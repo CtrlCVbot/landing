@@ -89,4 +89,20 @@ describe('AiExtractJsonViewer — TC-DASH3-UNIT-JSONVIEWER', () => {
     fireEvent.click(toggle)
     expect(toggle).toHaveAttribute('aria-expanded', 'false')
   })
+
+  it('aria-controls: 접힘 시 undefined, 펼침 시 BODY_ID (WAI-ARIA 1.1 dangling reference 방지)', () => {
+    render(<AiExtractJsonViewer json={{}} />)
+    const toggle = screen.getByRole('button', { name: /추출 결과 JSON/ })
+
+    // 접힘 상태 — body 미렌더 → aria-controls 속성 없음 (dangling reference 방지)
+    expect(toggle).not.toHaveAttribute('aria-controls')
+
+    // 펼침 상태 — body 렌더 → aria-controls=BODY_ID 참조
+    fireEvent.click(toggle)
+    expect(toggle).toHaveAttribute('aria-controls', 'ai-extract-json-body')
+
+    // 다시 접힘 — 속성 제거
+    fireEvent.click(toggle)
+    expect(toggle).not.toHaveAttribute('aria-controls')
+  })
 })

@@ -74,7 +74,7 @@ export function AiExtractJsonViewer({
         type="button"
         onClick={() => setExpanded((prev) => !prev)}
         aria-expanded={expanded}
-        aria-controls={BODY_ID}
+        aria-controls={expanded ? BODY_ID : undefined}
         className={TOGGLE_CLASSES}
       >
         <Code
