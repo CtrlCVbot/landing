@@ -408,3 +408,105 @@ describe('AiPanelContainer partialBeat 카테고리 순차 press (M3-11)', () =>
     ).not.toBeInTheDocument()
   })
 })
+
+// ---------------------------------------------------------------------------
+// M4-01 — #2 focus-walk (TC-DASH3-UNIT-FOCUS 적용 검증)
+// ---------------------------------------------------------------------------
+
+const AI_INPUT_STEP = PREVIEW_STEPS[1]!
+const AI_EXTRACT_STEP = PREVIEW_STEPS[2]!
+
+describe('AiPanelContainer #2 focus-walk 적용 (M4-01)', () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  it('AI_INPUT Step: ai-input-textarea 영역에 data-focus-active="true" 적용', () => {
+    render(
+      <AiPanelContainer
+        step={AI_INPUT_STEP}
+        aiInput={PREVIEW_MOCK_DATA.aiInput}
+        aiResult={PREVIEW_MOCK_DATA.aiResult}
+      />,
+    )
+
+    const textbox = screen.getByRole('textbox', { name: 'AI 입력 영역 (데모)' })
+    expect(textbox).toHaveAttribute('data-focus-active', 'true')
+  })
+
+  it('AI_EXTRACT Step: ai-extract-button 에 data-focus-active="true" 적용', () => {
+    render(
+      <AiPanelContainer
+        step={AI_EXTRACT_STEP}
+        aiInput={PREVIEW_MOCK_DATA.aiInput}
+        aiResult={PREVIEW_MOCK_DATA.aiResult}
+      />,
+    )
+
+    // AI_EXTRACT 상태에서 버튼 label 은 "추출 중..." (exact)
+    // "/추출/" regex 는 AiExtractJsonViewer toggle 과 충돌해서 exact name 사용.
+    const btn = screen.getByRole('button', { name: '추출 중...' })
+    expect(btn).toHaveAttribute('data-focus-active', 'true')
+  })
+
+  it('INITIAL Step: focusWalk 이 빈 배열 → 어떤 요소도 data-focus-active 비활성', () => {
+    render(
+      <AiPanelContainer
+        step={INITIAL_STEP}
+        aiInput={PREVIEW_MOCK_DATA.aiInput}
+        aiResult={PREVIEW_MOCK_DATA.aiResult}
+      />,
+    )
+
+    const textbox = screen.getByRole('textbox', { name: 'AI 입력 영역 (데모)' })
+    expect(textbox).toHaveAttribute('data-focus-active', 'false')
+    const btn = screen.getByRole('button', { name: '추출하기' })
+    expect(btn).toHaveAttribute('data-focus-active', 'false')
+  })
+
+  it('AI_APPLY Step: departure 카테고리 그룹이 mount 즉시 data-focus-active', () => {
+    render(
+      <AiPanelContainer
+        step={AI_APPLY_STEP}
+        aiInput={PREVIEW_MOCK_DATA.aiInput}
+        aiResult={PREVIEW_MOCK_DATA.aiResult}
+      />,
+    )
+
+    const departureGroup = screen.getByRole('group', {
+      name: /AI 추출 결과 — 상차지/,
+    })
+    expect(departureGroup).toHaveAttribute('data-focus-active', 'true')
+    const destinationGroup = screen.getByRole('group', {
+      name: /AI 추출 결과 — 하차지/,
+    })
+    expect(destinationGroup).toHaveAttribute('data-focus-active', 'false')
+  })
+
+  it('AI_APPLY Step: 400ms 경과 후 destination 그룹으로 focus 이동', () => {
+    render(
+      <AiPanelContainer
+        step={AI_APPLY_STEP}
+        aiInput={PREVIEW_MOCK_DATA.aiInput}
+        aiResult={PREVIEW_MOCK_DATA.aiResult}
+      />,
+    )
+
+    act(() => {
+      vi.advanceTimersByTime(400)
+    })
+
+    const departureGroup = screen.getByRole('group', {
+      name: /AI 추출 결과 — 상차지/,
+    })
+    expect(departureGroup).toHaveAttribute('data-focus-active', 'false')
+    const destinationGroup = screen.getByRole('group', {
+      name: /AI 추출 결과 — 하차지/,
+    })
+    expect(destinationGroup).toHaveAttribute('data-focus-active', 'true')
+  })
+})

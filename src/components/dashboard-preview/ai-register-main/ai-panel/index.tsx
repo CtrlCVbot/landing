@@ -36,6 +36,7 @@
 'use client'
 
 import { useFakeTyping } from '@/components/dashboard-preview/interactions/use-fake-typing'
+import { useFocusWalk } from '@/components/dashboard-preview/interactions/use-focus-walk'
 import type { AiCategoryId, PreviewMockData } from '@/lib/mock-data'
 import type { PreviewStep } from '@/lib/preview-steps'
 
@@ -85,6 +86,22 @@ export function AiPanelContainer({
   })
 
   // -------------------------------------------------------------------------
+  // #2 focus-walk — M4-01 / REQ-DASH3-021
+  //  - AI_INPUT   : focusWalk=['ai-input-textarea']       → AiInputArea 에 focused 주입.
+  //  - AI_EXTRACT : focusWalk=['ai-extract-button']       → AiExtractButton focused.
+  //  - AI_APPLY   : focusWalk=['ai-result-departure', ...] → AiResultButtons 그룹 순차.
+  //  - INITIAL    : focusWalk=[]                          → 전부 비활성.
+  //
+  // 간격은 AI_APPLY 의 partialBeat.intervalMs(300ms) 보다 약간 넉넉한 400ms 로 고정하여
+  // focus-walk 가 press 비트와 겹치지 않게 조율한다.
+  // -------------------------------------------------------------------------
+  const focusWalkTargets = step.interactions.focusWalk ?? []
+  const { currentTargetId: focusedTargetId } = useFocusWalk(focusWalkTargets, {
+    intervalMs: 400,
+    active: focusWalkTargets.length > 0,
+  })
+
+  // -------------------------------------------------------------------------
   // #3 button-press — AI_EXTRACT Step 에서 즉시 자동 press
   // pressTargets 는 ReadonlyArray<string> — 'ai-extract-button' 포함 여부로 판정
   // -------------------------------------------------------------------------
@@ -127,10 +144,12 @@ export function AiPanelContainer({
             text={displayedText}
             progress={progress}
             active={typingActive}
+            focused={focusedTargetId === 'ai-input-textarea'}
           />
           <AiExtractButton
             state={extractState}
             pressTriggerAt={extractTriggerAt}
+            focused={focusedTargetId === 'ai-extract-button'}
           />
           <AiWarningBadges warnings={aiResult.warnings} />
         </div>
@@ -138,6 +157,7 @@ export function AiPanelContainer({
         <AiResultButtons
           categories={aiResult.categories}
           extractState={extractState}
+          focusedTargetId={focusedTargetId}
           renderButton={(button, groupId) => (
             <AiButtonItem
               key={button.id}

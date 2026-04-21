@@ -42,6 +42,11 @@ export interface AiExtractButtonProps {
   readonly state: AiExtractButtonState
   /** use-button-press 자동 press 트리거 (ms). null 또는 undefined 면 비활성. */
   readonly pressTriggerAt?: number | null
+  /**
+   * #2 focus-walk 대상 여부 (M4-01 / REQ-DASH3-021).
+   * true 일 때 `data-focus-active="true"` + accent ring 스타일.
+   */
+  readonly focused?: boolean
   /** 수동 클릭 시 호출되는 콜백 (데모 시각용 optional). idle 상태에서만 호출. */
   readonly onPress?: () => void
 }
@@ -65,6 +70,7 @@ const BASE_CLASSES =
 export function AiExtractButton({
   state,
   pressTriggerAt = null,
+  focused = false,
   onPress,
 }: AiExtractButtonProps) {
   const { pressed, handlers, pressStyle } = useButtonPress({
@@ -79,12 +85,18 @@ export function AiExtractButton({
 
   const label = isLoading ? '추출 중...' : isResultReady ? '재추출' : '추출하기'
 
+  // M4-01: focused=true 면 accent ring 스타일 추가 (base 의 focus-visible 과 구분되는 자동 focus walk 용).
+  const focusedClasses = focused
+    ? ' ring-2 ring-accent/70 ring-offset-2 ring-offset-black/40'
+    : ''
+
   return (
     <button
       type="button"
       disabled={disabled}
       data-pressed={pressed}
       data-state={state}
+      data-focus-active={focused ? 'true' : 'false'}
       aria-label={label}
       onClick={() => {
         if (isIdle) {
@@ -94,7 +106,7 @@ export function AiExtractButton({
       onMouseDown={handlers.onMouseDown}
       onMouseUp={handlers.onMouseUp}
       onMouseLeave={handlers.onMouseLeave}
-      className={BASE_CLASSES}
+      className={BASE_CLASSES + focusedClasses}
       style={pressStyle}
     >
       {isLoading ? <LoadingSpinner /> : null}

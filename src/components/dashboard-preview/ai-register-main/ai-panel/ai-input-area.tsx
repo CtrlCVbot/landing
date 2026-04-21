@@ -43,6 +43,11 @@ export interface AiInputAreaProps {
   readonly progress: number
   /** fake-typing active 여부. 이 값이 true 이고 text 가 존재할 때만 caret 깜빡임. */
   readonly active: boolean
+  /**
+   * #2 focus-walk 대상 여부 (M4-01 / REQ-DASH3-021).
+   * true 일 때 ring 스타일 + `data-focus-active="true"` 속성 부여.
+   */
+  readonly focused?: boolean
 }
 
 // ---------------------------------------------------------------------------
@@ -56,7 +61,13 @@ const PLACEHOLDER =
 // Main Component
 // ---------------------------------------------------------------------------
 
-export function AiInputArea({ activeTab, text, progress, active }: AiInputAreaProps) {
+export function AiInputArea({
+  activeTab,
+  text,
+  progress,
+  active,
+  focused = false,
+}: AiInputAreaProps) {
   if (activeTab === 'image') {
     return <ImageTabPlaceholder />
   }
@@ -70,7 +81,13 @@ export function AiInputArea({ activeTab, text, progress, active }: AiInputAreaPr
         role="textbox"
         aria-readonly="true"
         aria-label="AI 입력 영역 (데모)"
-        className="bg-black/40 border border-white/10 rounded-lg p-3 min-h-[140px] text-sm text-gray-200 whitespace-pre-wrap"
+        data-focus-active={focused ? 'true' : 'false'}
+        className={
+          'bg-black/40 border rounded-lg p-3 min-h-[140px] text-sm text-gray-200 whitespace-pre-wrap transition-shadow ' +
+          (focused
+            ? 'border-accent/70 ring-2 ring-accent/40 shadow-[0_0_0_2px_rgba(96,165,250,0.15)]'
+            : 'border-white/10')
+        }
       >
         {text.length > 0 ? (
           text

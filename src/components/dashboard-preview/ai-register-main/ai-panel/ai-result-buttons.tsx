@@ -52,6 +52,11 @@ export interface AiResultButtonsProps {
   readonly extractState: AiResultButtonsExtractState
   /** M2-06 에서 AiButtonItem 주입. 미지정 시 default slot stub 렌더. */
   readonly renderButton?: (button: AiCategoryButton, groupId: AiCategoryId) => ReactNode
+  /**
+   * #2 focus-walk 대상 id. `ai-result-${groupId}` 와 비교해 일치하는 그룹에만
+   * `data-focus-active="true"` + accent ring 스타일 적용 (M4-01 / REQ-DASH3-021).
+   */
+  readonly focusedTargetId?: string | null
 }
 
 // ---------------------------------------------------------------------------
@@ -83,6 +88,7 @@ export function AiResultButtons({
   categories,
   extractState,
   renderButton,
+  focusedTargetId = null,
 }: AiResultButtonsProps) {
   const showButtons = extractState === 'resultReady'
 
@@ -90,13 +96,20 @@ export function AiResultButtons({
     <div className="flex flex-col gap-3 px-4 py-3">
       {categories.map((group) => {
         const Icon = ICON_MAP[group.icon]
+        const isFocused = focusedTargetId === `ai-result-${group.id}`
         return (
           <div
             key={group.id}
             data-testid={`ai-category-${group.id}`}
             role="group"
             aria-label={`AI 추출 결과 — ${group.label}`}
-            className={GROUP_CARD_CLASSES}
+            data-focus-active={isFocused ? 'true' : 'false'}
+            className={
+              GROUP_CARD_CLASSES +
+              (isFocused
+                ? ' ring-2 ring-accent/60 ring-offset-2 ring-offset-black/40 transition-shadow'
+                : '')
+            }
           >
             <div className="flex items-center gap-2">
               <Icon className="h-4 w-4 text-accent" aria-hidden="true" />
