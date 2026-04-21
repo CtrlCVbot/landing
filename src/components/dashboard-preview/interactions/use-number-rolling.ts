@@ -1,6 +1,4 @@
 /**
- * @spike T-DASH3-SPIKE-01 — 종료 시 이관 or 폐기
- *
  * #8 조작감: 숫자 카운터 롤링 훅.
  *
  * - Duration 0.3~0.5s (기본 400ms)
@@ -8,9 +6,8 @@
  * - active=false 시 즉시 target 반환
  * - `prefers-reduced-motion: reduce` 시 즉시 target
  *
- * 기존 `use-animated-number.ts` 와 의도는 동일하나, Spike 네이밍 규약
- * (target 을 positional arg, options 는 두 번째) 과 reduced-motion 처리를
- * 내장한 형태로 신규 구현.
+ * 기존 `use-animated-number.ts` 와 의도는 동일하나, target 을 positional arg,
+ * options 는 두 번째 arg 로 받고 reduced-motion 처리를 내장한 형태로 신규 구현.
  */
 
 'use client'

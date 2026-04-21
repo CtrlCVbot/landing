@@ -13,7 +13,6 @@
  * 범위
  *  - Flag OFF (기본): 기존 Phase 1/2 AiPanelPreview + FormPreview 렌더
  *  - Flag ON (env NEXT_PUBLIC_DASH_V3=phase3): AiRegisterMain 렌더
- *  - Flag ON (env NEXT_PUBLIC_DASH_V3=spike):  AiRegisterMain 렌더
  *  - Flag ON (query ?dashV3=1): AiRegisterMain 렌더
  *  - 두 렌더 경로 상호 배타
  *  - Tablet 뷰포트 scale 0.40 (REQ-DASH-023)
@@ -192,13 +191,6 @@ describe('DashboardPreview — Phase 3 Feature flag', () => {
       expect(screen.queryByTestId('form-preview')).not.toBeInTheDocument()
     })
 
-    it('env=spike: renders AiRegisterMain too (shared Phase 3 path)', () => {
-      vi.stubEnv('NEXT_PUBLIC_DASH_V3', 'spike')
-      render(<DashboardPreview />)
-      expect(screen.getByLabelText('AI 화물 등록 패널')).toBeInTheDocument()
-      expect(screen.getByLabelText('주문 등록 폼')).toBeInTheDocument()
-    })
-
     it('env=something-else: keeps Phase 1/2', () => {
       vi.stubEnv('NEXT_PUBLIC_DASH_V3', 'something-else')
       render(<DashboardPreview />)
@@ -295,16 +287,6 @@ describe('DashboardPreview — Phase 3 Feature flag', () => {
       expect(screen.queryByTestId('preview-chrome')).not.toBeInTheDocument()
       expect(screen.queryByTestId('ai-panel')).not.toBeInTheDocument()
       expect(screen.queryByTestId('form-preview')).not.toBeInTheDocument()
-    })
-
-    it('useDashV3=true (env spike) + Mobile → MobileCardView 렌더 (AiRegisterMain 아님)', () => {
-      setMobile()
-      vi.stubEnv('NEXT_PUBLIC_DASH_V3', 'spike')
-      render(<DashboardPreview />)
-
-      expect(screen.getByTestId('mobile-card-view')).toBeInTheDocument()
-      expect(screen.queryByLabelText('AI 화물 등록 패널')).not.toBeInTheDocument()
-      expect(screen.queryByLabelText('주문 등록 폼')).not.toBeInTheDocument()
     })
 
     it('useDashV3=true (query ?dashV3=1) + Mobile → MobileCardView 렌더', () => {

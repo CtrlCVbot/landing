@@ -5,7 +5,6 @@
  *
  * 판정 규칙 (Phase 1 스펙 §5 Feature flag)
  *  - env  `NEXT_PUBLIC_DASH_V3 === 'phase3'` → 활성
- *  - env  `NEXT_PUBLIC_DASH_V3 === 'spike'`  → 활성 (Spike 도 ai-register-main 경로 공유)
  *  - query `?dashV3=1` (client-side post-mount)  → 활성
  *  - 기본 → 비활성
  *
@@ -28,7 +27,7 @@ import { useEffect, useState } from 'react'
 // ---------------------------------------------------------------------------
 
 const ENV_KEY = 'NEXT_PUBLIC_DASH_V3'
-const ENV_VALUES_ENABLE = ['phase3', 'spike'] as const
+const ENV_VALUES_ENABLE = ['phase3'] as const
 const QUERY_KEY = 'dashV3'
 const QUERY_VALUE_ENABLE = '1'
 

@@ -1,21 +1,11 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { fadeInUp } from '@/lib/motion'
 import { GradientBlob } from '@/components/shared/gradient-blob'
 import { DashboardPreview } from '@/components/dashboard-preview/dashboard-preview'
-import { DashboardPreviewSpike } from '@/components/dashboard-preview/ai-register-main/spike'
 
 export function Hero() {
-  // Spike feature flag: `?spike=1` (client-side post-mount parsing, static export 호환 + Suspense 불필요)
-  // NOTE: useSearchParams는 output: 'export' 시 Suspense boundary 없으면 전체 페이지 fallback 발생 → 회피
-  const [spikeEnabled, setSpikeEnabled] = useState(false)
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search)
-    setSpikeEnabled(params.get('spike') === '1')
-  }, [])
-
   return (
     <section className="min-h-screen flex flex-col items-center justify-center text-center pt-16 relative overflow-hidden">
       <GradientBlob className="-top-20 -left-20 w-96 h-96" />
@@ -68,11 +58,10 @@ export function Hero() {
        * Hero 텍스트/버튼은 max-w-4xl(896px) 가독성 유지, DashboardPreview 블록만
        * 별도 래퍼에서 max-w-[1440px]로 확장해 OrderForm의 lg:grid-cols-3
        * (≥1024px) 충족에 필요한 가용폭(≈1060px)을 확보한다.
-       * Spike 분기(?spike=1) 로직은 그대로 유지한다.
        */}
       <div className="mt-16 w-full flex justify-center">
         <div className="max-w-[1440px] w-full">
-          {spikeEnabled ? <DashboardPreviewSpike /> : <DashboardPreview />}
+          <DashboardPreview />
         </div>
       </div>
     </section>

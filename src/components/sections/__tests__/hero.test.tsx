@@ -67,12 +67,6 @@ vi.mock('@/components/dashboard-preview/dashboard-preview', () => ({
   ),
 }))
 
-vi.mock('@/components/dashboard-preview/ai-register-main/spike', () => ({
-  DashboardPreviewSpike: () => (
-    <div data-testid="dashboard-preview-spike">DashboardPreviewSpike</div>
-  ),
-}))
-
 // ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------

@@ -9,7 +9,6 @@
  *
  * 판정 규칙 (Phase 1 스펙 §5 Feature flag)
  *  - env  `NEXT_PUBLIC_DASH_V3 === 'phase3'` → 활성
- *  - env  `NEXT_PUBLIC_DASH_V3 === 'spike'`  → 활성 (Spike 도 ai-register-main 경로)
  *  - env  그 외 값 / undefined             → 비활성
  *  - query `?dashV3=1`                       → 활성 (env 와 OR 결합)
  *  - 기본                                   → 비활성
@@ -60,10 +59,10 @@ describe('useDashV3', () => {
       expect(result.current).toBe(true)
     })
 
-    it('returns true when NEXT_PUBLIC_DASH_V3="spike"', () => {
+    it('returns false when NEXT_PUBLIC_DASH_V3="spike" (Spike retired in M1 review #2)', () => {
       vi.stubEnv('NEXT_PUBLIC_DASH_V3', 'spike')
       const { result } = renderHook(() => useDashV3())
-      expect(result.current).toBe(true)
+      expect(result.current).toBe(false)
     })
 
     it('returns false when NEXT_PUBLIC_DASH_V3="something-else"', () => {

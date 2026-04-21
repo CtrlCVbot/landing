@@ -1,6 +1,4 @@
 /**
- * @spike T-DASH3-SPIKE-01 — 종료 시 이관 or 폐기
- *
  * #3 조작감: 버튼 press 훅. scale(0.97) + shadow 축소, duration 150ms.
  *
  * 사용 모드:

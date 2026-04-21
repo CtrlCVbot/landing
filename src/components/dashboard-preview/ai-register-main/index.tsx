@@ -12,7 +12,6 @@
  *
  * SSOT
  *  - Phase 1 스펙 §7 / PRD §6-1
- *  - spike 구조 (`./spike/index.tsx`) 는 M1 종료 시 폐기 예정 — 여기서는 참조하지 않는다.
  */
 
 'use client'
