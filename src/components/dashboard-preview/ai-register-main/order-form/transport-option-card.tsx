@@ -34,9 +34,9 @@
 
 'use client'
 
-import { useEffect, useState } from 'react'
 import { Settings2 } from 'lucide-react'
 
+import { useTriggerAt } from '@/components/dashboard-preview/interactions/use-trigger-at'
 import type { TransportOptions } from '@/lib/mock-data'
 
 // ---------------------------------------------------------------------------
@@ -78,32 +78,6 @@ const OPTION_LABELS: ReadonlyArray<{ key: TransportOptionKey; label: string }> =
 ]
 
 const STROKE_DASH_TOTAL = 20
-
-// ---------------------------------------------------------------------------
-// Hook — #9 stroke trigger 타이머 (strokeTriggerAt 경과 시 true 전환)
-// ---------------------------------------------------------------------------
-
-function useStrokeTriggered(triggerAt: number | null | undefined): boolean {
-  const [triggered, setTriggered] = useState(false)
-
-  useEffect(() => {
-    if (triggerAt === null || triggerAt === undefined || triggerAt < 0) {
-      setTriggered(false)
-      return
-    }
-
-    const timer = setTimeout(() => {
-      setTriggered(true)
-    }, triggerAt)
-
-    return () => {
-      clearTimeout(timer)
-      setTriggered(false)
-    }
-  }, [triggerAt])
-
-  return triggered
-}
 
 // ---------------------------------------------------------------------------
 // Sub-component — OptionItem
@@ -168,7 +142,9 @@ export function TransportOptionCard({
   strokeTargets,
   strokeTriggerAt,
 }: TransportOptionCardProps) {
-  const triggered = useStrokeTriggered(strokeTriggerAt)
+  // M3-review#2 — useStrokeTriggered 삭제 후 공통 useTriggerAt 로 교체.
+  // strokeTriggerAt 이 null/undefined/음수이면 hook 이 false 를 유지하므로 active: true 고정.
+  const triggered = useTriggerAt({ active: true, triggerAt: strokeTriggerAt })
 
   return (
     <section

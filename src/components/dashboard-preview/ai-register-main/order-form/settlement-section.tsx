@@ -34,10 +34,10 @@
 
 'use client'
 
-import { useEffect, useState } from 'react'
 import { Wallet } from 'lucide-react'
 
 import { useNumberRolling } from '@/components/dashboard-preview/interactions/use-number-rolling'
+import { useTriggerAt } from '@/components/dashboard-preview/interactions/use-trigger-at'
 import type { SettlementMock } from '@/lib/mock-data'
 
 // ---------------------------------------------------------------------------
@@ -72,59 +72,11 @@ const ACTIVE_GLOW_CLASSES = 'ring-1 ring-accent/30 shadow-lg shadow-accent/10'
 const ROLLING_DURATION_MS = 400
 
 // ---------------------------------------------------------------------------
-// Hook — rollingTriggerAt 경과 시 롤링 활성 전환
+// Rolling values hook — 합계 3 수치를 단일 진입점으로 묶는다.
 //
 // useNumberRolling 이 active=true 일 때 mount 즉시 rAF 를 예약하므로,
-// rollingTriggerAt 이 지정된 경우 해당 ms 경과 전까지 active 를 false 로 유지해
-// "대기" 상태를 구현한다 (estimate-info-card 의 useRollingTriggered 와 동일 패턴).
-// ---------------------------------------------------------------------------
-
-function computeInitialTriggered(
-  active: boolean,
-  triggerAt: number | null | undefined,
-): boolean {
-  if (!active) return false
-  if (triggerAt === null || triggerAt === undefined || triggerAt < 0) return false
-  return triggerAt === 0
-}
-
-function useRollingTriggered(
-  active: boolean,
-  triggerAt: number | null | undefined,
-): boolean {
-  const [triggered, setTriggered] = useState<boolean>(
-    computeInitialTriggered(active, triggerAt),
-  )
-
-  useEffect(() => {
-    if (!active) {
-      setTriggered(false)
-      return
-    }
-    if (triggerAt === null || triggerAt === undefined || triggerAt < 0) {
-      setTriggered(false)
-      return
-    }
-    if (triggerAt === 0) {
-      setTriggered(true)
-      return
-    }
-
-    const timer = setTimeout(() => {
-      setTriggered(true)
-    }, triggerAt)
-
-    return () => {
-      clearTimeout(timer)
-      setTriggered(false)
-    }
-  }, [active, triggerAt])
-
-  return triggered
-}
-
-// ---------------------------------------------------------------------------
-// Rolling values hook — 합계 3 수치를 단일 진입점으로 묶는다.
+// rollingTriggerAt 이 지정된 경우 해당 ms 경과 전까지 hook 이 false 를 반환해
+// "대기" 상태를 구현한다 (M3-review#2 — useTriggerAt 공통 훅 사용).
 // ---------------------------------------------------------------------------
 
 interface RollingTotals {
@@ -138,7 +90,7 @@ function useRollingTotals(
   active: boolean,
   triggerAt: number | null | undefined,
 ): RollingTotals {
-  const triggered = useRollingTriggered(active, triggerAt)
+  const triggered = useTriggerAt({ active, triggerAt })
 
   // active=true + triggered=false → 0 target (애니 대기 상태로 0 유지)
   // 그 외 → 실제 target (active=false 면 useNumberRolling 이 즉시 반환)
