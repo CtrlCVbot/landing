@@ -545,3 +545,101 @@ describe('OrderFormContainer CargoInfoForm dropdownBeat 주입 (M3-review#1)', (
     )
   })
 })
+
+// ===========================================================================
+// M4-03 — #10 Column-wise Border Pulse (TC-DASH3-INT-COLPULSE)
+// ===========================================================================
+//
+// columnPulseTargets 가 존재하는 AI_APPLY Step 에서 각 Column(1/2/3) 이
+// 자신의 beat offset 에 맞춰 400ms pulse (data-pulse-active="true" + animate 클래스) 로 활성화된다.
+//   - Col 1 (pickup + delivery):     0ms 부터 400ms
+//   - Col 2 (vehicle + cargo):       600ms 부터 400ms (partialBeat cargo offset)
+//   - Col 3 (options + estimate):    1500ms 부터 400ms (partialBeat 종료 → allBeat 시작)
+//
+// AI_APPLY 외 Step (INITIAL, AI_INPUT, AI_EXTRACT) 에서는 columnPulseTargets 가 없거나
+// 비어 있어 어떤 Column 도 data-pulse-active="false".
+// ===========================================================================
+
+describe('OrderFormContainer — M4-03 #10 Column-wise Border Pulse', () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
+  })
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  it('INITIAL Step: 모든 Column 이 data-pulse-active="false"', () => {
+    render(
+      <OrderFormContainer step={INITIAL_STEP} formData={PREVIEW_MOCK_DATA.formData} />,
+    )
+    expect(screen.getByTestId('col-1')).toHaveAttribute('data-pulse-active', 'false')
+    expect(screen.getByTestId('col-2')).toHaveAttribute('data-pulse-active', 'false')
+    expect(screen.getByTestId('col-3')).toHaveAttribute('data-pulse-active', 'false')
+  })
+
+  it('AI_APPLY Step: Col 1 이 mount 즉시 data-pulse-active="true"', () => {
+    render(
+      <OrderFormContainer step={AI_APPLY_STEP} formData={PREVIEW_MOCK_DATA.formData} />,
+    )
+    expect(screen.getByTestId('col-1')).toHaveAttribute('data-pulse-active', 'true')
+    expect(screen.getByTestId('col-2')).toHaveAttribute('data-pulse-active', 'false')
+    expect(screen.getByTestId('col-3')).toHaveAttribute('data-pulse-active', 'false')
+  })
+
+  it('AI_APPLY Step: 400ms 경과 후 Col 1 pulse 종료 (data-pulse-active="false")', () => {
+    render(
+      <OrderFormContainer step={AI_APPLY_STEP} formData={PREVIEW_MOCK_DATA.formData} />,
+    )
+    act(() => {
+      vi.advanceTimersByTime(400)
+    })
+    expect(screen.getByTestId('col-1')).toHaveAttribute('data-pulse-active', 'false')
+  })
+
+  it('AI_APPLY Step: 600ms 경과 후 Col 2 pulse 시작', () => {
+    render(
+      <OrderFormContainer step={AI_APPLY_STEP} formData={PREVIEW_MOCK_DATA.formData} />,
+    )
+    act(() => {
+      vi.advanceTimersByTime(600)
+    })
+    expect(screen.getByTestId('col-2')).toHaveAttribute('data-pulse-active', 'true')
+  })
+
+  it('AI_APPLY Step: 1500ms 경과 후 Col 3 pulse 시작 (allBeat)', () => {
+    render(
+      <OrderFormContainer step={AI_APPLY_STEP} formData={PREVIEW_MOCK_DATA.formData} />,
+    )
+    act(() => {
+      vi.advanceTimersByTime(1500)
+    })
+    expect(screen.getByTestId('col-3')).toHaveAttribute('data-pulse-active', 'true')
+  })
+
+  it('AI_APPLY Step: pulse active 인 column 에 ring/shadow 클래스 적용', () => {
+    render(
+      <OrderFormContainer step={AI_APPLY_STEP} formData={PREVIEW_MOCK_DATA.formData} />,
+    )
+    const col1 = screen.getByTestId('col-1')
+    // mount 즉시 Col 1 pulse active → "ring" 포함
+    expect(col1.className).toMatch(/ring/)
+  })
+
+  it('AI_EXTRACT Step: columnPulseTargets 미존재 → 모든 Column pulse 비활성', () => {
+    render(
+      <OrderFormContainer step={AI_EXTRACT_STEP} formData={PREVIEW_MOCK_DATA.formData} />,
+    )
+    expect(screen.getByTestId('col-1')).toHaveAttribute('data-pulse-active', 'false')
+    expect(screen.getByTestId('col-2')).toHaveAttribute('data-pulse-active', 'false')
+    expect(screen.getByTestId('col-3')).toHaveAttribute('data-pulse-active', 'false')
+  })
+
+  it('AI_INPUT Step: columnPulseTargets 미존재 → 모든 Column pulse 비활성', () => {
+    render(
+      <OrderFormContainer step={AI_INPUT_STEP} formData={PREVIEW_MOCK_DATA.formData} />,
+    )
+    expect(screen.getByTestId('col-1')).toHaveAttribute('data-pulse-active', 'false')
+    expect(screen.getByTestId('col-2')).toHaveAttribute('data-pulse-active', 'false')
+    expect(screen.getByTestId('col-3')).toHaveAttribute('data-pulse-active', 'false')
+  })
+})

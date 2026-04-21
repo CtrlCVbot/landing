@@ -27,6 +27,8 @@
 
 'use client'
 
+import { useEffect, useState } from 'react'
+
 import type { PreviewMockData } from '@/lib/mock-data'
 import type { PreviewStep } from '@/lib/preview-steps'
 import type { TransportOptionKey } from './transport-option-card'
@@ -158,6 +160,74 @@ export function stripTransportOptionPrefix(
 }
 
 // ---------------------------------------------------------------------------
+// #10 Column-wise Border Pulse (M4-03 / REQ-DASH3-029)
+// ---------------------------------------------------------------------------
+
+/**
+ * `columnPulseTargets` 를 구독해 각 grid column(1/2/3) 을 400ms 동안 glow 시키는 훅.
+ *  - active=false 또는 triggerAt=null → 항상 false.
+ *  - triggerAt=0 → mount 즉시 pulse=true, 400ms 후 false 로 복귀.
+ *  - triggerAt>0 → 해당 ms 후 pulse=true 로 전환, 이어서 400ms 후 false 로 복귀.
+ *
+ * Column 별 offset 매핑 (AI_APPLY partialBeat/allBeat 정렬):
+ *  - Col 1 (pickup + delivery)    :    0ms  — departure/destination fill-in 시작 시점
+ *  - Col 2 (vehicle + cargo)      :  600ms  — partialBeat cargo offset
+ *  - Col 3 (options + estimate)   : 1500ms  — partialBeat 종료 → allBeat 진입 시점
+ */
+const COLUMN_PULSE_DURATION_MS = 400
+
+function useColumnPulse(
+  active: boolean,
+  triggerAt: number | null,
+): boolean {
+  const [pulsing, setPulsing] = useState<boolean>(
+    () => active && triggerAt === 0,
+  )
+
+  useEffect(() => {
+    if (!active || triggerAt === null || triggerAt < 0) {
+      setPulsing(false)
+      return
+    }
+
+    let endTimer: ReturnType<typeof setTimeout> | null = null
+    let startTimer: ReturnType<typeof setTimeout> | null = null
+
+    const scheduleEnd = () =>
+      setTimeout(() => setPulsing(false), COLUMN_PULSE_DURATION_MS)
+
+    if (triggerAt === 0) {
+      setPulsing(true)
+      endTimer = scheduleEnd()
+    } else {
+      startTimer = setTimeout(() => {
+        setPulsing(true)
+        endTimer = scheduleEnd()
+      }, triggerAt)
+    }
+
+    return () => {
+      if (startTimer !== null) clearTimeout(startTimer)
+      if (endTimer !== null) clearTimeout(endTimer)
+    }
+  }, [active, triggerAt])
+
+  return pulsing
+}
+
+/**
+ * AI_APPLY Step 에서 columnPulseTargets 가 non-empty 일 때 pulse 를 활성화한다.
+ * 이 외 Step 에서는 모든 column pulse 가 비활성 (triggerAt=null).
+ */
+function computeColumnPulseFlags(step: PreviewStep): {
+  readonly active: boolean
+} {
+  if (step.id !== 'AI_APPLY') return { active: false }
+  const targets = step.interactions.columnPulseTargets
+  return { active: !!targets && targets.length > 0 }
+}
+
+// ---------------------------------------------------------------------------
 // Main component
 // ---------------------------------------------------------------------------
 
@@ -171,6 +241,15 @@ export function OrderFormContainer({ step, formData }: OrderFormContainerProps) 
   // Stroke trigger: active 이면 mount 즉시 발동 (offset 0). 비활성 상태에선 null.
   const strokeTriggerAt = allBeat.active ? 0 : null
 
+  // Column pulse (M4-03) — AI_APPLY 에서 각 column 고유 offset.
+  const columnPulse = computeColumnPulseFlags(step)
+  const col1Pulse = useColumnPulse(columnPulse.active, columnPulse.active ? 0 : null)
+  const col2Pulse = useColumnPulse(columnPulse.active, columnPulse.active ? 600 : null)
+  const col3Pulse = useColumnPulse(columnPulse.active, columnPulse.active ? 1500 : null)
+
+  const COL_PULSE_RING =
+    ' ring-2 ring-accent/60 ring-offset-2 ring-offset-black/40 shadow-[0_0_24px_rgba(96,165,250,0.35)]'
+
   return (
     <div
       aria-label="주문 등록 폼"
@@ -183,7 +262,11 @@ export function OrderFormContainer({ step, formData }: OrderFormContainerProps) 
       <div
         data-col="1"
         data-testid="col-1"
-        className="lg:col-span-1 space-y-4"
+        data-pulse-active={col1Pulse ? 'true' : 'false'}
+        className={
+          'lg:col-span-1 space-y-4 rounded-lg transition-shadow duration-200' +
+          (col1Pulse ? COL_PULSE_RING : '')
+        }
       >
         <CompanyManagerSection
           company={formData.company}
@@ -207,7 +290,11 @@ export function OrderFormContainer({ step, formData }: OrderFormContainerProps) 
       <div
         data-col="2"
         data-testid="col-2"
-        className="lg:col-span-1 space-y-4"
+        data-pulse-active={col2Pulse ? 'true' : 'false'}
+        className={
+          'lg:col-span-1 space-y-4 rounded-lg transition-shadow duration-200' +
+          (col2Pulse ? COL_PULSE_RING : '')
+        }
       >
         <EstimateDistanceInfo
           distance={formData.estimate.distance}
@@ -246,7 +333,11 @@ export function OrderFormContainer({ step, formData }: OrderFormContainerProps) 
       <div
         data-col="3"
         data-testid="col-3"
-        className="lg:col-span-1 space-y-4"
+        data-pulse-active={col3Pulse ? 'true' : 'false'}
+        className={
+          'lg:col-span-1 space-y-4 rounded-lg transition-shadow duration-200' +
+          (col3Pulse ? COL_PULSE_RING : '')
+        }
       >
         <TransportOptionCard
           options={formData.options}
