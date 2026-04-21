@@ -22,6 +22,21 @@
   --radius-xl: 0.75rem;
   --radius-2xl: 1rem;
   --font-sans: 'Inter', 'Pretendard', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+
+  /* ------------------------------------------------------------
+   * shadcn 호환 alias (T-DASH3-M1-06, REQ-DASH3-051)
+   * shadcn v2 표준 토큰을 기존 디자인 토큰으로 연결한다.
+   * bg-primary → --color-accent, bg-secondary → --color-muted 등.
+   * ------------------------------------------------------------ */
+  --color-primary: var(--color-accent);
+  --color-primary-foreground: var(--color-accent-foreground);
+  --color-secondary: var(--color-muted);
+  --color-secondary-foreground: var(--color-foreground);
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #ffffff;
+  --color-accent-foreground-shadcn: var(--color-foreground);
+  --color-input: var(--color-border);
+  --color-ring: var(--color-accent);
 }
 
 @layer base {
