@@ -82,7 +82,12 @@ export interface AiApplyPartialBeat {
   /** 카테고리 간 간격 (ms) */
   readonly intervalMs: number
   readonly pressTargets: ReadonlyArray<string>
-  readonly rippleTargets: ReadonlyArray<string>
+  /**
+   * M4-review#1 — 자동 ripple 을 발동할 카테고리 id 집합 (REQ-DASH3-025).
+   * AiPanelContainer 가 `rippleTargets.includes(groupId)` 로 해당 카테고리의
+   * `rippleTriggerAt` 를 계산한다. 배열이 비어 있으면 전체 비활성.
+   */
+  readonly rippleTargets: ReadonlyArray<AiCategoryId>
   readonly fillInFields: ReadonlyArray<{
     readonly fieldId: string
     readonly value: string
@@ -377,10 +382,13 @@ const PARTIAL_PRESS_TARGETS: ReadonlyArray<string> = CATEGORY_ORDER.map(
   (id) => `ai-result-${id}-press`,
 )
 
-/** partialBeat 중 각 카테고리 버튼 ripple 타깃 */
-const PARTIAL_RIPPLE_TARGETS: ReadonlyArray<string> = CATEGORY_ORDER.map(
-  (id) => `ai-result-${id}-ripple`,
-)
+/**
+ * partialBeat 자동 ripple 대상 카테고리 id (M4-review#1 재정의).
+ * - 기존: `'ai-result-{id}-ripple'` 문자열 id — SSOT 소비처 부재.
+ * - 현재: `AiCategoryId` 그대로. AiPanelContainer 가 groupId 존재 여부로 분기.
+ * - 4개 전부 포함하여 departure/destination/cargo/fare 모두 자동 ripple.
+ */
+const PARTIAL_RIPPLE_TARGETS: ReadonlyArray<AiCategoryId> = [...CATEGORY_ORDER]
 
 // =============================================================================
 // AI_APPLY allBeat — toggle stroke + number rolling
@@ -409,11 +417,16 @@ const NUMBER_ROLLING_TARGETS: ReadonlyArray<{
   { targetId: 'settlement-profit', finalValue: PREVIEW_MOCK_DATA.formData.settlement.totals.profit },
 ] as const
 
+/**
+ * M4-review#1 — Column-wise Border Pulse 대상 (REQ-DASH3-029).
+ * 3-col grid 의 실제 DOM id (`col-1`/`col-2`/`col-3`) 에 맞춰 재정렬하여
+ * SSOT 를 소비처와 1:1 매핑한다. OrderFormContainer 가 각 col 에 대해
+ * `columnPulseTargets.includes('col-N')` 로 pulse 활성화를 판정한다.
+ */
 const COLUMN_PULSE_TARGETS: ReadonlyArray<string> = [
-  'col-pickup',
-  'col-delivery',
-  'col-vehicle-cargo',
-  'col-options-estimate',
+  'col-1',
+  'col-2',
+  'col-3',
 ] as const
 
 // =============================================================================

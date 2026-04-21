@@ -176,6 +176,22 @@ export function stripTransportOptionPrefix(
  */
 const COLUMN_PULSE_DURATION_MS = 400
 
+/**
+ * Column 별 pulse 시작 offset (AI_APPLY partialBeat/allBeat 정렬, ms).
+ *  - col-1 (pickup/delivery) : partialBeat departure/destination 동시 시작
+ *  - col-2 (vehicle/cargo)   : partialBeat cargo offset (2 × 300ms)
+ *  - col-3 (options/estimate): partialBeat 종료 → allBeat 진입 (~1500ms)
+ */
+const COLUMN_PULSE_OFFSETS_MS = {
+  col1: 0,
+  col2: 600,
+  col3: 1500,
+} as const
+
+/** Column pulse 활성 시 적용하는 ring + shadow 클래스 조합. */
+const COL_PULSE_RING_CLASSES =
+  ' ring-2 ring-accent/60 ring-offset-2 ring-offset-black/40 shadow-[0_0_24px_rgba(96,165,250,0.35)]'
+
 function useColumnPulse(
   active: boolean,
   triggerAt: number | null,
@@ -216,15 +232,14 @@ function useColumnPulse(
 }
 
 /**
- * AI_APPLY Step 에서 columnPulseTargets 가 non-empty 일 때 pulse 를 활성화한다.
- * 이 외 Step 에서는 모든 column pulse 가 비활성 (triggerAt=null).
+ * M4-review#1 — column pulse 대상 id 집합을 반환.
+ * AI_APPLY 외 Step 은 항상 빈 Set (pulse 비활성).
+ * 각 column 의 data-testid(col-1/col-2/col-3) 를 includes 로 판정한다.
  */
-function computeColumnPulseFlags(step: PreviewStep): {
-  readonly active: boolean
-} {
-  if (step.id !== 'AI_APPLY') return { active: false }
-  const targets = step.interactions.columnPulseTargets
-  return { active: !!targets && targets.length > 0 }
+function computeColumnPulseTargets(step: PreviewStep): ReadonlySet<string> {
+  if (step.id !== 'AI_APPLY') return new Set<string>()
+  const targets = step.interactions.columnPulseTargets ?? []
+  return new Set<string>(targets)
 }
 
 // ---------------------------------------------------------------------------
@@ -241,14 +256,22 @@ export function OrderFormContainer({ step, formData }: OrderFormContainerProps) 
   // Stroke trigger: active 이면 mount 즉시 발동 (offset 0). 비활성 상태에선 null.
   const strokeTriggerAt = allBeat.active ? 0 : null
 
-  // Column pulse (M4-03) — AI_APPLY 에서 각 column 고유 offset.
-  const columnPulse = computeColumnPulseFlags(step)
-  const col1Pulse = useColumnPulse(columnPulse.active, columnPulse.active ? 0 : null)
-  const col2Pulse = useColumnPulse(columnPulse.active, columnPulse.active ? 600 : null)
-  const col3Pulse = useColumnPulse(columnPulse.active, columnPulse.active ? 1500 : null)
-
-  const COL_PULSE_RING =
-    ' ring-2 ring-accent/60 ring-offset-2 ring-offset-black/40 shadow-[0_0_24px_rgba(96,165,250,0.35)]'
+  // Column pulse (M4-03 + review#1) — AI_APPLY 에서 columnPulseTargets SSOT 를 소비.
+  //   - targets: ReadonlySet<'col-1'|'col-2'|'col-3'> (AI_APPLY 외 Step 은 빈 Set)
+  //   - 각 col 은 presence 로 active 판정, offset 은 COLUMN_PULSE_OFFSETS_MS 상수 참조.
+  const pulseTargets = computeColumnPulseTargets(step)
+  const col1Pulse = useColumnPulse(
+    pulseTargets.has('col-1'),
+    pulseTargets.has('col-1') ? COLUMN_PULSE_OFFSETS_MS.col1 : null,
+  )
+  const col2Pulse = useColumnPulse(
+    pulseTargets.has('col-2'),
+    pulseTargets.has('col-2') ? COLUMN_PULSE_OFFSETS_MS.col2 : null,
+  )
+  const col3Pulse = useColumnPulse(
+    pulseTargets.has('col-3'),
+    pulseTargets.has('col-3') ? COLUMN_PULSE_OFFSETS_MS.col3 : null,
+  )
 
   return (
     <div
@@ -265,7 +288,7 @@ export function OrderFormContainer({ step, formData }: OrderFormContainerProps) 
         data-pulse-active={col1Pulse ? 'true' : 'false'}
         className={
           'lg:col-span-1 space-y-4 rounded-lg transition-shadow duration-200' +
-          (col1Pulse ? COL_PULSE_RING : '')
+          (col1Pulse ? COL_PULSE_RING_CLASSES : '')
         }
       >
         <CompanyManagerSection
@@ -293,7 +316,7 @@ export function OrderFormContainer({ step, formData }: OrderFormContainerProps) 
         data-pulse-active={col2Pulse ? 'true' : 'false'}
         className={
           'lg:col-span-1 space-y-4 rounded-lg transition-shadow duration-200' +
-          (col2Pulse ? COL_PULSE_RING : '')
+          (col2Pulse ? COL_PULSE_RING_CLASSES : '')
         }
       >
         <EstimateDistanceInfo
@@ -336,7 +359,7 @@ export function OrderFormContainer({ step, formData }: OrderFormContainerProps) 
         data-pulse-active={col3Pulse ? 'true' : 'false'}
         className={
           'lg:col-span-1 space-y-4 rounded-lg transition-shadow duration-200' +
-          (col3Pulse ? COL_PULSE_RING : '')
+          (col3Pulse ? COL_PULSE_RING_CLASSES : '')
         }
       >
         <TransportOptionCard

@@ -72,6 +72,22 @@ function computeCategoryPressTriggerAt(
   return categoryIndex * partialBeat.intervalMs
 }
 
+/**
+ * M4-review#1 — 카테고리별 rippleTriggerAt 계산.
+ * partialBeat.rippleTargets 에 포함된 groupId 만 auto ripple 대상.
+ * 미포함 시 null 반환 (ripple 비활성, 수동 클릭 ripple 은 유지).
+ */
+function computeCategoryRippleTriggerAt(
+  step: PreviewStep,
+  groupId: AiCategoryId,
+): number | null {
+  if (step.id !== 'AI_APPLY') return null
+  const partialBeat = step.interactions.partialBeat
+  if (!partialBeat) return null
+  if (!partialBeat.rippleTargets.includes(groupId)) return null
+  return computeCategoryPressTriggerAt(step, groupId)
+}
+
 export function AiPanelContainer({
   step,
   aiInput,
@@ -168,8 +184,9 @@ export function AiPanelContainer({
               // AI_EXTRACT Step 등 AI_APPLY 가 아닌 Step 에서는 null (press 비활성).
               pressTriggerAt={computeCategoryPressTriggerAt(step, groupId)}
               // M4-02 — ripple 을 press 와 동일 offset 으로 자동 발동.
-              // 센터 ripple 이 press scale 애니와 동시에 퍼져 "눌리며 파장" 시각을 만든다.
-              rippleTriggerAt={computeCategoryPressTriggerAt(step, groupId)}
+              // M4-review#1 — rippleTargets SSOT 를 실제 소비. partialBeat.rippleTargets 에
+              // 포함된 카테고리만 auto ripple 이 발동된다 (data-driven 판정).
+              rippleTriggerAt={computeCategoryRippleTriggerAt(step, groupId)}
             />
           )}
         />
