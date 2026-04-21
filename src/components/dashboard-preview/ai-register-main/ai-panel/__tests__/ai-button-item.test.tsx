@@ -344,3 +344,86 @@ describe('AiButtonItem — #4 ripple (REQ-DASH3-025)', () => {
     )
   })
 })
+
+// ---------------------------------------------------------------------------
+// M4-02 — AiButtonItem 자동 ripple 트리거 (rippleTriggerAt 구동)
+// ---------------------------------------------------------------------------
+
+describe('AiButtonItem — M4-02 자동 ripple (rippleTriggerAt)', () => {
+  beforeEach(() => {
+    mockMatchMedia(false)
+    vi.useFakeTimers()
+  })
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  it('rippleTriggerAt=0 이면 mount 즉시 센터 ripple 이 자동 생성된다', () => {
+    const { container } = render(
+      <AiButtonItem
+        button={PENDING_BUTTON}
+        groupId="departure"
+        rippleTriggerAt={0}
+      />,
+    )
+    // mount 시점의 rAF/setTimeout 예약 처리.
+    act(() => {
+      vi.advanceTimersByTime(0)
+    })
+    expect(container.querySelectorAll('[data-ripple]').length).toBeGreaterThan(
+      0,
+    )
+  })
+
+  it('rippleTriggerAt=300 이면 300ms 경과 후에 자동 ripple 생성', () => {
+    const { container } = render(
+      <AiButtonItem
+        button={PENDING_BUTTON}
+        groupId="destination"
+        rippleTriggerAt={300}
+      />,
+    )
+
+    // 299ms: 아직 미생성
+    act(() => {
+      vi.advanceTimersByTime(299)
+    })
+    expect(container.querySelectorAll('[data-ripple]').length).toBe(0)
+
+    // 300ms: 자동 생성
+    act(() => {
+      vi.advanceTimersByTime(1)
+    })
+    expect(container.querySelectorAll('[data-ripple]').length).toBeGreaterThan(
+      0,
+    )
+  })
+
+  it('rippleTriggerAt=null 이면 자동 ripple 이 생성되지 않는다', () => {
+    const { container } = render(
+      <AiButtonItem
+        button={PENDING_BUTTON}
+        groupId="departure"
+        rippleTriggerAt={null}
+      />,
+    )
+    act(() => {
+      vi.advanceTimersByTime(1000)
+    })
+    expect(container.querySelectorAll('[data-ripple]').length).toBe(0)
+  })
+
+  it('unavailable 상태에서는 rippleTriggerAt 이 지정되어도 ripple 미생성', () => {
+    const { container } = render(
+      <AiButtonItem
+        button={UNAVAILABLE_BUTTON}
+        groupId="cargo"
+        rippleTriggerAt={0}
+      />,
+    )
+    act(() => {
+      vi.advanceTimersByTime(0)
+    })
+    expect(container.querySelectorAll('[data-ripple]').length).toBe(0)
+  })
+})

@@ -167,6 +167,9 @@ export function AiPanelContainer({
               // categoryIndex × intervalMs 만큼 offset 을 두고 자동 press 발동.
               // AI_EXTRACT Step 등 AI_APPLY 가 아닌 Step 에서는 null (press 비활성).
               pressTriggerAt={computeCategoryPressTriggerAt(step, groupId)}
+              // M4-02 — ripple 을 press 와 동일 offset 으로 자동 발동.
+              // 센터 ripple 이 press scale 애니와 동시에 퍼져 "눌리며 파장" 시각을 만든다.
+              rippleTriggerAt={computeCategoryPressTriggerAt(step, groupId)}
             />
           )}
         />

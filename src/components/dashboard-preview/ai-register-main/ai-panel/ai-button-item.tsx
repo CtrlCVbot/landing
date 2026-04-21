@@ -38,10 +38,12 @@
 
 'use client'
 
+import { useEffect } from 'react'
 import { Check } from 'lucide-react'
 
 import { useButtonPress } from '@/components/dashboard-preview/interactions/use-button-press'
 import { useRipple } from '@/components/dashboard-preview/interactions/use-ripple'
+import { useTriggerAt } from '@/components/dashboard-preview/interactions/use-trigger-at'
 import type { AiCategoryButton, AiCategoryId } from '@/lib/mock-data'
 import { cn } from '@/lib/utils'
 
@@ -54,6 +56,13 @@ export interface AiButtonItemProps {
   readonly groupId: AiCategoryId
   /** use-button-press 자동 press 트리거 (ms). null 또는 undefined 면 비활성. */
   readonly pressTriggerAt?: number | null
+  /**
+   * 자동 ripple 트리거 (ms) — M4-02 / REQ-DASH3-025.
+   * AI_APPLY partialBeat 에서 해당 카테고리의 category × intervalMs offset 에 발동.
+   * null/undefined 면 자동 ripple 비활성 (수동 클릭 ripple 만 동작).
+   * unavailable 상태에서는 무시된다.
+   */
+  readonly rippleTriggerAt?: number | null
   /** 수동 클릭 시 호출되는 콜백. unavailable 상태에선 호출되지 않는다. */
   readonly onApply?: (buttonId: string) => void
 }
@@ -87,6 +96,7 @@ export function AiButtonItem({
   button,
   groupId,
   pressTriggerAt = null,
+  rippleTriggerAt = null,
   onApply,
 }: AiButtonItemProps) {
   const { id, label, displayValue, status, unavailableReason } = button
@@ -99,7 +109,24 @@ export function AiButtonItem({
     triggerAt: isUnavailable ? null : pressTriggerAt ?? null,
     pressDurationMs: 150,
   })
-  const { ripples, trigger: triggerRipple } = useRipple({ durationMs: 300 })
+  const { ripples, trigger: triggerRipple, triggerCenter: triggerCenterRipple } =
+    useRipple({ durationMs: 300 })
+
+  // M4-02 — rippleTriggerAt 기반 자동 센터 ripple.
+  // unavailable 이면 항상 비활성. active 는 pending/applied 양쪽 모두 허용.
+  const autoRippleFired = useTriggerAt({
+    active: !isUnavailable,
+    triggerAt: isUnavailable ? null : rippleTriggerAt ?? null,
+  })
+
+  useEffect(() => {
+    if (autoRippleFired) {
+      // jsdom 환경 대응: getBoundingClientRect 가 0 이므로 size 생략.
+      // 실제 브라우저에서는 centered ripple 의 절대 좌표 정확도가 크게 중요하지 않다
+      // (button width/height 의 중심은 대략 1:1 비율이며, RIPPLE_SIZE_PX=120 이 오버랩 커버).
+      triggerCenterRipple()
+    }
+  }, [autoRippleFired, triggerCenterRipple])
 
   const ariaLabel = displayValue ? `${label} — ${displayValue}` : label
 
