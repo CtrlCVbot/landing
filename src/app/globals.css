@@ -1,0 +1,44 @@
+@import 'tailwindcss';
+
+/* Tailwind v4 content detection — 모노레포/Turbopack 환경에서 자동 감지 실패 방지 */
+@source "../app/**/*.{ts,tsx,mdx}";
+@source "../components/**/*.{ts,tsx}";
+@source "../lib/**/*.{ts,tsx}";
+@source "../hooks/**/*.{ts,tsx}";
+
+@theme inline {
+  --color-background: #0a0a0a;
+  --color-foreground: #ffffff;
+  --color-card: oklch(0.15 0.01 260 / 0.5);
+  --color-card-foreground: #e5e7eb;
+  --color-border: #1f2937;
+  --color-muted: #374151;
+  --color-muted-foreground: #9ca3af;
+  --color-accent-start: #9333ea;
+  --color-accent-end: #3b82f6;
+  --color-accent: #8b5cf6;
+  --color-accent-foreground: #ffffff;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --font-sans: 'Inter', 'Pretendard', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background-color: oklch(0.5 0.2 280 / 0.4);
+    color: #ffffff;
+  }
+}

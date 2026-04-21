@@ -1,0 +1,34 @@
+# Next.js
+/.next/
+/out/
+
+# Build outputs
+/dist/
+/build/
+
+# Dependencies
+/node_modules/
+.pnpm-store/
+
+# Testing
+/coverage/
+*.lcov
+
+# Turbo
+.turbo/
+
+# Environment
+.env*.local
+
+# IDE
+.vscode/
+.idea/
+
+# Misc
+*.log
+.DS_Store
+Thumbs.db
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
