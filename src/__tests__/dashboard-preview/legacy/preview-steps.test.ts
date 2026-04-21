@@ -2,9 +2,18 @@ import { describe, it, expect } from 'vitest'
 import { PREVIEW_STEPS } from '@/lib/preview-steps'
 import type { PreviewStep, StepId } from '@/lib/preview-steps'
 
+/**
+ * Legacy 테스트 — Phase 3 4단계 기준으로 갱신됨 (M1-02, 방안 A).
+ *
+ * 원본은 Phase 1/2 5단계(INITIAL ~ COMPLETE, total 18000ms) 기준이었으나,
+ * Phase 3 M1-02 에서 PREVIEW_STEPS 가 4단계(INITIAL ~ AI_APPLY, total 5500ms) 로 축소됨.
+ * legacy 소비자(ai-panel-preview.tsx / form-preview.tsx) 는 step.aiPanelState / step.formState
+ * alias 를 통해 계속 동작한다.
+ */
+
 describe('PREVIEW_STEPS', () => {
-  it('should have exactly 5 steps', () => {
-    expect(PREVIEW_STEPS).toHaveLength(5)
+  it('should have exactly 4 steps (Phase 3 축소)', () => {
+    expect(PREVIEW_STEPS).toHaveLength(4)
   })
 
   it('should have id, label, duration, aiPanelState, formState on each step', () => {
@@ -28,7 +37,6 @@ describe('PREVIEW_STEPS', () => {
       'AI_INPUT',
       'AI_EXTRACT',
       'AI_APPLY',
-      'COMPLETE',
     ]
 
     it('should have step IDs in correct order', () => {
@@ -38,15 +46,9 @@ describe('PREVIEW_STEPS', () => {
   })
 
   describe('duration', () => {
-    it('should have total duration between 16000ms and 22000ms', () => {
+    it('should have total duration of 5500ms (Phase 3 PRD §6-1)', () => {
       const total = PREVIEW_STEPS.reduce((sum, s) => sum + s.duration, 0)
-      expect(total).toBeGreaterThanOrEqual(16000)
-      expect(total).toBeLessThanOrEqual(22000)
-    })
-
-    it('should have total duration of 18000ms', () => {
-      const total = PREVIEW_STEPS.reduce((sum, s) => sum + s.duration, 0)
-      expect(total).toBe(18000)
+      expect(total).toBe(5500)
     })
 
     it('should have positive duration for each step', () => {
@@ -105,7 +107,7 @@ describe('PREVIEW_STEPS', () => {
       expect(aiInput.aiPanelState.buttons).toEqual([])
     })
 
-    it('should have empty formState (same as INITIAL)', () => {
+    it('should have empty formState (same as INITIAL — companyManager 제외 모두 false)', () => {
       const aiInput = PREVIEW_STEPS[1]
       expect(aiInput.formState.filledCards).toEqual([])
       expect(aiInput.formState.highlightedCard).toBeNull()
@@ -114,26 +116,18 @@ describe('PREVIEW_STEPS', () => {
   })
 
   describe('AI_EXTRACT step', () => {
-    it('should have resultReady extractState', () => {
+    it('should have loading extractState (Phase 3: spinner)', () => {
       const aiExtract = PREVIEW_STEPS[2]
-      expect(aiExtract.aiPanelState.extractState).toBe('resultReady')
+      expect(aiExtract.aiPanelState.extractState).toBe('loading')
     })
 
-    it('should have 4 buttons all with pending status', () => {
+    it('should have empty buttons array (Phase 3: loading 중 버튼 미노출)', () => {
       const aiExtract = PREVIEW_STEPS[2]
-      expect(aiExtract.aiPanelState.buttons).toHaveLength(4)
-      for (const button of aiExtract.aiPanelState.buttons) {
-        expect(button.status).toBe('pending')
-      }
+      // Phase 3: AI_EXTRACT 는 loading 상태, 결과 버튼은 AI_APPLY 에서만 applied 로 노출
+      expect(aiExtract.aiPanelState.buttons).toEqual([])
     })
 
-    it('should have buttons for departure, destination, cargo, fare', () => {
-      const aiExtract = PREVIEW_STEPS[2]
-      const ids = aiExtract.aiPanelState.buttons.map((b) => b.id)
-      expect(ids).toEqual(['departure', 'destination', 'cargo', 'fare'])
-    })
-
-    it('should have empty formState (same as INITIAL)', () => {
+    it('should have empty formState (same as INITIAL — companyManager 제외 모두 false)', () => {
       const aiExtract = PREVIEW_STEPS[2]
       expect(aiExtract.formState.filledCards).toEqual([])
       expect(aiExtract.formState.highlightedCard).toBeNull()
@@ -142,12 +136,18 @@ describe('PREVIEW_STEPS', () => {
   })
 
   describe('AI_APPLY step', () => {
-    it('should have all buttons with applied status', () => {
+    it('should have all 4 buttons with applied status', () => {
       const aiApply = PREVIEW_STEPS[3]
       expect(aiApply.aiPanelState.buttons).toHaveLength(4)
       for (const button of aiApply.aiPanelState.buttons) {
         expect(button.status).toBe('applied')
       }
+    })
+
+    it('should have buttons for departure, destination, cargo, fare', () => {
+      const aiApply = PREVIEW_STEPS[3]
+      const ids = aiApply.aiPanelState.buttons.map((b) => b.id)
+      expect(ids).toEqual(['departure', 'destination', 'cargo', 'fare'])
     })
 
     it('should have 4 or more filledCards', () => {
@@ -163,31 +163,6 @@ describe('PREVIEW_STEPS', () => {
     it('should have null highlightedCard', () => {
       const aiApply = PREVIEW_STEPS[3]
       expect(aiApply.formState.highlightedCard).toBeNull()
-    })
-  })
-
-  describe('COMPLETE step', () => {
-    it('should have all buttons with applied status', () => {
-      const complete = PREVIEW_STEPS[4]
-      expect(complete.aiPanelState.buttons).toHaveLength(4)
-      for (const button of complete.aiPanelState.buttons) {
-        expect(button.status).toBe('applied')
-      }
-    })
-
-    it('should have 4 or more filledCards', () => {
-      const complete = PREVIEW_STEPS[4]
-      expect(complete.formState.filledCards.length).toBeGreaterThanOrEqual(4)
-    })
-
-    it('should have null highlightedCard', () => {
-      const complete = PREVIEW_STEPS[4]
-      expect(complete.formState.highlightedCard).toBeNull()
-    })
-
-    it('should have estimateAmount matching mock-data (Phase 3: 850000)', () => {
-      const complete = PREVIEW_STEPS[4]
-      expect(complete.formState.estimateAmount).toBe(850000)
     })
   })
 })

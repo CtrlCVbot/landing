@@ -32,9 +32,9 @@ describe('useAutoPlay', () => {
     })
   })
 
-  // TC-011: Step progression
+  // TC-011: Step progression (Phase 3 4단계, INITIAL duration = 500ms)
   describe('TC-011: step progression', () => {
-    it('advances from step 0 to step 1 after INITIAL duration (3000ms)', () => {
+    it('advances from step 0 to step 1 after INITIAL duration (500ms)', () => {
       const { result } = renderHook(() =>
         useAutoPlay({ steps: PREVIEW_STEPS, enabled: true }),
       )
@@ -42,47 +42,41 @@ describe('useAutoPlay', () => {
       expect(result.current.currentStep).toBe(0)
 
       act(() => {
-        vi.advanceTimersByTime(3000)
+        vi.advanceTimersByTime(500)
       })
 
       expect(result.current.currentStep).toBe(1)
     })
   })
 
-  // TC-012: Loop back to step 0 after COMPLETE
+  // TC-012: Loop back to step 0 after AI_APPLY (Phase 3: COMPLETE 제거됨, last = AI_APPLY)
   describe('TC-012: loop', () => {
-    it('loops from step 4 (COMPLETE) back to step 0 after its duration', () => {
+    it('loops from step 3 (AI_APPLY) back to step 0 after its duration', () => {
       const { result } = renderHook(() =>
         useAutoPlay({ steps: PREVIEW_STEPS, enabled: true }),
       )
 
-      // step 0 (INITIAL): 3000ms
+      // step 0 (INITIAL): 500ms
       act(() => {
-        vi.advanceTimersByTime(3000)
+        vi.advanceTimersByTime(500)
       })
       expect(result.current.currentStep).toBe(1)
 
-      // step 1 (AI_INPUT): 4000ms
+      // step 1 (AI_INPUT): 1500ms
       act(() => {
-        vi.advanceTimersByTime(4000)
+        vi.advanceTimersByTime(1500)
       })
       expect(result.current.currentStep).toBe(2)
 
-      // step 2 (AI_EXTRACT): 4000ms
+      // step 2 (AI_EXTRACT): 1000ms
       act(() => {
-        vi.advanceTimersByTime(4000)
+        vi.advanceTimersByTime(1000)
       })
       expect(result.current.currentStep).toBe(3)
 
-      // step 3 (AI_APPLY): 4000ms
+      // step 3 (AI_APPLY): 2500ms -> loops to 0
       act(() => {
-        vi.advanceTimersByTime(4000)
-      })
-      expect(result.current.currentStep).toBe(4)
-
-      // step 4 (COMPLETE): 3000ms -> loops to 0
-      act(() => {
-        vi.advanceTimersByTime(3000)
+        vi.advanceTimersByTime(2500)
       })
       expect(result.current.currentStep).toBe(0)
     })
@@ -221,14 +215,14 @@ describe('useAutoPlay', () => {
     })
   })
 
-  // TC-027: enabled=false — static mode
+  // TC-027: enabled=false — static mode (Phase 3: last index = length - 1 = 3)
   describe('TC-027: enabled=false', () => {
-    it('sets currentStep=4 and isPlaying=false when disabled', () => {
+    it('sets currentStep to last index and isPlaying=false when disabled', () => {
       const { result } = renderHook(() =>
         useAutoPlay({ steps: PREVIEW_STEPS, enabled: false }),
       )
 
-      expect(result.current.currentStep).toBe(4)
+      expect(result.current.currentStep).toBe(PREVIEW_STEPS.length - 1)
       expect(result.current.isPlaying).toBe(false)
     })
 
@@ -241,7 +235,7 @@ describe('useAutoPlay', () => {
         vi.advanceTimersByTime(10000)
       })
 
-      expect(result.current.currentStep).toBe(4)
+      expect(result.current.currentStep).toBe(PREVIEW_STEPS.length - 1)
       expect(result.current.isPlaying).toBe(false)
     })
   })

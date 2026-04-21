@@ -32,7 +32,14 @@ const RESUME_DELAY: Readonly<Record<PauseSource, number>> = {
   click: 5000,
 } as const
 
-const COMPLETE_STEP_INDEX = 4
+/**
+ * 비활성 모드(prefers-reduced-motion / mobile)에서 고정 노출될 Step 인덱스.
+ * Phase 3 에서 PREVIEW_STEPS 가 4단계로 축소되면서(Step.length - 1 = 3) 동적으로 계산한다.
+ * Phase 1/2 의 5단계(index 4) 가정을 깨지 않도록 런타임 길이를 기준으로 삼는다.
+ */
+function getLastStepIndex(length: number): number {
+  return Math.max(0, length - 1)
+}
 
 // ---------------------------------------------------------------------------
 // Hook
@@ -44,7 +51,7 @@ export function useAutoPlay({
   enabled = true,
 }: UseAutoPlayOptions): UseAutoPlayReturn {
   const [currentStep, setCurrentStep] = useState(
-    enabled ? initialStep : COMPLETE_STEP_INDEX,
+    enabled ? initialStep : getLastStepIndex(steps.length),
   )
   const [isPlaying, setIsPlaying] = useState(enabled)
 

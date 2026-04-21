@@ -30,10 +30,10 @@ interface DashboardPreviewProps {
 
 /**
  * HitArea 클릭 시 useAutoPlay.goToStep 으로 점프할 Step 인덱스 매핑.
- * - ai-input → AI_INPUT (1)
- * - extract-button → AI_EXTRACT (2)
- * - result-* → AI_APPLY (3)
- * - result-fare → COMPLETE (4)
+ * Phase 3 4단계 기준 (COMPLETE 제거됨).
+ *  - ai-input → AI_INPUT (1)
+ *  - extract-button → AI_EXTRACT (2)
+ *  - result-* → AI_APPLY (3)
  */
 const AREA_TO_STEP: Readonly<Record<string, number>> = {
   'ai-input': 1,
@@ -41,7 +41,7 @@ const AREA_TO_STEP: Readonly<Record<string, number>> = {
   'result-departure': 3,
   'result-destination': 3,
   'result-cargo': 3,
-  'result-fare': 4,
+  'result-fare': 3,
 } as const
 
 // ---------------------------------------------------------------------------
