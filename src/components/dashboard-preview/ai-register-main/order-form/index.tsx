@@ -232,6 +232,11 @@ export function OrderFormContainer({ step, formData }: OrderFormContainerProps) 
           vehicle={formData.vehicle}
           cargo={formData.cargo}
           active={partial.cargo}
+          dropdownBeat={
+            step.id === 'AI_APPLY'
+              ? step.interactions.partialBeat?.dropdownBeat
+              : undefined
+          }
         />
       </div>
 

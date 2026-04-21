@@ -88,6 +88,18 @@ export interface AiApplyPartialBeat {
     readonly value: string
     readonly delay: number
   }>
+  /**
+   * #7 dropdown 펼침 연출 (REQ-DASH3-027).
+   * CargoInfoForm 내 `vehicle-type` / `weight` select 중 하나를 600ms 간 펼쳐 하이라이트.
+   * cargo 카테고리 offset(600ms) 이후에 발동되어야 자연스럽다.
+   *
+   * M3-review#1 — 원래 CargoInfoForm 이 prop 을 받도록 M3-06 에서 선언되었으나,
+   * OrderFormContainer 에서 주입이 누락되어 연출이 실질 비활성이던 것을 이 필드로 실활성한다.
+   */
+  readonly dropdownBeat?: {
+    readonly targetId: 'vehicle-type' | 'weight'
+    readonly triggerAt: number
+  }
 }
 
 /** AI_APPLY allBeat (안 B) — 전체 적용 비트 (토글/자동배차/정산/숫자 롤링) */
@@ -529,6 +541,12 @@ const AI_APPLY_STEP: PreviewStep = (() => {
       pressTargets: PARTIAL_PRESS_TARGETS,
       rippleTargets: PARTIAL_RIPPLE_TARGETS,
       fillInFields: PARTIAL_FILL_IN_FIELDS,
+      // M3-review#1 — #7 dropdown 연출 (REQ-DASH3-027) 실활성.
+      // cargo 카테고리 offset(PARTIAL_INTERVAL_MS * 2 = 600ms) 이후 발동.
+      dropdownBeat: {
+        targetId: 'vehicle-type',
+        triggerAt: PARTIAL_INTERVAL_MS * 2,
+      },
     },
     allBeat: {
       durationMs: ALL_BEAT_MS,

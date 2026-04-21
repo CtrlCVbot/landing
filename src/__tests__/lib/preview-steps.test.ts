@@ -130,6 +130,17 @@ describe('PREVIEW_STEPS (Phase 3 4단계)', () => {
       }
     })
 
+    // M3-review#1 — dropdownBeat 존재 검증 (REQ-DASH3-027 실활성)
+    it('AI_APPLY.interactions.partialBeat.dropdownBeat 존재 (vehicle-type, cargo 카테고리 offset 이후 triggerAt)', () => {
+      const aiApply = PREVIEW_STEPS[3]
+      const partial = aiApply.interactions.partialBeat
+      expect(partial?.dropdownBeat).toBeDefined()
+      expect(partial?.dropdownBeat?.targetId).toBe('vehicle-type')
+      // cargo 카테고리는 index 2 × 300 = 600ms — dropdown 은 그 이후에 발동되어야 한다
+      expect(typeof partial?.dropdownBeat?.triggerAt).toBe('number')
+      expect(partial?.dropdownBeat?.triggerAt).toBeGreaterThanOrEqual(600)
+    })
+
     it('AI_APPLY.interactions.allBeat 구조 (durationMs 800, toggle stroke + number rolling)', () => {
       const aiApply = PREVIEW_STEPS[3]
       const all = aiApply.interactions.allBeat

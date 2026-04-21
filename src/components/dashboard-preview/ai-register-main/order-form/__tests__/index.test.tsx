@@ -19,8 +19,15 @@
  *  - AI_APPLY Step 에서 partialBeat / allBeat 기반 active / trigger 가 자식에 전달되는지 검증.
  */
 
-import { render, screen } from '@testing-library/react'
-import { describe, it, expect } from 'vitest'
+import { act, render, screen } from '@testing-library/react'
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  it,
+  expect,
+  vi,
+} from 'vitest'
 
 import {
   OrderFormContainer,
@@ -471,5 +478,70 @@ describe('stripTransportOptionPrefix (M3-review#3)', () => {
     it('prefix 만 있고 key 가 비어있으면 null 반환', () => {
       expect(stripTransportOptionPrefix('transport-option-')).toBeNull()
     })
+  })
+})
+
+// ===========================================================================
+// M3-review#1 — CargoInfoForm dropdownBeat 주입 검증 (REQ-DASH3-027 실활성)
+// ===========================================================================
+
+describe('OrderFormContainer CargoInfoForm dropdownBeat 주입 (M3-review#1)', () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  it('INITIAL: dropdownBeat 미지정 → 모든 cargo select 가 닫힘 상태 (data-expanded="false")', () => {
+    render(
+      <OrderFormContainer step={INITIAL_STEP} formData={PREVIEW_MOCK_DATA.formData} />,
+    )
+    expect(screen.getByTestId('cargo-vehicle-type-trigger')).toHaveAttribute(
+      'data-expanded',
+      'false',
+    )
+    expect(screen.getByTestId('cargo-weight-trigger')).toHaveAttribute(
+      'data-expanded',
+      'false',
+    )
+  })
+
+  it('AI_APPLY: 초기 상태에서는 아직 trigger 전 (모든 select 닫힘)', () => {
+    render(
+      <OrderFormContainer step={AI_APPLY_STEP} formData={PREVIEW_MOCK_DATA.formData} />,
+    )
+    // triggerAt=600ms — 초기 render 에는 아직 펼치지 않은 상태
+    expect(screen.getByTestId('cargo-vehicle-type-trigger')).toHaveAttribute(
+      'data-expanded',
+      'false',
+    )
+  })
+
+  it('AI_APPLY: triggerAt(600ms) 경과 후 vehicle-type select 가 펼쳐진다 (data-expanded="true")', () => {
+    render(
+      <OrderFormContainer step={AI_APPLY_STEP} formData={PREVIEW_MOCK_DATA.formData} />,
+    )
+    act(() => {
+      vi.advanceTimersByTime(600)
+    })
+    expect(screen.getByTestId('cargo-vehicle-type-trigger')).toHaveAttribute(
+      'data-expanded',
+      'true',
+    )
+  })
+
+  it('AI_APPLY: trigger 발동 후 weight select 는 계속 닫힘 (targetId="vehicle-type" 만 펼침)', () => {
+    render(
+      <OrderFormContainer step={AI_APPLY_STEP} formData={PREVIEW_MOCK_DATA.formData} />,
+    )
+    act(() => {
+      vi.advanceTimersByTime(600)
+    })
+    expect(screen.getByTestId('cargo-weight-trigger')).toHaveAttribute(
+      'data-expanded',
+      'false',
+    )
   })
 })
