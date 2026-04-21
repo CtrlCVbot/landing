@@ -148,15 +148,16 @@ describe('DashboardPreview', () => {
   })
 
   // -------------------------------------------------------------------------
-  // REQ-DASH-023: Tablet scaleFactor=0.38
+  // REQ-DASH-023/024 (M1-04): Tablet scaleFactor=0.40
+  //   기존 0.38 → 0.40 로 상향. Phase 3 REQ-DASH3-053 연동 (Tablet 가독성 개선).
   // -------------------------------------------------------------------------
 
-  it('REQ-DASH-023: tablet uses scaleFactor 0.38', () => {
+  it('REQ-DASH-023: tablet uses scaleFactor 0.40', () => {
     setTablet()
     render(<DashboardPreview />)
 
     const scaledInner = screen.getByTestId('scaled-content-inner')
-    expect(scaledInner.style.transform).toBe('scale(0.38)')
+    expect(scaledInner.style.transform).toBe('scale(0.4)')
   })
 
   // -------------------------------------------------------------------------

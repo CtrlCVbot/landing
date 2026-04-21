@@ -4,9 +4,11 @@ import { useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import { previewFadeIn } from '@/lib/motion'
+import { PREVIEW_MOCK_DATA } from '@/lib/mock-data'
 import { PREVIEW_STEPS } from '@/lib/preview-steps'
 import { useMediaQuery } from '@/hooks/use-media-query'
 import { useAutoPlay } from './use-auto-play'
+import { useDashV3 } from './use-dash-v3'
 import { useInteractiveMode } from './use-interactive-mode'
 import { PreviewChrome } from './preview-chrome'
 import { StepIndicator } from './step-indicator'
@@ -14,6 +16,7 @@ import { AiPanelPreview } from './ai-panel-preview'
 import { FormPreview } from './form-preview'
 import { MobileCardView } from './mobile-card-view'
 import { InteractiveOverlay } from './interactive-overlay'
+import { AiRegisterMain } from './ai-register-main'
 import { getHitAreas, type HitAreaConfig } from './hit-areas'
 
 // ---------------------------------------------------------------------------
@@ -53,6 +56,9 @@ export function DashboardPreview({ className }: DashboardPreviewProps) {
   const isMobile = useMediaQuery('(max-width: 767px)')
   const isTablet = useMediaQuery('(min-width: 768px) and (max-width: 1023px)')
 
+  // T-DASH3-M1-04: Phase 3 Feature flag (env NEXT_PUBLIC_DASH_V3=phase3|spike 또는 ?dashV3=1)
+  const dashV3Enabled = useDashV3()
+
   const interactive = useInteractiveMode({
     enabled: !isMobile && !prefersReducedMotion,
   })
@@ -73,7 +79,8 @@ export function DashboardPreview({ className }: DashboardPreviewProps) {
   }, [interactive.mode, pause, resume])
 
   const step = PREVIEW_STEPS[currentStep]
-  const scaleFactor = isTablet ? 0.38 : 0.45
+  // REQ-DASH-023/024 (M1-04): Tablet scaleFactor 0.38 → 0.40 (가독성 개선)
+  const scaleFactor = isTablet ? 0.4 : 0.45
 
   if (isMobile) {
     return (
@@ -136,10 +143,15 @@ export function DashboardPreview({ className }: DashboardPreviewProps) {
     >
       <div className="relative">
         <PreviewChrome scaleFactor={scaleFactor}>
-          <div className="flex h-full">
-            <AiPanelPreview aiPanelState={step.aiPanelState} />
-            <FormPreview formState={step.formState} className="flex-1" />
-          </div>
+          {/* T-DASH3-M1-04: Phase 3 Feature flag 분기. */}
+          {dashV3Enabled ? (
+            <AiRegisterMain step={step} mockData={PREVIEW_MOCK_DATA} />
+          ) : (
+            <div className="flex h-full">
+              <AiPanelPreview aiPanelState={step.aiPanelState} />
+              <FormPreview formState={step.formState} className="flex-1" />
+            </div>
+          )}
         </PreviewChrome>
         {interactive.mode === 'interactive' && (
           <InteractiveOverlay
