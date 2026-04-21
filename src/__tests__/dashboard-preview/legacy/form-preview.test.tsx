@@ -12,7 +12,8 @@ const EMPTY_FORM_STATE: FormState = {
 const FILLED_FORM_STATE: FormState = {
   filledCards: ['cargoInfo', 'location-departure', 'location-destination', 'estimate'],
   highlightedCard: null,
-  estimateAmount: 420000,
+  // Phase 3 mock-data.ts: estimate.amount = 850000 (SSOT)
+  estimateAmount: 850000,
 }
 
 describe('FormPreview', () => {
@@ -120,39 +121,39 @@ describe('FormPreview', () => {
       expect(cargoCard.textContent).toContain('5톤')
     })
 
-    it('shows "파레트 적재 공산품" in CargoInfo card', () => {
+    it('shows cargo name from mock-data in CargoInfo card (Phase 3: "전자제품")', () => {
       render(<FormPreview formState={FILLED_FORM_STATE} />)
 
       const cargoCard = screen.getByTestId('card-cargoInfo')
-      expect(cargoCard.textContent).toContain('파레트 적재 공산품')
+      expect(cargoCard.textContent).toContain('전자제품')
     })
 
-    it('shows "서울 강남구 물류센터" in departure location card', () => {
+    it('shows pickup company from mock-data in departure location card (Phase 3: "아이다스로지스")', () => {
       render(<FormPreview formState={FILLED_FORM_STATE} />)
 
       const locationCard = screen.getByTestId('card-location-departure')
-      expect(locationCard.textContent).toContain('서울 강남구 물류센터')
+      expect(locationCard.textContent).toContain('아이다스로지스')
     })
 
-    it('shows "대전 유성구 산업단지" in destination location card', () => {
+    it('shows delivery company from mock-data in destination location card (Phase 3: "부산물류허브")', () => {
       render(<FormPreview formState={FILLED_FORM_STATE} />)
 
       const locationCard = screen.getByTestId('card-location-destination')
-      expect(locationCard.textContent).toContain('대전 유성구 산업단지')
+      expect(locationCard.textContent).toContain('부산물류허브')
     })
 
-    it('shows "420,000" in estimate card amount', () => {
+    it('shows formatted estimate amount in estimate card (Phase 3: "850,000")', () => {
       render(<FormPreview formState={FILLED_FORM_STATE} />)
 
       const estimateCard = screen.getByTestId('card-estimate')
-      expect(estimateCard.textContent).toContain('420,000')
+      expect(estimateCard.textContent).toContain('850,000')
     })
 
-    it('shows "160" in estimate card distance', () => {
+    it('shows distance from mock-data in estimate card (Phase 3: "360")', () => {
       render(<FormPreview formState={FILLED_FORM_STATE} />)
 
       const estimateCard = screen.getByTestId('card-estimate')
-      expect(estimateCard.textContent).toContain('160')
+      expect(estimateCard.textContent).toContain('360')
     })
   })
 

@@ -155,9 +155,9 @@ describe('PREVIEW_STEPS', () => {
       expect(aiApply.formState.filledCards.length).toBeGreaterThanOrEqual(4)
     })
 
-    it('should have estimateAmount of 420000', () => {
+    it('should have estimateAmount matching mock-data (Phase 3: 850000)', () => {
       const aiApply = PREVIEW_STEPS[3]
-      expect(aiApply.formState.estimateAmount).toBe(420000)
+      expect(aiApply.formState.estimateAmount).toBe(850000)
     })
 
     it('should have null highlightedCard', () => {
@@ -185,9 +185,9 @@ describe('PREVIEW_STEPS', () => {
       expect(complete.formState.highlightedCard).toBeNull()
     })
 
-    it('should have estimateAmount of 420000', () => {
+    it('should have estimateAmount matching mock-data (Phase 3: 850000)', () => {
       const complete = PREVIEW_STEPS[4]
-      expect(complete.formState.estimateAmount).toBe(420000)
+      expect(complete.formState.estimateAmount).toBe(850000)
     })
   })
 })

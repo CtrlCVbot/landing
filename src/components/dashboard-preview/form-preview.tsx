@@ -190,7 +190,10 @@ export function FormPreview({ formState, className }: FormPreviewProps) {
               key={key}
               className={cn(
                 'rounded-full px-2 py-0.5 text-[10px]',
-                formData.options.includes(key)
+                // Phase 3: formData.options 는 Record<string, boolean>.
+                // legacy TRANSPORT_OPTIONS 키는 'direct' | 'forklift' | 'roundtrip' | 'urgent' 인데
+                // Phase 3 스키마에는 'direct' / 'forklift' 만 매칭된다 (roundtrip/urgent는 Phase 1/2 전용).
+                (formData.options as unknown as Record<string, boolean | undefined>)[key] === true
                   ? 'bg-purple-500/20 text-purple-300'
                   : 'bg-gray-800 text-gray-500',
               )}

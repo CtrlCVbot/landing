@@ -90,7 +90,10 @@ describe('PREVIEW_MOCK_DATA', () => {
     })
 
     it('should have at least one option', () => {
-      expect(PREVIEW_MOCK_DATA.formData.options.length).toBeGreaterThanOrEqual(1)
+      // Phase 3 이후 formData.options 는 Record<string, boolean> (8개 불리언 토글).
+      // 최소 1개 이상 true 인 옵션이 존재하면 legacy "at least one option" 계약을 충족.
+      const activeCount = Object.values(PREVIEW_MOCK_DATA.formData.options).filter(Boolean).length
+      expect(activeCount).toBeGreaterThanOrEqual(1)
     })
 
     it('should have estimate with distance and amount', () => {
@@ -115,8 +118,11 @@ describe('PREVIEW_MOCK_DATA', () => {
       'estimate-info',
     ] as const
 
-    it('should have all 11 required tooltip keys', () => {
-      expect(Object.keys(PREVIEW_MOCK_DATA.tooltips)).toHaveLength(11)
+    it('should have all 11 required tooltip keys (Phase 3 이후 추가 key 허용)', () => {
+      // Phase 3 에서 히트 영역 19~20개 대응 tooltip 16개가 추가되어 총 23개가 되었다.
+      // legacy 계약은 "11개 key가 존재"하는 것이지 "정확히 11개"가 아니므로, 포함 여부만 검증.
+      const legacyKeyCount = Object.keys(PREVIEW_MOCK_DATA.tooltips).length
+      expect(legacyKeyCount).toBeGreaterThanOrEqual(11)
     })
 
     it('should contain every required tooltip key', () => {

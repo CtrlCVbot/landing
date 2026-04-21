@@ -115,14 +115,18 @@ describe('MobileCardView', () => {
 
     expect(screen.getByText('등록 완료')).toBeInTheDocument()
 
+    // Phase 3 mock-data.ts (SSOT §4-3):
+    //  - pickup.company = '아이다스로지스' → split(' ')[0] → '아이다스로지스'
+    //  - delivery.company = '부산물류허브' → split(' ')[0] → '부산물류허브'
+    //  - estimate.amount = 850000 → toLocaleString() → '850,000'
     // Route summary
-    expect(screen.getByText('서울 → 대전')).toBeInTheDocument()
+    expect(screen.getByText('아이다스로지스 → 부산물류허브')).toBeInTheDocument()
 
     // Vehicle summary
     expect(screen.getByText('카고 5톤')).toBeInTheDocument()
 
     // Fare summary
-    expect(screen.getByText('420,000원')).toBeInTheDocument()
+    expect(screen.getByText('850,000원')).toBeInTheDocument()
 
     // Status badge
     expect(screen.getByText('완료')).toBeInTheDocument()
