@@ -48,6 +48,13 @@ import { AiResultButtons } from './ai-result-buttons'
 import { AiTabBar } from './ai-tab-bar'
 import { AiWarningBadges } from './ai-warning-badges'
 
+/**
+ * M4 review#3 — #2 focus-walk 전진 간격 (ms).
+ * AI_APPLY partialBeat.intervalMs(300) 보다 약간 넉넉하게 설정하여 press 비트와
+ * 겹치지 않도록 조율한다 (REQ-DASH3-021).
+ */
+const FOCUS_WALK_INTERVAL_MS = 400
+
 export interface AiPanelContainerProps {
   readonly step: PreviewStep
   readonly aiInput: PreviewMockData['aiInput']
@@ -113,7 +120,7 @@ export function AiPanelContainer({
   // -------------------------------------------------------------------------
   const focusWalkTargets = step.interactions.focusWalk ?? []
   const { currentTargetId: focusedTargetId } = useFocusWalk(focusWalkTargets, {
-    intervalMs: 400,
+    intervalMs: FOCUS_WALK_INTERVAL_MS,
     active: focusWalkTargets.length > 0,
   })
 
