@@ -65,13 +65,11 @@ vi.mock('framer-motion', () => ({
 //   stub 이 실제 AiRegisterMain 을 렌더링한다.
 // - 실제 dynamic + ssr:false 옵션 자체는 소스 코드 레벨에서 `Dynamic import 청크 로드 회피`
 //   describe 블록이 별도로 검증한다.
+type DynamicLoader = () => Promise<{ default: React.ComponentType<unknown> }>
 vi.mock('next/dynamic', () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const cache = new WeakMap<Function, React.ComponentType<any>>()
+  const cache = new WeakMap<DynamicLoader, React.ComponentType<unknown>>()
   return {
-    default: (
-      loader: () => Promise<{ default: React.ComponentType<unknown> }>,
-    ) => {
+    default: (loader: DynamicLoader) => {
       loader().then((mod) => {
         cache.set(loader, mod.default)
       })

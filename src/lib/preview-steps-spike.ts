@@ -172,7 +172,6 @@ export function logSpikeStep(stepId: SpikeStepId, phase: 'enter' | 'exit'): void
   if (typeof performance === 'undefined') return
 
   const timestamp = performance.now().toFixed(2)
-  // eslint-disable-next-line no-console
   console.info(`[spike][${timestamp}ms] ${stepId} ${phase}`)
 }
 
