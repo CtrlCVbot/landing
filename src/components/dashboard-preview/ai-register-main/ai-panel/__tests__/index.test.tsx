@@ -1,9 +1,10 @@
 /**
- * T-DASH3-M1-03 + M2-01 — AiPanelContainer 단위 테스트
+ * T-DASH3-M1-03 + M2-01 + M3-11 — AiPanelContainer 단위 테스트
  *
  * TC
  *  - TC-DASH3-INT-GRID:     AiPanel 380px 고정 + border-r + bg-black/40 (M1-03)
  *  - TC-DASH3-INT-AIPANEL:  자식 7 컴포넌트 주입 검증 (M2-01)
+ *  - TC-DASH3-INT-APPLY-2BEAT: AI_APPLY partialBeat 카테고리 순차 press (M3-11)
  *
  * REQ
  *  - REQ-DASH3-050 (AiPanel 380px 고정)
@@ -12,6 +13,7 @@
  *  - REQ-DASH3-003 (AiPanel 자식 컴포넌트 조립)
  *  - REQ-DASH3-020 (#1 fake-typing 통합)
  *  - REQ-DASH3-021 (#3 button-press 자동 트리거)
+ *  - REQ-DASH3-041 / 042 / 043 (AI_APPLY 2단 구조 — partialBeat 카테고리 순차 press)
  *
  * 범위
  *  - shell 레이아웃 + aria-label 검증 (M1-03 유지)
@@ -23,10 +25,11 @@
  *    * AiResultButtons (role="group") + AiButtonItem
  *    * AiExtractJsonViewer (기본 접힘)
  *    * 헤더에 step.label 표시
+ *  - M3-11: AI_APPLY Step 에서 categoryIndex × intervalMs 기반으로 AiButtonItem pressTriggerAt 계산.
  */
 
-import { render, screen } from '@testing-library/react'
-import { describe, it, expect } from 'vitest'
+import { render, screen, act } from '@testing-library/react'
+import { afterEach, beforeEach, describe, it, expect, vi } from 'vitest'
 
 import { AiPanelContainer } from '@/components/dashboard-preview/ai-register-main/ai-panel'
 import { PREVIEW_MOCK_DATA } from '@/lib/mock-data'
@@ -264,5 +267,144 @@ describe('AiPanelContainer 자식 주입 (M2-01)', () => {
     )
 
     expect(screen.getByText('AI 화물 등록')).toBeInTheDocument()
+  })
+})
+
+// ---------------------------------------------------------------------------
+// M3-11 — partialBeat 카테고리 순차 press (TC-DASH3-INT-APPLY-2BEAT)
+// ---------------------------------------------------------------------------
+
+describe('AiPanelContainer partialBeat 카테고리 순차 press (M3-11)', () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  it('AI_APPLY: departure(index 0) 카테고리 버튼은 즉시 press (0ms 후 data-pressed=true)', () => {
+    render(
+      <AiPanelContainer
+        step={AI_APPLY_STEP}
+        aiInput={PREVIEW_MOCK_DATA.aiInput}
+        aiResult={PREVIEW_MOCK_DATA.aiResult}
+      />,
+    )
+
+    const btn = screen.getByTestId('ai-button-item-btn-departure-address1')
+    // 초기 상태: 아직 press 미발동
+    expect(btn).toHaveAttribute('data-pressed', 'false')
+
+    // 0ms offset — setTimeout(fn, 0) 는 다음 tick 에 실행
+    act(() => {
+      vi.advanceTimersByTime(1)
+    })
+    expect(btn).toHaveAttribute('data-pressed', 'true')
+  })
+
+  it('AI_APPLY: destination(index 1) 카테고리 버튼은 intervalMs(300) 경과 후 press', () => {
+    render(
+      <AiPanelContainer
+        step={AI_APPLY_STEP}
+        aiInput={PREVIEW_MOCK_DATA.aiInput}
+        aiResult={PREVIEW_MOCK_DATA.aiResult}
+      />,
+    )
+
+    const btn = screen.getByTestId('ai-button-item-btn-destination-address1')
+    expect(btn).toHaveAttribute('data-pressed', 'false')
+
+    // 299ms: 아직 press 전
+    act(() => {
+      vi.advanceTimersByTime(299)
+    })
+    expect(btn).toHaveAttribute('data-pressed', 'false')
+
+    // 300ms: press 발동
+    act(() => {
+      vi.advanceTimersByTime(1)
+    })
+    expect(btn).toHaveAttribute('data-pressed', 'true')
+  })
+
+  it('AI_APPLY: cargo(index 2) 카테고리 버튼은 600ms 경과 후 press', () => {
+    render(
+      <AiPanelContainer
+        step={AI_APPLY_STEP}
+        aiInput={PREVIEW_MOCK_DATA.aiInput}
+        aiResult={PREVIEW_MOCK_DATA.aiResult}
+      />,
+    )
+
+    const btn = screen.getByTestId('ai-button-item-btn-cargo-vehicleType')
+    expect(btn).toHaveAttribute('data-pressed', 'false')
+
+    act(() => {
+      vi.advanceTimersByTime(599)
+    })
+    expect(btn).toHaveAttribute('data-pressed', 'false')
+
+    act(() => {
+      vi.advanceTimersByTime(1)
+    })
+    expect(btn).toHaveAttribute('data-pressed', 'true')
+  })
+
+  it('AI_APPLY: fare(index 3) 카테고리 버튼은 900ms 경과 후 press', () => {
+    render(
+      <AiPanelContainer
+        step={AI_APPLY_STEP}
+        aiInput={PREVIEW_MOCK_DATA.aiInput}
+        aiResult={PREVIEW_MOCK_DATA.aiResult}
+      />,
+    )
+
+    const btn = screen.getByTestId('ai-button-item-btn-fare-amount')
+    expect(btn).toHaveAttribute('data-pressed', 'false')
+
+    act(() => {
+      vi.advanceTimersByTime(899)
+    })
+    expect(btn).toHaveAttribute('data-pressed', 'false')
+
+    act(() => {
+      vi.advanceTimersByTime(1)
+    })
+    expect(btn).toHaveAttribute('data-pressed', 'true')
+  })
+
+  it('AI_APPLY: 같은 카테고리 내 2개 버튼(departure-address1, departure-datetime) 은 동일 offset 에서 press', () => {
+    render(
+      <AiPanelContainer
+        step={AI_APPLY_STEP}
+        aiInput={PREVIEW_MOCK_DATA.aiInput}
+        aiResult={PREVIEW_MOCK_DATA.aiResult}
+      />,
+    )
+
+    const addressBtn = screen.getByTestId('ai-button-item-btn-departure-address1')
+    const datetimeBtn = screen.getByTestId('ai-button-item-btn-departure-datetime')
+    // 둘 다 index 0 (departure) → 동시에 press
+    act(() => {
+      vi.advanceTimersByTime(1)
+    })
+    expect(addressBtn).toHaveAttribute('data-pressed', 'true')
+    expect(datetimeBtn).toHaveAttribute('data-pressed', 'true')
+  })
+
+  it('INITIAL Step 에서는 partialBeat 미존재 → 카테고리 버튼도 미렌더', () => {
+    render(
+      <AiPanelContainer
+        step={INITIAL_STEP}
+        aiInput={PREVIEW_MOCK_DATA.aiInput}
+        aiResult={PREVIEW_MOCK_DATA.aiResult}
+      />,
+    )
+
+    // extractState=idle → AiButtonItem 미렌더 (부모 AiResultButtons 의 showButtons=false)
+    expect(
+      screen.queryByTestId('ai-button-item-btn-departure-address1'),
+    ).not.toBeInTheDocument()
   })
 })

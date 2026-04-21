@@ -1,7 +1,7 @@
 /**
  * AiPanelContainer — 좌측 AI 패널 380px 고정 + 자식 7 컴포넌트 조립.
  *
- * T-DASH3-M1-03 (shell) + T-DASH3-M2-01 (자식 주입)
+ * T-DASH3-M1-03 (shell) + T-DASH3-M2-01 (자식 주입) + T-DASH3-M3-11 (AI_APPLY partialBeat 주입)
  *
  * 레이아웃
  *  - width: `w-[380px]` 고정 (REQ-DASH3-050)
@@ -21,9 +21,12 @@
  *
  * 조작감 연동
  *  - #1 fake-typing : step.interactions.typingRhythm.active 시 활성
- *  - #3 button-press: step.id === 'AI_EXTRACT' + pressTargets 에 'ai-extract-button' 포함 시
- *                     AiExtractButton 에 pressTriggerAt=0 주입 → 즉시 자동 press
- *  - AiButtonItem 개별 카테고리 순차 press (partialBeat.categoryOrder) 는 M3 에서 구현.
+ *  - #3 button-press:
+ *    - AI_EXTRACT Step: pressTargets 에 'ai-extract-button' 포함 시 AiExtractButton 에
+ *      pressTriggerAt=0 주입 → 즉시 자동 press.
+ *    - AI_APPLY Step: partialBeat.categoryOrder × intervalMs 기반으로 categoryIndex 마다
+ *      AiButtonItem 에 pressTriggerAt 주입. 같은 카테고리 내 복수 버튼은 동일 offset 사용.
+ *      (M3-11 — REQ-DASH3-041 / 042 / 043)
  *
  * SSOT
  *  - Phase 1 스펙 §2-1 Dumb Components 원칙:
@@ -33,7 +36,7 @@
 'use client'
 
 import { useFakeTyping } from '@/components/dashboard-preview/interactions/use-fake-typing'
-import type { PreviewMockData } from '@/lib/mock-data'
+import type { AiCategoryId, PreviewMockData } from '@/lib/mock-data'
 import type { PreviewStep } from '@/lib/preview-steps'
 
 import { AiButtonItem } from './ai-button-item'
@@ -48,6 +51,24 @@ export interface AiPanelContainerProps {
   readonly step: PreviewStep
   readonly aiInput: PreviewMockData['aiInput']
   readonly aiResult: PreviewMockData['aiResult']
+}
+
+/**
+ * AI_APPLY Step 에서 카테고리별 pressTriggerAt 을 계산한다.
+ *  - partialBeat 가 없거나 Step 이 AI_APPLY 가 아니면 null 반환 (press 비활성).
+ *  - categoryIndex 가 categoryOrder 에 존재하면 `index × intervalMs` 를 반환.
+ *  - 같은 카테고리 내 복수 버튼은 동일 offset 을 사용한다.
+ */
+function computeCategoryPressTriggerAt(
+  step: PreviewStep,
+  groupId: AiCategoryId,
+): number | null {
+  if (step.id !== 'AI_APPLY') return null
+  const partialBeat = step.interactions.partialBeat
+  if (!partialBeat) return null
+  const categoryIndex = partialBeat.categoryOrder.indexOf(groupId)
+  if (categoryIndex < 0) return null
+  return categoryIndex * partialBeat.intervalMs
 }
 
 export function AiPanelContainer({
@@ -122,10 +143,10 @@ export function AiPanelContainer({
               key={button.id}
               button={button}
               groupId={groupId}
-              // TODO(M3/T-DASH3-M3-??): AI_APPLY partialBeat에서 카테고리 순차 press 트리거 주입.
-              // step.interactions.partialBeat.categoryOrder × intervalMs 기반으로 groupId별 pressTriggerAt 계산.
-              // 현재는 M2 범위 외로 null 고정 (AI_EXTRACT 버튼만 press 활성화).
-              pressTriggerAt={null}
+              // M3-11 — AI_APPLY partialBeat 카테고리 순차 press.
+              // categoryIndex × intervalMs 만큼 offset 을 두고 자동 press 발동.
+              // AI_EXTRACT Step 등 AI_APPLY 가 아닌 Step 에서는 null (press 비활성).
+              pressTriggerAt={computeCategoryPressTriggerAt(step, groupId)}
             />
           )}
         />
