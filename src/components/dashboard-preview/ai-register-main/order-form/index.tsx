@@ -27,8 +27,7 @@
 
 'use client'
 
-import { useEffect, useState } from 'react'
-
+import { useColumnPulse } from '@/components/dashboard-preview/interactions/use-column-pulse'
 import type { PreviewMockData } from '@/lib/mock-data'
 import type { PreviewStep } from '@/lib/preview-steps'
 import type { TransportOptionKey } from './transport-option-card'
@@ -164,23 +163,13 @@ export function stripTransportOptionPrefix(
 // ---------------------------------------------------------------------------
 
 /**
- * `columnPulseTargets` 를 구독해 각 grid column(1/2/3) 을 400ms 동안 glow 시키는 훅.
- *  - active=false 또는 triggerAt=null → 항상 false.
- *  - triggerAt=0 → mount 즉시 pulse=true, 400ms 후 false 로 복귀.
- *  - triggerAt>0 → 해당 ms 후 pulse=true 로 전환, 이어서 400ms 후 false 로 복귀.
- *
- * Column 별 offset 매핑 (AI_APPLY partialBeat/allBeat 정렬):
- *  - Col 1 (pickup + delivery)    :    0ms  — departure/destination fill-in 시작 시점
- *  - Col 2 (vehicle + cargo)      :  600ms  — partialBeat cargo offset
- *  - Col 3 (options + estimate)   : 1500ms  — partialBeat 종료 → allBeat 진입 시점
- */
-const COLUMN_PULSE_DURATION_MS = 400
-
-/**
  * Column 별 pulse 시작 offset (AI_APPLY partialBeat/allBeat 정렬, ms).
  *  - col-1 (pickup/delivery) : partialBeat departure/destination 동시 시작
  *  - col-2 (vehicle/cargo)   : partialBeat cargo offset (2 × 300ms)
  *  - col-3 (options/estimate): partialBeat 종료 → allBeat 진입 (~1500ms)
+ *
+ * M4 review#2 — pulse duration / reduced-motion 처리는 `interactions/use-column-pulse.ts`
+ * 공용 훅이 담당한다. 여기서는 offset 상수만 보관한다.
  */
 const COLUMN_PULSE_OFFSETS_MS = {
   col1: 0,
@@ -191,45 +180,6 @@ const COLUMN_PULSE_OFFSETS_MS = {
 /** Column pulse 활성 시 적용하는 ring + shadow 클래스 조합. */
 const COL_PULSE_RING_CLASSES =
   ' ring-2 ring-accent/60 ring-offset-2 ring-offset-black/40 shadow-[0_0_24px_rgba(96,165,250,0.35)]'
-
-function useColumnPulse(
-  active: boolean,
-  triggerAt: number | null,
-): boolean {
-  const [pulsing, setPulsing] = useState<boolean>(
-    () => active && triggerAt === 0,
-  )
-
-  useEffect(() => {
-    if (!active || triggerAt === null || triggerAt < 0) {
-      setPulsing(false)
-      return
-    }
-
-    let endTimer: ReturnType<typeof setTimeout> | null = null
-    let startTimer: ReturnType<typeof setTimeout> | null = null
-
-    const scheduleEnd = () =>
-      setTimeout(() => setPulsing(false), COLUMN_PULSE_DURATION_MS)
-
-    if (triggerAt === 0) {
-      setPulsing(true)
-      endTimer = scheduleEnd()
-    } else {
-      startTimer = setTimeout(() => {
-        setPulsing(true)
-        endTimer = scheduleEnd()
-      }, triggerAt)
-    }
-
-    return () => {
-      if (startTimer !== null) clearTimeout(startTimer)
-      if (endTimer !== null) clearTimeout(endTimer)
-    }
-  }, [active, triggerAt])
-
-  return pulsing
-}
 
 /**
  * M4-review#1 — column pulse 대상 id 집합을 반환.
