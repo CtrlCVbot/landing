@@ -118,21 +118,43 @@ function computeAllBeatFlags(step: PreviewStep): AllBeatFlags {
   if (!allBeat) {
     return { active: false, strokeTargets: [], rollingTriggerAt: null }
   }
+  const strokeTargets = allBeat.toggleStrokeTargets
+    .map(stripTransportOptionPrefix)
+    .filter((k): k is TransportOptionKey => k !== null)
   return {
     active: true,
-    strokeTargets: allBeat.toggleStrokeTargets.map(stripTransportOptionPrefix),
+    strokeTargets,
     rollingTriggerAt: 0,
   }
 }
 
 /**
  * `toggleStrokeTargets` 는 `transport-option-{key}` 형태의 id.
- * transport-option-card 의 `strokeTargets` prop 은 raw option key 를 요구하므로 prefix 제거.
+ * transport-option-card 의 `strokeTargets` prop 은 raw option key 를 요구하므로 prefix 제거 후
+ * `VALID_TRANSPORT_OPTION_KEYS` 화이트리스트에 포함된 경우에만 반환한다.
+ *
+ * M3-review#3 — 오타/타이밍 이슈로 invalid key 가 유입되는 것을 런타임 대신 이 경계에서 차단한다.
+ * 유효하지 않으면 `null` 반환; 호출부에서 `.filter((k): k is TransportOptionKey => k !== null)` 로 제거한다.
  */
-function stripTransportOptionPrefix(fullId: string): TransportOptionKey {
+const VALID_TRANSPORT_OPTION_KEYS = [
+  'fast',
+  'roundTrip',
+  'direct',
+  'trace',
+  'forklift',
+  'manual',
+  'cod',
+  'special',
+] as const satisfies ReadonlyArray<TransportOptionKey>
+
+export function stripTransportOptionPrefix(
+  fullId: string,
+): TransportOptionKey | null {
   const prefix = 'transport-option-'
   const key = fullId.startsWith(prefix) ? fullId.slice(prefix.length) : fullId
-  return key as TransportOptionKey
+  return (VALID_TRANSPORT_OPTION_KEYS as ReadonlyArray<string>).includes(key)
+    ? (key as TransportOptionKey)
+    : null
 }
 
 // ---------------------------------------------------------------------------

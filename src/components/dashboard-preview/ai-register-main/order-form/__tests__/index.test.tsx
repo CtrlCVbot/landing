@@ -22,7 +22,10 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
 
-import { OrderFormContainer } from '@/components/dashboard-preview/ai-register-main/order-form'
+import {
+  OrderFormContainer,
+  stripTransportOptionPrefix,
+} from '@/components/dashboard-preview/ai-register-main/order-form'
 import { PREVIEW_MOCK_DATA } from '@/lib/mock-data'
 import { PREVIEW_STEPS } from '@/lib/preview-steps'
 
@@ -417,6 +420,56 @@ describe('OrderFormContainer AI_APPLY 2단 구조 (M3-01 / M3-11)', () => {
       const forklift = screen.getByTestId('transport-option-forklift')
       const polyline = forklift.querySelector('polyline')
       expect(polyline).toHaveAttribute('data-animating', 'true')
+    })
+  })
+})
+
+// ===========================================================================
+// M3-review#3 — stripTransportOptionPrefix 화이트리스트 검증
+// ===========================================================================
+
+describe('stripTransportOptionPrefix (M3-review#3)', () => {
+  describe('유효 key', () => {
+    it('"transport-option-fast" → "fast" 로 변환된다', () => {
+      expect(stripTransportOptionPrefix('transport-option-fast')).toBe('fast')
+    })
+
+    it('8개 화이트리스트 key 전부 prefix 제거 후 그대로 반환된다', () => {
+      const keys = [
+        'fast',
+        'roundTrip',
+        'direct',
+        'trace',
+        'forklift',
+        'manual',
+        'cod',
+        'special',
+      ] as const
+      for (const key of keys) {
+        expect(stripTransportOptionPrefix(`transport-option-${key}`)).toBe(key)
+      }
+    })
+
+    it('prefix 없이 유효 key 가 직접 전달되면 그대로 반환된다', () => {
+      expect(stripTransportOptionPrefix('fast')).toBe('fast')
+    })
+  })
+
+  describe('무효 key', () => {
+    it('"transport-option-unknown" 과 같이 화이트리스트 외 key 는 null 반환', () => {
+      expect(stripTransportOptionPrefix('transport-option-unknown')).toBeNull()
+    })
+
+    it('prefix 없이 무효 key 가 전달되면 null 반환 (오타 차단)', () => {
+      expect(stripTransportOptionPrefix('typo-key')).toBeNull()
+    })
+
+    it('빈 문자열은 null 반환', () => {
+      expect(stripTransportOptionPrefix('')).toBeNull()
+    })
+
+    it('prefix 만 있고 key 가 비어있으면 null 반환', () => {
+      expect(stripTransportOptionPrefix('transport-option-')).toBeNull()
     })
   })
 })
