@@ -16,6 +16,7 @@
 import { describe, it, expect } from 'vitest'
 import { PREVIEW_STEPS } from '@/lib/preview-steps'
 import type { PreviewStep, StepId } from '@/lib/preview-steps'
+import { PREVIEW_MOCK_DATA } from '@/lib/mock-data'
 
 describe('PREVIEW_STEPS (Phase 3 4단계)', () => {
   // --------------------------------------------------------------------
@@ -198,6 +199,23 @@ describe('PREVIEW_STEPS (Phase 3 4단계)', () => {
       // 나머지 필드 false
       expect(aiInput.formState.pickupFilled).toBe(false)
       expect(aiInput.formState.estimateVisible).toBe(false)
+    })
+
+    // M1-review#3: AI_INPUT 중간 진행률(textProgress=0.5)에서 inputText 가 full 이 아닌
+    // 진행률 비례 slice 가 되어야 한다 (Phase 1/2 legacy consumer 의 "진행 중 타이핑" 시각 복원).
+    it('AI_INPUT: aiPanelState.inputText 는 textProgress 에 비례해 slice 된다 (full 반환 아님)', () => {
+      const aiInput = PREVIEW_STEPS[1]
+      // aiInput message 의 총 길이
+      const fullMessage = PREVIEW_MOCK_DATA.aiInput.message
+      // textProgress=0.5 → full 의 절반보다 짧아야 한다 (Math.floor 로 인해 1문자 덜함 가능)
+      expect(aiInput.aiPanelState.inputText.length).toBeLessThan(fullMessage.length)
+      expect(aiInput.aiPanelState.inputText.length).toBeGreaterThan(0)
+      // 실제 slice: full.slice(0, floor(length * 0.5)) 와 일치
+      const expected = fullMessage.slice(
+        0,
+        Math.floor(fullMessage.length * aiInput.aiState.textProgress),
+      )
+      expect(aiInput.aiPanelState.inputText).toBe(expected)
     })
 
     it('AI_EXTRACT: extractState loading, CompanyManager pre-filled 유지, buttons pending', () => {

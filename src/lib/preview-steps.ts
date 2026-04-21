@@ -232,9 +232,10 @@ function computeInputText(textProgress: number): string {
   const full = PREVIEW_MOCK_DATA.aiInput.message
   if (textProgress <= 0) return ''
   if (textProgress >= 1) return full
-  // INITIAL/AI_INPUT 간 중간 표시는 use-fake-typing 훅이 세분화 제어.
-  // 스냅샷 계산에서는 최종값 반환으로 legacy 테스트 호환성 확보.
-  return full
+  // Phase 1/2 legacy consumer 가 중간 진행률(예: AI_INPUT 의 textProgress=0.5)에서
+  // "진행 중인 타이핑 텍스트"를 그대로 표시할 수 있도록 full.length × progress 만큼 slice.
+  // Phase 3 경로(use-fake-typing)는 자체 세분화 계산이 있어 이 함수에 의존하지 않는다.
+  return full.slice(0, Math.floor(full.length * textProgress))
 }
 
 function legacyFilledCards(snap: {
