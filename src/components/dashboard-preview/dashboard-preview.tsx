@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import dynamic from 'next/dynamic'
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import { previewFadeIn } from '@/lib/motion'
@@ -16,8 +17,26 @@ import { AiPanelPreview } from './ai-panel-preview'
 import { FormPreview } from './form-preview'
 import { MobileCardView } from './mobile-card-view'
 import { InteractiveOverlay } from './interactive-overlay'
-import { AiRegisterMain } from './ai-register-main'
 import { getHitAreas, type HitAreaConfig } from './hit-areas'
+
+// ---------------------------------------------------------------------------
+// T-DASH3-M1-09: AiRegisterMain dynamic import (Spike 발굴 이슈 해소)
+//
+// REQ-DASH3-062: Mobile(<768px) 뷰포트에서 `ai-register-main` 청크 네트워크 요청 0건.
+//  - `next/dynamic` + `ssr: false` 로 래핑 → 서버 렌더 시 번들 분리.
+//  - `DashboardPreview` 상단의 `if (isMobile) return <MobileCardView />` 조기 종료와
+//    결합하여, Mobile 뷰포트에서는 AiRegisterMain 자체가 import 되지 않는다.
+//  - Phase 1/2 `DashboardPreview` 컴포넌트 자체가 `'use client'` + framer-motion 사용으로
+//    이미 CSR 이라 SSR 분리 부담은 없다.
+//  - Chrome Preview 내부 body 라 별도 loading skeleton 은 불필요 → `loading: () => null`.
+// ---------------------------------------------------------------------------
+const AiRegisterMain = dynamic(
+  () => import('./ai-register-main').then((m) => ({ default: m.AiRegisterMain })),
+  {
+    ssr: false,
+    loading: () => null,
+  },
+)
 
 // ---------------------------------------------------------------------------
 // Types
@@ -82,6 +101,10 @@ export function DashboardPreview({ className }: DashboardPreviewProps) {
   // REQ-DASH-023/024 (M1-04): Tablet scaleFactor 0.38 → 0.40 (가독성 개선)
   const scaleFactor = isTablet ? 0.4 : 0.45
 
+  // T-DASH3-M1-09 (Spike 발굴): Mobile(<768px) 은 flag 상태와 무관하게
+  // MobileCardView 를 렌더한다. 상단 `AiRegisterMain = dynamic(..., { ssr: false })`
+  // 와 결합하여 Mobile 에서는 `ai-register-main` 청크가 네트워크 로드되지 않는다.
+  // (REQ-DASH3-062 / TC-DASH3-INT-MOBILE-FALLBACK)
   if (isMobile) {
     return (
       <motion.div
