@@ -122,6 +122,9 @@ export function AiPanelContainer({
               key={button.id}
               button={button}
               groupId={groupId}
+              // TODO(M3/T-DASH3-M3-??): AI_APPLY partialBeat에서 카테고리 순차 press 트리거 주입.
+              // step.interactions.partialBeat.categoryOrder × intervalMs 기반으로 groupId별 pressTriggerAt 계산.
+              // 현재는 M2 범위 외로 null 고정 (AI_EXTRACT 버튼만 press 활성화).
               pressTriggerAt={null}
             />
           )}
