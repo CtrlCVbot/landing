@@ -9,7 +9,7 @@ import {
 import { PREVIEW_MOCK_DATA } from '@/lib/mock-data'
 
 const DESKTOP_SCALE = 0.45
-const TABLET_SCALE = 0.38
+const TABLET_SCALE = 0.40  // Phase 3 M1-04: 0.38 → 0.40 상향
 
 describe('InteractiveOverlay', () => {
   // -------------------------------------------------------------------------
@@ -76,7 +76,7 @@ describe('InteractiveOverlay', () => {
   // TC-OVERLAY-002: HitArea button 렌더링
   // -------------------------------------------------------------------------
   describe('TC-OVERLAY-002: hit area button rendering', () => {
-    it('renders one button per hit area (Desktop: 11 buttons)', () => {
+    it('renders one button per hit area (Desktop: 19 buttons, Phase 3 M4-04)', () => {
       render(
         <InteractiveOverlay
           hitAreas={DESKTOP_HIT_AREAS}
@@ -87,7 +87,7 @@ describe('InteractiveOverlay', () => {
       expect(buttons).toHaveLength(DESKTOP_HIT_AREAS.length)
     })
 
-    it('renders one button per hit area (Tablet: 6 buttons)', () => {
+    it('renders one button per hit area (Tablet: 19 buttons — Phase 3 축약 폐기)', () => {
       render(
         <InteractiveOverlay
           hitAreas={TABLET_HIT_AREAS}
@@ -304,7 +304,7 @@ describe('InteractiveOverlay', () => {
         />,
       )
       const first = screen.getByTestId('hit-area-ai-input')
-      const second = screen.getByTestId('hit-area-extract-button')
+      const second = screen.getByTestId('hit-area-ai-extract-button')
 
       fireEvent.mouseEnter(first)
       expect(first).toHaveClass('ring-2')
@@ -367,9 +367,9 @@ describe('InteractiveOverlay', () => {
           scaleFactor={DESKTOP_SCALE}
         />,
       )
-      const button = screen.getByTestId('hit-area-extract-button')
+      const button = screen.getByTestId('hit-area-ai-extract-button')
       fireEvent.mouseEnter(button)
-      const expected = PREVIEW_MOCK_DATA.tooltips['extract-button']
+      const expected = PREVIEW_MOCK_DATA.tooltips['ai-extract-button']
       expect(screen.getByRole('tooltip')).toHaveTextContent(expected)
     })
   })
@@ -446,10 +446,10 @@ describe('InteractiveOverlay', () => {
           onAreaExecute={onAreaExecute}
         />,
       )
-      fireEvent.click(screen.getByTestId('hit-area-extract-button'))
-      fireEvent.click(screen.getByTestId('hit-area-result-fare'))
-      expect(onAreaExecute).toHaveBeenNthCalledWith(1, 'extract-button')
-      expect(onAreaExecute).toHaveBeenNthCalledWith(2, 'result-fare')
+      fireEvent.click(screen.getByTestId('hit-area-ai-extract-button'))
+      fireEvent.click(screen.getByTestId('hit-area-ai-result-fare'))
+      expect(onAreaExecute).toHaveBeenNthCalledWith(1, 'ai-extract-button')
+      expect(onAreaExecute).toHaveBeenNthCalledWith(2, 'ai-result-fare')
     })
   })
 
@@ -459,7 +459,7 @@ describe('InteractiveOverlay', () => {
   describe('TC-041: isAreaEnabled gates execution (REQ-DASH-041)', () => {
     it('does not call onAreaExecute when isAreaEnabled returns false', () => {
       const onAreaExecute = vi.fn()
-      const isAreaEnabled = (area: HitAreaConfig) => area.id !== 'extract-button'
+      const isAreaEnabled = (area: HitAreaConfig) => area.id !== 'ai-extract-button'
       render(
         <InteractiveOverlay
           hitAreas={DESKTOP_HIT_AREAS}
@@ -468,13 +468,13 @@ describe('InteractiveOverlay', () => {
           isAreaEnabled={isAreaEnabled}
         />,
       )
-      fireEvent.click(screen.getByTestId('hit-area-extract-button'))
+      fireEvent.click(screen.getByTestId('hit-area-ai-extract-button'))
       expect(onAreaExecute).not.toHaveBeenCalled()
     })
 
     it('calls onAreaExecute for enabled areas when isAreaEnabled is provided', () => {
       const onAreaExecute = vi.fn()
-      const isAreaEnabled = (area: HitAreaConfig) => area.id !== 'extract-button'
+      const isAreaEnabled = (area: HitAreaConfig) => area.id !== 'ai-extract-button'
       render(
         <InteractiveOverlay
           hitAreas={DESKTOP_HIT_AREAS}
@@ -487,7 +487,7 @@ describe('InteractiveOverlay', () => {
       expect(onAreaExecute).toHaveBeenCalledWith('ai-input')
     })
 
-    it('treats missing isAreaEnabled as always enabled', () => {
+    it('treats missing isAreaEnabled as enabled (단, area.isEnabled=false 는 별도 차단 — Phase 3 M4-04)', () => {
       const onAreaExecute = vi.fn()
       render(
         <InteractiveOverlay
@@ -499,11 +499,17 @@ describe('InteractiveOverlay', () => {
       for (const area of DESKTOP_HIT_AREAS) {
         fireEvent.click(screen.getByTestId(`hit-area-${area.id}`))
       }
-      expect(onAreaExecute).toHaveBeenCalledTimes(DESKTOP_HIT_AREAS.length)
+      // area.isEnabled=false 가 설정된 영역(form-company-manager)은 차단되므로 해당 수만큼 차감.
+      const disabledCount = DESKTOP_HIT_AREAS.filter(
+        (a) => a.isEnabled === false,
+      ).length
+      expect(onAreaExecute).toHaveBeenCalledTimes(
+        DESKTOP_HIT_AREAS.length - disabledCount,
+      )
     })
 
     it('sets aria-disabled="true" on disabled areas', () => {
-      const isAreaEnabled = (area: HitAreaConfig) => area.id !== 'extract-button'
+      const isAreaEnabled = (area: HitAreaConfig) => area.id !== 'ai-extract-button'
       render(
         <InteractiveOverlay
           hitAreas={DESKTOP_HIT_AREAS}
@@ -512,7 +518,7 @@ describe('InteractiveOverlay', () => {
         />,
       )
       expect(
-        screen.getByTestId('hit-area-extract-button'),
+        screen.getByTestId('hit-area-ai-extract-button'),
       ).toHaveAttribute('aria-disabled', 'true')
       expect(screen.getByTestId('hit-area-ai-input')).toHaveAttribute(
         'aria-disabled',
@@ -521,7 +527,7 @@ describe('InteractiveOverlay', () => {
     })
 
     it('applies cursor-not-allowed class to disabled areas', () => {
-      const isAreaEnabled = (area: HitAreaConfig) => area.id !== 'extract-button'
+      const isAreaEnabled = (area: HitAreaConfig) => area.id !== 'ai-extract-button'
       render(
         <InteractiveOverlay
           hitAreas={DESKTOP_HIT_AREAS}
@@ -529,7 +535,7 @@ describe('InteractiveOverlay', () => {
           isAreaEnabled={isAreaEnabled}
         />,
       )
-      expect(screen.getByTestId('hit-area-extract-button')).toHaveClass(
+      expect(screen.getByTestId('hit-area-ai-extract-button')).toHaveClass(
         'cursor-not-allowed',
       )
       expect(screen.getByTestId('hit-area-ai-input')).toHaveClass('cursor-pointer')
@@ -652,9 +658,9 @@ describe('InteractiveOverlay', () => {
           scaleFactor={DESKTOP_SCALE}
         />,
       )
-      const button = screen.getByTestId('hit-area-extract-button')
+      const button = screen.getByTestId('hit-area-ai-extract-button')
       fireEvent.focus(button)
-      const expected = PREVIEW_MOCK_DATA.tooltips['extract-button']
+      const expected = PREVIEW_MOCK_DATA.tooltips['ai-extract-button']
       expect(screen.getByRole('tooltip')).toHaveTextContent(expected)
     })
 
@@ -702,10 +708,10 @@ describe('InteractiveOverlay', () => {
           onAreaExecute={onAreaExecute}
         />,
       )
-      const button = screen.getByTestId('hit-area-extract-button')
+      const button = screen.getByTestId('hit-area-ai-extract-button')
       fireEvent.keyDown(button, { key: ' ' })
       expect(onAreaExecute).toHaveBeenCalledTimes(1)
-      expect(onAreaExecute).toHaveBeenCalledWith('extract-button')
+      expect(onAreaExecute).toHaveBeenCalledWith('ai-extract-button')
     })
 
     it('other keys (a, Tab, Escape) do NOT call onAreaExecute', () => {
@@ -727,7 +733,7 @@ describe('InteractiveOverlay', () => {
     it('Enter key on aria-disabled button does NOT call onAreaExecute', () => {
       const onAreaExecute = vi.fn()
       const isAreaEnabled = (area: HitAreaConfig) =>
-        area.id !== 'extract-button'
+        area.id !== 'ai-extract-button'
       render(
         <InteractiveOverlay
           hitAreas={DESKTOP_HIT_AREAS}
@@ -736,7 +742,7 @@ describe('InteractiveOverlay', () => {
           isAreaEnabled={isAreaEnabled}
         />,
       )
-      const button = screen.getByTestId('hit-area-extract-button')
+      const button = screen.getByTestId('hit-area-ai-extract-button')
       fireEvent.keyDown(button, { key: 'Enter' })
       expect(onAreaExecute).not.toHaveBeenCalled()
     })
@@ -744,7 +750,7 @@ describe('InteractiveOverlay', () => {
     it('Space key on aria-disabled button does NOT call onAreaExecute', () => {
       const onAreaExecute = vi.fn()
       const isAreaEnabled = (area: HitAreaConfig) =>
-        area.id !== 'extract-button'
+        area.id !== 'ai-extract-button'
       render(
         <InteractiveOverlay
           hitAreas={DESKTOP_HIT_AREAS}
@@ -753,7 +759,7 @@ describe('InteractiveOverlay', () => {
           isAreaEnabled={isAreaEnabled}
         />,
       )
-      const button = screen.getByTestId('hit-area-extract-button')
+      const button = screen.getByTestId('hit-area-ai-extract-button')
       fireEvent.keyDown(button, { key: ' ' })
       expect(onAreaExecute).not.toHaveBeenCalled()
     })
@@ -829,7 +835,7 @@ describe('InteractiveOverlay', () => {
         />,
       )
       const hoverTarget = screen.getByTestId('hit-area-ai-input')
-      const focusTarget = screen.getByTestId('hit-area-extract-button')
+      const focusTarget = screen.getByTestId('hit-area-ai-extract-button')
 
       fireEvent.mouseEnter(hoverTarget)
       expect(screen.getByTestId('interactive-tooltip')).toBeInTheDocument()
@@ -846,27 +852,27 @@ describe('InteractiveOverlay', () => {
   // REQ-DASH-047: Tablet 최소 16px 크기 보장
   // -------------------------------------------------------------------------
   describe('REQ-DASH-046: viewport별 히트 영역 렌더링', () => {
-    it('Desktop renders 11 buttons', () => {
+    it('Desktop renders 19 buttons (Phase 3 M4-04)', () => {
       render(
         <InteractiveOverlay
           hitAreas={DESKTOP_HIT_AREAS}
           scaleFactor={DESKTOP_SCALE}
         />,
       )
-      expect(screen.getAllByRole('button')).toHaveLength(11)
+      expect(screen.getAllByRole('button')).toHaveLength(19)
     })
 
-    it('Tablet renders 6 buttons', () => {
+    it('Tablet renders 19 buttons (Phase 3 M4-04 — 축약 폐기)', () => {
       render(
         <InteractiveOverlay
           hitAreas={TABLET_HIT_AREAS}
           scaleFactor={TABLET_SCALE}
         />,
       )
-      expect(screen.getAllByRole('button')).toHaveLength(6)
+      expect(screen.getAllByRole('button')).toHaveLength(19)
     })
 
-    it('REQ-DASH-047: tablet buttons have minimum 16px size after scale', () => {
+    it('REQ-DASH-047 → Phase 3: tablet buttons >= 17.6px after scale (44 * 0.40)', () => {
       render(
         <InteractiveOverlay
           hitAreas={TABLET_HIT_AREAS}
@@ -879,8 +885,9 @@ describe('InteractiveOverlay', () => {
         const styleHeight = parseFloat(
           (button as HTMLButtonElement).style.height,
         )
-        expect(styleWidth).toBeGreaterThanOrEqual(16)
-        expect(styleHeight).toBeGreaterThanOrEqual(16)
+        // Phase 3 scaleFactor 0.40 기준: 44 * 0.40 = 17.6
+        expect(styleWidth).toBeGreaterThanOrEqual(17.6)
+        expect(styleHeight).toBeGreaterThanOrEqual(17.6)
       })
     })
   })

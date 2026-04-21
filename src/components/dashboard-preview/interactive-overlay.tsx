@@ -88,9 +88,20 @@ export function InteractiveOverlay({
     setFocusedId(null)
   }
 
+  /**
+   * 영역 실행 가능 여부.
+   *  - `area.isEnabled === false` → 영구 비활성 (#11 company-manager, M4-04).
+   *  - `isAreaEnabled` prop 이 있으면 논리 조건(AI_INPUT 텍스트 유무 등) 추가 검증.
+   *  - 두 조건 모두 통과해야 onAreaExecute 호출.
+   */
+  const computeEnabled = (area: HitAreaConfig): boolean => {
+    if (area.isEnabled === false) return false
+    if (isAreaEnabled) return isAreaEnabled(area)
+    return true
+  }
+
   const handleExecute = (area: HitAreaConfig) => {
-    const enabled = isAreaEnabled ? isAreaEnabled(area) : true
-    if (enabled && onAreaExecute) {
+    if (computeEnabled(area) && onAreaExecute) {
       onAreaExecute(area.id)
     }
   }
@@ -115,7 +126,7 @@ export function InteractiveOverlay({
       {hitAreas.map((area) => {
         const isHighlighted =
           hoveredId === area.id || focusedId === area.id
-        const enabled = isAreaEnabled ? isAreaEnabled(area) : true
+        const enabled = computeEnabled(area)
         return (
           <button
             key={area.id}

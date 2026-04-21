@@ -302,7 +302,7 @@ describe('DashboardPreview', () => {
       expect(screen.queryByTestId('interactive-overlay')).not.toBeInTheDocument()
     })
 
-    it('Tablet: renders 6 hit areas after entering interactive mode', () => {
+    it('Tablet: renders 19 hit areas after entering interactive mode (Phase 3 M4-04)', () => {
       setTablet()
       render(<DashboardPreview />)
 
@@ -314,11 +314,11 @@ describe('DashboardPreview', () => {
       })
 
       expect(screen.getByTestId('interactive-overlay')).toBeInTheDocument()
-      // Tablet hit areas = 6 (TABLET_HIT_AREAS.slice(0, 6))
-      expect(screen.getAllByTestId(/^hit-area-/)).toHaveLength(6)
+      // Phase 3: Tablet 축약 폐기 → Desktop 과 동일 19 영역 (M4-04)
+      expect(screen.getAllByTestId(/^hit-area-/)).toHaveLength(19)
     })
 
-    it('Desktop: renders 11 hit areas after entering interactive mode', () => {
+    it('Desktop: renders 19 hit areas after entering interactive mode (Phase 3 M4-04)', () => {
       setDesktop()
       render(<DashboardPreview />)
 
@@ -329,7 +329,7 @@ describe('DashboardPreview', () => {
         fireEvent.click(container)
       })
 
-      expect(screen.getAllByTestId(/^hit-area-/)).toHaveLength(11)
+      expect(screen.getAllByTestId(/^hit-area-/)).toHaveLength(19)
     })
 
     // -----------------------------------------------------------------------
@@ -425,7 +425,7 @@ describe('DashboardPreview', () => {
       vi.useRealTimers()
     })
 
-    it('Tablet: hit area IDs match TABLET_HIT_AREAS', () => {
+    it('Tablet: hit area IDs match Phase 3 TABLET_HIT_AREAS (Desktop 과 동일)', () => {
       setTablet()
       render(<DashboardPreview />)
 
@@ -436,21 +436,23 @@ describe('DashboardPreview', () => {
         fireEvent.click(container)
       })
 
-      const expectedIds = [
+      // Phase 3: Tablet 축약 폐기 → Phase 3 ID prefix (ai-/form-) 사용
+      const expectedAiIds = [
+        'ai-tab-bar',
         'ai-input',
-        'extract-button',
-        'result-departure',
-        'result-destination',
-        'result-cargo',
-        'result-fare',
+        'ai-extract-button',
+        'ai-result-departure',
+        'ai-result-destination',
+        'ai-result-cargo',
+        'ai-result-fare',
       ]
-      expectedIds.forEach((id) => {
+      expectedAiIds.forEach((id) => {
         expect(screen.getByTestId(`hit-area-${id}`)).toBeInTheDocument()
       })
-      // Form 영역 없음 검증
+      // Phase 3 에서는 Form 영역도 Tablet 에 포함 (M4-04 — Tablet 축약 폐기).
       expect(
-        screen.queryByTestId('hit-area-form-cargo-info'),
-      ).not.toBeInTheDocument()
+        screen.getByTestId('hit-area-form-cargo-info'),
+      ).toBeInTheDocument()
     })
   })
 })
