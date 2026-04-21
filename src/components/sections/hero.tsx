@@ -63,8 +63,17 @@ export function Hero() {
         </a>
       </motion.div>
 
-      <div className="mt-16 max-w-4xl w-full">
-        {spikeEnabled ? <DashboardPreviewSpike /> : <DashboardPreview />}
+      {/**
+       * Phase 3 3-column grid 수용 위한 1440px 확장 (M1-08).
+       * Hero 텍스트/버튼은 max-w-4xl(896px) 가독성 유지, DashboardPreview 블록만
+       * 별도 래퍼에서 max-w-[1440px]로 확장해 OrderForm의 lg:grid-cols-3
+       * (≥1024px) 충족에 필요한 가용폭(≈1060px)을 확보한다.
+       * Spike 분기(?spike=1) 로직은 그대로 유지한다.
+       */}
+      <div className="mt-16 w-full flex justify-center">
+        <div className="max-w-[1440px] w-full">
+          {spikeEnabled ? <DashboardPreviewSpike /> : <DashboardPreview />}
+        </div>
       </div>
     </section>
   )
