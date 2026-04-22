@@ -1,0 +1,299 @@
+{
+  "mode": "hybrid-reference-only",
+  "variant": null,
+  "reason": "원본이 source code 참조 (.references/code/mm-broker). 운영 URL 없음. visual/interaction review는 Phase 1 스펙(IMP-DASH-001-option-b-spec-phase1.md)을 spec source로 대체 수행.",
+  "source_manifest": {
+    "base_path": ".references/code/mm-broker/app/broker/order/ai-register/",
+    "git_sha_frozen_at": "bcb763100613c41a5bd3d2ff4405b4bb373426dc",
+    "frozen_at": "2026-04-17",
+    "files": [
+      {
+        "relative_path": "_components/ai-panel.tsx",
+        "role": "AI 사이드바 최상위",
+        "replication_type": "DOM/style 1:1",
+        "target_path_in_landing": "apps/landing/src/components/dashboard-preview/ai-register-main/ai-panel/index.tsx",
+        "source_exists": true,
+        "notes": ""
+      },
+      {
+        "relative_path": "_components/ai-input-area.tsx",
+        "role": "텍스트/이미지 입력 영역",
+        "replication_type": "DOM 복제, 입력 불가. 조작감 #1 fake-typing 적용",
+        "target_path_in_landing": "apps/landing/src/components/dashboard-preview/ai-register-main/ai-panel/ai-input-area.tsx",
+        "source_exists": true,
+        "notes": ""
+      },
+      {
+        "relative_path": "_components/ai-result-buttons.tsx",
+        "role": "카테고리 버튼 그룹 (상차/하차/화물/운임)",
+        "replication_type": "DOM 복제",
+        "target_path_in_landing": "apps/landing/src/components/dashboard-preview/ai-register-main/ai-panel/ai-result-buttons.tsx",
+        "source_exists": true,
+        "notes": ""
+      },
+      {
+        "relative_path": "_components/ai-button-item.tsx",
+        "role": "개별 AI 버튼. 조작감 #3 button-press, #4 ripple 적용",
+        "replication_type": "DOM 복제, popover 시각만",
+        "target_path_in_landing": "apps/landing/src/components/dashboard-preview/ai-register-main/ai-panel/ai-button-item.tsx",
+        "source_exists": true,
+        "notes": ""
+      },
+      {
+        "relative_path": "_components/ai-warning-badges.tsx",
+        "role": "경고 뱃지",
+        "replication_type": "DOM 복제",
+        "target_path_in_landing": "apps/landing/src/components/dashboard-preview/ai-register-main/ai-panel/ai-warning-badges.tsx",
+        "source_exists": true,
+        "notes": ""
+      },
+      {
+        "relative_path": "_components/ai-extract-json-viewer.tsx",
+        "role": "JSON 뷰어 (접힌 상태)",
+        "replication_type": "DOM 복제",
+        "target_path_in_landing": "apps/landing/src/components/dashboard-preview/ai-register-main/ai-panel/ai-extract-json-viewer.tsx",
+        "source_exists": true,
+        "notes": ""
+      },
+      {
+        "relative_path": null,
+        "role": "AI 탭 바 (AiPanel 내 탭 전환 UI)",
+        "replication_type": "landing 전용 신규 파일. 원본 ai-panel.tsx 내부 인라인 구조를 별도 컴포넌트로 분리",
+        "target_path_in_landing": "apps/landing/src/components/dashboard-preview/ai-register-main/ai-panel/ai-tab-bar.tsx",
+        "source_exists": false,
+        "notes": "원본 .references에 ai-tab-bar.tsx 독립 파일 없음. Phase 1 스펙 §3 및 §5 파일 구조에서 landing 전용 컴포넌트로 정의. 원본 ai-panel.tsx 내 탭 UI를 추출하여 생성."
+      },
+      {
+        "relative_path": null,
+        "role": "AI 추출 버튼 (조작감 #3 button-press 전용)",
+        "replication_type": "landing 전용 신규 파일. 원본 ai-panel.tsx 내 추출 버튼을 별도 컴포넌트로 분리",
+        "target_path_in_landing": "apps/landing/src/components/dashboard-preview/ai-register-main/ai-panel/ai-extract-button.tsx",
+        "source_exists": false,
+        "notes": "원본 .references에 ai-extract-button.tsx 독립 파일 없음. Phase 1 스펙 §3 및 §5에서 landing 전용 컴포넌트로 정의. 조작감 #3 button-press 적용 대상."
+      },
+      {
+        "relative_path": "_components/register-form.tsx",
+        "role": "OrderForm 최상위 — 3-column grid 레이아웃 (register-form.tsx:939 lg:grid-cols-3)",
+        "replication_type": "DOM 복제",
+        "target_path_in_landing": "apps/landing/src/components/dashboard-preview/ai-register-main/order-form/index.tsx",
+        "source_exists": true,
+        "notes": "Phase 3에서 3-column grid 전체 재현 대상. 원본 register-form.tsx:939 구조 기준."
+      },
+      {
+        "relative_path": "_components/company-manager-section.tsx",
+        "role": "업체/담당자 섹션. INITIAL부터 pre-filled (옵틱물류/이매니저). AI_APPLY 영향 없음",
+        "replication_type": "DOM 복제 (신규). fill-in caret 적용 대상 제외 (REQ-DASH3-022)",
+        "target_path_in_landing": "apps/landing/src/components/dashboard-preview/ai-register-main/order-form/company-manager-section.tsx",
+        "source_exists": true,
+        "notes": ""
+      },
+      {
+        "relative_path": "_components/company-manager-form.tsx",
+        "role": "업체 폼",
+        "replication_type": "DOM 복제",
+        "target_path_in_landing": "apps/landing/src/components/dashboard-preview/ai-register-main/order-form/company-manager-form.tsx",
+        "source_exists": true,
+        "notes": ""
+      },
+      {
+        "relative_path": "_components/company-manager-list.tsx",
+        "role": "담당자 리스트",
+        "replication_type": "DOM 복제",
+        "target_path_in_landing": "apps/landing/src/components/dashboard-preview/ai-register-main/order-form/company-manager-list.tsx",
+        "source_exists": true,
+        "notes": ""
+      },
+      {
+        "relative_path": "_components/company-warning.tsx",
+        "role": "업체 경고",
+        "replication_type": "DOM 복제",
+        "target_path_in_landing": "apps/landing/src/components/dashboard-preview/ai-register-main/order-form/company-warning.tsx",
+        "source_exists": true,
+        "notes": ""
+      },
+      {
+        "relative_path": "_components/location-form.tsx",
+        "role": "주소 폼 (pickup/delivery 재사용). 조작감 #6 fill-in caret 적용",
+        "replication_type": "DOM 복제",
+        "target_path_in_landing": "apps/landing/src/components/dashboard-preview/ai-register-main/order-form/location-form.tsx",
+        "source_exists": true,
+        "notes": "pickup/delivery 양쪽에서 재사용. REQ-DASH3-004 기준."
+      },
+      {
+        "relative_path": "_components/datetime/datetime-card.tsx",
+        "role": "날짜·시간 카드 베이스. 조작감 #6 fill-in caret 적용",
+        "replication_type": "DOM 복제",
+        "target_path_in_landing": "apps/landing/src/components/dashboard-preview/ai-register-main/order-form/datetime-card.tsx",
+        "source_exists": true,
+        "notes": "pickup/delivery 재사용 구조. pickup-datetime-card.tsx, dropoff-datetime-card.tsx는 wrapper이므로 datetime-card.tsx가 핵심 대상."
+      },
+      {
+        "relative_path": "_components/datetime/pickup-datetime-card.tsx",
+        "role": "상차 날짜·시간 카드 (wrapper)",
+        "replication_type": "DOM 복제",
+        "target_path_in_landing": "apps/landing/src/components/dashboard-preview/ai-register-main/order-form/pickup-datetime-card.tsx",
+        "source_exists": true,
+        "notes": "datetime-card.tsx 기반 wrapper. Phase 1 스펙 '+ pickup/dropoff 변형' 표현 대응."
+      },
+      {
+        "relative_path": "_components/datetime/dropoff-datetime-card.tsx",
+        "role": "하차 날짜·시간 카드 (wrapper)",
+        "replication_type": "DOM 복제",
+        "target_path_in_landing": "apps/landing/src/components/dashboard-preview/ai-register-main/order-form/dropoff-datetime-card.tsx",
+        "source_exists": true,
+        "notes": "datetime-card.tsx 기반 wrapper."
+      },
+      {
+        "relative_path": "_components/transport-option-card.tsx",
+        "role": "운송 옵션 카드 (8옵션). 조작감 #9 toggle stroke 적용",
+        "replication_type": "DOM 복제",
+        "target_path_in_landing": "apps/landing/src/components/dashboard-preview/ai-register-main/order-form/transport-option-card.tsx",
+        "source_exists": true,
+        "notes": ""
+      },
+      {
+        "relative_path": "_components/option-selector.tsx",
+        "role": "옵션 선택기",
+        "replication_type": "DOM 복제",
+        "target_path_in_landing": "apps/landing/src/components/dashboard-preview/ai-register-main/order-form/option-selector.tsx",
+        "source_exists": true,
+        "notes": ""
+      },
+      {
+        "relative_path": "_components/estimate-info-card.tsx",
+        "role": "거리/운임 카드. 조작감 #8 number-rolling, #9 toggle, #10 border pulse 적용",
+        "replication_type": "DOM 복제",
+        "target_path_in_landing": "apps/landing/src/components/dashboard-preview/ai-register-main/order-form/estimate-info-card.tsx",
+        "source_exists": true,
+        "notes": ""
+      },
+      {
+        "relative_path": "_components/cargo-info-form.tsx",
+        "role": "차량/화물 폼. 조작감 #6 fill-in caret, #7 dropdown 적용",
+        "replication_type": "DOM 복제",
+        "target_path_in_landing": "apps/landing/src/components/dashboard-preview/ai-register-main/order-form/cargo-info-form.tsx",
+        "source_exists": true,
+        "notes": ""
+      },
+      {
+        "relative_path": "_components/register-success-dialog.tsx",
+        "role": "성공 다이얼로그 — Phase 1에서 파일 복제만. open 항상 false",
+        "replication_type": "파일 복제만 (호출 없음, REQ-DASH3-004)",
+        "target_path_in_landing": "apps/landing/src/components/dashboard-preview/ai-register-main/order-form/register-success-dialog.tsx",
+        "source_exists": true,
+        "notes": "REQ-DASH3-013: successDialogOpen 항상 false 고정."
+      },
+      {
+        "relative_path": null,
+        "role": "정산 섹션 (청구/지급/추가 요금/합계). 조작감 #8 number-rolling 적용",
+        "replication_type": "landing 전용 신규 파일. 원본 register-form.tsx 내부 정산 영역을 별도 컴포넌트로 분리",
+        "target_path_in_landing": "apps/landing/src/components/dashboard-preview/ai-register-main/order-form/settlement-section.tsx",
+        "source_exists": false,
+        "notes": "원본 .references에 settlement-section.tsx 독립 파일 없음. Phase 1 스펙 §3 및 §5에서 landing 전용 컴포넌트로 정의. 원본 register-form.tsx 내 정산 UI를 추출하여 생성."
+      },
+      {
+        "relative_path": "_components/search-address-dialog.tsx",
+        "role": "주소 검색 다이얼로그 — 닫힌 상태 시각 스냅샷만",
+        "replication_type": "DOM 복제, 닫힌 상태만 (REQ-DASH3-005)",
+        "target_path_in_landing": "apps/landing/src/components/dashboard-preview/ai-register-main/order-form/search-address-dialog.tsx",
+        "source_exists": true,
+        "notes": "포털/트리거 로직 제거. open=false 기본값."
+      },
+      {
+        "relative_path": "_components/company-manager-dialog.tsx",
+        "role": "업체 다이얼로그 — 닫힌 상태 시각 스냅샷만",
+        "replication_type": "시각 스냅샷, 닫힌 상태만 (REQ-DASH3-005)",
+        "target_path_in_landing": "apps/landing/src/components/dashboard-preview/ai-register-main/order-form/company-manager-dialog.tsx",
+        "source_exists": true,
+        "notes": "포털/트리거 로직 제거. open=false 기본값."
+      }
+    ]
+  },
+  "captures": [],
+  "capture_plan": {
+    "note": "실제 스크린샷 캡처는 Spike 또는 Milestone 5에서 수행. 본 단계는 원본 파일 목록 + 버전 동결만.",
+    "planned_captures": [
+      {
+        "source": "spec",
+        "scenario": "C",
+        "viewport": 1440,
+        "state": "INITIAL",
+        "description": "빈 폼 + CompanyManager pre-filled (옵틱물류/이매니저). caret 대기 상태.",
+        "trigger": "Milestone 5 완료 후"
+      },
+      {
+        "source": "spec",
+        "scenario": "C",
+        "viewport": 1440,
+        "state": "AI_INPUT",
+        "description": "AiInputArea 변동 리듬 타이핑 진행 중 상태.",
+        "trigger": "Milestone 5 완료 후"
+      },
+      {
+        "source": "spec",
+        "scenario": "C",
+        "viewport": 1440,
+        "state": "AI_EXTRACT",
+        "description": "AiExtractButton press + spinner 상태. AiResultButtons 결과 카드 등장 직전.",
+        "trigger": "Milestone 5 완료 후"
+      },
+      {
+        "source": "spec",
+        "scenario": "C",
+        "viewport": 1440,
+        "state": "AI_APPLY",
+        "description": "파트별 beat 완료 + 전체 beat 완료. 모든 필드 채움 완료 상태.",
+        "trigger": "Milestone 5 완료 후"
+      },
+      {
+        "source": "spec",
+        "scenario": "C",
+        "viewport": 1024,
+        "state": "AI_APPLY",
+        "description": "Tablet scale 0.40 + 3-column 유지 상태. AI_APPLY 완료.",
+        "trigger": "Milestone 5 Tablet 검증"
+      },
+      {
+        "source": "current",
+        "scenario": "C",
+        "viewport": 1440,
+        "state": "INITIAL",
+        "description": "Phase 3 구현 — INITIAL 상태. CompanyManager pre-filled 확인.",
+        "trigger": "Milestone 2 완료 후"
+      },
+      {
+        "source": "current",
+        "scenario": "C",
+        "viewport": 1440,
+        "state": "AI_INPUT",
+        "description": "Phase 3 구현 — AiInputArea 타이핑 상태.",
+        "trigger": "Milestone 2 완료 후"
+      },
+      {
+        "source": "current",
+        "scenario": "C",
+        "viewport": 1440,
+        "state": "AI_EXTRACT",
+        "description": "Phase 3 구현 — AI 추출 진행 상태.",
+        "trigger": "Milestone 3 완료 후"
+      },
+      {
+        "source": "current",
+        "scenario": "C",
+        "viewport": 1440,
+        "state": "AI_APPLY",
+        "description": "Phase 3 구현 — AI_APPLY 2단 구조 완료 상태.",
+        "trigger": "Milestone 3 완료 후"
+      },
+      {
+        "source": "current",
+        "scenario": "C",
+        "viewport": 1024,
+        "state": "AI_APPLY",
+        "description": "Phase 3 구현 — Tablet 0.40 scale AI_APPLY 완료.",
+        "trigger": "Milestone 5"
+      }
+    ]
+  },
+  "pcc06_applicable": false
+}
