@@ -6,12 +6,15 @@
  * 탭 전환 로직(fake-typing) 은 M2-03 AiInputArea 가 담당하며, 본 컴포넌트는 시각
  * 표현과 접근성만 제공한다.
  *
- * 접근성 (REQ-DASH-007)
+ * 접근성 (REQ-DASH-007 + M5-06)
  *  - `role="tablist"` + `aria-label="AI 입력 타입 선택"`
- *  - 각 탭은 `role="tab"` + `aria-selected` + `aria-controls`
+ *  - 각 탭은 `role="tab"` + `aria-selected`
+ *  - aria-controls 는 의도적으로 미지정 — tabpanel 요소가 별도로 존재하지 않는 데모 렌더
+ *    이므로 dangling aria-controls 를 회피 (axe-core aria-valid-attr-value 위반 방지).
  *
  * @see REQ-DASH3-003 (AiPanel 컴포넌트 복제 매니페스트)
  * @see TC-DASH3-UNIT-TABBAR
+ * @see TC-DASH3-A11Y-AXE (M5-06)
  */
 
 'use client'
@@ -49,7 +52,6 @@ export function AiTabBar({ activeTab, onTabChange }: AiTabBarProps) {
             type="button"
             role="tab"
             aria-selected={isActive}
-            aria-controls={`ai-tab-panel-${key}`}
             data-tab={key}
             data-active={isActive}
             onClick={() => onTabChange?.(key)}
