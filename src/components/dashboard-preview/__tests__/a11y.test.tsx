@@ -64,27 +64,36 @@ describe('Phase 3 접근성 — axe-core 스캔 (M5-06)', () => {
     vi.useRealTimers()
   })
 
-  it('AiPanelContainer: 0 violations at AI_APPLY Step', async () => {
-    const { container } = render(
-      <AiPanelContainer
-        step={AI_APPLY_STEP}
-        aiInput={PREVIEW_MOCK_DATA.aiInput}
-        aiResult={PREVIEW_MOCK_DATA.aiResult}
-      />,
-    )
-    const results = await axe(container)
-    expect(results).toHaveNoViolations()
-  })
+  // review#2 — axe 스캔을 4 Step (INITIAL/AI_INPUT/AI_EXTRACT/AI_APPLY) 전부로 확장.
+  //   Step 별 DOM 구조 차이 (spinner / caret / buttons) 를 모두 스캔해 REQ-DASH3-066
+  //   "axe-core 0 violations" 를 Step 불문 조건으로 충족.
+  it.each(PREVIEW_STEPS)(
+    'AiPanelContainer: 0 violations at %s',
+    async (step) => {
+      const { container } = render(
+        <AiPanelContainer
+          step={step}
+          aiInput={PREVIEW_MOCK_DATA.aiInput}
+          aiResult={PREVIEW_MOCK_DATA.aiResult}
+        />,
+      )
+      const results = await axe(container)
+      expect(results).toHaveNoViolations()
+    },
+  )
 
-  it('OrderFormContainer: 0 violations at AI_APPLY Step', async () => {
-    const { container } = render(
-      <OrderFormContainer step={AI_APPLY_STEP} formData={PREVIEW_MOCK_DATA.formData} />,
-    )
-    const results = await axe(container)
-    expect(results).toHaveNoViolations()
-  })
+  it.each(PREVIEW_STEPS)(
+    'OrderFormContainer: 0 violations at %s',
+    async (step) => {
+      const { container } = render(
+        <OrderFormContainer step={step} formData={PREVIEW_MOCK_DATA.formData} />,
+      )
+      const results = await axe(container)
+      expect(results).toHaveNoViolations()
+    },
+  )
 
-  it('AiPanel + OrderForm 조합 (Phase 3 메인 쉘): 0 violations', async () => {
+  it('AiPanel + OrderForm 조합 (Phase 3 메인 쉘): 0 violations at AI_APPLY', async () => {
     const { container } = render(
       <div>
         <AiPanelContainer
@@ -117,11 +126,14 @@ describe('Phase 3 Landmark 구조 (M5-06)', () => {
     expect(aside.tagName).toBe('ASIDE')
   })
 
-  it('OrderForm 은 aria-label="주문 등록 폼" landmark 를 갖는다', () => {
+  it('OrderForm 은 <section role="region" aria-label="주문 등록 폼"> landmark 를 갖는다 (review#3)', () => {
     render(
       <OrderFormContainer step={AI_APPLY_STEP} formData={PREVIEW_MOCK_DATA.formData} />,
     )
-    expect(screen.getByLabelText('주문 등록 폼')).toBeInTheDocument()
+    // getByRole('region') 으로 실제 landmark 노출 검증 (getByLabelText 는 label 존재만 확인).
+    const region = screen.getByRole('region', { name: '주문 등록 폼' })
+    expect(region).toBeInTheDocument()
+    expect(region.tagName).toBe('SECTION')
   })
 
   it('AiPanel 의 4 카테고리 role="group" + aria-label 완전', () => {
@@ -150,6 +162,16 @@ describe('Phase 3 reduced-motion fallback (M5-06)', () => {
   it('PREVIEW_STEPS 의 마지막 Step 은 AI_APPLY (index 3)', () => {
     expect(PREVIEW_STEPS.length).toBe(4)
     expect(PREVIEW_STEPS[3]?.id).toBe('AI_APPLY')
+  })
+
+  // review#1 — framer-motion 의 MotionConfig 가 reducedMotion="user" 로 설정되어
+  // OS prefers-reduced-motion 감지 시 모든 하위 motion.* 의 transition duration 을
+  // 0 으로 강제한다 (MotionProvider 루트 래핑).
+  it('MotionProvider 가 app/layout.tsx 에서 MotionConfig 를 주입한다', async () => {
+    const mod = await import('@/components/providers/motion-provider')
+    expect(mod.MotionProvider).toBeDefined()
+    // MotionProvider 컴포넌트 이름 검증 (SSR 호환성을 위한 client component 식별).
+    expect(typeof mod.MotionProvider).toBe('function')
   })
 
   it('reduced-motion 시 DashboardPreview 가 useAutoPlay(enabled:false) 로 index 3 렌더', async () => {

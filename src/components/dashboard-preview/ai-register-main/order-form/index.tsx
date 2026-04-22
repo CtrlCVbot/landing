@@ -224,7 +224,11 @@ export function OrderFormContainer({ step, formData }: OrderFormContainerProps) 
   )
 
   return (
-    <div
+    // M5-06 review#3 — landmark 완전성: <div aria-label> 은 implicit role 이 없어
+    // 스크린리더 landmark navigation 에서 누락된다. <section role="region"> 으로 변경하여
+    // VoiceOver rotor / NVDA D 키 등 landmark 탐색에서 노출되도록 보장.
+    <section
+      role="region"
       aria-label="주문 등록 폼"
       data-testid="order-form-grid"
       className="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-4 p-4 bg-gradient-to-br from-gray-900/50 to-gray-950/50 overflow-auto"
@@ -331,6 +335,6 @@ export function OrderFormContainer({ step, formData }: OrderFormContainerProps) 
           rollingTriggerAt={allBeat.rollingTriggerAt}
         />
       </div>
-    </div>
+    </section>
   )
 }
