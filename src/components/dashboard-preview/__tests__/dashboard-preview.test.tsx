@@ -162,21 +162,21 @@ describe('DashboardPreview — Phase 3 Feature flag', () => {
     vi.unstubAllEnvs()
   })
 
-  describe('TC-DASH3-INT-FLAG: flag OFF renders Phase 1/2', () => {
-    it('renders AiPanelPreview + FormPreview (legacy path) by default', () => {
+  describe('TC-DASH3-INT-FLAG: default ON (M5 closeout)', () => {
+    it('renders AiRegisterMain regions by default (Phase 3 default ON)', () => {
       render(<DashboardPreview />)
-      expect(screen.getByTestId('ai-panel')).toBeInTheDocument()
-      expect(screen.getByTestId('form-preview')).toBeInTheDocument()
+      expect(screen.getByLabelText('AI 화물 등록 패널')).toBeInTheDocument()
+      expect(screen.getByLabelText('주문 등록 폼')).toBeInTheDocument()
     })
 
-    it('does NOT render AiRegisterMain regions when flag is off', () => {
+    it('does NOT render Phase 1/2 components by default', () => {
       render(<DashboardPreview />)
-      expect(screen.queryByLabelText('AI 화물 등록 패널')).not.toBeInTheDocument()
-      expect(screen.queryByLabelText('주문 등록 폼')).not.toBeInTheDocument()
+      expect(screen.queryByTestId('ai-panel')).not.toBeInTheDocument()
+      expect(screen.queryByTestId('form-preview')).not.toBeInTheDocument()
     })
   })
 
-  describe('TC-DASH3-INT-FLAG: flag ON via env NEXT_PUBLIC_DASH_V3', () => {
+  describe('TC-DASH3-INT-FLAG: env=phase3 (명시적 opt-in, default 와 동일)', () => {
     it('env=phase3: renders AiRegisterMain (2-col shell regions)', () => {
       vi.stubEnv('NEXT_PUBLIC_DASH_V3', 'phase3')
       render(<DashboardPreview />)
@@ -184,40 +184,51 @@ describe('DashboardPreview — Phase 3 Feature flag', () => {
       expect(screen.getByLabelText('주문 등록 폼')).toBeInTheDocument()
     })
 
-    it('env=phase3: does NOT render Phase 1/2 components', () => {
-      vi.stubEnv('NEXT_PUBLIC_DASH_V3', 'phase3')
+    it('env=something-unknown: default ON 유지 (알 수 없는 값은 무시)', () => {
+      vi.stubEnv('NEXT_PUBLIC_DASH_V3', 'something-unknown')
       render(<DashboardPreview />)
+      expect(screen.getByLabelText('AI 화물 등록 패널')).toBeInTheDocument()
       expect(screen.queryByTestId('ai-panel')).not.toBeInTheDocument()
-      expect(screen.queryByTestId('form-preview')).not.toBeInTheDocument()
-    })
-
-    it('env=something-else: keeps Phase 1/2', () => {
-      vi.stubEnv('NEXT_PUBLIC_DASH_V3', 'something-else')
-      render(<DashboardPreview />)
-      expect(screen.getByTestId('ai-panel')).toBeInTheDocument()
-      expect(screen.queryByLabelText('AI 화물 등록 패널')).not.toBeInTheDocument()
     })
   })
 
-  describe('TC-DASH3-INT-FLAG: flag ON via query ?dashV3=1', () => {
-    it('query=1: renders AiRegisterMain', () => {
+  describe('TC-DASH3-INT-FLAG: env 기반 opt-out (Phase 1/2 fallback)', () => {
+    it.each(['legacy', 'phase1', 'phase2', 'off', '0'])(
+      'env="%s": Phase 1/2 렌더 (AiPanelPreview + FormPreview)',
+      (value) => {
+        vi.stubEnv('NEXT_PUBLIC_DASH_V3', value)
+        render(<DashboardPreview />)
+        expect(screen.getByTestId('ai-panel')).toBeInTheDocument()
+        expect(screen.getByTestId('form-preview')).toBeInTheDocument()
+        expect(screen.queryByLabelText('AI 화물 등록 패널')).not.toBeInTheDocument()
+      },
+    )
+  })
+
+  describe('TC-DASH3-INT-FLAG: query 기반 세션 opt-in/out', () => {
+    it('query=1: renders AiRegisterMain (세션 opt-in)', () => {
       setQuery('?dashV3=1')
       render(<DashboardPreview />)
       expect(screen.getByLabelText('AI 화물 등록 패널')).toBeInTheDocument()
-      expect(screen.getByLabelText('주문 등록 폼')).toBeInTheDocument()
     })
 
-    it('query=0: stays Phase 1/2', () => {
+    it('query=0: Phase 1/2 fallback (세션 opt-out)', () => {
       setQuery('?dashV3=0')
       render(<DashboardPreview />)
       expect(screen.getByTestId('ai-panel')).toBeInTheDocument()
       expect(screen.queryByLabelText('AI 화물 등록 패널')).not.toBeInTheDocument()
     })
+
+    it('query=1 이 env=legacy 를 덮어쓴다 (query 우선)', () => {
+      vi.stubEnv('NEXT_PUBLIC_DASH_V3', 'legacy')
+      setQuery('?dashV3=1')
+      render(<DashboardPreview />)
+      expect(screen.getByLabelText('AI 화물 등록 패널')).toBeInTheDocument()
+    })
   })
 
   describe('TC-DASH3-INT-FLAG: exclusive rendering', () => {
-    it('flag ON: Phase 1/2 and AiRegisterMain do not coexist', () => {
-      vi.stubEnv('NEXT_PUBLIC_DASH_V3', 'phase3')
+    it('default ON: Phase 1/2 and AiRegisterMain do not coexist', () => {
       render(<DashboardPreview />)
 
       const ariaPanel = screen.queryByLabelText('AI 화물 등록 패널')
@@ -330,6 +341,8 @@ describe('DashboardPreview — Phase 3 Feature flag', () => {
     })
 
     it('useDashV3=false + Desktop → 기존 Phase 1/2 렌더 (Mobile 분기 미적용)', () => {
+      // M5 closeout: default 가 Phase 3 로 승격되었으므로 legacy 경로를 명시적으로 opt-out.
+      vi.stubEnv('NEXT_PUBLIC_DASH_V3', 'legacy')
       setDesktop()
       render(<DashboardPreview />)
 

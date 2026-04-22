@@ -1,5 +1,5 @@
 /**
- * T-DASH3-M1-04 — useDashV3 feature flag hook 단위 테스트
+ * T-DASH3-M1-04 (M5 closeout) — useDashV3 feature flag hook 단위 테스트
  *
  * TC
  *  - TC-DASH3-INT-FLAG: env 또는 query 기반 Phase 3 Feature flag 판정
@@ -7,13 +7,15 @@
  * REQ
  *  - REQ-DASH3-052, 053 (Phase 3 활성화 조건)
  *
- * 판정 규칙 (Phase 1 스펙 §5 Feature flag)
- *  - env  `NEXT_PUBLIC_DASH_V3 === 'phase3'` → 활성
- *  - env  그 외 값 / undefined             → 비활성
- *  - query `?dashV3=1`                       → 활성 (env 와 OR 결합)
- *  - 기본                                   → 비활성
+ * 판정 규칙 (M5 closeout — default ON 승격)
+ *  - 기본                                                → **활성** (Phase 3)
+ *  - env  `NEXT_PUBLIC_DASH_V3` in legacy 집합            → 비활성 (Phase 1/2)
+ *  - env  `NEXT_PUBLIC_DASH_V3 === 'phase3'`              → 활성
+ *  - query `?dashV3=0`                                    → 비활성 (세션 opt-out)
+ *  - query `?dashV3=1`                                    → 활성 (세션 opt-in)
+ *  - query 가 env 보다 우선
  *
- * SSR 안전성: typeof window === 'undefined' 일 때 초기값 false.
+ * SSR 안전성: typeof window === 'undefined' 일 때 초기값 true (default ON).
  */
 
 import { renderHook } from '@testing-library/react'
@@ -41,74 +43,80 @@ function resetQuery() {
 // Tests
 // ---------------------------------------------------------------------------
 
-describe('useDashV3', () => {
+describe('useDashV3 (M5 closeout — default ON)', () => {
   afterEach(() => {
     resetQuery()
     vi.unstubAllEnvs()
   })
 
-  describe('TC-DASH3-INT-FLAG: env NEXT_PUBLIC_DASH_V3', () => {
-    it('returns false by default (no env, no query)', () => {
+  describe('TC-DASH3-INT-FLAG: 기본 활성 (default ON)', () => {
+    it('returns true by default (no env, no query) — Phase 3 default', () => {
       const { result } = renderHook(() => useDashV3())
-      expect(result.current).toBe(false)
+      expect(result.current).toBe(true)
     })
 
-    it('returns true when NEXT_PUBLIC_DASH_V3="phase3"', () => {
+    it('returns true when NEXT_PUBLIC_DASH_V3="phase3" (명시적 opt-in)', () => {
       vi.stubEnv('NEXT_PUBLIC_DASH_V3', 'phase3')
       const { result } = renderHook(() => useDashV3())
       expect(result.current).toBe(true)
     })
 
-    it('returns false when NEXT_PUBLIC_DASH_V3="spike" (Spike retired in M1 review #2)', () => {
-      vi.stubEnv('NEXT_PUBLIC_DASH_V3', 'spike')
+    it('returns true when NEXT_PUBLIC_DASH_V3="something-unknown" (default ON 유지)', () => {
+      vi.stubEnv('NEXT_PUBLIC_DASH_V3', 'something-unknown')
       const { result } = renderHook(() => useDashV3())
-      expect(result.current).toBe(false)
-    })
-
-    it('returns false when NEXT_PUBLIC_DASH_V3="something-else"', () => {
-      vi.stubEnv('NEXT_PUBLIC_DASH_V3', 'something-else')
-      const { result } = renderHook(() => useDashV3())
-      expect(result.current).toBe(false)
+      expect(result.current).toBe(true)
     })
   })
 
-  describe('TC-DASH3-INT-FLAG: query ?dashV3=1', () => {
-    it('returns true when ?dashV3=1 is present', () => {
+  describe('TC-DASH3-INT-FLAG: env 기반 opt-out (legacy 회귀)', () => {
+    it.each(['legacy', 'phase1', 'phase2', 'off', '0'])(
+      'returns false when NEXT_PUBLIC_DASH_V3="%s"',
+      (value) => {
+        vi.stubEnv('NEXT_PUBLIC_DASH_V3', value)
+        const { result } = renderHook(() => useDashV3())
+        expect(result.current).toBe(false)
+      },
+    )
+  })
+
+  describe('TC-DASH3-INT-FLAG: query 기반 세션 opt-out/in', () => {
+    it('returns true when ?dashV3=1 (세션 opt-in)', () => {
       setQuery('?dashV3=1')
       const { result } = renderHook(() => useDashV3())
       expect(result.current).toBe(true)
     })
 
-    it('returns false when ?dashV3=0', () => {
+    it('returns false when ?dashV3=0 (세션 opt-out)', () => {
       setQuery('?dashV3=0')
       const { result } = renderHook(() => useDashV3())
       expect(result.current).toBe(false)
     })
 
-    it('returns false when ?dashV3 is missing', () => {
+    it('returns true when ?dashV3 is missing (default ON)', () => {
       setQuery('?other=1')
       const { result } = renderHook(() => useDashV3())
-      expect(result.current).toBe(false)
+      expect(result.current).toBe(true)
     })
   })
 
-  describe('TC-DASH3-INT-FLAG: env + query OR', () => {
-    it('returns true when env=phase3 even if query missing', () => {
+  describe('TC-DASH3-INT-FLAG: query 가 env 보다 우선', () => {
+    it('env=legacy + query=1 → true (query 우선)', () => {
+      vi.stubEnv('NEXT_PUBLIC_DASH_V3', 'legacy')
+      setQuery('?dashV3=1')
+      const { result } = renderHook(() => useDashV3())
+      expect(result.current).toBe(true)
+    })
+
+    it('env=phase3 + query=0 → false (query 우선)', () => {
+      vi.stubEnv('NEXT_PUBLIC_DASH_V3', 'phase3')
+      setQuery('?dashV3=0')
+      const { result } = renderHook(() => useDashV3())
+      expect(result.current).toBe(false)
+    })
+
+    it('env=phase3 + query missing → true (env=phase3 유지)', () => {
       vi.stubEnv('NEXT_PUBLIC_DASH_V3', 'phase3')
       setQuery('')
-      const { result } = renderHook(() => useDashV3())
-      expect(result.current).toBe(true)
-    })
-
-    it('returns true when query=1 even if env disabled', () => {
-      setQuery('?dashV3=1')
-      const { result } = renderHook(() => useDashV3())
-      expect(result.current).toBe(true)
-    })
-
-    it('returns true when both env=phase3 AND query=1', () => {
-      vi.stubEnv('NEXT_PUBLIC_DASH_V3', 'phase3')
-      setQuery('?dashV3=1')
       const { result } = renderHook(() => useDashV3())
       expect(result.current).toBe(true)
     })

@@ -98,8 +98,15 @@ function setMobile() {
 
 describe('DashboardPreview', () => {
   beforeEach(() => {
+    // M5 closeout: Phase 3 가 default ON 이 된 이후 legacy 테스트는 Phase 1/2 경로를
+    // 검증하므로 env 로 opt-out 고정. (useDashV3 hook 이 'legacy' 값을 감지해 false 반환)
+    vi.stubEnv('NEXT_PUBLIC_DASH_V3', 'legacy')
     setDesktop()
     useAutoPlaySpy.mockClear()
+  })
+
+  afterEach(() => {
+    vi.unstubAllEnvs()
   })
 
   it('renders PreviewChrome, AiPanelPreview, and FormPreview', () => {
