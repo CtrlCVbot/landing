@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import { ThemeProvider } from '@/components/providers/theme-provider'
 import { MotionProvider } from '@/components/providers/motion-provider'
 import './globals.css'
 
@@ -43,7 +44,7 @@ export default function RootLayout({
   readonly children: React.ReactNode
 }) {
   return (
-    <html lang="ko" className={inter.variable}>
+    <html lang="ko" className={inter.variable} suppressHydrationWarning>
       <head>
         <link
           rel="stylesheet"
@@ -53,7 +54,14 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <MotionProvider>{children}</MotionProvider>
+        <ThemeProvider
+          attribute="data-theme"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <MotionProvider>{children}</MotionProvider>
+        </ThemeProvider>
       </body>
     </html>
   )

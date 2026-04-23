@@ -19,13 +19,13 @@
 
 | 파일 | 변경 |
 |------|------|
-| `src/app/globals.css` | ① `@theme inline` 19 개 컬러 변수 → `var(--landing-*)` 간접화 (REQ-001). ② `:root` 블록에 라이트 팔레트 19 개 `--landing-*` 신규 정의 (REQ-002). ③ `[data-theme="dark"]` 블록에 다크 팔레트 19 개 정의 (REQ-003, 기존 다크 값 이관). ④ 기존 `@layer base` + `prefers-reduced-motion` 블록 **유지** (NFR-006). |
+| `src/app/globals.css` | ① `@theme inline` **13 개 직접값 색상 토큰** → `var(--landing-*)` 간접화 (REQ-001, decision-log D-005). shadcn alias 7 개(`--color-primary`, `--color-secondary`, `--color-input`, `--color-ring` 등)는 이미 `var(--color-*)` 참조 중이므로 하위 토큰 이중화로 자동 상속. ② `:root` 블록에 라이트 팔레트 **13 개** `--landing-*` 신규 정의 (REQ-002). ③ `[data-theme="dark"]` 블록에 다크 팔레트 **13 개** 정의 (REQ-003, 기존 다크 값 이관). ④ 기존 `@layer base` + `prefers-reduced-motion` 블록 **유지** (NFR-006). |
 
 **완료 조건**:
 
-- [ ] `@theme inline { --color-*: var(--landing-*); }` 19 개 변수 간접화 확인
-- [ ] `:root { --landing-*: ...; }` 19 개 라이트 값 정의 + WCAG AA ≥ 4.5:1 (텍스트) / ≥ 3:1 (UI) 확인
-- [ ] `[data-theme="dark"] { --landing-*: ...; }` 19 개 다크 값 정의 + 기존 다크 렌더 시각 회귀 스냅샷 100% 일치
+- [ ] `@theme inline { --color-*: var(--landing-*); }` 13 개 직접값 간접화 확인 + shadcn alias 7 개 `var(--color-*)` 참조 유지 확인
+- [ ] `:root { --landing-*: ...; }` 13 개 라이트 값 정의 + WCAG AA ≥ 4.5:1 (텍스트) / ≥ 3:1 (UI) 확인
+- [ ] `[data-theme="dark"] { --landing-*: ...; }` 13 개 다크 값 정의 + 기존 다크 렌더 시각 회귀 스냅샷 100% 일치
 - [ ] `pnpm build` 성공 (Tailwind 4 빌드 시점 토큰 해석 통과)
 - [ ] `pnpm dev --turbopack` 정상 기동
 
@@ -334,7 +334,7 @@ grep -rn '`.*\${.*}.*bg-white\|`.*\${.*}.*text-white' src/
 ```bash
 # @theme inline 간접화 확인 (REQ-001)
 grep -n "var(--landing-" src/app/globals.css
-# 기대: 19 개 변수 간접화 라인
+# 기대: 13 개 직접값 간접화 라인 (shadcn alias 7 개는 기존 var(--color-*) 참조 유지)
 
 # :root 라이트 팔레트 확인 (REQ-002)
 grep -n "^:root" src/app/globals.css

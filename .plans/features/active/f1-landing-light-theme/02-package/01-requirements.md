@@ -10,15 +10,15 @@
 
 ### REQ-001 — `@theme inline` 변수 간접화
 
-`src/app/globals.css` 의 `@theme inline` 블록에서 19개 `--color-*` 변수를 `var(--landing-*)` 참조로 교체한다.
+`src/app/globals.css` 의 `@theme inline` 블록에서 **13개 직접값 색상 토큰**을 `var(--landing-*)` 참조로 교체한다. shadcn alias 7개(`--color-primary`, `--color-secondary`, `--color-primary-foreground`, `--color-secondary-foreground`, `--color-accent-foreground-shadcn`, `--color-input`, `--color-ring`)는 이미 `var(--color-*)` 참조 중이므로 하위 토큰 이중화로 라이트/다크 전환을 **자동 상속**한다. radius/font 변수는 색상이 아니므로 이중화 대상 아님 (decision-log D-005 참조).
 
 **수용 기준**:
-- `grep -n "var(--landing-" src/app/globals.css` → 19 라인
+- `grep -n "var(--landing-" src/app/globals.css` → 13 라인 (코드 기준, 주석 제외)
 - `pnpm build` 성공
 
 ### REQ-002 — `:root` 라이트 팔레트
 
-`:root { --landing-*: ...; }` 에 라이트 팔레트 19개 변수 신규 정의.
+`:root { --landing-*: ...; }` 에 라이트 팔레트 **13개** 변수 신규 정의.
 
 **수용 기준**:
 - WCAG AA 대비 ≥ 4.5:1 (텍스트) / ≥ 3:1 (UI) 확보 (토큰 매핑 결정표 REQ-013)
@@ -26,7 +26,7 @@
 
 ### REQ-003 — `[data-theme="dark"]` 다크 팔레트
 
-`[data-theme="dark"] { --landing-*: ...; }` 에 다크 팔레트 19개 변수 정의 (기존 다크 값 이관).
+`[data-theme="dark"] { --landing-*: ...; }` 에 다크 팔레트 **13개** 변수 정의 (기존 다크 값 이관).
 
 **수용 기준**:
 - 기존 다크 렌더 스냅샷 **100% 일치** (회귀 없음)

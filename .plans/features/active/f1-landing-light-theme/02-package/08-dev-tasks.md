@@ -31,18 +31,20 @@
 
 ### Scope
 - `src/app/globals.css` 수정
-  - `@theme inline` 19개 `--color-*` 변수 → `var(--landing-*)` 간접화
-  - `:root { --landing-*: ... }` 라이트 팔레트 19개 신규 정의 (WCAG AA ≥ 4.5:1)
-  - `[data-theme="dark"] { --landing-*: ... }` 다크 팔레트 19개 정의 (기존 다크 값 이관)
+  - `@theme inline` **13개 직접값 색상 토큰** → `var(--landing-*)` 간접화 (shadcn alias 7개는 기존 `var(--color-*)` 참조로 자동 상속)
+  - `:root { --landing-*: ... }` 라이트 팔레트 **13개** 신규 정의 (WCAG AA ≥ 4.5:1)
+  - `[data-theme="dark"] { --landing-*: ... }` 다크 팔레트 **13개** 정의 (기존 다크 값 이관)
   - 기존 `@layer base` + `prefers-reduced-motion` 블록 **유지** (NFR-006)
+  - 근거: [decision-log D-005](../00-context/02-decision-log.md) — radius/font(색상 아님) + shadcn alias 7개 제외한 실제 직접값 13개
 
 ### TDD RED (선행)
 `src/__tests__/light-theme.test.tsx` 작성 — `:root` 라이트 팔레트 대비 규칙 검증 (axe color-contrast)
 
 ### Acceptance
-- [ ] 19개 변수 `var(--landing-*)` 간접화 확인 (grep)
-- [ ] `:root` 라이트 팔레트 19개 정의 완료
-- [ ] `[data-theme="dark"]` 다크 팔레트 19개 정의 완료
+- [ ] 13개 직접값 `var(--landing-*)` 간접화 확인 (grep, 코드 기준)
+- [ ] shadcn alias 7개 `var(--color-*)` 참조 유지 확인
+- [ ] `:root` 라이트 팔레트 13개 정의 완료
+- [ ] `[data-theme="dark"]` 다크 팔레트 13개 정의 완료
 - [ ] `pnpm build` 성공 (Tailwind 4 빌드 통과)
 - [ ] 기존 다크 렌더 시각 회귀 스냅샷 100% 일치
 
@@ -52,55 +54,75 @@
 
 ---
 
-## T-THEME-02 — layout.tsx ThemeProvider 주입
+## T-THEME-02 — layout.tsx ThemeProvider 주입 + next-themes install 병합
 
-**REQ**: REQ-005, REQ-006
+**REQ**: REQ-004 (병합), REQ-005, REQ-006
 **PR**: PR-1
+**범위 확장**: [decision-log D-008](../00-context/02-decision-log.md) — next-themes install 을 T-02 로 병합 (typecheck 선행 통과 목적)
 
 ### Scope
+- `src/components/providers/theme-provider.tsx` 신규 — 'use client' next-themes pass-through 래퍼 (motion-provider.tsx 패턴 준수)
 - `src/app/layout.tsx` 수정
   - `<html>` 태그에 `suppressHydrationWarning` 추가 (REQ-006)
   - `<body>` 내부 최상위에 `<ThemeProvider attribute="data-theme" defaultTheme="system" enableSystem disableTransitionOnChange>` 래퍼 추가 (REQ-005)
   - Provider 순서: `ThemeProvider > MotionProvider > children` (PRD §7.3)
+- `package.json` — `next-themes ^0.3.0` dependency 추가 (REQ-004)
+- `pnpm-lock.yaml` — `pnpm add` 자동 생성
 
 ### TDD RED
-SSR 초기 렌더 테스트 작성 (cookie 없음 · localStorage 있음 · OS 다크·라이트 4 조합)
+`src/__tests__/light-theme.test.tsx` 에 T-THEME-02 describe 블록 추가. layout.tsx, theme-provider.tsx, package.json 구조 계약 검증 (파일 파싱 기반 — jsdom 한계 대응).
 
 ### Acceptance
-- [ ] `<html lang="ko" className={inter.variable} suppressHydrationWarning>` 확인
-- [ ] ThemeProvider 4개 속성 모두 명시
-- [ ] Provider 순서 정확 (ThemeProvider 바깥, MotionProvider 안쪽)
-- [ ] `pnpm dev --turbopack` 콘솔 hydration 경고 0건 (NFR-004)
+- [x] `<html lang="ko" className={inter.variable} suppressHydrationWarning>` 확인
+- [x] ThemeProvider 4개 속성 모두 명시
+- [x] Provider 순서 정확 (ThemeProvider 바깥, MotionProvider 안쪽)
+- [x] theme-provider.tsx pass-through 래퍼 작성 + 'use client' 지시자
+- [x] `package.json` 에 `next-themes: ^0.3.0` 추가
+- [x] typecheck 0 errors + 전체 테스트 686/686 PASS
 
 ### Non-goals
 - Cookie 기반 SSR 초기값 주입 (next-themes 내부 처리)
+- NFR-004 `pnpm dev --turbopack` hydration 경고 0건 수동 검증은 PR-2 머지 직전 수행
 
 ---
 
-## T-THEME-03 — next-themes 설치 + Tailwind 4 정합 검증 (PR-1 핵심 게이트)
+## T-THEME-03 — NFR 검증 (PR-1 핵심 게이트, install 제외)
 
-**REQ**: REQ-004
+**REQ**: REQ-004 수용 기준 (번들 증분), NFR-003, NFR-007 (Critical gate), NFR-008
 **PR**: PR-1
 **Critical gate**: NFR-007 (Tailwind 4 런타임 오버라이드 정합)
+**범위 축소**: [decision-log D-008](../00-context/02-decision-log.md) — install 단계는 T-02 로 이동. 본 TASK 는 NFR 측정/검증만 잔존.
 
-### Scope
-- `package.json` — `next-themes ^0.3.0` dependency 추가
-- `pnpm-lock.yaml` — `pnpm install` 산출물
-- 실험 컴포넌트 1개 (예: `src/components/sections/header.tsx` 일부, 또는 임시 test 파일) — `bg-white` → `bg-background` 1건 치환 → 런타임 토글 검증
+### Scope (검증 전용 — 코드 변경 없음)
+1. **NFR-003 번들 증분 측정** — `pnpm build` 후 First Load JS / CSS 크기 기록
+2. **NFR-007 Tailwind 4 런타임 오버라이드 정합** — 생성된 CSS (`.next/static/css/*.css`) 에서:
+   - `:root` 블록과 `[data-theme=dark]` 블록 양쪽 생성 확인
+   - `[data-theme=dark]` 블록에 13 개 `--landing-*` 변수 전수 포함
+   - CSS cascade 순서 (`:root` 먼저, `[data-theme=dark]` 뒤) 로 override 성립
+3. **NFR-008 production 호환** — static export 모드 (`output: export`) 검증:
+   - `pnpm build` 성공 + `out/` 디렉터리 생성
+   - `out/index.html` 에 next-themes pre-hydration script 포함
+   - `npx http-server out/` 로 정적 서빙 + HTTP 200 응답
+4. **decision-log D-009 기록** — NFR-007 PASS 증거
 
-### NFR-007 검증 절차
-1. `pnpm install`
-2. `document.documentElement.setAttribute('data-theme', 'dark')` 콘솔 실행
-3. 배경색 변화 발생 확인
+### 산출물
+- `.plans/features/active/f1-landing-light-theme/00-context/02-decision-log.md` — D-009 등록
+- Phase A 최종 정리 시 NFR 측정치는 본 TASK decision-log 에 기록
+
+### NFR-007 검증 절차 (실제 수행)
+1. `pnpm build` → `.next/static/css/*.css` 생성 확인
+2. Python으로 CSS 파일 파싱 → `:root` offset < `[data-theme=dark]` offset 검증 (cascade)
+3. `[data-theme=dark]` 블록 내 `--landing-{token}:` 13 개 전수 포함 검증
 4. 실패 시 → **SPIKE-THEME-01** 분기 (1일 budget, IMP-KIT-036):
    - 대안 1: `darkMode: 'selector'` 우선순위
    - 대안 2: `@layer` 활용 특이성 상승
    - 대안 3: next-themes `attribute="class"` + `.dark` 전환
 
 ### Acceptance
-- [ ] `pnpm install` 성공 + 번들 증분 ≤ 1.8 kB gzipped (NFR-003 측정)
-- [ ] 런타임 토글 → 색상 변화 발생
-- [ ] `pnpm build && pnpm start` (production) 호환 확인 (NFR-008)
+- [ ] 번들 크기 기록 (First Load JS / CSS gzipped)
+- [ ] NFR-007: Cascade 순서 `:root` → `[data-theme=dark]` + 13 개 `--landing-*` 전수 포함 증거
+- [ ] NFR-008: `pnpm build` 성공 + `out/` 정적 서빙 HTTP 200 확인
+- [ ] decision-log D-009 등록
 
 ### Rollback 조건
 NFR-007 실패 + 3 대안 모두 실패 → SPIKE 보고 + 사용자 승인 후 설계 전환 또는 F1 Hold
