@@ -2,7 +2,7 @@
  * T-DASH3-M3-08 — EstimateInfoCard 단위 테스트
  *
  * TC
- *  - TC-DASH3-UNIT-ESTINFO (3 수치 렌더 + 단위 + 자동 배차 토글 + landing 팔레트 + 접근성)
+ *  - TC-DASH3-UNIT-ESTINFO (3 수치 렌더 + 단위 + 자동 배차 대기 토글 + landing 팔레트 + 접근성)
  *  - TC-DASH3-UNIT-ROLL 적용 (#8 number-rolling — 0→target 롤링 애니)
  *
  * REQ
@@ -15,7 +15,7 @@
  *  - stateless, distance/duration/amount/autoDispatch/active/rollingTriggerAt prop 주입.
  *  - active=false 시 최종값 즉시 정적 표시 (롤링 없음).
  *  - active=true + rollingTriggerAt 주입 시 0 → target 카운트업 애니메이션 (300~500ms).
- *  - 자동 배차 토글 ON/OFF 스타일 분기.
+ *  - 자동 배차 대기 토글 ON/OFF 스타일 분기.
  *  - active=true 글로우: `ring-accent/30 + shadow-accent/10`.
  *
  * 원본 참조
@@ -114,7 +114,7 @@ afterEach(() => {
 })
 
 // ---------------------------------------------------------------------------
-// TC-DASH3-UNIT-ESTINFO — 기본 렌더 (3 수치 + 단위 + 자동배차)
+// TC-DASH3-UNIT-ESTINFO — 기본 렌더 (3 수치 + 단위 + 자동 배차 대기)
 // ---------------------------------------------------------------------------
 
 describe('EstimateInfoCard — TC-DASH3-UNIT-ESTINFO (기본 렌더)', () => {
@@ -151,7 +151,7 @@ describe('EstimateInfoCard — TC-DASH3-UNIT-ESTINFO (기본 렌더)', () => {
     expect(card.textContent).toMatch(/원/)
   })
 
-  it('autoDispatch=true 시 자동 배차 토글이 ON 상태 (data-auto-dispatch="true")', () => {
+  it('autoDispatch=true 시 자동 배차 대기 토글이 ON 상태 (data-auto-dispatch="true")', () => {
     render(
       <EstimateInfoCard
         distance={DISTANCE_KM}
@@ -165,7 +165,7 @@ describe('EstimateInfoCard — TC-DASH3-UNIT-ESTINFO (기본 렌더)', () => {
     expect(toggle).toHaveAttribute('data-auto-dispatch', 'true')
   })
 
-  it('autoDispatch=false 시 자동 배차 토글이 OFF 상태 (data-auto-dispatch="false")', () => {
+  it('autoDispatch=false 시 자동 배차 대기 토글이 OFF 상태 (data-auto-dispatch="false")', () => {
     render(
       <EstimateInfoCard
         distance={DISTANCE_KM}
@@ -177,6 +177,23 @@ describe('EstimateInfoCard — TC-DASH3-UNIT-ESTINFO (기본 렌더)', () => {
     )
     const toggle = screen.getByTestId('estimate-auto-dispatch-toggle')
     expect(toggle).toHaveAttribute('data-auto-dispatch', 'false')
+  })
+
+  // F5 T-CLEANUP-02 (R6) — 토글 라벨 "자동 배차" → "자동 배차 대기".
+  // TDD RED: 구현 전에는 span 텍스트가 "자동 배차" 여서 exact match "자동 배차 대기" 가 실패.
+  it('토글 라벨이 "자동 배차 대기" 로 렌더된다 (F5 R6)', () => {
+    render(
+      <EstimateInfoCard
+        distance={DISTANCE_KM}
+        duration={DURATION_MIN}
+        amount={AMOUNT_KRW}
+        autoDispatch={true}
+        active={false}
+      />,
+    )
+    const toggle = screen.getByTestId('estimate-auto-dispatch-toggle')
+    // 토글 컨테이너 내부에 "자동 배차 대기" 문구가 정확히 존재해야 한다.
+    expect(toggle).toHaveTextContent('자동 배차 대기')
   })
 
   it('ON 상태는 gradient 배경 (from-purple-600 to-blue-600) 을 적용한다', () => {

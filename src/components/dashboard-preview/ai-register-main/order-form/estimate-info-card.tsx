@@ -1,5 +1,5 @@
 /**
- * EstimateInfoCard — Col 3 중단 예상 운임/거리/소요 + 자동 배차 토글 카드.
+ * EstimateInfoCard — Col 3 중단 예상 운임/거리/소요 + 자동 배차 대기 토글 카드.
  *
  * T-DASH3-M3-08 — 원본 `estimate-info-card.tsx` (mm-broker) 의 RHF/Card/Dialog 연동을 제거하고
  * landing Phase 3 demo 용 stateless 시각 복제. 거리/소요/운임 3 수치에 #8 number-rolling 적용.
@@ -10,14 +10,14 @@
  *    - `active=false` → useNumberRolling(active:false) → 즉시 target 정적 표시.
  *    - `active=true` + `rollingTriggerAt=null` → 아직 발동 전 (초기 0 유지).
  *    - `active=true` + `rollingTriggerAt>=0` → 주어진 ms 경과 후 0→target 카운트업 (400ms easeOut).
- *  - 자동 배차 토글은 시각적 표시만 (onClick 없음). mock-data `formData.estimate.autoDispatch` 와 동기.
+ *  - 자동 배차 대기 토글은 시각적 표시만 (onClick 없음). mock-data `formData.estimate.autoDispatch` 와 동기.
  *
  * 스타일 (REQ-DASH-005 landing 팔레트)
  *  - 카드: `bg-white/5 border-white/10 rounded-xl p-4 backdrop-blur-sm`.
  *  - 제목 아이콘: lucide `Calculator`.
  *  - active=true glow: `ring-1 ring-accent/30 shadow-lg shadow-accent/10`.
- *  - 자동 배차 토글 ON: `bg-gradient-to-r from-purple-600 to-blue-600`.
- *  - 자동 배차 토글 OFF: `bg-white/10`.
+ *  - 자동 배차 대기 토글 ON: `bg-gradient-to-r from-purple-600 to-blue-600`.
+ *  - 자동 배차 대기 토글 OFF: `bg-white/10`.
  *
  * 접근성 (REQ-DASH-007)
  *  - `<section role="region" aria-label="예상 운임/거리">` landmark.
@@ -48,7 +48,7 @@ export interface EstimateInfoCardProps {
   readonly duration: number
   /** 예상 운임 (원) */
   readonly amount: number
-  /** 자동 배차 토글 활성 여부 */
+  /** 자동 배차 대기 토글 활성 여부 */
   readonly autoDispatch: boolean
   /**
    * #8 number-rolling 활성 여부.
@@ -223,7 +223,7 @@ function AutoDispatchToggle({ autoDispatch }: AutoDispatchToggleProps) {
       className={`flex items-center gap-2 px-3 py-2 rounded-lg ${toggleClassName}`}
     >
       <Zap aria-hidden="true" className="h-4 w-4 shrink-0" />
-      <span className="text-xs font-medium">자동 배차</span>
+      <span className="text-xs font-medium">자동 배차 대기</span>
       <span className="ml-auto text-xs font-semibold tabular-nums">
         {autoDispatch ? 'ON' : 'OFF'}
       </span>
