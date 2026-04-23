@@ -17,7 +17,6 @@
  *  - AiExtractButton — idle/loading/resultReady 3 상태
  *  - AiWarningBadges — warnings 배열 있을 때만 렌더
  *  - AiResultButtons + AiButtonItem — 4 카테고리 결과 버튼
- *  - AiExtractJsonViewer — 기본 접힘
  *
  * 조작감 연동
  *  - #1 fake-typing : step.interactions.typingRhythm.active 시 활성
@@ -42,7 +41,6 @@ import type { PreviewStep } from '@/lib/preview-steps'
 
 import { AiButtonItem } from './ai-button-item'
 import { AiExtractButton } from './ai-extract-button'
-import { AiExtractJsonViewer } from './ai-extract-json-viewer'
 import { AiInputArea } from './ai-input-area'
 import { AiResultButtons } from './ai-result-buttons'
 import { AiTabBar } from './ai-tab-bar'
@@ -196,11 +194,6 @@ export function AiPanelContainer({
               rippleTriggerAt={computeCategoryRippleTriggerAt(step, groupId)}
             />
           )}
-        />
-
-        <AiExtractJsonViewer
-          json={aiResult.evidence}
-          defaultOpen={aiResult.jsonViewerOpen}
         />
       </div>
     </aside>

@@ -95,11 +95,6 @@ export const DESKTOP_HIT_AREAS: ReadonlyArray<HitAreaConfig> = [
     tooltipKey: 'result-fare',
     logicalDependency: 'extracted',
   },
-  {
-    id: 'ai-json-viewer',
-    bounds: { x: 16, y: 580, width: 348, height: 48 },
-    tooltipKey: 'ai-json-viewer',
-  },
 
   // =========================================================================
   // OrderForm Col 1 (x 396~746) — Company + Pickup/Delivery Location

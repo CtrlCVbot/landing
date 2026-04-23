@@ -17,13 +17,12 @@
  *
  * 범위
  *  - shell 레이아웃 + aria-label 검증 (M1-03 유지)
- *  - 자식 7 컴포넌트 렌더 검증 (M2-01)
+ *  - 자식 6 컴포넌트 렌더 검증 (M2-01; F5 T-CLEANUP-01: AiExtractJsonViewer 제거)
  *    * AiTabBar (role="tablist")
  *    * AiInputArea (role="textbox", textValue 주입 via useFakeTyping)
  *    * AiExtractButton (state, pressTriggerAt)
  *    * AiWarningBadges (warnings 있을 때만)
  *    * AiResultButtons (role="group") + AiButtonItem
- *    * AiExtractJsonViewer (기본 접힘)
  *    * 헤더에 step.label 표시
  *  - M3-11: AI_APPLY Step 에서 categoryIndex × intervalMs 기반으로 AiButtonItem pressTriggerAt 계산.
  */
@@ -220,7 +219,9 @@ describe('AiPanelContainer 자식 주입 (M2-01)', () => {
     expect(screen.getByText(/경고 예시: 상차지 확인 필요/)).toBeInTheDocument()
   })
 
-  it('AiExtractJsonViewer 기본 접힘 (aria-expanded="false")', () => {
+  // F5 T-CLEANUP-01 (R5) — AiExtractJsonViewer 렌더 경로 제거.
+  // 컴포넌트 파일/단위 테스트는 K1/K2 로 유지되지만, AiPanelContainer 는 더 이상 렌더하지 않음.
+  it('AiExtractJsonViewer 미렌더 — JSON 뷰어 토글 버튼이 존재하지 않음 (F5 R1/R2)', () => {
     render(
       <AiPanelContainer
         step={INITIAL_STEP}
@@ -229,8 +230,10 @@ describe('AiPanelContainer 자식 주입 (M2-01)', () => {
       />,
     )
 
-    const toggle = screen.getByRole('button', { name: /추출 결과 JSON/ })
-    expect(toggle).toHaveAttribute('aria-expanded', 'false')
+    expect(
+      screen.queryByRole('button', { name: /추출 결과 JSON/ }),
+    ).not.toBeInTheDocument()
+    expect(screen.queryByTestId('ai-json-body')).not.toBeInTheDocument()
   })
 
   it('헤더에 step.label 표시 (INITIAL → "초기 화면")', () => {
@@ -448,7 +451,8 @@ describe('AiPanelContainer #2 focus-walk 적용 (M4-01)', () => {
     )
 
     // AI_EXTRACT 상태에서 버튼 label 은 "추출 중..." (exact)
-    // "/추출/" regex 는 AiExtractJsonViewer toggle 과 충돌해서 exact name 사용.
+    // F5 이전: AiExtractJsonViewer toggle 과 충돌 방지 목적이었음 (R1/R2 로 해결됨).
+    // exact name 은 그대로 유지 (의미 변화 없음).
     const btn = screen.getByRole('button', { name: '추출 중...' })
     expect(btn).toHaveAttribute('data-focus-active', 'true')
   })
