@@ -404,14 +404,13 @@ const TOOLTIPS: Readonly<Record<string, string>> = {
   'ai-extract-button': '메시지 분석을 시작해 운송 정보를 추출합니다',
   'ai-result-buttons': '추출 결과를 골라서 폼에 적용합니다',
   'ai-warning-badges': '누락되거나 불확실한 항목을 알려줍니다',
-  'ai-json-viewer': '원본 추출 결과를 JSON 형태로 확인합니다',
   'company-manager': '로그인 시 선택된 회사와 담당자 정보입니다',
   'pickup-location': '상차지 주소와 현장 담당자를 관리합니다',
   'delivery-location': '하차지 주소와 현장 담당자를 관리합니다',
   'pickup-datetime': '상차 일자와 시간을 지정합니다',
   'delivery-datetime': '하차 일자와 시간을 지정합니다',
   settlement: '청구·지급 금액과 추가 요금을 관리합니다',
-  'auto-dispatch': '조건에 맞는 차량에 자동으로 배차합니다',
+  'auto-dispatch': '자동 배차 대기 중 — 배차요청 자동 승인되어 배차대기상태로 전환합니다',
 } as const
 
 // ---------------------------------------------------------------------------

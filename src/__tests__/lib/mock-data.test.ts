@@ -197,6 +197,14 @@ describe('PREVIEW_MOCK_DATA (Phase 3 full schema)', () => {
         expect(PREVIEW_MOCK_DATA.tooltips[key]).toBeTruthy()
       }
     })
+
+    // F5 T-CLEANUP-04 (R8) — 'auto-dispatch' tooltip 문구 업데이트.
+    // SSOT: .plans/features/active/f5-ui-residue-cleanup/02-package/01-requirements.md §R8 (D-005, 2026-04-23).
+    it(`'auto-dispatch' tooltip 문구가 신 SSOT 로 반영 (F5 R8)`, () => {
+      expect(PREVIEW_MOCK_DATA.tooltips['auto-dispatch']).toBe(
+        '자동 배차 대기 중 — 배차요청 자동 승인되어 배차대기상태로 전환합니다',
+      )
+    })
   })
 
   // --------------------------------------------------------------------
