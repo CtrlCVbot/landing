@@ -382,7 +382,7 @@ const AI_CATEGORIES: ReadonlyArray<AiCategoryGroup> = [
 ] as const
 
 // ---------------------------------------------------------------------------
-// Tooltips — Phase 1/2 legacy 11개 + Phase 3 16개 (히트 영역 19~20 대응)
+// Tooltips — Phase 1/2 legacy 11개 + Phase 3 15개 (히트 영역 18 대응, F5 T-CLEANUP-01 반영)
 // ---------------------------------------------------------------------------
 
 const TOOLTIPS: Readonly<Record<string, string>> = {
@@ -399,7 +399,7 @@ const TOOLTIPS: Readonly<Record<string, string>> = {
   'transport-options': '직송, 지게차 등 운송 옵션을 선택합니다',
   'estimate-info': '거리와 예상 운임이 자동 계산됩니다',
 
-  // ----- Phase 3 신규 (히트 영역 16개) -----
+  // ----- Phase 3 신규 (히트 영역 15개, F5 T-CLEANUP-01 로 ai-json-viewer 제거) -----
   'ai-tab-bar': '텍스트와 이미지 입력을 전환합니다',
   'ai-extract-button': '메시지 분석을 시작해 운송 정보를 추출합니다',
   'ai-result-buttons': '추출 결과를 골라서 폼에 적용합니다',

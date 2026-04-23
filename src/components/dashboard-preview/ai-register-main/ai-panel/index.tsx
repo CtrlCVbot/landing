@@ -1,5 +1,5 @@
 /**
- * AiPanelContainer — 좌측 AI 패널 380px 고정 + 자식 7 컴포넌트 조립.
+ * AiPanelContainer — 좌측 AI 패널 380px 고정 + 자식 6 컴포넌트 조립.
  *
  * T-DASH3-M1-03 (shell) + T-DASH3-M2-01 (자식 주입) + T-DASH3-M3-11 (AI_APPLY partialBeat 주입)
  *
@@ -156,7 +156,7 @@ export function AiPanelContainer({
         <span className="text-[10px] text-gray-400">{step.label}</span>
       </div>
 
-      {/* 본문 — 자식 7 컴포넌트 세로 스택 */}
+      {/* 본문 — 자식 6 컴포넌트 세로 스택 */}
       <div className="flex-1 overflow-y-auto">
         <div className="p-4 space-y-4">
           <AiTabBar activeTab={activeTab} />
