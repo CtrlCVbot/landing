@@ -266,11 +266,11 @@ Epic 상태는 **`active` 유지** (Phase B/C 완료까지). 모든 자식 Featu
 
 | Feature | 상태 | TASK 진행 | 테스트 | 번들 영향 | 리뷰 |
 |---|:---:|:---:|:---:|:---:|:---:|
-| F1 라이트 모드 | pending | — | — | — | — |
+| F1 라이트 모드 | approved | 0/7 | — | — | — |
 | F2 Mock 재설계 | pending | — | — | — | — |
 | F3 옵션↔요금 파생 | pending | — | — | — | — |
 | F4 레이아웃+HitArea | pending | — | — | — | — |
-| F5 UI 잔재 정리 | pending | — | — | — | — |
+| F5 UI 잔재 정리 | implemented | 4/4 | 624 PASS | — | /dev-verify PASS |
 
 상태 값: `pending` / `screening` / `approved` / `active` / `archived`.
 
@@ -297,3 +297,4 @@ Epic 상태는 **`active` 유지** (Phase B/C 완료까지). 모든 자식 Featu
 | 2026-04-23 | F5 A 섹션 방향 수정 (IDEA-20260423-001 기반) — 파일 삭제 → 화면 숨김. §1 F5 헤더/범위 + §2 F2↔F5 근거 + §3 Phase A F5 설명 + §4 종료 조건 동기 |
 | 2026-04-23 | F1 범위 확장 (IDEA-20260423-002 기반) — dash-preview 한정 → landing 사이트 전역. §1 F1 헤더/Lane/RICE/범위 + §2 F1↔F2/F3/F4 근거 + §3 Phase A F1 설명 + §4 종료 조건 동기 |
 | 2026-04-23 | Phase A Step 4~7 완료 — F5/F1 Screening (Go 승인) + Draft (Lite/Standard) + F1 PRD (PCC 5/5 PASS) + F5/F1 Bridge (Feature Package 생성). §1 F5/F1 상태 `inbox → approved` + Draft/PRD/Feature Package 링크 추가. Step 8 Epic `planning → active` 진입 준비 |
+| 2026-04-23 | Phase A Step 9 /dev-feature 완료 (F1 + F5) — Architecture Profile detected → approved. F5 /dev-run 완료 (T-CLEANUP-01~04, 5 커밋, 624 tests PASS, DVC PASS, F5 상태 `implemented`). F1 /dev-run 새 세션에서 진행. F1 PR-4 Skip 결정 (D-003, pricing/testimonials 미존재). |

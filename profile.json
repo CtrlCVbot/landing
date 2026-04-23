@@ -1,0 +1,18 @@
+{
+  "project": {
+    "name": "@mologado/landing",
+    "description": "",
+    "type": "monorepo"
+  },
+  "domains": ["core", "dev", "plan", "copy"],
+  "targets": ["claude", "codex"],
+  "monorepo": {
+    "packageManager": "npm",
+    "framework": "turborepo"
+  },
+  "stack": {
+    "language": "typescript",
+    "testRunner": "vitest",
+    "architecture": "hexagonal"
+  }
+}

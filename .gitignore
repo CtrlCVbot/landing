@@ -32,3 +32,14 @@ Thumbs.db
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts
+
+
+#.claude kit
+/.claude/*
+/.codex/*
+/.agents/*
+/plugins/*
+.claude-kit-meta.json
+CLAUDE-KIT-QUICKSTART.md
+CLAUDE.md
+AGENTS.md
