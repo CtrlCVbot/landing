@@ -295,11 +295,11 @@ describe('TransportOptionCard — TC-DASH3-UNIT-STROKE (#9 stroke 애니)', () =
 // ---------------------------------------------------------------------------
 
 describe('TransportOptionCard — TC-DASH3-UNIT-TRANSOPT (구조 / landing 팔레트 / 접근성)', () => {
-  it('카드 className 은 landing 팔레트 (bg-white/5 border-white/10 rounded-xl) 를 가진다', () => {
+  it('카드 className 은 landing 팔레트 (bg-card/50 border-border rounded-xl) 를 가진다 (F1 T-THEME-08)', () => {
     render(<TransportOptionCard options={OPTIONS_ALL_FALSE} />)
     const card = screen.getByTestId('transport-option-card')
-    expect(card.className).toMatch(/bg-white\/5/)
-    expect(card.className).toMatch(/border-white\/10/)
+    expect(card.className).toMatch(/bg-card\/50/)
+    expect(card.className).toMatch(/border-border/)
     expect(card.className).toMatch(/rounded-xl/)
   })
 
@@ -318,11 +318,11 @@ describe('TransportOptionCard — TC-DASH3-UNIT-TRANSOPT (구조 / landing 팔�
     expect(card.querySelector('[data-icon="options"]')).not.toBeNull()
   })
 
-  it('체크된 polyline 은 stroke-accent 클래스, 체크 안된 polyline 은 stroke-gray-600 클래스를 가진다', () => {
+  it('체크된 polyline 은 stroke-accent 클래스, 체크 안된 polyline 은 stroke-muted-foreground 클래스를 가진다 (F1 T-THEME-08)', () => {
     render(<TransportOptionCard options={OPTIONS_DIRECT_FORKLIFT} />)
     const direct = screen.getByTestId('transport-option-direct')
     const fast = screen.getByTestId('transport-option-fast')
     expect(direct.querySelector('polyline')?.getAttribute('class')).toMatch(/stroke-accent/)
-    expect(fast.querySelector('polyline')?.getAttribute('class')).toMatch(/stroke-gray-600/)
+    expect(fast.querySelector('polyline')?.getAttribute('class')).toMatch(/stroke-muted-foreground/)
   })
 })

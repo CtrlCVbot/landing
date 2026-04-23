@@ -213,7 +213,7 @@ describe('EstimateInfoCard — TC-DASH3-UNIT-ESTINFO (기본 렌더)', () => {
     expect(toggle.className).toMatch(/bg-gradient-to-r/)
   })
 
-  it('OFF 상태는 bg-white/10 배경을 적용한다 (gradient 없음)', () => {
+  it('OFF 상태는 bg-muted/50 배경을 적용한다 (gradient 없음, F1 T-THEME-08)', () => {
     render(
       <EstimateInfoCard
         distance={DISTANCE_KM}
@@ -224,7 +224,7 @@ describe('EstimateInfoCard — TC-DASH3-UNIT-ESTINFO (기본 렌더)', () => {
       />,
     )
     const toggle = screen.getByTestId('estimate-auto-dispatch-toggle')
-    expect(toggle.className).toMatch(/bg-white\/10/)
+    expect(toggle.className).toMatch(/bg-muted\/50/)
     expect(toggle.className).not.toMatch(/from-purple-600/)
   })
 })
@@ -407,7 +407,7 @@ describe('EstimateInfoCard — TC-DASH3-UNIT-ESTINFO (active glow)', () => {
 // ---------------------------------------------------------------------------
 
 describe('EstimateInfoCard — TC-DASH3-UNIT-ESTINFO (구조 / landing 팔레트 / 접근성)', () => {
-  it('카드 className 은 landing 팔레트 (bg-white/5 border-white/10 rounded-xl) 를 가진다', () => {
+  it('카드 className 은 landing 팔레트 (bg-card/50 border-border rounded-xl) 를 가진다 (F1 T-THEME-08)', () => {
     render(
       <EstimateInfoCard
         distance={DISTANCE_KM}
@@ -418,8 +418,8 @@ describe('EstimateInfoCard — TC-DASH3-UNIT-ESTINFO (구조 / landing 팔레트
       />,
     )
     const card = screen.getByTestId('estimate-info-card')
-    expect(card.className).toMatch(/bg-white\/5/)
-    expect(card.className).toMatch(/border-white\/10/)
+    expect(card.className).toMatch(/bg-card\/50/)
+    expect(card.className).toMatch(/border-border/)
     expect(card.className).toMatch(/rounded-xl/)
   })
 

@@ -171,9 +171,33 @@ Draft §4 + PRD §7 에서 확정된 6 결정 + Tailwind 4 정정. 상세는 [`0
 | 결정자 | `/dev-run` T-THEME-07 구현 결정 + 사용자 승인 대기 |
 | 배경 | `problems.tsx`/`products.tsx` 에서 상태 아이콘 색상 `text-red-400`(#f87171), `text-emerald-400`(#34d399) 사용. 라이트 모드 흰 배경 실측 대비 (WARN-1 정정): red-400 **~2.77:1** (UI 3:1 미달), emerald-400 **~1.92:1** (**UI 3:1 미달, WCAG AA 위반**). |
 | 선택값 | `text-red-400` → `text-destructive` (기존 토큰 재사용, 라이트 #dc2626 대비 ~4.83:1 AA 텍스트 충족 / 다크 #ef4444). `text-emerald-400` → `text-emerald-600` (#059669, 고정값, 라이트 대비 ~3.77:1 UI AA 충족, 다크에서도 시각 유지). |
-| 근거 | ① `text-destructive` 는 T-01 에서 이미 shadcn 표준으로 정의(라이트 AA 대비 확보). X(부정) 아이콘 의미론 일치. ② success 토큰 미정의 상태이므로 emerald-600 고정값 채택 — 라이트/다크 공통 시각 적합. ③ 향후 차기 Epic(토큰 스케일 재설계)에서 `--landing-success` 토큰 정의 시 재전환 권장. ④ 라이트 WCAG AA 위반 해소 우선순위 > 다크 시각 최소화 변화. |
-| 영향 범위 | problems.tsx Line 30, 34 (2건) + products.tsx Line 61 (1건). 총 3건 전환. |
+| 근거 | ① `text-destructive` 는 T-01 에서 이미 shadcn 표준으로 정의(라이트 AA 대비 확보). X(부정) 아이콘 의미론 일치. ② success 토큰 미정의 상태이므로 emerald-600 고정값 채택 — 라이트/다크 공통 시각 적합. ③ 향후 차기 Epic(토큰 스케일 재설계)에서 `--landing-success` 토큰 정의 시 재전환 권장. ④ 라이트 WCAG AA 위반 해소 우선순위 > 다크 시각 최소화 변화. ⑤ T-08 settlement-section (dash-preview) 에서도 동일 패턴 재적용 — 수익 양수/음수/0 구분. |
+| 영향 범위 | problems.tsx Line 30, 34 (2건) + products.tsx Line 61 (1건) + settlement-section.tsx Line 295-297 (2건, T-08 재적용). 총 5건 전환. |
 | Rollback | success 토큰 신설 시 `text-emerald-600` → `text-success` 재전환. 하위 호환. |
+
+### D-014. interactive-tooltip 반대 테마 배경 유지 (T-THEME-08)
+
+| 항목 | 값 |
+|------|-----|
+| 결정일 | 2026-04-24 |
+| 결정자 | `/dev-run` T-THEME-08 구현 결정 + 사용자 승인 대기 |
+| 배경 | `src/components/dashboard-preview/interactive-tooltip.tsx` Line 74에서 툴팁 배경 `bg-gray-900/90 text-white` 사용. REQ-014 3중 grep 에 탐지되나, 토큰화 시 라이트 모드 툴팁 가독성/대비 저하 위험. |
+| 선택값 | **반대 테마 배경 유지** — `bg-gray-900/90 text-white` 그대로. 토큰화(`bg-popover text-popover-foreground` 또는 `bg-card text-foreground`) 하지 않음. REQ-014 3중 grep 의 **의도적 예외** 로 등록. |
+| 근거 | ① 툴팁은 macOS, Windows, VS Code, GitHub 등 UI 표준에서 **양 테마 공통 어두운 배경 + 밝은 글자** 패턴 (포커스 강조 목적). ② 라이트 모드에서도 hover 툴팁은 "주변과 대비되는 강조 배경"이 가독성에 유리. ③ popover 토큰 미정의 상태 — 토큰 도입은 T-01 범위 확장 필요. ④ 차기 Epic (토큰 스케일 재설계) 에서 `--landing-popover` 신설 시 재평가. |
+| 영향 범위 | interactive-tooltip.tsx Line 74 (1건). D-010 (CTA gradient text-white) + CHROME_DOT_COLORS (preview-chrome) + D-014 3가지가 REQ-014 3중 grep 예외 항목. |
+| Rollback | 사용자 피드백 시 `bg-card text-foreground` 토큰 전환 가능. 단 라이트 모드 툴팁 대비 저하 위험. |
+
+### D-015. dash-preview 알파 패턴 토큰 치환 원칙 (T-THEME-08)
+
+| 항목 | 값 |
+|------|-----|
+| 결정일 | 2026-04-24 |
+| 결정자 | `/dev-run` T-THEME-08 구현 결정 + 사용자 승인 대기 |
+| 배경 | dash-preview 7파일은 `text-white/40`, `text-white/50`, `text-white/60`, `text-white/70`, `text-white/80`, `text-white/90` 등 다양한 알파 투명도 패턴 사용. 단순 `text-foreground` 치환은 투명도 의미 손실. |
+| 선택값 | 알파 슬롯을 의미론적 계층으로 매핑: (a) `text-white/40~60` → `text-muted-foreground` (부가/라벨/placeholder 용). (b) `text-white/70` → `text-foreground/80` (약간 약한 본문). (c) `text-white/80~90` → `text-foreground` (본문 근접). `bg-white/5` → `bg-card/50` (카드 배경 — 알파 값은 달라도 시각적 유사성 유지). `bg-white/10` → `bg-muted/50` (강조 배경). `border-white/10` → `border-border` (표준), `border-white/5` → `border-border/50` (약한 구분). |
+| 근거 | ① shadcn/design-system 계층(foreground / muted-foreground / border / card / muted) 으로 알파 패턴을 의미화 — 테마별 자동 조정. ② 일부 알파 미세 차이는 양 테마 공통 가독 확보 우선. ③ 주석(JSDoc) 내 팔레트 설명은 실제 코드와 정합하도록 동시 업데이트 (수술적 범위). |
+| 영향 범위 | datetime-card (8지점) + estimate-info-card (8지점) + settlement-section (15+지점) + transport-option-card (5지점) + preview-chrome (3지점) + order-form-index (2지점). 총 40+지점. |
+| Rollback | 필요 시 알파 슬롯 세부 조정 (예: `text-foreground/70`) 가능. 하위 호환. |
 
 **기록 형식**:
 
@@ -211,6 +235,11 @@ Draft §4 각 결정 항목의 "거절된 대안" 은 [`03-design-decisions.md`]
 | 2026-04-23 | T-THEME-01 리뷰 WARN 해소 — D-005(토큰 이중화 범위 13개 확정), D-006(destructive alias 블록 재배치), D-007(destructive 대비비 4.54:1 의도 채택) 등록. |
 | 2026-04-23 | T-THEME-02 실행 — D-008(next-themes install T-02 병합) 등록. |
 | 2026-04-23 | T-THEME-03 검증 완료 — D-009(NFR-007 Critical gate PASS, SPIKE 미발동) 등록 + dev-tasks.md T-02/03 문구 실행 반영 갱신. |
+| 2026-04-23 | T-THEME-04 완료 — D-010(CTA gradient text-white 유지) 등록. dev-code-reviewer PASS. |
+| 2026-04-23 | T-THEME-05 완료 — D-011(features Icon text-purple-400 → text-accent) 등록. dev-code-reviewer PASS. |
+| 2026-04-23 | T-THEME-07 완료 — D-012(UI primitives + shared/ 편집 불요) + D-013(상태색 red-400/emerald-400 토큰 전환) 등록. dev-code-reviewer PASS (WARN-1 R-001 D-013 수치 근사치 오차). |
+| 2026-04-23 | PR-1~5 + test/docs 5 커밋 생성 (08443ea/a4e0b76/c82f4e8/56b0a83/0d57b48). WARN-1 R-001 수치 정정 포함. |
+| 2026-04-24 | T-THEME-08 완료 — D-014(interactive-tooltip 반대 테마 유지) + D-015(dash-preview 알파 패턴 토큰 치환 원칙) 등록. 7파일 40+지점 치환 + D-013 settlement-section 재적용. F1 Phase A 완료 준비. |
 | 2026-04-23 | T-THEME-04 구현 완료 — D-010(CTA gradient text-white 의도적 유지) 등록. ThemeToggle.tsx 신규 + header.tsx navbar 토큰 치환 + 15 신규 테스트. |
 | 2026-04-23 | T-THEME-05 구현 완료 — D-011(features.tsx Icon text-purple-400 → text-accent 전환) 등록. hero.tsx 3지점 + features.tsx 4지점 토큰 치환 + 16 신규 테스트. |
 | 2026-04-23 | T-THEME-07 구현 완료 — D-012(UI primitives + shared/ 편집 불요, 기존 shadcn 토큰화), D-013(problems/products 상태색 red-400→destructive, emerald-400→emerald-600) 등록. footer/cta/integrations/problems/products 5 sections 토큰 치환 + 24 신규 테스트 + 전체 754/754 PASS. |

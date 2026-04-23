@@ -542,3 +542,183 @@ describe('F1 Footer + Sections 토큰 치환 (T-THEME-07, PR-5)', () => {
     })
   })
 })
+
+describe('F1 Dash-Preview 토큰 치환 (T-THEME-08, PR-6)', () => {
+  const FILES = {
+    'preview-chrome': readFileSync(
+      resolve(__dirname, '../components/dashboard-preview/preview-chrome.tsx'),
+      'utf8',
+    ),
+    'interactive-tooltip': readFileSync(
+      resolve(
+        __dirname,
+        '../components/dashboard-preview/interactive-tooltip.tsx',
+      ),
+      'utf8',
+    ),
+    'datetime-card': readFileSync(
+      resolve(
+        __dirname,
+        '../components/dashboard-preview/ai-register-main/order-form/datetime-card.tsx',
+      ),
+      'utf8',
+    ),
+    'estimate-info-card': readFileSync(
+      resolve(
+        __dirname,
+        '../components/dashboard-preview/ai-register-main/order-form/estimate-info-card.tsx',
+      ),
+      'utf8',
+    ),
+    'settlement-section': readFileSync(
+      resolve(
+        __dirname,
+        '../components/dashboard-preview/ai-register-main/order-form/settlement-section.tsx',
+      ),
+      'utf8',
+    ),
+    'transport-option-card': readFileSync(
+      resolve(
+        __dirname,
+        '../components/dashboard-preview/ai-register-main/order-form/transport-option-card.tsx',
+      ),
+      'utf8',
+    ),
+    'order-form-index': readFileSync(
+      resolve(
+        __dirname,
+        '../components/dashboard-preview/ai-register-main/order-form/index.tsx',
+      ),
+      'utf8',
+    ),
+  }
+
+  describe('REQ-011 — 실 코드 다크 하드코딩 제거 (interactive-tooltip 예외)', () => {
+    const FILES_EXCEPT_TOOLTIP = Object.entries(FILES).filter(
+      ([name]) => name !== 'interactive-tooltip',
+    )
+
+    /**
+     * 주석(JSDoc) 영역은 테스트 범위에서 제외하고 **실 코드 라인**만 검사한다.
+     * 각 파일의 JSDoc 블록을 소거한 후 패턴 탐지 — 수술적 변경 원칙 준수.
+     */
+    function stripComments(src: string): string {
+      return src.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/[^\n]*/g, '')
+    }
+
+    it.each(FILES_EXCEPT_TOOLTIP)(
+      '%s — bg-white 알파 하드코딩 0건 (실 코드)',
+      (_name, src) => {
+        expect(stripComments(src)).not.toMatch(/bg-white\/\d+/)
+      },
+    )
+    it.each(FILES_EXCEPT_TOOLTIP)(
+      '%s — text-white 알파/solid 0건 (gradient CTA 예외 제외, 실 코드)',
+      (_name, src) => {
+        const code = stripComments(src)
+        // 알파 패턴 완전 제거
+        expect(code).not.toMatch(/text-white\/\d+/)
+        // solid text-white 는 gradient CTA 컨텍스트만 허용
+        const solidMatches = code.match(/text-white(?![a-z/-])/g) || []
+        const gradientContext =
+          (code.match(
+            /text-white[^;"\n]*from-purple-600|from-purple-600[^;"\n]*text-white/gs,
+          ) || []).length
+        expect(solidMatches.length).toBe(gradientContext)
+      },
+    )
+    it.each(FILES_EXCEPT_TOOLTIP)(
+      '%s — border-white 알파 하드코딩 0건 (실 코드)',
+      (_name, src) => {
+        expect(stripComments(src)).not.toMatch(/border-white\/\d+/)
+      },
+    )
+    it.each(FILES_EXCEPT_TOOLTIP)(
+      '%s — text-gray-* 하드코딩 0건 (실 코드)',
+      (_name, src) => {
+        expect(stripComments(src)).not.toMatch(/text-gray-\d+/)
+      },
+    )
+    it.each(FILES_EXCEPT_TOOLTIP)(
+      '%s — border-gray-* 하드코딩 0건 (실 코드)',
+      (_name, src) => {
+        expect(stripComments(src)).not.toMatch(/border-gray-\d+/)
+      },
+    )
+    it.each(FILES_EXCEPT_TOOLTIP)(
+      '%s — bg-gray-* 하드코딩 0건 (실 코드)',
+      (_name, src) => {
+        expect(stripComments(src)).not.toMatch(/bg-gray-\d+/)
+      },
+    )
+  })
+
+  describe('REQ-011 — 토큰 사용 확인', () => {
+    it('datetime-card — text-foreground/muted-foreground/border-border/bg-card 사용', () => {
+      expect(FILES['datetime-card']).toMatch(/text-(muted-)?foreground/)
+      expect(FILES['datetime-card']).toMatch(/border-border/)
+      expect(FILES['datetime-card']).toMatch(/bg-card\/50/)
+    })
+    it('estimate-info-card — 토큰 전수 사용', () => {
+      expect(FILES['estimate-info-card']).toMatch(/text-(muted-)?foreground/)
+      expect(FILES['estimate-info-card']).toMatch(/border-border/)
+      expect(FILES['estimate-info-card']).toMatch(/bg-card\/50|bg-muted/)
+    })
+    it('settlement-section — 토큰 전수 사용', () => {
+      expect(FILES['settlement-section']).toMatch(/text-(muted-)?foreground/)
+      expect(FILES['settlement-section']).toMatch(/border-border/)
+      expect(FILES['settlement-section']).toMatch(/bg-card\/50/)
+    })
+    it('transport-option-card — 토큰 전수 사용 + stroke-muted-foreground', () => {
+      expect(FILES['transport-option-card']).toMatch(/text-(muted-)?foreground/)
+      expect(FILES['transport-option-card']).toMatch(/border-border/)
+      expect(FILES['transport-option-card']).toMatch(/bg-card\/50/)
+      expect(FILES['transport-option-card']).toMatch(/stroke-muted-foreground/)
+    })
+    it('order-form-index — gradient 배경 토큰화 (bg-gradient-to-br from-muted/30 to-muted/50)', () => {
+      expect(FILES['order-form-index']).toMatch(/from-muted\/30/)
+      expect(FILES['order-form-index']).toMatch(/to-muted\/50/)
+      expect(FILES['order-form-index']).toMatch(/ring-offset-background/)
+    })
+    it('preview-chrome — border-border + bg-card/50 + text-muted-foreground', () => {
+      expect(FILES['preview-chrome']).toMatch(/border border-border/)
+      expect(FILES['preview-chrome']).toMatch(/bg-card\/50/)
+      expect(FILES['preview-chrome']).toMatch(/text-muted-foreground/)
+    })
+  })
+
+  describe('D-013 — settlement-section 상태색 전환', () => {
+    it('text-emerald-400 제거 + text-emerald-600 도입', () => {
+      expect(FILES['settlement-section']).not.toMatch(/text-emerald-400/)
+      expect(FILES['settlement-section']).toMatch(/text-emerald-600/)
+    })
+    it('text-red-400 제거 + text-destructive 도입', () => {
+      // 주석 제외, 실 코드에서만 검증
+      const code = FILES['settlement-section']
+        .replace(/\/\*[\s\S]*?\*\//g, '')
+        .replace(/\/\/[^\n]*/g, '')
+      expect(code).not.toMatch(/text-red-400/)
+      expect(code).toMatch(/text-destructive/)
+    })
+  })
+
+  describe('D-014 — interactive-tooltip 반대 테마 배경 유지', () => {
+    it('bg-gray-900/90 + text-white 유지 (실 코드 Line 74)', () => {
+      expect(FILES['interactive-tooltip']).toMatch(/bg-gray-900\/90/)
+      expect(FILES['interactive-tooltip']).toMatch(/text-white/)
+    })
+  })
+
+  describe('브랜드 고정 색 유지', () => {
+    it('preview-chrome CHROME_DOT_COLORS (red-500/yellow-500/green-500) 유지', () => {
+      expect(FILES['preview-chrome']).toMatch(/bg-red-500/)
+      expect(FILES['preview-chrome']).toMatch(/bg-yellow-500/)
+      expect(FILES['preview-chrome']).toMatch(/bg-green-500/)
+    })
+    it('estimate-info-card CTA gradient from-purple-600 to-blue-600 text-white 유지 (D-010)', () => {
+      expect(FILES['estimate-info-card']).toMatch(
+        /from-purple-600[^;"\n]*to-blue-600[^;"\n]*text-white|text-white[^;"\n]*from-purple-600[^;"\n]*to-blue-600/s,
+      )
+    })
+  })
+})

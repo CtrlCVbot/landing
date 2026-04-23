@@ -21,10 +21,10 @@
  *  - active=true  : 2필드 동시에 caret 깜박임 → delay(400ms) 후 값 즉시 등장.
  *  - `prefers-reduced-motion: reduce` 시 즉시 최종 상태 (`useFillInCaret` 내부 처리).
  *
- * 스타일 (REQ-DASH-005 landing 팔레트)
- *  - 카드: `bg-white/5 border-white/10 rounded-xl p-4`.
+ * 스타일 (REQ-DASH-005 landing 팔레트, F1 T-THEME-08 토큰 전환 완료)
+ *  - 카드: `bg-card/50 border border-border rounded-xl p-4`.
  *  - 활성 프리셋: `text-accent border-accent`.
- *  - 비활성 프리셋: `text-gray-500 border-white/10`.
+ *  - 비활성 프리셋: `text-muted-foreground border-border`.
  *  - caret: `bg-accent w-[2px] h-4 animate-pulse`.
  *
  * 접근성 (REQ-DASH-007)
@@ -74,24 +74,24 @@ export interface DateTimeCardProps {
 // ---------------------------------------------------------------------------
 
 const CARD_CLASSES =
-  'bg-white/5 border border-white/10 rounded-xl p-4 space-y-3 backdrop-blur-sm'
+  'bg-card/50 border border-border rounded-xl p-4 space-y-3 backdrop-blur-sm'
 
 const CARET_CLASSES =
   'inline-block w-[2px] h-4 bg-accent ml-0.5 align-middle animate-pulse'
 
 const PRESET_BASE_CLASSES =
-  'px-2.5 py-1 text-[11px] rounded-md border bg-white/5 cursor-not-allowed transition-colors'
+  'px-2.5 py-1 text-[11px] rounded-md border bg-card/50 cursor-not-allowed transition-colors'
 
 const PRESET_ACTIVE_CLASSES =
   'text-accent border-accent bg-accent/10'
 
 const PRESET_INACTIVE_CLASSES =
-  'text-gray-500 border-white/10'
+  'text-muted-foreground border-border'
 
 const FIELD_ROW_CLASSES =
-  'flex items-center gap-2 text-xs text-white/70'
+  'flex items-center gap-2 text-xs text-foreground/80'
 
-const FIELD_ICON_CLASSES = 'h-3.5 w-3.5 shrink-0 text-white/40'
+const FIELD_ICON_CLASSES = 'h-3.5 w-3.5 shrink-0 text-muted-foreground'
 
 const PRESETS: ReadonlyArray<DateTimePreset> = ['지금', '오늘', '내일']
 
@@ -154,12 +154,12 @@ function FilledDateTimeField({
   return (
     <div className={FIELD_ROW_CLASSES}>
       {icon}
-      <span className="text-white/40 shrink-0">{label}</span>
+      <span className="text-muted-foreground shrink-0">{label}</span>
       <span
         className={
           monospace
-            ? 'font-mono truncate text-white/90'
-            : 'truncate text-white/90'
+            ? 'font-mono truncate text-foreground'
+            : 'truncate text-foreground'
         }
       >
         {shown}
@@ -206,7 +206,7 @@ export function DateTimeCard({
           data-icon="calendar"
           className="h-4 w-4 text-accent shrink-0"
         />
-        <h3 className="text-sm font-semibold text-white truncate">{title}</h3>
+        <h3 className="text-sm font-semibold text-foreground truncate">{title}</h3>
       </div>
 
       {/* 프리셋 버튼 (지금 / 오늘 / 내일) — 정적/disabled */}
@@ -221,7 +221,7 @@ export function DateTimeCard({
       </div>
 
       {/* 날짜 / 시간 필드 — #6 fill-in */}
-      <div className="flex flex-col gap-2 pt-1 border-t border-white/5">
+      <div className="flex flex-col gap-2 pt-1 border-t border-border/50">
         <FilledDateTimeField
           icon={
             <Calendar

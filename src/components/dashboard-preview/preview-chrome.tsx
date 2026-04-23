@@ -17,7 +17,7 @@ function ChromeHeader() {
   return (
     <div
       data-testid="chrome-header"
-      className="flex items-center gap-1.5 border-b border-gray-800 px-3 py-2"
+      className="flex items-center gap-1.5 border-b border-border px-3 py-2"
     >
       {CHROME_DOT_COLORS.map((color) => (
         <div
@@ -26,7 +26,7 @@ function ChromeHeader() {
           className={cn('h-2.5 w-2.5 rounded-full', color)}
         />
       ))}
-      <span className="ml-2 text-xs text-gray-500">OPTIC Broker</span>
+      <span className="ml-2 text-xs text-muted-foreground">OPTIC Broker</span>
     </div>
   )
 }
@@ -89,7 +89,7 @@ export function PreviewChrome({
     <div
       data-testid="preview-chrome"
       className={cn(
-        'overflow-hidden rounded-2xl border border-gray-800 bg-gray-900/50',
+        'overflow-hidden rounded-2xl border border-border bg-card/50',
         className,
       )}
     >

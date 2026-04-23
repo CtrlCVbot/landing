@@ -116,15 +116,15 @@ describe('OrderFormContainer shell', () => {
       expect(screen.getByTestId('col-3')).toHaveAttribute('data-col', '3')
     })
 
-    it('applies landing palette gradient (from-gray-900/50 to-gray-950/50)', () => {
+    it('applies landing palette gradient (from-muted/30 to-muted/50, F1 T-THEME-08)', () => {
       render(
         <OrderFormContainer step={INITIAL_STEP} formData={PREVIEW_MOCK_DATA.formData} />,
       )
 
       const grid = screen.getByTestId('order-form-grid')
       expect(grid).toHaveClass('bg-gradient-to-br')
-      expect(grid).toHaveClass('from-gray-900/50')
-      expect(grid).toHaveClass('to-gray-950/50')
+      expect(grid).toHaveClass('from-muted/30')
+      expect(grid).toHaveClass('to-muted/50')
     })
 
     it('applies p-4 padding + overflow-auto', () => {

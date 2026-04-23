@@ -12,12 +12,12 @@
  *    - `active=true` + `rollingTriggerAt>=0` → 주어진 ms 경과 후 0→target 카운트업 (400ms easeOut).
  *  - 자동 배차 대기 토글은 시각적 표시만 (onClick 없음). mock-data `formData.estimate.autoDispatch` 와 동기.
  *
- * 스타일 (REQ-DASH-005 landing 팔레트)
- *  - 카드: `bg-white/5 border-white/10 rounded-xl p-4 backdrop-blur-sm`.
+ * 스타일 (REQ-DASH-005 landing 팔레트, F1 T-THEME-08 토큰 전환 완료)
+ *  - 카드: `bg-card/50 border border-border rounded-xl p-4 backdrop-blur-sm`.
  *  - 제목 아이콘: lucide `Calculator`.
  *  - active=true glow: `ring-1 ring-accent/30 shadow-lg shadow-accent/10`.
- *  - 자동 배차 대기 토글 ON: `bg-gradient-to-r from-purple-600 to-blue-600`.
- *  - 자동 배차 대기 토글 OFF: `bg-white/10`.
+ *  - 자동 배차 대기 토글 ON: `bg-gradient-to-r from-purple-600 to-blue-600 text-white` (D-010 브랜드 고정).
+ *  - 자동 배차 대기 토글 OFF: `bg-muted/50 text-foreground/80`.
  *
  * 접근성 (REQ-DASH-007)
  *  - `<section role="region" aria-label="예상 운임/거리">` landmark.
@@ -69,16 +69,17 @@ export interface EstimateInfoCardProps {
 // ---------------------------------------------------------------------------
 
 const BASE_CARD_CLASSES =
-  'bg-white/5 border border-white/10 rounded-xl p-4 backdrop-blur-sm space-y-3'
+  'bg-card/50 border border-border rounded-xl p-4 backdrop-blur-sm space-y-3'
 
 const ACTIVE_GLOW_CLASSES = 'ring-1 ring-accent/30 shadow-lg shadow-accent/10'
 
 const ROLLING_DURATION_MS = 400
 
+// D-010 — 브랜드 gradient CTA: text-white 고정 유지 (양 테마 공통 가독).
 const TOGGLE_ON_CLASSES =
   'bg-gradient-to-r from-purple-600 to-blue-600 text-white'
 
-const TOGGLE_OFF_CLASSES = 'bg-white/10 text-white/70'
+const TOGGLE_OFF_CLASSES = 'bg-muted/50 text-foreground/80'
 
 // ---------------------------------------------------------------------------
 // Rolling values hook — 3 수치 롤링을 단일 진입점으로 묶는다.
@@ -162,7 +163,7 @@ function CardHeader() {
         data-icon="estimate-info"
         className="h-4 w-4 text-accent shrink-0"
       />
-      <h3 className="text-sm font-semibold text-white truncate">
+      <h3 className="text-sm font-semibold text-foreground truncate">
         예상 운임/거리
       </h3>
     </div>
@@ -255,15 +256,15 @@ function MetricCell({
 
   return (
     <div
-      className="flex flex-col gap-0.5 items-start px-2 py-2 rounded-md bg-white/5 border border-white/10"
+      className="flex flex-col gap-0.5 items-start px-2 py-2 rounded-md bg-card/50 border border-border"
     >
-      <span className="text-[10px] text-white/50">{label}</span>
+      <span className="text-[10px] text-muted-foreground">{label}</span>
       <span
         data-testid={testId}
-        className="text-sm font-bold text-white tabular-nums"
+        className="text-sm font-bold text-foreground tabular-nums"
       >
         {formatted}
-        <span className="ml-0.5 text-[10px] font-normal text-white/60">
+        <span className="ml-0.5 text-[10px] font-normal text-muted-foreground">
           {unit}
         </span>
       </span>

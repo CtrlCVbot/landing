@@ -199,7 +199,7 @@ describe('DateTimeCard — TC-DASH3-UNIT-DTCARD (프리셋 버튼)', () => {
     expect(tomorrowBtn.className).toMatch(/border-accent/)
   })
 
-  it('datePresetActive="내일" 시 "지금" / "오늘" 버튼은 비활성 색상(text-gray-500)', () => {
+  it('datePresetActive="내일" 시 "지금" / "오늘" 버튼은 비활성 색상(text-muted-foreground)', () => {
     render(
       <DateTimeCard
         kind="pickup"
@@ -211,8 +211,8 @@ describe('DateTimeCard — TC-DASH3-UNIT-DTCARD (프리셋 버튼)', () => {
     )
     const nowBtn = screen.getByRole('button', { name: '지금' })
     const todayBtn = screen.getByRole('button', { name: '오늘' })
-    expect(nowBtn.className).toMatch(/text-gray-500/)
-    expect(todayBtn.className).toMatch(/text-gray-500/)
+    expect(nowBtn.className).toMatch(/text-muted-foreground/)
+    expect(todayBtn.className).toMatch(/text-muted-foreground/)
   })
 
   it('datePresetActive 생략 시 3개 모두 비활성 색상이다', () => {
@@ -226,13 +226,13 @@ describe('DateTimeCard — TC-DASH3-UNIT-DTCARD (프리셋 버튼)', () => {
     )
     expect(
       screen.getByRole('button', { name: '지금' }).className,
-    ).toMatch(/text-gray-500/)
+    ).toMatch(/text-muted-foreground/)
     expect(
       screen.getByRole('button', { name: '오늘' }).className,
-    ).toMatch(/text-gray-500/)
+    ).toMatch(/text-muted-foreground/)
     expect(
       screen.getByRole('button', { name: '내일' }).className,
-    ).toMatch(/text-gray-500/)
+    ).toMatch(/text-muted-foreground/)
   })
 
   it('datePresetActive="오늘" 시 "오늘" 버튼만 accent 강조된다', () => {
@@ -400,7 +400,7 @@ describe('DateTimeCard — TC-DASH3-UNIT-FILLIN (active=true, AI_APPLY)', () => 
 // ---------------------------------------------------------------------------
 
 describe('DateTimeCard — TC-DASH3-UNIT-DTCARD (구조 / landing 팔레트 / 접근성)', () => {
-  it('카드 className 은 landing 팔레트 (bg-white/5 border-white/10 rounded-xl p-4) 를 가진다', () => {
+  it('카드 className 은 landing 팔레트 (bg-card/50 border-border rounded-xl p-4) 를 가진다 (F1 T-THEME-08)', () => {
     render(
       <DateTimeCard
         kind="pickup"
@@ -410,8 +410,8 @@ describe('DateTimeCard — TC-DASH3-UNIT-DTCARD (구조 / landing 팔레트 / �
       />,
     )
     const card = screen.getByTestId('datetime-card-pickup')
-    expect(card.className).toMatch(/bg-white\/5/)
-    expect(card.className).toMatch(/border-white\/10/)
+    expect(card.className).toMatch(/bg-card\/50/)
+    expect(card.className).toMatch(/border-border/)
     expect(card.className).toMatch(/rounded-xl/)
     expect(card.className).toMatch(/p-4/)
   })
@@ -426,8 +426,8 @@ describe('DateTimeCard — TC-DASH3-UNIT-DTCARD (구조 / landing 팔레트 / �
       />,
     )
     const card = screen.getByTestId('datetime-card-delivery')
-    expect(card.className).toMatch(/bg-white\/5/)
-    expect(card.className).toMatch(/border-white\/10/)
+    expect(card.className).toMatch(/bg-card\/50/)
+    expect(card.className).toMatch(/border-border/)
     expect(card.className).toMatch(/rounded-xl/)
     expect(card.className).toMatch(/p-4/)
   })

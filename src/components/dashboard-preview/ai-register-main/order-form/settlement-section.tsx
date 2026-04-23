@@ -14,11 +14,11 @@
  *    - `active=true` + `rollingTriggerAt>=0` → 해당 ms 경과 후 0→target 카운트업 (400ms easeOut).
  *  - 추가 요금 (additionalFees) 은 type / amount / memo 를 단순 그리드로 표시.
  *
- * 스타일 (REQ-DASH-005 landing 팔레트)
- *  - 카드: `bg-white/5 border-white/10 rounded-xl p-4 backdrop-blur-sm`.
+ * 스타일 (REQ-DASH-005 landing 팔레트, F1 T-THEME-08 토큰 전환 완료)
+ *  - 카드: `bg-card/50 border border-border rounded-xl p-4 backdrop-blur-sm`.
  *  - 제목 아이콘: lucide `Wallet`.
  *  - active=true glow: `ring-1 ring-accent/30 shadow-lg shadow-accent/10`.
- *  - 수익 양수: `text-emerald-400`; 음수: `text-red-400`; 0: `text-white/80`.
+ *  - 수익 양수: `text-emerald-600` (D-013); 음수: `text-destructive` (D-013); 0: `text-foreground`.
  *
  * 접근성 (REQ-DASH-007)
  *  - `<section role="region" aria-label="정산 정보">` landmark.
@@ -65,7 +65,7 @@ export interface SettlementSectionProps {
 // ---------------------------------------------------------------------------
 
 const BASE_CARD_CLASSES =
-  'bg-white/5 border border-white/10 rounded-xl p-4 backdrop-blur-sm space-y-3'
+  'bg-card/50 border border-border rounded-xl p-4 backdrop-blur-sm space-y-3'
 
 const ACTIVE_GLOW_CLASSES = 'ring-1 ring-accent/30 shadow-lg shadow-accent/10'
 
@@ -164,7 +164,7 @@ function CardHeader() {
         data-icon="settlement"
         className="h-4 w-4 text-accent shrink-0"
       />
-      <h3 className="text-sm font-semibold text-white truncate">정산 정보</h3>
+      <h3 className="text-sm font-semibold text-foreground truncate">정산 정보</h3>
     </div>
   )
 }
@@ -206,14 +206,14 @@ interface BaseAmountCellProps {
 
 function BaseAmountCell({ testId, label, value }: BaseAmountCellProps) {
   return (
-    <div className="flex flex-col gap-0.5 items-start px-2 py-2 rounded-md bg-white/5 border border-white/10">
-      <span className="text-[10px] text-white/50">{label}</span>
+    <div className="flex flex-col gap-0.5 items-start px-2 py-2 rounded-md bg-card/50 border border-border">
+      <span className="text-[10px] text-muted-foreground">{label}</span>
       <span
         data-testid={testId}
-        className="text-sm font-bold text-white tabular-nums"
+        className="text-sm font-bold text-foreground tabular-nums"
       >
         {value.toLocaleString()}
-        <span className="ml-0.5 text-[10px] font-normal text-white/60">원</span>
+        <span className="ml-0.5 text-[10px] font-normal text-muted-foreground">원</span>
       </span>
     </div>
   )
@@ -232,7 +232,7 @@ function AdditionalFeesList({ fees }: AdditionalFeesListProps) {
     return (
       <div
         data-testid="settlement-fees-empty"
-        className="text-[10px] text-white/40 italic px-1"
+        className="text-[10px] text-muted-foreground italic px-1"
       >
         추가 요금 없음
       </div>
@@ -242,9 +242,9 @@ function AdditionalFeesList({ fees }: AdditionalFeesListProps) {
   return (
     <div
       data-testid="settlement-fees-list"
-      className="space-y-1.5 border-t border-white/10 pt-2"
+      className="space-y-1.5 border-t border-border pt-2"
     >
-      <div className="flex items-center gap-2 text-[10px] text-white/50 px-1">
+      <div className="flex items-center gap-2 text-[10px] text-muted-foreground px-1">
         <span>추가 요금</span>
       </div>
       {fees.map((fee) => (
@@ -263,16 +263,16 @@ function AdditionalFeeRow({ fee }: AdditionalFeeRowProps) {
     <div
       data-testid={`settlement-fee-${fee.id}`}
       data-target={fee.target}
-      className="grid grid-cols-12 gap-2 items-center px-2 py-1.5 rounded-md bg-white/5 border border-white/10"
+      className="grid grid-cols-12 gap-2 items-center px-2 py-1.5 rounded-md bg-card/50 border border-border"
     >
-      <span className="col-span-3 text-xs text-white/80 truncate">
+      <span className="col-span-3 text-xs text-foreground truncate">
         {fee.type}
       </span>
-      <span className="col-span-3 text-xs font-semibold text-white tabular-nums text-right">
+      <span className="col-span-3 text-xs font-semibold text-foreground tabular-nums text-right">
         {fee.amount.toLocaleString()}
-        <span className="ml-0.5 text-[10px] font-normal text-white/60">원</span>
+        <span className="ml-0.5 text-[10px] font-normal text-muted-foreground">원</span>
       </span>
-      <span className="col-span-6 text-[10px] text-white/50 truncate">
+      <span className="col-span-6 text-[10px] text-muted-foreground truncate">
         {fee.memo}
       </span>
     </div>
@@ -292,13 +292,13 @@ interface TotalsRowProps {
 function TotalsRow({ chargeTotal, dispatchTotal, profit }: TotalsRowProps) {
   const profitClassName =
     profit > 0
-      ? 'text-emerald-400'
+      ? 'text-emerald-600'
       : profit < 0
-        ? 'text-red-400'
-        : 'text-white/80'
+        ? 'text-destructive'
+        : 'text-foreground'
 
   return (
-    <div className="grid grid-cols-3 gap-2 border-t border-white/10 pt-3">
+    <div className="grid grid-cols-3 gap-2 border-t border-border pt-3">
       <TotalCell
         testId="settlement-total-charge"
         label="청구 합계"
@@ -330,17 +330,17 @@ function TotalCell({
   testId,
   label,
   value,
-  valueClassName = 'text-white',
+  valueClassName = 'text-foreground',
 }: TotalCellProps) {
   return (
     <div className="flex flex-col gap-0.5 items-start">
-      <span className="text-[10px] text-white/50">{label}</span>
+      <span className="text-[10px] text-muted-foreground">{label}</span>
       <span
         data-testid={testId}
         className={`text-sm font-bold tabular-nums ${valueClassName}`}
       >
         {value.toLocaleString()}
-        <span className="ml-0.5 text-[10px] font-normal text-white/60">원</span>
+        <span className="ml-0.5 text-[10px] font-normal text-muted-foreground">원</span>
       </span>
     </div>
   )

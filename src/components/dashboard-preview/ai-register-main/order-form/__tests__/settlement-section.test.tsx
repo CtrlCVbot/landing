@@ -291,13 +291,13 @@ describe('SettlementSection — TC-DASH3-UNIT-ROLL (#8 number-rolling 합계)', 
 // ---------------------------------------------------------------------------
 
 describe('SettlementSection — TC-DASH3-UNIT-SETTLEMENT (구조 / landing 팔레트 / 접근성)', () => {
-  it('카드 className 에 landing 팔레트 (bg-white/5 border-white/10 rounded-xl) 가 적용된다', () => {
+  it('카드 className 에 landing 팔레트 (bg-card/50 border-border rounded-xl) 가 적용된다 (F1 T-THEME-08)', () => {
     render(
       <SettlementSection settlement={SETTLEMENT_FIXTURE} active={false} />,
     )
     const section = screen.getByTestId('settlement-section')
-    expect(section.className).toMatch(/bg-white\/5/)
-    expect(section.className).toMatch(/border-white\/10/)
+    expect(section.className).toMatch(/bg-card\/50/)
+    expect(section.className).toMatch(/border-border/)
     expect(section.className).toMatch(/rounded-xl/)
   })
 

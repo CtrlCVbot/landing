@@ -179,7 +179,7 @@ const COLUMN_PULSE_OFFSETS_MS = {
 
 /** Column pulse 활성 시 적용하는 ring + shadow 클래스 조합. */
 const COL_PULSE_RING_CLASSES =
-  ' ring-2 ring-accent/60 ring-offset-2 ring-offset-black/40 shadow-[0_0_24px_rgba(96,165,250,0.35)]'
+  ' ring-2 ring-accent/60 ring-offset-2 ring-offset-background/40 shadow-[0_0_24px_rgba(96,165,250,0.35)]'
 
 /**
  * M4-review#1 — column pulse 대상 id 집합을 반환.
@@ -231,7 +231,7 @@ export function OrderFormContainer({ step, formData }: OrderFormContainerProps) 
       role="region"
       aria-label="주문 등록 폼"
       data-testid="order-form-grid"
-      className="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-4 p-4 bg-gradient-to-br from-gray-900/50 to-gray-950/50 overflow-auto"
+      className="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-4 p-4 bg-gradient-to-br from-muted/30 to-muted/50 overflow-auto"
     >
       {/* -------------------------------------------------------------------- */}
       {/* Col 1 — Company + Pickup + Delivery */}

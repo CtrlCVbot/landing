@@ -13,9 +13,9 @@
  *    - strokeTriggerAt>=0   : mount 후 triggerAt(ms) 경과 시 dashoffset 20 → 0 애니 (200ms ease-out).
  *  - `options[key]=false` 옵션 → dashoffset=20 고정 (체크 없음).
  *
- * 스타일 (REQ-DASH-005 landing 팔레트)
- *  - 카드: `bg-white/5 border-white/10 rounded-xl p-4 space-y-3`.
- *  - polyline 체크: `stroke-accent` (옵션 on), `stroke-gray-600` (옵션 off).
+ * 스타일 (REQ-DASH-005 landing 팔레트, F1 T-THEME-08 토큰 전환 완료)
+ *  - 카드: `bg-card/50 border border-border rounded-xl p-4 space-y-3`.
+ *  - polyline 체크: `stroke-accent` (옵션 on), `stroke-muted-foreground` (옵션 off).
  *  - dashoffset 트랜지션: `200ms ease-out`.
  *  - grid 2xN: `grid grid-cols-2 gap-2`.
  *
@@ -64,7 +64,7 @@ export interface TransportOptionCardProps {
 // ---------------------------------------------------------------------------
 
 const CARD_CLASSES =
-  'bg-white/5 border border-white/10 rounded-xl p-4 space-y-3 backdrop-blur-sm'
+  'bg-card/50 border border-border rounded-xl p-4 space-y-3 backdrop-blur-sm'
 
 const OPTION_LABELS: ReadonlyArray<{ key: TransportOptionKey; label: string }> = [
   { key: 'fast', label: '급송' },
@@ -98,13 +98,13 @@ function OptionItem({
   animating,
   dashOffset,
 }: OptionItemProps) {
-  const strokeClassName = checked ? 'stroke-accent' : 'stroke-gray-600'
+  const strokeClassName = checked ? 'stroke-accent' : 'stroke-muted-foreground'
 
   return (
     <div
       data-testid={`transport-option-${optionKey}`}
       data-checked={checked}
-      className="flex items-center gap-2 px-2 py-1.5 rounded-md bg-white/5 border border-white/10"
+      className="flex items-center gap-2 px-2 py-1.5 rounded-md bg-card/50 border border-border"
     >
       <svg
         aria-hidden="true"
@@ -128,7 +128,7 @@ function OptionItem({
           }}
         />
       </svg>
-      <span className="text-xs text-white/80">{label}</span>
+      <span className="text-xs text-foreground">{label}</span>
     </div>
   )
 }
@@ -159,7 +159,7 @@ export function TransportOptionCard({
           data-icon="options"
           className="h-4 w-4 text-accent shrink-0"
         />
-        <h3 className="text-sm font-semibold text-white truncate">운송 옵션</h3>
+        <h3 className="text-sm font-semibold text-foreground truncate">운송 옵션</h3>
       </div>
 
       <div className="grid grid-cols-2 gap-2">
