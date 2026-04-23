@@ -9,7 +9,7 @@ import { SectionWrapper } from '@/components/shared/section-wrapper'
 export function Problems() {
   return (
     <SectionWrapper id="problems">
-      <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-12">
+      <h2 className="text-3xl md:text-4xl font-bold text-foreground text-center mb-12">
         이런 문제, 겪고 계신가요?
       </h2>
 
@@ -27,12 +27,12 @@ export function Problems() {
             className="bg-card border border-border rounded-xl p-6"
           >
             <div className="flex items-start gap-3">
-              <X className="w-5 h-5 text-red-400 mt-0.5 shrink-0" />
-              <span className="text-gray-500 line-through">{problem.before}</span>
+              <X className="w-5 h-5 text-destructive mt-0.5 shrink-0" />
+              <span className="text-muted-foreground line-through">{problem.before}</span>
             </div>
             <div className="flex items-start gap-3 mt-3">
-              <Check className="w-5 h-5 text-emerald-400 mt-0.5 shrink-0" />
-              <span className="text-white font-medium">{problem.after}</span>
+              <Check className="w-5 h-5 text-emerald-600 mt-0.5 shrink-0" />
+              <span className="text-foreground font-medium">{problem.after}</span>
             </div>
           </motion.div>
         ))}

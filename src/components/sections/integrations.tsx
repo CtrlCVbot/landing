@@ -9,7 +9,7 @@ import { SectionWrapper } from '@/components/shared/section-wrapper'
 export function Integrations() {
   return (
     <SectionWrapper id="integrations">
-      <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-12">
+      <h2 className="text-3xl md:text-4xl font-bold text-foreground text-center mb-12">
         강력한 외부 연동
       </h2>
 
@@ -26,13 +26,13 @@ export function Integrations() {
             variants={fadeInUp}
             className="bg-card border border-border rounded-xl p-6 text-center"
           >
-            <div className="w-12 h-12 mx-auto rounded-lg bg-gray-800 flex items-center justify-center">
-              <Puzzle className="w-6 h-6 text-purple-400" />
+            <div className="w-12 h-12 mx-auto rounded-lg bg-muted flex items-center justify-center">
+              <Puzzle className="w-6 h-6 text-accent" />
             </div>
-            <h3 className="text-lg font-semibold text-white mt-4">
+            <h3 className="text-lg font-semibold text-foreground mt-4">
               {integration.name}
             </h3>
-            <p className="text-sm text-gray-400 mt-2">
+            <p className="text-sm text-muted-foreground mt-2">
               {integration.description}
             </p>
           </motion.div>
