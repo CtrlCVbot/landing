@@ -15,7 +15,7 @@ export function Hero() {
         variants={fadeInUp}
         initial="hidden"
         animate="visible"
-        className="text-4xl md:text-5xl lg:text-7xl font-bold text-white"
+        className="text-4xl md:text-5xl lg:text-7xl font-bold text-foreground"
       >
         운송 운영을 한눈에
       </motion.h1>
@@ -25,7 +25,7 @@ export function Hero() {
         initial="hidden"
         animate="visible"
         transition={{ delay: 0.2 }}
-        className="text-lg md:text-xl text-gray-400 mt-6"
+        className="text-lg md:text-xl text-muted-foreground mt-6"
       >
         오더부터 정산까지
       </motion.p>
@@ -47,7 +47,7 @@ export function Hero() {
           href="#"
           target="_blank"
           rel="noopener noreferrer"
-          className="border border-gray-600 text-gray-200 px-8 py-4 rounded-xl hover:border-white transition-colors"
+          className="border border-border text-foreground px-8 py-4 rounded-xl hover:border-foreground transition-colors"
         >
           데모 보기
         </a>
