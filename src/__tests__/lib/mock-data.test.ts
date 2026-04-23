@@ -173,14 +173,14 @@ describe('PREVIEW_MOCK_DATA (Phase 3 full schema)', () => {
       expect(Object.keys(PREVIEW_MOCK_DATA.tooltips).length).toBeGreaterThanOrEqual(15)
     })
 
-    it('tooltips: Phase 3 신규 key 16종 모두 존재', () => {
+    // F5 T-CLEANUP-03 (R4/R5) — 'ai-json-viewer' tooltip 키 제거 반영 (16 → 15종).
+    it('tooltips: Phase 3 신규 key 15종 모두 존재', () => {
       const REQUIRED_PHASE3_KEYS = [
         'ai-tab-bar',
         'ai-input',
         'ai-extract-button',
         'ai-result-buttons',
         'ai-warning-badges',
-        'ai-json-viewer',
         'company-manager',
         'pickup-location',
         'delivery-location',

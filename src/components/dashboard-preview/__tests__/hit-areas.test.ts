@@ -11,9 +11,9 @@
  *  - REQ-DASH-047 (scaleFactor 축소 후 최소 크기)
  *
  * 범위
- *  - Phase 3 3-col grid 기준 19 히트 영역.
+ *  - Phase 3 3-col grid 기준 18 히트 영역 (F5 T-CLEANUP-03: ai-json-viewer 제거 반영).
  *  - #11 company-manager: isEnabled=false (pre-filled 영역 클릭 차단, hover 툴팁은 유지).
- *  - Tablet 축약 폐기 → getHitAreas('tablet') 이 Desktop 과 동일 19 영역 반환.
+ *  - Tablet 축약 폐기 → getHitAreas('tablet') 이 Desktop 과 동일 18 영역 반환.
  */
 
 import { describe, expect, it } from 'vitest'
@@ -27,18 +27,18 @@ import {
 import { PREVIEW_MOCK_DATA } from '@/lib/mock-data'
 
 // ---------------------------------------------------------------------------
-// 19 영역 구성 검증
+// 18 영역 구성 검증 (F5 T-CLEANUP-03: ai-json-viewer 제거 → 19 → 18)
 // ---------------------------------------------------------------------------
 
 describe('Phase 3 hit-areas (M4-04)', () => {
-  it('has exactly 19 hit areas', () => {
-    expect(DESKTOP_HIT_AREAS).toHaveLength(19)
+  it('has exactly 18 hit areas', () => {
+    expect(DESKTOP_HIT_AREAS).toHaveLength(18)
   })
 
-  it('contains the canonical 19 ID set in canonical order', () => {
+  it('contains the canonical 18 ID set in canonical order', () => {
     const ids = DESKTOP_HIT_AREAS.map((a) => a.id)
     expect(ids).toEqual([
-      // AiPanel (8 areas)
+      // AiPanel (7 areas — F5 T-CLEANUP-01: ai-json-viewer 제거)
       'ai-tab-bar',
       'ai-input',
       'ai-extract-button',
@@ -46,7 +46,6 @@ describe('Phase 3 hit-areas (M4-04)', () => {
       'ai-result-destination',
       'ai-result-cargo',
       'ai-result-fare',
-      'ai-json-viewer',
       // Col 1 (3 areas — form-company-manager 포함 disabled)
       'form-company-manager',
       'form-pickup-location',
@@ -148,10 +147,10 @@ describe('Phase 3 hit-areas (M4-04)', () => {
   // Tablet 축약 폐기
   // -------------------------------------------------------------------------
 
-  it('getHitAreas("tablet") 이 Desktop 과 동일한 19 영역 반환 (Tablet 축약 폐기)', () => {
+  it('getHitAreas("tablet") 이 Desktop 과 동일한 18 영역 반환 (Tablet 축약 폐기)', () => {
     const desktop = getHitAreas('desktop')
     const tablet = getHitAreas('tablet')
-    expect(tablet).toHaveLength(19)
+    expect(tablet).toHaveLength(18)
     expect(tablet).toEqual(desktop)
   })
 
