@@ -66,7 +66,114 @@ Draft §4 + PRD §7 에서 확정된 6 결정 + Tailwind 4 정정. 상세는 [`0
 
 ## 3. 구현 중 신규 결정 (TODO — TASK 진행 중 추가)
 
-(아직 없음 — TASK 실행 중 새 결정 발생 시 표 형식으로 추가)
+### D-005. 토큰 이중화 범위 확정 — 13개 직접값 색상 토큰 (T-THEME-01)
+
+| 항목 | 값 |
+|------|-----|
+| 결정일 | 2026-04-23 |
+| 결정자 | 사용자 승인 + `dev-code-reviewer` HIGH SC-001 권고 |
+| 배경 | 초기 REQ-001/002/003 문서는 "19개 `--color-*` 변수 이중화"를 명시했으나, 실제 `@theme inline` 원본은 **직접값 색상 토큰 13개 + radius/font 4개 + shadcn alias 7개 = 총 24개**. "19"는 대략 수치로 초기 설계 단계에서 기록된 것으로 실제 파일 기반 구조와 불일치. T-THEME-01 리뷰 WARN(HIGH 2건)의 SC-001 지적. |
+| 선택값 | **직접값 색상 토큰 13개만 이중화**. shadcn alias 7개(`--color-primary`, `--color-primary-foreground`, `--color-secondary`, `--color-secondary-foreground`, `--color-accent-foreground-shadcn`, `--color-input`, `--color-ring`)는 이미 `var(--color-*)` 참조 중이므로 하위 토큰 13개가 이중화되면 라이트/다크 전환을 **자동 상속**. radius/font 4개는 색상 아님. |
+| 근거 | ① 기능적으로 13개 이중화만으로 라이트/다크 전환 완전 달성 (alias 2단 참조). ② golden #12 수술적 변경 — alias 7개 추가 이중화는 복잡도 증가 대비 기능 동일(unjustified). ③ Tailwind 4 `@theme inline` 유틸리티 생성 규칙은 shadcn alias도 동일 전환 보장. |
+| 영향 범위 | `01-requirements.md` REQ-001/002/003 문구 정정, `04-implementation-hints.md`, `08-dev-tasks.md` 수치 정정. 구현 파일(`globals.css`)은 그대로 유지. |
+| Rollback | 후속 TASK에서 shadcn alias도 이중화 요구 발생 시 `:root`/`[data-theme="dark"]` 블록에 `--landing-primary` 등 추가 + `@theme inline` alias 재매핑. 하위 호환. |
+
+### D-006. CQ-001 해소 — destructive 토큰 shadcn alias 블록 재배치 (T-THEME-01)
+
+| 항목 | 값 |
+|------|-----|
+| 결정일 | 2026-04-23 |
+| 결정자 | 사용자 승인 + `dev-code-reviewer` HIGH CQ-001 권고 |
+| 배경 | T-THEME-01 최초 구현에서 `--color-destructive`, `--color-destructive-foreground` 2개를 상단 직접값 블록(Line 32-33)에 배치했으나, 원본 `@theme inline` 에서 destructive 는 shadcn 표준 토큰으로 분류되어 shadcn alias 주석 블록(T-DASH3-M1-06)에 속해 있었음. 이동으로 alias 그룹 의미론 붕괴 발생. |
+| 선택값 | destructive 2개 토큰을 **shadcn alias 블록 위치**로 재이동하되, 간접화(`var(--landing-destructive)`)는 **유지**. alias 블록 주석에 "destructive 2개는 F1 T-THEME-01 에서 이중화" 각주 추가. |
+| 근거 | shadcn 표준 토큰 분류 복원 + 이중화 기능 유지 동시 달성. 주석 SSOT(T-DASH3-M1-06)와 실제 코드 일치. |
+| 영향 범위 | `src/app/globals.css` Line 32-33 제거 + Line 48 앞 삽입 + 주석 1줄 추가. 테스트 통과 유지. |
+| Rollback | 단순 순서 조정 — 필요 시 즉시 되돌림 가능. |
+
+### D-007. CQ-003 해소 — destructive 경계값 AA 4.54:1 의도적 채택 (T-THEME-01)
+
+| 항목 | 값 |
+|------|-----|
+| 결정일 | 2026-04-23 |
+| 결정자 | 사용자 승인 + `dev-code-reviewer` MEDIUM CQ-003 권고 |
+| 배경 | `--landing-destructive-foreground #ffffff on --landing-destructive #dc2626` 대비비 4.54:1 — WCAG AA 4.5:1 기준 대비 0.04 버퍼만 확보. 디자이너가 향후 색상 조정 시 경계 미달 위험. |
+| 선택값 | **현재 색상 유지** + decision-log 기록만. 색상 변경(Option A)이나 테스트 엄격화 버퍼 상향(Option B)은 본 TASK 범위 밖. |
+| 근거 | ① 현재 4.54:1 은 WCAG AA **명시적 준수** (명세상 통과). ② `#dc2626`은 Tailwind `red-600` 표준이며 변경 시 다른 섹션 일관성 영향. ③ 경계 미달 회귀 방지는 테스트 `toBeGreaterThanOrEqual(4.5)` 가 이미 담당. ④ 색상 변경은 디자인 시스템 결정 사항이며 차기 Epic(토큰 스케일 재설계)에서 재평가. |
+| 영향 범위 | 없음 (의사결정 기록만). |
+| Rollback | 차기 Epic에서 색상 상향 결정 시 `--landing-destructive` 값 조정. |
+
+### D-008. T-THEME-02 범위 확장 — next-themes install 병합 (T-THEME-02)
+
+| 항목 | 값 |
+|------|-----|
+| 결정일 | 2026-04-23 |
+| 결정자 | 사용자 승인 + `/dev-run` 세션 |
+| 배경 | dev-tasks.md 초안에서 T-THEME-02는 layout 수정, T-THEME-03은 `pnpm install` + NFR-007 런타임 검증으로 분리되어 있음. 그러나 T-02 에서 ThemeProvider import 를 추가하는 즉시 typecheck 실패 (next-themes 모듈 미존재). TDD RED-GREEN 단일 루프 내에서 typecheck 통과를 보장하려면 의존성 추가가 선행 필요. |
+| 선택값 | `pnpm add next-themes ^0.3.0` 을 T-THEME-02 범위에 병합. T-THEME-03 잔여 범위는 NFR-003 번들 증분 측정 + NFR-007 Tailwind 4 실험 컴포넌트 런타임 토글 + NFR-008 production 호환 확인으로 한정. |
+| 근거 | ① 의존성 추가는 단순 package.json 변경으로 기능 영향 없음. ② TDD 가드 통과 + 단일 TASK Red-Green-Improve 자기완결 원칙(F5 D-007 선례). ③ REQ-004 수용 기준(`pnpm install` 성공)은 T-02 시점에 이미 충족 가능. |
+| 영향 범위 | T-THEME-02: package.json, pnpm-lock.yaml 추가 편집. T-THEME-03: pnpm install 단계 제거, NFR-003/007/008 검증만 잔존. dev-tasks.md 파일 문구 갱신은 T-THEME-03 수행 직전 또는 Phase A 최종 정리 시 일괄 처리. |
+| Rollback | 의존성 추가만 되돌리면 원상복구. |
+
+### D-009. NFR-007 Critical gate PASS — Tailwind 4 런타임 오버라이드 정합 확인 (T-THEME-03)
+
+| 항목 | 값 |
+|------|-----|
+| 결정일 | 2026-04-23 |
+| 결정자 | `/dev-run` T-THEME-03 검증 결과 + 사용자 승인 대기 |
+| 배경 | T-THEME-03 의 **Critical gate (NFR-007)** — Tailwind 4 `@theme inline` 간접화 + `:root` / `[data-theme="dark"]` cascade 구조가 런타임 토글에서 실제로 작동하는지 검증. 실패 시 SPIKE-THEME-01 (1일 budget) 발동. |
+| 선택값 | **PASS — SPIKE 미발동**. 생성된 CSS (`.next/static/css/3433a75f5b0b3278.css`, 58 kB raw / 10.3 kB gzipped) 검사 결과 다음 3 조건 전수 충족. |
+| 근거 (증거) | ① **Cascade 순서**: `:root{` offset 2010 < `[data-theme=dark]{` offset 52113 → CSS 표준 override 성립. ② **13 개 `--landing-*` 변수 전수 포함**: `background`, `foreground`, `card`, `card-foreground`, `border`, `muted`, `muted-foreground`, `accent-start`, `accent-end`, `accent`, `accent-foreground`, `destructive`, `destructive-foreground` 모두 `[data-theme=dark]` 블록 내 정의 확인. ③ **Production static export 호환 (NFR-008)**: `out/index.html` 에 next-themes pre-hydration script 포함 (`function(){try{var d=document.documentElement,n='data-theme',...}}`) + `npx http-server out/` 기동 후 HTTP 200 응답 (35,662 bytes). |
+| 영향 범위 | T-THEME-04~08 진입 가능. PR-2/3/5/6 모두 SPIKE 없이 정상 진행. |
+| 측정치 | First Load JS 163 kB / Page Size 60.8 kB / CSS 58 kB raw (10.3 kB gzipped). 이전 baseline 미측정으로 정확 증분 계산 불가하나, `pnpm build` 성공 + Next.js bundle 경고 0 으로 NFR-003 ≤ 2 kB gzipped 가이드라인 준수 추정 (next-themes 자체 ~1.5 kB + theme-provider.tsx 17 line wrapper ~0.3 kB). |
+| Rollback | NFR-007 PASS 이므로 rollback 불요. SPIKE-THEME-01 미발동 기록. |
+
+### D-010. CTA gradient 배경 위 text-white 의도적 유지 (T-THEME-04)
+
+| 항목 | 값 |
+|------|-----|
+| 결정일 | 2026-04-23 |
+| 결정자 | `/dev-run` T-THEME-04 구현 결정 + 사용자 승인 대기 |
+| 배경 | navbar "도입 문의하기" CTA 버튼은 `bg-gradient-to-r from-purple-600 to-blue-600` 위에 `text-white` 로 렌더된다. REQ-010/014 3중 grep 스윕 시 `text-white` 탐지될 수 있으나, 브랜드 gradient 배경 위 글자는 **라이트/다크 모두 흰색이 WCAG AA 대비 확보**. 토큰화하면 오히려 라이트 모드에서 대비 손실 위험. |
+| 선택값 | CTA 버튼 내 `text-white` **유지**. 3중 grep 회귀 검증 시 CTA 라인만 예외 처리 (REQ-014 의 "의도적 예외" 항목에 등록). |
+| 근거 | ① 브랜드 gradient accent 배경은 테마 전환과 독립 (purple-600/blue-600 고정값). ② `text-white` on `#9333ea` 대비비 4.73:1 (AA), on `#2563eb` 대비비 5.17:1 (AA) — 양쪽 라이트/다크 공통 충족. ③ 토큰화 (`text-accent-foreground`) 시 라이트 팔레트 `--landing-accent-foreground: #ffffff` 이므로 결과 동일하나, 가독성을 위해 고정 white 가 명시적. |
+| 영향 범위 | header.tsx CTA 2건 (desktop Line 70, mobile Line 112 해당). 추후 다른 섹션 CTA 버튼도 동일 패턴 적용 가능. |
+| Rollback | 필요 시 `text-accent-foreground` 로 전환 가능 (시각 동일). |
+
+### D-011. features.tsx Icon 색상 — text-purple-400 → text-accent 토큰 전환 (T-THEME-05)
+
+| 항목 | 값 |
+|------|-----|
+| 결정일 | 2026-04-23 |
+| 결정자 | `/dev-run` T-THEME-05 구현 결정 + 사용자 승인 대기 |
+| 배경 | `src/components/sections/features.tsx` Line 51 에서 Feature card 아이콘을 `text-purple-400`(#c084fc 고정) 으로 렌더. 라이트 모드 흰 배경 위 `#c084fc` 는 대비비 약 3.1:1 로 WCAG AA(3:1 UI 기준 경계) 미달 위험. 또한 "다크 전용 밝은 보라" 는 라이트 모드 디자인 일관성 저해. |
+| 선택값 | `text-purple-400` → `text-accent` 로 전환. `--color-accent` 는 라이트 `#7c3aed` / 다크 `#8b5cf6` 로 테마 적응. 라이트 대비비 약 5.95:1 (AA 충족), 다크는 기존 #c084fc → #8b5cf6 약간 진한 violet 으로 시각 미세 변화 발생. |
+| 근거 | ① 라이트 WCAG AA 대비 확보. ② 테마 토큰 일관성 (브랜드 accent 통합). ③ 다크 시각 변화는 미세 (hue 동일, luminance 차 소폭) 로 브랜드 아이덴티티 유지. ④ 기존 `hover:border-purple-500/30` 은 알파 0.3 으로 양 테마 부드럽게 적응하므로 **유지**. |
+| 영향 범위 | `features.tsx` Line 51 (1 건). 다른 `text-purple-*` 잔존 여부는 T-THEME-07 (footer + shared UI) 시점 재검토. |
+| Rollback | 다크 시각 회귀 요청 발생 시 `text-purple-400` 고정값 복귀 가능하나 라이트 대비 부족 재발. 권장 대안: 라이트/다크 별도 팔레트 (`text-accent` 가 이미 최적). |
+
+### D-012. UI primitives + shared/ 편집 불요 — 기존 shadcn 토큰화 (T-THEME-07)
+
+| 항목 | 값 |
+|------|-----|
+| 결정일 | 2026-04-23 |
+| 결정자 | `/dev-run` T-THEME-07 전수 조사 + 사용자 승인 대기 |
+| 배경 | REQ-012 는 `src/components/ui/*` 와 `src/components/shared/*` 의 다크 하드코딩 전수 치환을 명시. T-THEME-07 Scope 에서 12 파일(5 sections + 5 ui + 2 shared) 편집 예상. |
+| 선택값 | **7 파일 편집 불요** — T-DASH3-M1-06 단계(dash-preview-phase3)에서 shadcn 표준 토큰화 완료 상태 확인. |
+| 근거 | ① `ui/badge.tsx`, `ui/button.tsx`, `ui/card.tsx`, `ui/input.tsx`, `ui/textarea.tsx` 모두 `bg-primary`, `bg-accent`, `border-input`, `text-card-foreground`, `text-muted-foreground` 등 shadcn 표준 토큰 사용. ② `shared/gradient-blob.tsx` 은 `rgba()` 알파 0.2 opacity 브랜드 고정 색(양 테마 적응). ③ `shared/section-wrapper.tsx` 는 레이아웃 전용(색상 클래스 0). ④ 수술적 변경 원칙(golden #12) — 이미 토큰화된 파일 재편집은 중복 작업. |
+| 영향 범위 | T-THEME-07 실제 편집 대상은 sections 5 파일(footer/cta/integrations/problems/products) 로 축소. ui/shared 7 파일 미편집. REQ-012 자동 충족. |
+| Rollback | 향후 shadcn 토큰이 재정의되거나 다른 UI 컴포넌트 추가 시 본 가정 재검토. |
+
+### D-013. problems/products 상태색 — red-400/emerald-400 토큰 전환 (T-THEME-07)
+
+| 항목 | 값 |
+|------|-----|
+| 결정일 | 2026-04-23 |
+| 결정자 | `/dev-run` T-THEME-07 구현 결정 + 사용자 승인 대기 |
+| 배경 | `problems.tsx`/`products.tsx` 에서 상태 아이콘 색상 `text-red-400`(#f87171), `text-emerald-400`(#34d399) 사용. 라이트 모드 흰 배경 실측 대비 (WARN-1 정정): red-400 **~2.77:1** (UI 3:1 미달), emerald-400 **~1.92:1** (**UI 3:1 미달, WCAG AA 위반**). |
+| 선택값 | `text-red-400` → `text-destructive` (기존 토큰 재사용, 라이트 #dc2626 대비 ~4.83:1 AA 텍스트 충족 / 다크 #ef4444). `text-emerald-400` → `text-emerald-600` (#059669, 고정값, 라이트 대비 ~3.77:1 UI AA 충족, 다크에서도 시각 유지). |
+| 근거 | ① `text-destructive` 는 T-01 에서 이미 shadcn 표준으로 정의(라이트 AA 대비 확보). X(부정) 아이콘 의미론 일치. ② success 토큰 미정의 상태이므로 emerald-600 고정값 채택 — 라이트/다크 공통 시각 적합. ③ 향후 차기 Epic(토큰 스케일 재설계)에서 `--landing-success` 토큰 정의 시 재전환 권장. ④ 라이트 WCAG AA 위반 해소 우선순위 > 다크 시각 최소화 변화. |
+| 영향 범위 | problems.tsx Line 30, 34 (2건) + products.tsx Line 61 (1건). 총 3건 전환. |
+| Rollback | success 토큰 신설 시 `text-emerald-600` → `text-success` 재전환. 하위 호환. |
 
 **기록 형식**:
 
@@ -101,3 +208,9 @@ Draft §4 각 결정 항목의 "거절된 대안" 은 [`03-design-decisions.md`]
 | 날짜 | 변경 |
 |------|------|
 | 2026-04-23 | 초안 — `/dev-feature` Phase A 진입. D-001, D-002 등록. |
+| 2026-04-23 | T-THEME-01 리뷰 WARN 해소 — D-005(토큰 이중화 범위 13개 확정), D-006(destructive alias 블록 재배치), D-007(destructive 대비비 4.54:1 의도 채택) 등록. |
+| 2026-04-23 | T-THEME-02 실행 — D-008(next-themes install T-02 병합) 등록. |
+| 2026-04-23 | T-THEME-03 검증 완료 — D-009(NFR-007 Critical gate PASS, SPIKE 미발동) 등록 + dev-tasks.md T-02/03 문구 실행 반영 갱신. |
+| 2026-04-23 | T-THEME-04 구현 완료 — D-010(CTA gradient text-white 의도적 유지) 등록. ThemeToggle.tsx 신규 + header.tsx navbar 토큰 치환 + 15 신규 테스트. |
+| 2026-04-23 | T-THEME-05 구현 완료 — D-011(features.tsx Icon text-purple-400 → text-accent 전환) 등록. hero.tsx 3지점 + features.tsx 4지점 토큰 치환 + 16 신규 테스트. |
+| 2026-04-23 | T-THEME-07 구현 완료 — D-012(UI primitives + shared/ 편집 불요, 기존 shadcn 토큰화), D-013(problems/products 상태색 red-400→destructive, emerald-400→emerald-600) 등록. footer/cta/integrations/problems/products 5 sections 토큰 치환 + 24 신규 테스트 + 전체 754/754 PASS. |
