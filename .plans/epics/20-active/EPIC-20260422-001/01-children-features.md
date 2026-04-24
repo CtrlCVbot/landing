@@ -254,9 +254,145 @@ TeamCreate team_name="dash-preview-phase4-phase-a"
 
 ---
 
+### Phase B 착수 전 체크
+
+Phase B 는 Epic 이 이미 **`active` 상태**이므로 `draft → planning → active` 전이를 다시 밟지 않는다. 대신 **Phase A 잔여 3건 확인 + baseline 재확인** 후 Step 1부터 진입한다.
+
+- [ ] 사용자 육안 QA 완료 여부 확인 (브라우저 1440/1280/768/390 + 다크 회귀)
+- [ ] `/plan-archive f1-landing-light-theme`
+- [ ] `/plan-archive f5-ui-residue-cleanup`
+- [ ] `git log --oneline -15` · `git status` · `pnpm test` 로 현재 baseline 재확인
+- [ ] F2 ↔ F4 의존성 매트릭스 `✓` 병렬 가능 재확인
+
+---
+
+### Phase B 실행 로드맵 (9단계)
+
+Phase B 는 Phase A 의 `/plan-idea → /plan-screen → /plan-draft → /plan-prd → /plan-bridge → /dev-feature → /dev-run → /dev-verify → /plan-archive` 파이프라인을 **F2 · F4** 두 Feature 에 재사용한다. 두 Feature 모두 Standard 예상이며, Epic 상태는 **`active` 유지**. 목표: **M-Epic-2 (2026-05-14)**.
+
+### Step 1. F2/F4 IDEA 등록
+
+```bash
+/plan-idea "F2 Mock 스키마 재설계 — extractedFrame/appliedFrame 분리 + PREVIEW_MOCK_SCENARIOS + Step 기반 가시성" --epic=EPIC-20260422-001
+/plan-idea "F4 레이아웃 정비 — Col 2 2열 래핑 + hit-areas 재측정 + overlay anchor 정비" --epic=EPIC-20260422-001
+```
+
+- 실행 주체: 사용자 → `plan-idea-collector`
+- 산출: F2/F4 IDEA 파일 + `backlog.md` 등록 + Epic F2/F4 행 IDEA 필드 갱신
+- 메모: F2 는 이슈 [2-1]~[2-4], F4 는 [3]·[4] 범위를 그대로 계승
+
+### Step 2. Screening (초기 승인 게이트)
+
+```bash
+/plan-screen {F2-IDEA-ID} --framework=rice
+/plan-screen {F4-IDEA-ID} --framework=rice
+```
+
+- 실행 주체: `plan-idea-screener`
+- 산출: RICE 기반 Go/Hold/Kill 판정 + 사용자 승인용 screening 결과
+- Checkpoint: Go/Hold/Kill 결과는 **사용자 승인 필수** (`initial-approval-gate`, auto proceed 금지)
+
+### Step 3. Draft 작성
+
+```bash
+/plan-draft {F2-IDEA-ID}
+/plan-draft {F4-IDEA-ID}
+```
+
+- 실행 주체: `plan-draft-writer`
+- 예상 판정: F2 `Standard/B/dev`, F4 `Standard/B/dev`
+- 산출: 두 Feature 모두 Standard draft + 시나리오 + scope/routing metadata
+- 초점:
+  - F2: `extractedFrame` / `appliedFrame`, `PREVIEW_MOCK_SCENARIOS`, 세트 선택 트리거 방식 확정
+  - F4: 2열 레이아웃 범위, 19 bounds 재측정 방식, Tablet 분리 여부, overlay anchor 위치 확정
+
+### Step 4. PRD 작성
+
+```bash
+/plan-prd .plans/drafts/{F2-slug}/
+/plan-prd .plans/drafts/{F4-slug}/
+```
+
+- 실행 주체: `plan-prd-writer`
+- 산출: F2/F4 각각 10섹션 PRD
+- Checkpoint: `plan-reviewer` PCC 리뷰 + 사용자 승인 후 다음 단계 진행
+
+### Step 5. Bridge (Feature Package 전환)
+
+```bash
+/plan-bridge {F2-slug}
+/plan-bridge {F4-slug}
+```
+
+- 실행 주체: `plan-bridge-writer`
+- 산출: `.plans/features/active/{slug}/00-context/` 4종 컨텍스트 + `08-epic-binding.md`
+- 메모: Epic 상태는 이미 `active` 이므로 binding 만 동기하면 된다
+
+### Step 6. Feature Package 승격 + TASK 정의
+
+```bash
+/dev-feature .plans/features/active/{F2-slug}/
+/dev-feature .plans/features/active/{F4-slug}/
+```
+
+- 실행 주체: `dev-feature`
+- 산출: 구현 TASK, architecture binding, decision log 구조 확정
+- 규칙: Allowed Target Paths 밖 수정이 필요하면 binding 먼저 갱신
+
+### Step 7. 병렬 구현
+
+```bash
+/dev-run .plans/features/active/{F2-slug}/
+/dev-run .plans/features/active/{F4-slug}/
+```
+
+- 실행 주체: `dev-run` 또는 병렬 에이전트 팀
+- 권장 운영:
+  - F2: `mock-data.ts` 스키마 + order-form 가시성 + 시나리오 선택기 중심
+  - F4: DateTimeCard 래핑 + `hit-areas.ts` 재측정 + `interactive-overlay.tsx` anchor 조정 중심
+- 체크포인트: 각 TASK 완료 후 `dev-code-reviewer` + `dev-security-reviewer` 확인 후 다음 TASK 진행
+
+### Step 8. 검증 + 아카이브
+
+```bash
+/dev-verify .plans/features/active/{F2-slug}/
+/dev-verify .plans/features/active/{F4-slug}/
+/plan-archive {F2-slug}
+/plan-archive {F4-slug}
+```
+
+- 검증 기준: fresh `pnpm test` + 필요한 `typecheck` / `lint` / `build` + feature package 검증 보고서
+- 산출: F2/F4 상태 `implemented → archived`
+- 메모: 완료 선언은 Iron Law 에 따라 fresh evidence 필수
+
+### Step 9. Phase C 진입 준비
+
+```bash
+/plan-idea "F3 옵션↔추가요금 파생 로직 — OPTION_FEE_MAP + settlement 파생" --epic=EPIC-20260422-001
+```
+
+- 목적: F2 재설계 결과를 바탕으로 F3 입력 스펙 정리
+- 선행: F2/F4 구현·검증·아카이브 완료
+- 결과: M-Epic-2 달성 후 Phase C kickoff readiness 확보
+
+---
+
+### Phase B 종료 조건 (M-Epic-2, 2026-05-14 예정)
+
+- [ ] F2 IDEA → screening → draft → PRD → bridge → implementation → archive 완료
+- [ ] F4 IDEA → screening → draft → PRD → bridge → implementation → archive 완료
+- [ ] `src/lib/mock-data.ts` 에 `extractedFrame` / `appliedFrame` + `PREVIEW_MOCK_SCENARIOS` 정착
+- [ ] `order-form/index.tsx` 의 Step 기반 가시성 제어와 `fare ↔ estimate.amount` 정합성 검증 완료
+- [ ] `src/components/dashboard-preview/hit-areas.ts` 19 bounds 재측정 및 Tablet/overlay 결정이 decision log 에 기록됨
+- [ ] fresh `pnpm test` + 필요한 `typecheck` / `lint` / `build` + `/dev-verify` 통과 증거 확보
+- [ ] `/plan-archive {F2-slug}` + `/plan-archive {F4-slug}` 완료
+- [ ] F3 (Phase C) 착수 입력이 정리되고 Epic 은 `active` 상태 유지
+
+---
+
 ### Phase 전환 규칙
 
-Phase A 완료 후 **세션 종료** (context 50% 규칙 + 사용자 결정). Phase B 는 별도 세션에서 착수한다:
+Phase A 완료 후 **세션 종료** (context 50% 규칙 + 사용자 결정). Phase B 는 **위 착수 전 체크를 마친 뒤** 별도 세션에서 착수한다:
 
 ```bash
 # Phase B 시작 시 (다른 세션)
@@ -308,3 +444,4 @@ Epic 상태는 **`active` 유지** (Phase B/C 완료까지). 모든 자식 Featu
 | 2026-04-23 | Phase A Step 4~7 완료 — F5/F1 Screening (Go 승인) + Draft (Lite/Standard) + F1 PRD (PCC 5/5 PASS) + F5/F1 Bridge (Feature Package 생성). §1 F5/F1 상태 `inbox → approved` + Draft/PRD/Feature Package 링크 추가. Step 8 Epic `planning → active` 진입 준비 |
 | 2026-04-23 | Phase A Step 9 /dev-feature 완료 (F1 + F5) — Architecture Profile detected → approved. F5 /dev-run 완료 (T-CLEANUP-01~04, 5 커밋, 624 tests PASS, DVC PASS, F5 상태 `implemented`). F1 /dev-run 새 세션에서 진행. F1 PR-4 Skip 결정 (D-003, pricing/testimonials 미존재). |
 | 2026-04-24 | F1 /dev-run 완료 — T-THEME-01~08 (PR-1~6) + preview QA 2회 (D-016/D-017 확장) → T-THEME-09~14 추가 구현. 총 14 TASK (T-06 skip), 980/980 tests PASS, typecheck 0, lint 0, build +1 kB. /dev-verify PASS with WARN (ERROR 0). F1 상태 `approved → implemented`. **Phase A M-Epic-1 도달 — /plan-archive 대기**. |
+| 2026-04-24 | `phase-b-handoff-prompt.md` 기반으로 §4 에 Phase B 착수 전 체크, 9단계 실행 로드맵, 종료 조건을 추가. Phase A 잔여 3건 확인 순서와 F2/F4 파이프라인·검증·아카이브 기준 동기화. |
