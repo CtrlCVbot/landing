@@ -16,9 +16,12 @@
 - **범위**: `src/app/globals.css` `@theme inline` 토큰 이중화 (**Tailwind 4 — `tailwind.config.ts` 미사용**, PRD §7.1 정정 반영), `src/app/layout.tsx` `ThemeProvider` 또는 `data-theme` 속성. **landing 사이트 전역 컴포넌트 스윕** — `src/app/page.tsx` · `src/components/**/*.tsx` (hero · features · pricing · testimonials · footer · navbar 등 메인 섹션 + dash-preview 하위 7 개 파일 + shared UI) 의 `bg-white/5`·`text-white`·`from-gray-900/50`·`border-gray-800` 류 다크 하드코딩 클래스 토큰 치환. 전수 조사는 `grep` 기반 후보 목록 → 토큰 매핑 결정표 작성. 전환 트리거 방식·초기 모드·hydration 방어 등은 Draft §4 에서 확정 (next-themes + system follow + 3 중 방어).
 - **Draft**: [`.plans/drafts/f1-landing-light-theme/01-draft.md`](../../../drafts/f1-landing-light-theme/01-draft.md) (Standard/A/dev)
 - **PRD**: [`.plans/drafts/f1-landing-light-theme/02-prd.md`](../../../drafts/f1-landing-light-theme/02-prd.md) (REQ-14 + NFR-10 + SM-10, PCC 5/5 PASS)
-- **Feature Package**: [`.plans/features/active/f1-landing-light-theme/`](../../../features/active/f1-landing-light-theme/00-context/01-product-context.md) (Bridge 완료 2026-04-23, TASK 8 건 예정 T-THEME-01~08, 6 PR 분할)
+- **Feature Package**: [`.plans/features/active/f1-landing-light-theme/`](../../../features/active/f1-landing-light-theme/00-context/01-product-context.md) (Bridge 완료 2026-04-23, TASK **14 건 구현 완료** T-THEME-01~14, T-06 skip per D-003, **PR-1~7 직접 main 머지**)
+- **구현 이력**: T-THEME-01~08 완료 (08443ea/a4e0b76/c82f4e8/56b0a83/0d57b48/a7bbda4) → D-016 확장 T-THEME-09~12 (8e3523f/af70fb4/9555339) → D-017 확장 T-THEME-13~14 (446c718/08cabd6). 총 10+ 커밋.
+- **주요 결정**: D-005(토큰 13개), D-009(NFR-007 PASS), D-010(CTA gradient 예외), D-011(text-purple-400→accent), D-013(상태색 emerald-600/destructive), D-014(tooltip 반대테마), D-015(알파 패턴), **D-016(ai-panel+legacy 확장), D-017(order-form+palette 안 C)**.
+- **검증**: 980/980 tests PASS, typecheck 0, lint 0, build 164 kB (baseline +1 kB). dev-verify PASS with WARN (ERROR 0).
 - **포함 이슈**: [1]
-- **상태**: approved
+- **상태**: **implemented** (2026-04-24, /dev-verify 완료 · /plan-archive 대기)
 
 ### F2 — Mock 스키마 재설계 (추출/적용 분리 + 시나리오 세트)
 
@@ -233,15 +236,21 @@ TeamCreate team_name="dash-preview-phase4-phase-a"
 
 ---
 
-### Phase A 종료 조건 (M-Epic-1, 2026-05-06)
+### Phase A 종료 조건 (M-Epic-1, 2026-05-06 예정 → **실제 2026-04-24 도달**)
 
-- [ ] F1 구현 완료 + 테스트 통과 + 리뷰 승인 → F1 Feature 상태 `archived`
-- [ ] F5 구현 완료 + 테스트 통과 + 리뷰 승인 → F5 Feature 상태 `archived`
-- [ ] 라이트 모드 MVP 작동 (토글 또는 `prefers-color-scheme` 자동 전환)
-- [ ] JSON 뷰어 화면 비노출 확인 (`grep -r "<AiExtractJsonViewer" src/` → 0 결과, 컴포넌트 파일 자체는 유지)
-- [ ] "자동 배차 대기" 라벨 반영 확인 (`grep "자동 배차" src/components/dashboard-preview/` → 새 문구만)
-- [ ] axe-core 라이트 모드 0 violations (**landing 전역** 기준, 지표 4 중간 평가)
-- [ ] Phase A 회고 (선택, 다음 Phase 착수 전)
+- [x] F1 구현 완료 + 테스트 통과 + 리뷰 승인 → F1 Feature 상태 `implemented` (2026-04-24, 14/14 TASK, 980 PASS, dev-verify PASS with WARN ERROR 0). **/plan-archive 대기** → 실행 후 `archived`
+- [x] F5 구현 완료 + 테스트 통과 + 리뷰 승인 → F5 Feature 상태 `implemented` (2026-04-23, 4/4 TASK, 624 PASS, DVC PASS). **/plan-archive 대기** → 실행 후 `archived`
+- [x] 라이트 모드 MVP 작동 (next-themes + data-theme + system follow + 3중 방어, NFR-007 PASS)
+- [x] JSON 뷰어 화면 비노출 확인 (F5 T-CLEANUP-01 완료, ai-panel/index.tsx 렌더 제거)
+- [x] "자동 배차 대기" 라벨 반영 확인 (F5 T-CLEANUP-02 완료)
+- [ ] axe-core 라이트 모드 0 violations (**landing 전역** 기준) — **사용자 육안 QA 대기** (1440/1280/768/390 뷰포트 + 다크 회귀)
+- [ ] Phase A 회고 (선택, Phase B 착수 전)
+- [ ] `/plan-archive f1-landing-light-theme` + `/plan-archive f5-ui-residue-cleanup` — Feature 번들화 + `.plans/archive/` 이동 + index 등록
+
+**Phase A 도달 현황** (2026-04-24 세션 종료 시점):
+- 코드·테스트·빌드: 완료 (F1 + F5 양쪽 PASS)
+- 문서: 완료 (D-001~D-017, 대시보드 동기)
+- **잔여**: 사용자 육안 QA 1건 + /plan-archive 2건
 
 ---
 
@@ -266,7 +275,7 @@ Epic 상태는 **`active` 유지** (Phase B/C 완료까지). 모든 자식 Featu
 
 | Feature | 상태 | TASK 진행 | 테스트 | 번들 영향 | 리뷰 |
 |---|:---:|:---:|:---:|:---:|:---:|
-| F1 라이트 모드 | approved | 0/7 | — | — | — |
+| F1 라이트 모드 | **implemented** | **14/14** (T-06 skip) | **980 PASS** | **+1 kB (164 kB)** | **/dev-verify PASS with WARN (ERROR 0)** |
 | F2 Mock 재설계 | pending | — | — | — | — |
 | F3 옵션↔요금 파생 | pending | — | — | — | — |
 | F4 레이아웃+HitArea | pending | — | — | — | — |
@@ -298,3 +307,4 @@ Epic 상태는 **`active` 유지** (Phase B/C 완료까지). 모든 자식 Featu
 | 2026-04-23 | F1 범위 확장 (IDEA-20260423-002 기반) — dash-preview 한정 → landing 사이트 전역. §1 F1 헤더/Lane/RICE/범위 + §2 F1↔F2/F3/F4 근거 + §3 Phase A F1 설명 + §4 종료 조건 동기 |
 | 2026-04-23 | Phase A Step 4~7 완료 — F5/F1 Screening (Go 승인) + Draft (Lite/Standard) + F1 PRD (PCC 5/5 PASS) + F5/F1 Bridge (Feature Package 생성). §1 F5/F1 상태 `inbox → approved` + Draft/PRD/Feature Package 링크 추가. Step 8 Epic `planning → active` 진입 준비 |
 | 2026-04-23 | Phase A Step 9 /dev-feature 완료 (F1 + F5) — Architecture Profile detected → approved. F5 /dev-run 완료 (T-CLEANUP-01~04, 5 커밋, 624 tests PASS, DVC PASS, F5 상태 `implemented`). F1 /dev-run 새 세션에서 진행. F1 PR-4 Skip 결정 (D-003, pricing/testimonials 미존재). |
+| 2026-04-24 | F1 /dev-run 완료 — T-THEME-01~08 (PR-1~6) + preview QA 2회 (D-016/D-017 확장) → T-THEME-09~14 추가 구현. 총 14 TASK (T-06 skip), 980/980 tests PASS, typecheck 0, lint 0, build +1 kB. /dev-verify PASS with WARN (ERROR 0). F1 상태 `approved → implemented`. **Phase A M-Epic-1 도달 — /plan-archive 대기**. |
