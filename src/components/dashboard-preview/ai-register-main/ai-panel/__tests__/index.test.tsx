@@ -81,7 +81,7 @@ describe('AiPanelContainer shell (M1-03)', () => {
     expect(aside).toHaveClass('flex-shrink-0')
   })
 
-  it('has border-r border-white/10 + bg-black/40 palette', () => {
+  it('has border-r border-border + bg-card/50 palette (T-THEME-09 토큰 치환)', () => {
     render(
       <AiPanelContainer
         step={INITIAL_STEP}
@@ -92,8 +92,9 @@ describe('AiPanelContainer shell (M1-03)', () => {
 
     const aside = screen.getByLabelText('AI 화물 등록 패널')
     expect(aside).toHaveClass('border-r')
-    expect(aside).toHaveClass('border-white/10')
-    expect(aside).toHaveClass('bg-black/40')
+    // T-THEME-09 — 토큰 치환 (원본: border-white/10 bg-black/40)
+    expect(aside).toHaveClass('border-border')
+    expect(aside).toHaveClass('bg-card/50')
   })
 
   it('uses flex flex-col overflow-hidden (vertical stacking)', () => {

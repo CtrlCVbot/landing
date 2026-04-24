@@ -199,6 +199,18 @@ Draft §4 + PRD §7 에서 확정된 6 결정 + Tailwind 4 정정. 상세는 [`0
 | 영향 범위 | datetime-card (8지점) + estimate-info-card (8지점) + settlement-section (15+지점) + transport-option-card (5지점) + preview-chrome (3지점) + order-form-index (2지점). 총 40+지점. |
 | Rollback | 필요 시 알파 슬롯 세부 조정 (예: `text-foreground/70`) 가능. 하위 호환. |
 
+### D-016. F1 범위 재정의 — ai-panel 8파일 + legacy 4파일 편입 (T-THEME-09/10/11/12)
+
+| 항목 | 값 |
+|------|-----|
+| 결정일 | 2026-04-24 |
+| 결정자 | `/dev-run` T-THEME-08 완료 후 preview QA + 사용자 승인 (Option 2 선택) |
+| 배경 | T-THEME-01~08 완료 후 브라우저 프리뷰 (preview_start, 1440px, 라이트 모드) QA 결과 다음 갭 확인: ① **P0** — `ai-register-main/ai-panel/` 8파일이 `bg-black/40`, `border-white/10`, `text-white`, `text-gray-500` 등 하드코딩으로 라이트 모드에서 전체 검은색 렌더. ② **P1** — `dashboard-preview/` 루트 legacy 4파일 (`ai-panel-preview.tsx`, `form-preview.tsx`, `mobile-card-view.tsx`, `step-indicator.tsx`) 하드코딩 잔존. ③ **P1** — `products.tsx` L68 placeholder + `integrations.tsx` L27 카드 배경 `bg-card/50` 과도 투명으로 시각 약함. ④ **P2** — `problems.tsx` L31 before 텍스트 + order-form 카드 shadow 부재 미세 조정. **원 Binding §2-3 해석 오류**: F5 out-of-scope 로 등록된 `ai-panel/index.tsx`는 "렌더 제거" 전제 (F5 T-CLEANUP-01 완료), 8파일 전체 토큰화 주체는 명시 없음. |
+| 선택값 | **4 TASK 추가 (T-THEME-09~12, 합 2 인·일)** — F1 범위 확장: (a) T-THEME-09 (P0, 1 인·일): ai-panel 8파일 토큰 치환. (b) T-THEME-10 (P1, 0.5 인·일): legacy 4파일 토큰 치환. (c) T-THEME-11 (P1, 0.25 인·일): Products/Integrations 카드 배경 강화. (d) T-THEME-12 (P2, 0.25 인·일): Problems/order-form 미세 조정. `architecture-binding §2-3` 에서 `ai-panel/index.tsx` 제거 (F5 렌더 제거 완료 → 토큰화는 F1 책임). |
+| 근거 | ① F5 T-CLEANUP-01 **렌더 제거** 는 "메인 UI 렌더 흐름에서 분리" 의미이며 파일 삭제가 아님 — 잔존 8파일이 다른 screenshot 또는 프리뷰 경로에서 로딩. ② P0 gap 은 F1 핵심 acceptance (라이트 모드 완전 가시성) 위반. ③ Option 2 (2 인·일) 은 별도 Feature 분리 (F6 신설, 3~5 인·일 overhead) 대비 F1 범위 확장이 합리적 (Epic Phase A 기간 내 완결). ④ golden #12 수술적 변경 — ai-panel 8파일은 이미 토큰화된 dash-preview 7파일 (T-08) 의 sibling 이므로 동일 D-015 알파 패턴 원칙 적용으로 일관성 유지. |
+| 영향 범위 | `02-decision-log.md` D-016 신규 등록, `06-architecture-binding.md` §2-3 수정 (ai-panel/index.tsx 제거 + ai-panel 8파일 + legacy 4파일을 §2-2 수정 범위에 추가), `02-package/08-dev-tasks.md` T-THEME-09/10/11/12 TASK 정의 추가, `02-package/01-requirements.md` REQ-011 Scope "dash-preview 7파일" → "dash-preview 7파일 + ai-panel 8파일 + legacy 4파일" 확장. 총 추가 파일: 12 (8 + 4) + 미세 조정 4 섹션. |
+| Rollback | F1 완결 후 새 Epic 에서 토큰 세부 조정 시 독립 TASK 등록 가능. 본 D-016 은 "F1 완결 조건" 확장이며 파괴적 롤백 불필요. |
+
 **기록 형식**:
 
 ```
@@ -240,6 +252,7 @@ Draft §4 각 결정 항목의 "거절된 대안" 은 [`03-design-decisions.md`]
 | 2026-04-23 | T-THEME-07 완료 — D-012(UI primitives + shared/ 편집 불요) + D-013(상태색 red-400/emerald-400 토큰 전환) 등록. dev-code-reviewer PASS (WARN-1 R-001 D-013 수치 근사치 오차). |
 | 2026-04-23 | PR-1~5 + test/docs 5 커밋 생성 (08443ea/a4e0b76/c82f4e8/56b0a83/0d57b48). WARN-1 R-001 수치 정정 포함. |
 | 2026-04-24 | T-THEME-08 완료 — D-014(interactive-tooltip 반대 테마 유지) + D-015(dash-preview 알파 패턴 토큰 치환 원칙) 등록. 7파일 40+지점 치환 + D-013 settlement-section 재적용. F1 Phase A 완료 준비. |
+| 2026-04-24 | Preview QA 후 F1 범위 확장 — D-016(ai-panel 8파일 + legacy 4파일 F1 편입, T-THEME-09~12 신설 2 인·일) 등록. architecture-binding §2-3 수정 예정. |
 | 2026-04-23 | T-THEME-04 구현 완료 — D-010(CTA gradient text-white 의도적 유지) 등록. ThemeToggle.tsx 신규 + header.tsx navbar 토큰 치환 + 15 신규 테스트. |
 | 2026-04-23 | T-THEME-05 구현 완료 — D-011(features.tsx Icon text-purple-400 → text-accent 전환) 등록. hero.tsx 3지점 + features.tsx 4지점 토큰 치환 + 16 신규 테스트. |
 | 2026-04-23 | T-THEME-07 구현 완료 — D-012(UI primitives + shared/ 편집 불요, 기존 shadcn 토큰화), D-013(problems/products 상태색 red-400→destructive, emerald-400→emerald-600) 등록. footer/cta/integrations/problems/products 5 sections 토큰 치환 + 24 신규 테스트 + 전체 754/754 PASS. |

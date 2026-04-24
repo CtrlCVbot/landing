@@ -147,11 +147,11 @@ describe('AiResultButtons — TC-DASH3-UNIT-RESBT', () => {
     expect(label).toHaveClass('text-accent')
   })
 
-  it('그룹 컨테이너에 bg-white/5 border-white/10 클래스 (landing 팔레트)', () => {
+  it('그룹 컨테이너에 bg-card/50 border-border 클래스 (landing 팔레트 — T-THEME-09 토큰 치환; 원본: bg-white/5 border-white/10)', () => {
     render(<AiResultButtons categories={MOCK_CATEGORIES} extractState="resultReady" />)
     const group = screen.getByTestId('ai-category-departure')
-    expect(group.className).toMatch(/bg-white\/5/)
-    expect(group.className).toMatch(/border-white\/10/)
+    expect(group.className).toMatch(/bg-card\/50/)
+    expect(group.className).toMatch(/border-border/)
   })
 
   it('extractState=idle 시 버튼 리스트 미렌더 (placeholder)', () => {
@@ -244,10 +244,10 @@ describe('AiResultButtons — TC-DASH3-UNIT-RESBT', () => {
 // ---------------------------------------------------------------------------
 
 describe('AiResultButtons — TC-DASH3-UNIT-HOVER (#5 CSS only)', () => {
-  it('default slot 버튼 컨테이너에 hover:bg-white/10 className', () => {
+  it('default slot 버튼 컨테이너에 hover:bg-muted/50 className (T-THEME-09 토큰 치환; 원본: hover:bg-white/10)', () => {
     render(<AiResultButtons categories={MOCK_CATEGORIES} extractState="resultReady" />)
     const slot = screen.getByTestId('ai-button-slot-btn-dep-addr')
-    expect(slot.className).toMatch(/hover:bg-white\/10/)
+    expect(slot.className).toMatch(/hover:bg-muted\/50/)
   })
 
   it('default slot 버튼 컨테이너에 transition-colors className', () => {
@@ -256,7 +256,7 @@ describe('AiResultButtons — TC-DASH3-UNIT-HOVER (#5 CSS only)', () => {
     expect(slot.className).toMatch(/transition-colors/)
   })
 
-  it('모든 default slot 버튼에 hover + transition 적용', () => {
+  it('모든 default slot 버튼에 hover + transition 적용 (T-THEME-09 토큰 치환)', () => {
     render(<AiResultButtons categories={MOCK_CATEGORIES} extractState="resultReady" />)
     const slots = [
       'ai-button-slot-btn-dep-addr',
@@ -266,7 +266,7 @@ describe('AiResultButtons — TC-DASH3-UNIT-HOVER (#5 CSS only)', () => {
     ]
     for (const id of slots) {
       const slot = screen.getByTestId(id)
-      expect(slot.className).toMatch(/hover:bg-white\/10/)
+      expect(slot.className).toMatch(/hover:bg-muted\/50/)
       expect(slot.className).toMatch(/transition-colors/)
     }
   })

@@ -10,8 +10,8 @@
  *  - 빈 배열이면 null 반환 (렌더 안 함).
  *  - 한국어 warning 메시지 그대로 표시 (상위에서 이미 변환된 사용자 메시지 가정).
  *
- * 스타일 (REQ-DASH-005 landing 팔레트)
- *  - amber/warning 계열 — `bg-amber-500/10 border-amber-500/30 text-amber-300`.
+ * 스타일 (REQ-DASH-005 landing 팔레트, T-THEME-09 토큰 치환)
+ *  - amber/warning 계열 — `bg-amber-500/10 border-amber-500/30 text-amber-700` (원본: `text-amber-300` → D-013 WCAG AA 승계).
  *  - `lucide-react` 의 `AlertTriangle` 아이콘 + `data-icon="alert-triangle"` 속성
  *    으로 테스트/스타일링 hook 제공.
  *
@@ -41,7 +41,7 @@ export interface AiWarningBadgesProps {
 
 const BADGE_CLASSES =
   'flex items-start gap-2 rounded-lg border px-3 py-2 text-xs font-medium ' +
-  'bg-amber-500/10 border-amber-500/30 text-amber-300'
+  'bg-amber-500/10 border-amber-500/30 text-amber-700'
 
 // ---------------------------------------------------------------------------
 // Main Component

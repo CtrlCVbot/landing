@@ -5,7 +5,7 @@
  *
  * 레이아웃
  *  - width: `w-[380px]` 고정 (REQ-DASH3-050)
- *  - background: `bg-black/40` + 우측 `border-r border-white/10` (landing 팔레트)
+ *  - background: `bg-card/50` + 우측 `border-r border-border` (T-THEME-09 토큰 치환, D-015/D-016 원칙; 원본: `bg-black/40` / `border-white/10`)
  *  - flex flex-col overflow-hidden — 자식을 세로 스택으로 배치
  *
  * 접근성 (REQ-DASH-007)
@@ -143,17 +143,17 @@ export function AiPanelContainer({
   return (
     <aside
       aria-label="AI 화물 등록 패널"
-      className="w-[380px] flex-shrink-0 border-r border-white/10 bg-black/40 flex flex-col overflow-hidden"
+      className="w-[380px] flex-shrink-0 border-r border-border bg-card/50 flex flex-col overflow-hidden"
     >
       {/* 헤더 — 제목 + Step label */}
-      <div className="p-4 border-b border-white/10 flex items-center justify-between">
-        <h3 className="text-sm font-bold text-white flex items-center gap-2">
+      <div className="p-4 border-b border-border flex items-center justify-between">
+        <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
           <span className="w-6 h-6 rounded bg-gradient-to-br from-purple-600 to-blue-600 text-white text-xs flex items-center justify-center font-bold">
             AI
           </span>
           AI 화물 등록
         </h3>
-        <span className="text-[10px] text-gray-400">{step.label}</span>
+        <span className="text-[10px] text-muted-foreground">{step.label}</span>
       </div>
 
       {/* 본문 — 자식 6 컴포넌트 세로 스택 */}

@@ -70,6 +70,17 @@
 - `ai-register-main/order-form/index.tsx`
 - PR-6 (F5 merge 후)에 포함 (REQ-011)
 
+**Feature pocket — ai-panel 8 파일 (D-016 확장)** (`src/components/dashboard-preview/ai-register-main/ai-panel/`):
+- `index.tsx`, `ai-tab-bar.tsx`, `ai-input-area.tsx`, `ai-extract-button.tsx`
+- `ai-result-buttons.tsx`, `ai-button-item.tsx`, `ai-warning-badges.tsx`, `ai-extract-json-viewer.tsx`
+- PR-7 (T-THEME-09). F5 T-CLEANUP-01 은 **렌더 흐름 제거** 수준이며 파일 삭제 아님 → 잔존 컴포넌트가 프리뷰 경로 일부에서 로딩. F1 라이트 모드 완결성 위해 토큰화 주체는 F1.
+- 근거: [decision-log D-016](./02-decision-log.md)
+
+**Feature pocket — legacy 4 파일 (D-016 확장)** (`src/components/dashboard-preview/`):
+- `ai-panel-preview.tsx`, `form-preview.tsx`, `mobile-card-view.tsx`, `step-indicator.tsx`
+- PR-7 (T-THEME-10).
+- 근거: [decision-log D-016](./02-decision-log.md)
+
 ### 2-3. 명시적 금지 (out-of-scope)
 
 다음은 F1 범위 밖 (Feature Package `02-scope-boundaries.md` §3 참조):
@@ -77,7 +88,7 @@
 - `src/lib/mock-data.ts` — F2/F3/F5 범위
 - `src/components/dashboard-preview/hit-areas.ts` — F4/F5 범위
 - `src/lib/preview-steps.ts` — F2 범위
-- `src/components/dashboard-preview/ai-register-main/ai-panel/index.tsx` — F5 범위 (렌더 제거)
+- ~~`src/components/dashboard-preview/ai-register-main/ai-panel/index.tsx` — F5 범위 (렌더 제거)~~ **D-016 수정**: F5 렌더 제거 완료 이후 파일 자체 토큰화 주체가 F1 로 이동. §2-2 Feature pocket — ai-panel 8 파일 로 재분류.
 
 ---
 

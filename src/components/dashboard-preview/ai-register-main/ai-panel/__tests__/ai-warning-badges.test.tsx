@@ -35,12 +35,12 @@ describe('AiWarningBadges — TC-DASH3-UNIT-WARNBADGE', () => {
     expect(badges).toHaveLength(3)
   })
 
-  it('badge에 amber 색상 클래스 (bg-amber-500/10, border-amber-500/30, text-amber-300)', () => {
+  it('badge에 amber 색상 클래스 (bg-amber-500/10, border-amber-500/30, text-amber-700 — T-THEME-09 D-013 WCAG AA 승계; 원본: text-amber-300)', () => {
     render(<AiWarningBadges warnings={['테스트 경고']} />)
     const badge = screen.getByTestId('ai-warning-badge-0')
     expect(badge).toHaveClass('bg-amber-500/10')
     expect(badge).toHaveClass('border-amber-500/30')
-    expect(badge).toHaveClass('text-amber-300')
+    expect(badge).toHaveClass('text-amber-700')
   })
 
   it('AlertTriangle 아이콘 sigil 렌더 (data-icon="alert-triangle")', () => {

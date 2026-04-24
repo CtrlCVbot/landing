@@ -102,12 +102,12 @@ describe('AiInputArea — TC-DASH3-UNIT-INPAREA', () => {
       expect(textbox).toHaveAttribute('aria-label', 'AI 입력 영역 (데모)')
     })
 
-    it('landing 팔레트 클래스 적용 (bg-black/40 border-white/10 text-gray-200)', () => {
+    it('landing 팔레트 클래스 적용 (bg-card/50 border-border text-foreground — T-THEME-09 토큰 치환; 원본: bg-black/40 border-white/10 text-gray-200)', () => {
       render(<AiInputArea activeTab="text" text="abc" progress={0} active={false} />)
       const textbox = screen.getByRole('textbox')
-      expect(textbox).toHaveClass('bg-black/40')
-      expect(textbox).toHaveClass('border-white/10')
-      expect(textbox).toHaveClass('text-gray-200')
+      expect(textbox).toHaveClass('bg-card/50')
+      expect(textbox).toHaveClass('border-border')
+      expect(textbox).toHaveClass('text-foreground')
     })
   })
 

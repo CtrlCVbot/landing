@@ -47,14 +47,14 @@ const BODY_ID = 'ai-extract-json-body'
 
 const TOGGLE_CLASSES =
   'w-full flex items-center gap-2 px-4 py-2 text-xs font-medium ' +
-  'text-gray-400 hover:text-gray-200 hover:bg-white/5 transition-colors ' +
-  'border-t border-white/10 ' +
+  'text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors ' +
+  'border-t border-border ' +
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60'
 
 const BODY_CLASSES =
   'font-mono text-[10px] leading-tight whitespace-pre-wrap break-all ' +
-  'bg-black/40 border border-white/10 rounded-md p-2 mx-4 mb-3 ' +
-  'max-h-[300px] overflow-auto text-gray-200'
+  'bg-card/50 border border-border rounded-md p-2 mx-4 mb-3 ' +
+  'max-h-[300px] overflow-auto text-foreground'
 
 // ---------------------------------------------------------------------------
 // Main Component

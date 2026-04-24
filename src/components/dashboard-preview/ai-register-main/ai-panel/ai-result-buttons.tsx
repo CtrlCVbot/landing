@@ -14,10 +14,10 @@
  *  - idle / loading : 카테고리 헤더만 렌더, 버튼 리스트는 placeholder (hidden).
  *  - resultReady    : 각 카테고리의 buttons 를 default slot 또는 renderButton 으로 렌더.
  *
- * 스타일 (REQ-DASH-005 landing 팔레트)
- *  - 그룹 카드 : `bg-white/5 border-white/10` + `rounded-lg`.
+ * 스타일 (REQ-DASH-005 landing 팔레트, T-THEME-09 토큰 치환)
+ *  - 그룹 카드 : `bg-card/50 border-border` + `rounded-lg` (원본: `bg-white/5 border-white/10`).
  *  - 카테고리 라벨 : `text-accent` + 소형 대문자 스타일.
- *  - default slot 버튼 : `hover:bg-white/10 transition-colors` (#5 CSS-only hover, REQ-DASH-006).
+ *  - default slot 버튼 : `hover:bg-muted/50 transition-colors` (#5 CSS-only hover, REQ-DASH-006; 원본: `hover:bg-white/10`).
  *
  * 접근성 (REQ-DASH-007)
  *  - 각 카테고리 `role="group"` + `aria-label="AI 추출 결과 — {label}"`.
@@ -71,14 +71,14 @@ const ICON_MAP: Readonly<Record<AiCategoryIcon, typeof MapPin>> = {
 } as const
 
 const GROUP_CARD_CLASSES =
-  'rounded-lg bg-white/5 border border-white/10 p-3 flex flex-col gap-2'
+  'rounded-lg bg-card/50 border border-border p-3 flex flex-col gap-2'
 
 const CATEGORY_LABEL_CLASSES =
   'text-xs font-bold uppercase tracking-wider text-accent'
 
 const DEFAULT_SLOT_CLASSES =
-  'rounded-md bg-white/[0.03] border border-white/10 px-3 py-2 text-xs text-white/80 ' +
-  'transition-colors hover:bg-white/10'
+  'rounded-md bg-muted/30 border border-border px-3 py-2 text-xs text-foreground ' +
+  'transition-colors hover:bg-muted/50'
 
 // ---------------------------------------------------------------------------
 // Main Component
@@ -107,7 +107,7 @@ export function AiResultButtons({
             className={
               GROUP_CARD_CLASSES +
               (isFocused
-                ? ' ring-2 ring-accent/60 ring-offset-2 ring-offset-black/40 transition-shadow'
+                ? ' ring-2 ring-accent/60 ring-offset-2 ring-offset-background transition-shadow'
                 : '')
             }
           >
@@ -151,7 +151,7 @@ function DefaultSlot({ button }: DefaultSlotProps) {
       className={DEFAULT_SLOT_CLASSES}
     >
       <span className="font-medium">{button.label}</span>
-      <span className="ml-1 text-white/60">{button.displayValue}</span>
+      <span className="ml-1 text-muted-foreground">{button.displayValue}</span>
     </div>
   )
 }

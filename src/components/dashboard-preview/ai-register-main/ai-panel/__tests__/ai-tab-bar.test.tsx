@@ -55,11 +55,11 @@ describe('AiTabBar — TC-DASH3-UNIT-TABBAR', () => {
     expect(textTab).toHaveClass('text-accent')
   })
 
-  it('inactive 탭에 text-gray-500 클래스', () => {
+  it('inactive 탭에 text-muted-foreground 클래스 (T-THEME-09 토큰 치환; 원본: text-gray-500)', () => {
     render(<AiTabBar activeTab="text" />)
 
     const imageTab = screen.getByRole('tab', { name: '이미지' })
-    expect(imageTab).toHaveClass('text-gray-500')
+    expect(imageTab).toHaveClass('text-muted-foreground')
   })
 
   it('onTabChange 콜백 호출 (탭 클릭 시)', () => {

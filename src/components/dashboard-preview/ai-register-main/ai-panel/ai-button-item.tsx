@@ -21,10 +21,10 @@
  *  - #4 use-ripple       : 클릭 시 좌표 기반 wave 오버레이, 300ms 후 제거.
  *  - unavailable 상태에서는 두 훅 모두 비활성 (disabled button 이므로 click 이벤트 차단).
  *
- * 스타일 (REQ-DASH-005 landing 팔레트)
+ * 스타일 (REQ-DASH-005 landing 팔레트, T-THEME-09 토큰 치환)
  *  - pending     : `border-accent/40 text-accent bg-accent/5`.
- *  - applied     : `border-green-500/40 text-green-400 bg-green-500/10`.
- *  - unavailable : `opacity-50 bg-white/5 text-white/40` + `cursor-not-allowed`.
+ *  - applied     : `border-green-500/40 text-emerald-600 bg-green-500/10` (D-013 WCAG AA 승계; 원본: `text-green-400`).
+ *  - unavailable : `opacity-50 bg-muted/30 text-muted-foreground/60 border-border` + `cursor-not-allowed` (원본: `bg-white/5 text-white/40 border-white/10`).
  *
  * 접근성 (REQ-DASH-007)
  *  - `<button type="button">` + `aria-label` (label + displayValue).
@@ -74,17 +74,17 @@ export interface AiButtonItemProps {
 const BASE_CLASSES =
   'relative inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium ' +
   'max-w-full overflow-hidden ' +
-  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-black/40 ' +
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background ' +
   'transition-colors'
 
 const PENDING_CLASSES =
   'border border-accent/40 text-accent bg-accent/5 hover:bg-accent/10 cursor-pointer'
 
 const APPLIED_CLASSES =
-  'border border-green-500/40 text-green-400 bg-green-500/10 hover:bg-green-500/15 cursor-pointer'
+  'border border-green-500/40 text-emerald-600 bg-green-500/10 hover:bg-green-500/15 cursor-pointer'
 
 const UNAVAILABLE_CLASSES =
-  'border border-white/10 bg-white/5 text-white/40 opacity-50 cursor-not-allowed'
+  'border border-border bg-muted/30 text-muted-foreground/60 opacity-50 cursor-not-allowed'
 
 const RIPPLE_SIZE_PX = 120
 
@@ -164,7 +164,7 @@ export function AiButtonItem({
         ) : null}
         <span className="truncate font-semibold">{label}</span>
         {displayValue ? (
-          <span className="truncate text-white/70">{displayValue}</span>
+          <span className="truncate text-foreground/80">{displayValue}</span>
         ) : null}
 
         {/* #4 ripple wave 오버레이 */}
@@ -173,7 +173,7 @@ export function AiButtonItem({
             key={ripple.id}
             data-ripple
             aria-hidden="true"
-            className="pointer-events-none absolute rounded-full bg-white/30 animate-ping"
+            className="pointer-events-none absolute rounded-full bg-foreground/30 animate-ping"
             style={{
               left: ripple.x - RIPPLE_SIZE_PX / 2,
               top: ripple.y - RIPPLE_SIZE_PX / 2,
@@ -187,7 +187,7 @@ export function AiButtonItem({
       {isUnavailable && unavailableReason ? (
         <span
           data-testid={`ai-button-item-reason-${id}`}
-          className="text-[10px] text-white/50 px-1 truncate"
+          className="text-[10px] text-muted-foreground px-1 truncate"
         >
           {unavailableReason}
         </span>

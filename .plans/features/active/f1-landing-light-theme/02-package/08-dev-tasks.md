@@ -18,9 +18,13 @@
 | ~~T-THEME-06~~ | ~~Pricing + Testimonials 토큰 치환~~ **⚠️ SKIPPED (D-003)** | ~~PR-4~~ | — | 0 | 0 |
 | T-THEME-07 | Footer + Shared UI 토큰 치환 | PR-5 | PR-1 merge | 5~10 | 2 인·일 |
 | T-THEME-08 | Dash-Preview 7파일 토큰 치환 | PR-6 | PR-1 merge + F5 merge | 7 | 1 인·일 |
+| T-THEME-09 | AI 패널 8파일 토큰 치환 (D-016, **P0**) | PR-7 | T-THEME-08 | 8 | 1 인·일 |
+| T-THEME-10 | Legacy 4파일 토큰 치환 (D-016, **P1**) | PR-7 | T-THEME-09 | 4 | 0.5 인·일 |
+| T-THEME-11 | Products/Integrations 카드 배경 강화 (D-016, **P1**) | PR-7 | T-THEME-10 | 2 | 0.25 인·일 |
+| T-THEME-12 | Problems/order-form 미세 조정 (D-016, **P2**) | PR-7 | T-THEME-11 | 2+ | 0.25 인·일 |
 
-**합계**: 9 인·일 (T-THEME-06 skip 반영, 직렬) / 약 8.5 인·일 (PR 병렬).
-**PR 개수**: 6 → **5** (PR-4 Skip, [decision-log D-003](../00-context/02-decision-log.md) 참조).
+**합계**: 11 인·일 (T-THEME-06 skip 반영 + T-THEME-09~12 D-016 확장 +2 인·일, 직렬) / 약 10.5 인·일 (PR 병렬).
+**PR 개수**: 6 → **6** (PR-4 Skip, PR-7 신설 D-016, [decision-log D-003](../00-context/02-decision-log.md) + [D-016](../00-context/02-decision-log.md) 참조).
 
 ---
 
@@ -244,6 +248,109 @@ grep -n "자동 배차" src/components/dashboard-preview/ai-register-main/order-
 
 ---
 
+## T-THEME-09 — AI 패널 8파일 토큰 치환 (D-016, P0)
+
+**REQ**: REQ-011 확장 (D-016)
+**PR**: PR-7 (T-THEME-08 merge 후)
+**Priority**: **P0** (라이트 모드 완전 가시성 — 프리뷰 QA 결과 검은색 블록 완전 노출)
+
+### Scope (8파일)
+- `src/components/dashboard-preview/ai-register-main/ai-panel/index.tsx`
+- `src/components/dashboard-preview/ai-register-main/ai-panel/ai-tab-bar.tsx`
+- `src/components/dashboard-preview/ai-register-main/ai-panel/ai-input-area.tsx`
+- `src/components/dashboard-preview/ai-register-main/ai-panel/ai-extract-button.tsx`
+- `src/components/dashboard-preview/ai-register-main/ai-panel/ai-result-buttons.tsx`
+- `src/components/dashboard-preview/ai-register-main/ai-panel/ai-button-item.tsx`
+- `src/components/dashboard-preview/ai-register-main/ai-panel/ai-warning-badges.tsx`
+- `src/components/dashboard-preview/ai-register-main/ai-panel/ai-extract-json-viewer.tsx`
+
+### 치환 패턴 (D-015 알파 패턴 원칙 재사용)
+- `bg-black/40` → `bg-card/50` (AI 패널 컨테이너)
+- `bg-black/20~30` → `bg-muted/30~50`
+- `text-white` → `text-foreground`
+- `text-white/40~60` → `text-muted-foreground`
+- `text-white/70` → `text-foreground/80`
+- `text-white/80~90` → `text-foreground`
+- `text-gray-400~500` → `text-muted-foreground`
+- `border-white/10` → `border-border`
+- `border-white/5` → `border-border/50`
+- 브랜드 gradient 배경 위 `text-white` 는 **유지** (D-010 원칙 승계)
+
+### TDD RED
+`src/__tests__/light-theme.test.tsx` T-THEME-09 describe 블록 추가. 8파일 각각 3중 grep 0건 검증.
+
+### Acceptance
+- [ ] 8파일 `bg-black`, `text-white`(gradient 제외), `border-white`, `text-gray-*` 3중 grep 0건
+- [ ] 기존 테스트 PASS 유지 (ai-panel/__tests__/*.test.tsx)
+- [ ] `pnpm typecheck` 0 errors
+- [ ] axe-core 라이트 모드 0 violations
+- [ ] 프리뷰 (1440px 라이트) 육안 검증: AI 패널 가시성 확보
+
+---
+
+## T-THEME-10 — Legacy 4파일 토큰 치환 (D-016, P1)
+
+**REQ**: REQ-011 확장 (D-016)
+**PR**: PR-7 (T-THEME-09 이후 직렬)
+**Priority**: **P1** (legacy 렌더 경로 가시성 완성)
+
+### Scope (4파일)
+- `src/components/dashboard-preview/ai-panel-preview.tsx` (~8 지점)
+- `src/components/dashboard-preview/form-preview.tsx` (~6 지점)
+- `src/components/dashboard-preview/mobile-card-view.tsx` (~14 지점)
+- `src/components/dashboard-preview/step-indicator.tsx` (~1 지점)
+
+### 치환 패턴
+T-THEME-09 와 동일 (D-015 알파 패턴 원칙).
+
+### TDD RED
+`src/__tests__/light-theme.test.tsx` T-THEME-10 describe 추가.
+
+### Acceptance
+- [ ] 4파일 3중 grep 0건 (gradient 예외 제외)
+- [ ] 기존 legacy 스냅샷/테스트 PASS
+- [ ] `pnpm typecheck` 0 errors
+
+---
+
+## T-THEME-11 — Products/Integrations 카드 배경 강화 (D-016, P1)
+
+**REQ**: REQ-010 보강 (D-016 QA)
+**PR**: PR-7 (T-THEME-10 이후)
+**Priority**: **P1** (시각 가독)
+
+### Scope (2파일)
+- `src/components/sections/products.tsx` Line 68 placeholder (`bg-card/50` → `bg-muted/50` 또는 `bg-card shadow-sm`)
+- `src/components/sections/integrations.tsx` Line 27 카드 (동일 treatment)
+
+### 근거
+라이트 모드에서 `bg-card/50` 알파 50%는 흰 배경 위 투명도 과도 → 카드 경계/시각 약함. `bg-muted/50` (light: `#f1f5f9` 반투명) 또는 `bg-card` 완전 + `shadow-sm` 로 깊이감 확보.
+
+### Acceptance
+- [ ] products.tsx placeholder 배경 강화 (bg-muted/50 또는 shadow-sm)
+- [ ] integrations.tsx 카드 배경 강화 (동일)
+- [ ] 스냅샷 차이 확인 (의도적 시각 변경)
+- [ ] 다크 모드 시각 회귀 0
+
+---
+
+## T-THEME-12 — Problems/order-form 미세 조정 (D-016, P2)
+
+**REQ**: REQ-010 보강 (D-016 QA)
+**PR**: PR-7 (T-THEME-11 이후)
+**Priority**: **P2** (개선 여지)
+
+### Scope
+- `src/components/sections/problems.tsx` Line 31 before 텍스트 `text-muted-foreground/80` 확인/조정
+- order-form 카드 배경: `shadow-sm` 추가 (datetime-card / estimate-info-card / settlement-section / transport-option-card — 시각 깊이 부족 시)
+
+### Acceptance
+- [ ] problems.tsx before 텍스트 대비 확인 (WCAG AA)
+- [ ] order-form 카드 shadow-sm 적용 (선택적, 시각 검토 후)
+- [ ] 스냅샷 변경 최소화
+
+---
+
 ## 공통 검증 (전 TASK)
 
 각 TASK 완료 시 실행:
@@ -268,5 +375,6 @@ pnpm test src/__tests__/light-theme.test.tsx    # 0 failures (누적)
 | ~~PR-4~~ | ~~T-THEME-06~~ | ⚠️ SKIPPED (D-003) |
 | PR-5 | T-THEME-07 | footer + shared UI (cta, integrations, problems, products, footer + ui/ + shared/) |
 | PR-6 | T-THEME-08 | dash-preview 7파일 |
+| PR-7 | T-THEME-09~12 | ai-panel 8 + legacy 4 + products/integrations + problems/order-form (D-016) |
 
 **D+7 진척 평가** (2026-05-02): PR-1 + PR-2/3 merge 완료 여부 확인. 미달 시 Phase A 1주 연장 (Epic §6 리스크 6).

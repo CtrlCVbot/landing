@@ -15,11 +15,11 @@
  *  - pressTriggerAt 도달 시 150ms 동안 scale(0.97) + shadow 축소.
  *  - data-pressed 속성으로 현재 press 상태를 노출 (테스트/스타일링 용).
  *
- * 스타일 (REQ-DASH-005 landing 팔레트)
- *  - idle:    gradient `from-purple-600 to-blue-600` + 흰 글자.
- *  - loading: 버튼은 disabled + spinner (border-white/30 border-t-white).
+ * 스타일 (REQ-DASH-005 landing 팔레트, T-THEME-09 토큰 치환)
+ *  - idle:    gradient `from-purple-600 to-blue-600` + 흰 글자 (D-010 브랜드 고정 예외).
+ *  - loading: 버튼은 disabled + spinner (border-white/30 border-t-white — gradient 배경 brand-contrast 예외로 유지).
  *  - resultReady: "재추출" label + disabled (spike demo 상 실제 재시도 차단).
- *  - focus-visible: `focus-visible:ring-2 focus-visible:ring-white/60`.
+ *  - focus-visible: `focus-visible:ring-2 focus-visible:ring-foreground/60 focus-visible:ring-offset-background` (원본: `ring-white/60` / `ring-offset-black/40`).
  *
  * @see REQ-DASH3-003 (AiPanel 컴포넌트 복제 매니페스트)
  * @see REQ-DASH3-021 (#3 조작감 — 버튼 press)
@@ -61,7 +61,7 @@ const BASE_CLASSES =
   'flex items-center justify-center gap-2 ' +
   'transition-opacity duration-150 ' +
   'disabled:opacity-60 ' +
-  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-black/40'
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background'
 
 // ---------------------------------------------------------------------------
 // Main Component
@@ -87,7 +87,7 @@ export function AiExtractButton({
 
   // M4-01: focused=true 면 accent ring 스타일 추가 (base 의 focus-visible 과 구분되는 자동 focus walk 용).
   const focusedClasses = focused
-    ? ' ring-2 ring-accent/70 ring-offset-2 ring-offset-black/40'
+    ? ' ring-2 ring-accent/70 ring-offset-2 ring-offset-background'
     : ''
 
   return (

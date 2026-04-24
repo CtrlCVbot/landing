@@ -15,8 +15,8 @@
  *  - 텍스트 뷰: `role="textbox"` + `aria-readonly="true"` + `aria-label`.
  *  - caret 은 `aria-hidden="true"`.
  *
- * 스타일 (REQ-DASH-005 landing 팔레트)
- *  - `bg-black/40` / `border-white/10` / `rounded-lg` / `text-gray-200`.
+ * 스타일 (REQ-DASH-005 landing 팔레트, T-THEME-09 토큰 치환)
+ *  - `bg-card/50` / `border-border` / `rounded-lg` / `text-foreground` (원본: `bg-black/40` / `border-white/10` / `text-gray-200`).
  *  - caret 색상: `text-accent` / `animate-pulse`.
  *
  * @see REQ-DASH3-003  (AiPanel 컴포넌트 복제 매니페스트)
@@ -83,16 +83,16 @@ export function AiInputArea({
         aria-label="AI 입력 영역 (데모)"
         data-focus-active={focused ? 'true' : 'false'}
         className={
-          'bg-black/40 border rounded-lg p-3 min-h-[140px] text-sm text-gray-200 whitespace-pre-wrap transition-shadow ' +
+          'bg-card/50 border rounded-lg p-3 min-h-[140px] text-sm text-foreground whitespace-pre-wrap transition-shadow ' +
           (focused
             ? 'border-accent/70 ring-2 ring-accent/40 shadow-[0_0_0_2px_rgba(96,165,250,0.15)]'
-            : 'border-white/10')
+            : 'border-border')
         }
       >
         {text.length > 0 ? (
           text
         ) : (
-          <span className="text-gray-600">{PLACEHOLDER}</span>
+          <span className="text-muted-foreground/70">{PLACEHOLDER}</span>
         )}
         {showCaret && (
           <span
@@ -101,7 +101,7 @@ export function AiInputArea({
           />
         )}
       </div>
-      <div className="flex justify-between items-center mt-2 text-xs text-gray-500">
+      <div className="flex justify-between items-center mt-2 text-xs text-muted-foreground">
         <span>{progressLabel}</span>
         <span>{text.length}자</span>
       </div>
@@ -115,9 +115,9 @@ export function AiInputArea({
 
 function ImageTabPlaceholder() {
   return (
-    <div className="bg-black/40 border border-white/10 border-dashed rounded-lg p-8 text-center text-gray-500 text-sm">
+    <div className="bg-card/50 border border-border border-dashed rounded-lg p-8 text-center text-muted-foreground text-sm">
       이미지를 드래그 앤 드롭 또는 클릭하여 업로드
-      <div className="text-xs text-gray-600 mt-2">(데모 — 실제 업로드는 비활성)</div>
+      <div className="text-xs text-muted-foreground/70 mt-2">(데모 — 실제 업로드는 비활성)</div>
     </div>
   )
 }

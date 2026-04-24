@@ -35,14 +35,14 @@ const ACTIVE_CLASSES =
   'text-xs font-semibold py-1.5 rounded-md bg-accent/20 text-accent border border-accent/30'
 
 const INACTIVE_CLASSES =
-  'text-xs font-semibold py-1.5 rounded-md text-gray-500 hover:text-gray-300 transition-colors'
+  'text-xs font-semibold py-1.5 rounded-md text-muted-foreground hover:text-foreground/80 transition-colors'
 
 export function AiTabBar({ activeTab, onTabChange }: AiTabBarProps) {
   return (
     <div
       role="tablist"
       aria-label="AI 입력 타입 선택"
-      className="grid grid-cols-2 gap-0 bg-black/40 border border-white/10 rounded-lg p-1"
+      className="grid grid-cols-2 gap-0 bg-card/50 border border-border rounded-lg p-1"
     >
       {TABS.map(({ key, label }) => {
         const isActive = activeTab === key
