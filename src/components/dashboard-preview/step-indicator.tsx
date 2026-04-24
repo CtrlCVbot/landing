@@ -75,7 +75,7 @@ export function StepIndicator({
               'w-2 h-2 rounded-full cursor-pointer transition-all duration-200',
               isActive
                 ? 'bg-gradient-to-r from-purple-500 to-blue-500 scale-125'
-                : 'bg-gray-600 hover:bg-gray-500',
+                : 'bg-muted-foreground/40 hover:bg-muted-foreground/60',
             )}
           />
         )

@@ -49,7 +49,7 @@ function ExtractCard() {
 
   return (
     <div data-testid="mobile-card-extract">
-      <h3 className="mb-3 text-sm font-semibold text-white">AI 분석 결과</h3>
+      <h3 className="mb-3 text-sm font-semibold text-foreground">AI 분석 결과</h3>
       <div className="space-y-2">
         {CATEGORY_CONFIG.map((config) => {
           const category = categories.find((c) => c.id === config.id)
@@ -58,13 +58,13 @@ function ExtractCard() {
           return (
             <div
               key={config.id}
-              className="flex items-center gap-2 rounded-lg bg-gray-800/50 px-3 py-2"
+              className="flex items-center gap-2 rounded-lg bg-muted/50 px-3 py-2"
             >
               <CategoryIcon icon={config.icon} />
-              <span className="rounded-full bg-blue-500/20 px-2 py-0.5 text-xs text-blue-400">
+              <span className="rounded-full bg-accent/20 px-2 py-0.5 text-xs text-accent">
                 {config.label}
               </span>
-              <span className="ml-auto text-sm text-gray-300">
+              <span className="ml-auto text-sm text-foreground/80">
                 {firstButton?.displayValue ?? ''}
               </span>
             </div>
@@ -86,25 +86,25 @@ function CompleteCard() {
   return (
     <div data-testid="mobile-card-complete">
       <div className="mb-3 flex items-center gap-2">
-        <h3 className="text-sm font-semibold text-white">등록 완료</h3>
-        <span className="rounded-full bg-green-500/20 px-2 py-0.5 text-xs text-green-400">
+        <h3 className="text-sm font-semibold text-foreground">등록 완료</h3>
+        <span className="rounded-full bg-emerald-500/20 px-2 py-0.5 text-xs text-emerald-600">
           완료
         </span>
       </div>
       <div className="space-y-2">
-        <div className="flex items-center justify-between rounded-lg bg-gray-800/50 px-3 py-2">
-          <span className="text-xs text-gray-400">경로</span>
-          <span className="text-sm text-white">
+        <div className="flex items-center justify-between rounded-lg bg-muted/50 px-3 py-2">
+          <span className="text-xs text-muted-foreground">경로</span>
+          <span className="text-sm text-foreground">
             {pickupCity} → {deliveryCity}
           </span>
         </div>
-        <div className="flex items-center justify-between rounded-lg bg-gray-800/50 px-3 py-2">
-          <span className="text-xs text-gray-400">차량</span>
-          <span className="text-sm text-white">{vehicleLabel}</span>
+        <div className="flex items-center justify-between rounded-lg bg-muted/50 px-3 py-2">
+          <span className="text-xs text-muted-foreground">차량</span>
+          <span className="text-sm text-foreground">{vehicleLabel}</span>
         </div>
-        <div className="flex items-center justify-between rounded-lg bg-gray-800/50 px-3 py-2">
-          <span className="text-xs text-gray-400">운임</span>
-          <span className="text-lg font-semibold text-white">{fareLabel}</span>
+        <div className="flex items-center justify-between rounded-lg bg-muted/50 px-3 py-2">
+          <span className="text-xs text-muted-foreground">운임</span>
+          <span className="text-lg font-semibold text-foreground">{fareLabel}</span>
         </div>
       </div>
     </div>
@@ -153,7 +153,7 @@ export function MobileCardView({ className }: MobileCardViewProps) {
     <div
       data-testid="mobile-card-view"
       className={cn(
-        'rounded-xl border border-gray-800 bg-gray-900/50 p-4',
+        'rounded-xl border border-border bg-card/50 p-4',
         className,
       )}
     >

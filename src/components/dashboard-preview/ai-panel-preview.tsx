@@ -37,11 +37,11 @@ const CATEGORY_META: ReadonlyArray<{
 
 function AiTabBar() {
   return (
-    <div data-testid="ai-tab-bar" className="flex border-b border-gray-800">
-      <div className="flex-1 px-4 py-2 text-center text-sm border-b-2 border-blue-400 text-blue-400">
+    <div data-testid="ai-tab-bar" className="flex border-b border-border">
+      <div className="flex-1 px-4 py-2 text-center text-sm border-b-2 border-accent text-accent">
         텍스트
       </div>
-      <div className="flex-1 px-4 py-2 text-center text-sm border-b-2 border-transparent text-gray-500">
+      <div className="flex-1 px-4 py-2 text-center text-sm border-b-2 border-transparent text-muted-foreground">
         이미지
       </div>
     </div>
@@ -54,12 +54,12 @@ function AiTextarea({ inputText }: { readonly inputText: string }) {
   return (
     <div
       data-testid="ai-textarea"
-      className="rounded-lg border border-gray-700 bg-gray-800/50 p-3 min-h-[120px] text-sm"
+      className="rounded-lg border border-border bg-card/50 p-3 min-h-[120px] text-sm"
     >
       {isEmpty ? (
-        <span className="text-gray-500">카카오톡 메시지를 입력하세요</span>
+        <span className="text-muted-foreground">카카오톡 메시지를 입력하세요</span>
       ) : (
-        <span className="text-gray-200">{inputText}</span>
+        <span className="text-foreground">{inputText}</span>
       )}
     </div>
   )
@@ -80,7 +80,7 @@ function AiExtractButton({
     <div
       data-testid="extract-button"
       className={cn(
-        'mt-3 flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm text-white',
+        'mt-3 flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm text-primary-foreground',
         isDisabled && 'opacity-50',
       )}
     >
@@ -122,7 +122,7 @@ function AiResultButtons({
             data-testid={`category-group-${meta.id}`}
             className="flex flex-col gap-1"
           >
-            <div className="flex items-center gap-2 text-xs text-gray-400">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <meta.Icon
                 data-testid={`icon-${meta.id}`}
                 className="h-3.5 w-3.5"
@@ -137,8 +137,8 @@ function AiResultButtons({
                   className={cn(
                     'rounded-lg px-3 py-2 text-xs',
                     isPending
-                      ? 'bg-blue-500/20 text-blue-400'
-                      : 'bg-green-500/20 text-green-400',
+                      ? 'bg-accent/20 text-accent'
+                      : 'bg-emerald-500/20 text-emerald-600',
                   )}
                 >
                   <span className="font-medium">{btn.label}</span>
@@ -164,7 +164,7 @@ export function AiPanelPreview({ aiPanelState, className }: AiPanelPreviewProps)
     <div
       data-testid="ai-panel"
       className={cn(
-        'w-[380px] flex-shrink-0 border-r border-gray-800 bg-gray-900/30 flex flex-col overflow-hidden',
+        'w-[380px] flex-shrink-0 border-r border-border bg-card/50 flex flex-col overflow-hidden',
         className,
       )}
     >

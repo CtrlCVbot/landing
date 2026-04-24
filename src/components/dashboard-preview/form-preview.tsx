@@ -10,11 +10,11 @@ interface FormPreviewProps {
   readonly className?: string
 }
 
-const CARD_BASE = 'rounded-lg border border-gray-800 bg-gray-900/30 p-3'
-const LABEL_STYLE = 'text-xs font-medium text-gray-400 mb-2'
-const FIELD_LABEL_STYLE = 'text-[10px] text-gray-500'
-const FIELD_VALUE_STYLE = 'text-xs text-white'
-const PLACEHOLDER_STYLE = 'border border-dashed border-gray-700 rounded px-2 py-1 text-xs text-gray-600'
+const CARD_BASE = 'rounded-lg border border-border bg-card/50 p-3'
+const LABEL_STYLE = 'text-xs font-medium text-muted-foreground mb-2'
+const FIELD_LABEL_STYLE = 'text-[10px] text-muted-foreground'
+const FIELD_VALUE_STYLE = 'text-xs text-foreground'
+const PLACEHOLDER_STYLE = 'border border-dashed border-border rounded px-2 py-1 text-xs text-muted-foreground/70'
 
 const TRANSPORT_OPTIONS = [
   { key: 'direct', label: '직송' },
@@ -194,8 +194,8 @@ export function FormPreview({ formState, className }: FormPreviewProps) {
                 // legacy TRANSPORT_OPTIONS 키는 'direct' | 'forklift' | 'roundtrip' | 'urgent' 인데
                 // Phase 3 스키마에는 'direct' / 'forklift' 만 매칭된다 (roundtrip/urgent는 Phase 1/2 전용).
                 (formData.options as unknown as Record<string, boolean | undefined>)[key] === true
-                  ? 'bg-purple-500/20 text-purple-300'
-                  : 'bg-gray-800 text-gray-500',
+                  ? 'bg-accent/20 text-accent'
+                  : 'bg-muted/50 text-muted-foreground',
               )}
             >
               {label}
