@@ -1335,3 +1335,101 @@ describe('F1 order-form 5파일 토큰화 (T-THEME-13, PR-7)', () => {
     })
   })
 })
+
+// ---------------------------------------------------------------------------
+// T-THEME-14 — 라이트 팔레트 대비 강화 안 C (D-017, PR-7)
+//
+// 배경: T-THEME-09~13 완료 후 2차 preview QA 에서 background(#ffffff)
+// 대 card(oklch(0.98 / 0.8)) 대비비 1.034:1, background 대 border(#e5e7eb)
+// 1.238:1 로 카드 경계 지각 불가. 안 C 채택 — card/border/muted 3 변수
+// 값 조정 + alpha 제거로 경계 대비 강화.
+// ---------------------------------------------------------------------------
+
+describe('F1 라이트 팔레트 대비 강화 (T-THEME-14, PR-7)', () => {
+  const CSS = readFileSync(
+    resolve(__dirname, '../app/globals.css'),
+    'utf8',
+  )
+
+  describe('D-017 안 C — :root 3 변수 값 조정', () => {
+    it(':root --landing-card 가 #f1f5f9 (slate-100) 로 변경됨', () => {
+      const rootMatch = CSS.match(/:root\s*\{([\s\S]*?)\r?\n\}/)
+      expect(rootMatch).not.toBeNull()
+      expect(rootMatch![1]).toMatch(/--landing-card:\s*#f1f5f9/)
+    })
+
+    it(':root --landing-border 가 #cbd5e1 (slate-300) 로 변경됨', () => {
+      const rootMatch = CSS.match(/:root\s*\{([\s\S]*?)\r?\n\}/)
+      expect(rootMatch).not.toBeNull()
+      expect(rootMatch![1]).toMatch(/--landing-border:\s*#cbd5e1/)
+    })
+
+    it(':root --landing-muted 가 #e2e8f0 (slate-200) 로 변경됨', () => {
+      const rootMatch = CSS.match(/:root\s*\{([\s\S]*?)\r?\n\}/)
+      expect(rootMatch).not.toBeNull()
+      expect(rootMatch![1]).toMatch(/--landing-muted:\s*#e2e8f0/)
+    })
+
+    it(':root --landing-card 에 alpha 제거 (oklch 함수 미사용)', () => {
+      const rootMatch = CSS.match(/:root\s*\{([\s\S]*?)\r?\n\}/)
+      expect(rootMatch).not.toBeNull()
+      // :root body 에 oklch 함수가 없어야 (alpha 없는 고정 hex)
+      expect(rootMatch![1]).not.toMatch(/--landing-card:\s*oklch/)
+    })
+  })
+
+  describe('D-017 안 C — 다크 팔레트 불변', () => {
+    it('[data-theme="dark"] --landing-card 는 oklch(0.15 0.01 260 / 0.5) 유지', () => {
+      const darkMatch = CSS.match(/\[data-theme="dark"\]\s*\{([\s\S]*?)\r?\n\}/)
+      expect(darkMatch).not.toBeNull()
+      expect(darkMatch![1]).toMatch(
+        /--landing-card:\s*oklch\(0\.15 0\.01 260 \/ 0\.5\)/,
+      )
+    })
+
+    it('[data-theme="dark"] --landing-border 는 #1f2937 유지', () => {
+      const darkMatch = CSS.match(/\[data-theme="dark"\]\s*\{([\s\S]*?)\r?\n\}/)
+      expect(darkMatch).not.toBeNull()
+      expect(darkMatch![1]).toMatch(/--landing-border:\s*#1f2937/)
+    })
+
+    it('[data-theme="dark"] --landing-muted 는 #374151 유지', () => {
+      const darkMatch = CSS.match(/\[data-theme="dark"\]\s*\{([\s\S]*?)\r?\n\}/)
+      expect(darkMatch).not.toBeNull()
+      expect(darkMatch![1]).toMatch(/--landing-muted:\s*#374151/)
+    })
+  })
+
+  describe('D-017 안 C — WCAG AA 재검증 (새 카드 값)', () => {
+    it('foreground #0a0a0a on card #f1f5f9 이 4.5:1 이상 (AAA 기대)', () => {
+      expect(contrastRatio('#0a0a0a', '#f1f5f9')).toBeGreaterThanOrEqual(4.5)
+    })
+
+    it('muted-foreground #4b5563 on card #f1f5f9 이 4.5:1 이상 (AA)', () => {
+      expect(contrastRatio('#4b5563', '#f1f5f9')).toBeGreaterThanOrEqual(4.5)
+    })
+
+    it('card-foreground #1f2937 on card #f1f5f9 이 4.5:1 이상', () => {
+      expect(contrastRatio('#1f2937', '#f1f5f9')).toBeGreaterThanOrEqual(4.5)
+    })
+
+    it('foreground #0a0a0a on muted #e2e8f0 이 4.5:1 이상', () => {
+      expect(contrastRatio('#0a0a0a', '#e2e8f0')).toBeGreaterThanOrEqual(4.5)
+    })
+  })
+
+  describe('D-017 안 C — 배경-카드-border 경계 대비 강화', () => {
+    it('background #ffffff vs card #f1f5f9 대비비가 기존(1.034) 대비 상승', () => {
+      // 기존 oklch(0.98 / 0.8) 합성값 ~#fbfbfc 대비 1.034:1
+      // 신규 #f1f5f9 대비 ~1.09:1 — 경계 지각 가능 임계값 초과
+      const ratio = contrastRatio('#ffffff', '#f1f5f9')
+      expect(ratio).toBeGreaterThan(1.05)
+    })
+
+    it('background #ffffff vs border #cbd5e1 대비비가 기존(1.238) 대비 상승', () => {
+      // 기존 #e5e7eb 대비 1.238:1 → 신규 #cbd5e1 대비 ~1.48:1
+      const ratio = contrastRatio('#ffffff', '#cbd5e1')
+      expect(ratio).toBeGreaterThan(1.4)
+    })
+  })
+})
