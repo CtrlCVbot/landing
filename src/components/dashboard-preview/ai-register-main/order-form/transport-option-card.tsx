@@ -64,7 +64,7 @@ export interface TransportOptionCardProps {
 // ---------------------------------------------------------------------------
 
 const CARD_CLASSES =
-  'bg-card/50 border border-border rounded-xl p-4 space-y-3 backdrop-blur-sm'
+  'bg-card/50 border border-border shadow-sm rounded-xl p-4 space-y-3 backdrop-blur-sm'
 
 const OPTION_LABELS: ReadonlyArray<{ key: TransportOptionKey; label: string }> = [
   { key: 'fast', label: '급송' },

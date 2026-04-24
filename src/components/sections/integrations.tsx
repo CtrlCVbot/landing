@@ -24,7 +24,7 @@ export function Integrations() {
           <motion.div
             key={integration.key}
             variants={fadeInUp}
-            className="bg-card border border-border rounded-xl p-6 text-center"
+            className="bg-card border border-border shadow-sm rounded-xl p-6 text-center"
           >
             <div className="w-12 h-12 mx-auto rounded-lg bg-muted flex items-center justify-center">
               <Puzzle className="w-6 h-6 text-accent" />

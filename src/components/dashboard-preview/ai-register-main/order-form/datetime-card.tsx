@@ -74,7 +74,7 @@ export interface DateTimeCardProps {
 // ---------------------------------------------------------------------------
 
 const CARD_CLASSES =
-  'bg-card/50 border border-border rounded-xl p-4 space-y-3 backdrop-blur-sm'
+  'bg-card/50 border border-border shadow-sm rounded-xl p-4 space-y-3 backdrop-blur-sm'
 
 const CARET_CLASSES =
   'inline-block w-[2px] h-4 bg-accent ml-0.5 align-middle animate-pulse'

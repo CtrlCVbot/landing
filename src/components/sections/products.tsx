@@ -65,7 +65,7 @@ export function Products() {
               </ul>
             </div>
 
-            <div className="aspect-video rounded-xl bg-card/50 border border-border flex items-center justify-center">
+            <div className="aspect-video rounded-xl bg-muted/50 border border-border shadow-sm flex items-center justify-center">
               <span className="text-muted-foreground">{activeProduct.label}</span>
             </div>
           </motion.div>

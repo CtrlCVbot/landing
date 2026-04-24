@@ -722,3 +722,472 @@ describe('F1 Dash-Preview 토큰 치환 (T-THEME-08, PR-6)', () => {
     })
   })
 })
+
+// ============================================================================
+// T-THEME-09 — AI 패널 8파일 토큰 치환 (PR-7, D-016 P0)
+// ============================================================================
+
+describe('F1 AI 패널 토큰 치환 (T-THEME-09, PR-7)', () => {
+  const AI_PANEL_DIR = '../components/dashboard-preview/ai-register-main/ai-panel'
+  const FILES = {
+    'index': readFileSync(
+      resolve(__dirname, `${AI_PANEL_DIR}/index.tsx`),
+      'utf8',
+    ),
+    'ai-tab-bar': readFileSync(
+      resolve(__dirname, `${AI_PANEL_DIR}/ai-tab-bar.tsx`),
+      'utf8',
+    ),
+    'ai-input-area': readFileSync(
+      resolve(__dirname, `${AI_PANEL_DIR}/ai-input-area.tsx`),
+      'utf8',
+    ),
+    'ai-extract-button': readFileSync(
+      resolve(__dirname, `${AI_PANEL_DIR}/ai-extract-button.tsx`),
+      'utf8',
+    ),
+    'ai-result-buttons': readFileSync(
+      resolve(__dirname, `${AI_PANEL_DIR}/ai-result-buttons.tsx`),
+      'utf8',
+    ),
+    'ai-button-item': readFileSync(
+      resolve(__dirname, `${AI_PANEL_DIR}/ai-button-item.tsx`),
+      'utf8',
+    ),
+    'ai-warning-badges': readFileSync(
+      resolve(__dirname, `${AI_PANEL_DIR}/ai-warning-badges.tsx`),
+      'utf8',
+    ),
+    'ai-extract-json-viewer': readFileSync(
+      resolve(__dirname, `${AI_PANEL_DIR}/ai-extract-json-viewer.tsx`),
+      'utf8',
+    ),
+  }
+
+  /**
+   * 주석(JSDoc) 영역은 테스트 범위에서 제외하고 **실 코드 라인**만 검사한다.
+   * D-015 알파 패턴 원칙 — 주석 내 REQ-DASH3-* 레퍼런스는 보존.
+   */
+  function stripComments(src: string): string {
+    return src.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/[^\n]*/g, '')
+  }
+
+  describe('REQ-011 확장 (D-016) — 8파일 다크 하드코딩 제거', () => {
+    const ALL_FILES = Object.entries(FILES)
+
+    it.each(ALL_FILES)(
+      '%s — bg-black 알파/solid 하드코딩 0건 (실 코드)',
+      (_name, src) => {
+        expect(stripComments(src)).not.toMatch(/bg-black(?![-/])/)
+        expect(stripComments(src)).not.toMatch(/bg-black\/\d+/)
+      },
+    )
+    it.each(ALL_FILES)(
+      '%s — border-white 알파 하드코딩 0건 (LoadingSpinner brand-contrast 예외만 허용, 실 코드)',
+      (name, src) => {
+        const code = stripComments(src)
+        // ai-extract-button 의 LoadingSpinner 는 gradient 배경 위에 있어 brand-contrast 로 유지 (D-010 승계)
+        // 그 외 모든 파일은 border-white 알파 0건
+        if (name === 'ai-extract-button') {
+          const matches = code.match(/border-white\/\d+/g) || []
+          // LoadingSpinner 의 border-white/30 1건만 허용
+          expect(matches.length).toBeLessThanOrEqual(1)
+          if (matches.length === 1) {
+            // 동일 클래스 리스트에 border-t-white 가 함께 있어야 LoadingSpinner 컨텍스트 인증
+            expect(code).toMatch(/border-white\/30[^'"]*border-t-white/)
+          }
+        } else {
+          expect(code).not.toMatch(/border-white\/\d+/)
+        }
+      },
+    )
+    it.each(ALL_FILES)(
+      '%s — bg-white 알파 하드코딩 0건 (실 코드, ripple wave 예외 — foreground/30 으로 치환)',
+      (_name, src) => {
+        expect(stripComments(src)).not.toMatch(/bg-white\/\d+/)
+        expect(stripComments(src)).not.toMatch(/bg-white\/\[[^\]]+\]/)
+      },
+    )
+    it.each(ALL_FILES)(
+      '%s — text-gray-* 하드코딩 0건 (실 코드)',
+      (_name, src) => {
+        expect(stripComments(src)).not.toMatch(/text-gray-\d+/)
+      },
+    )
+    it.each(ALL_FILES)(
+      '%s — text-white 알파 하드코딩 0건 (실 코드)',
+      (_name, src) => {
+        expect(stripComments(src)).not.toMatch(/text-white\/\d+/)
+      },
+    )
+    it.each(ALL_FILES)(
+      '%s — ring-offset-black 하드코딩 0건 (실 코드)',
+      (_name, src) => {
+        expect(stripComments(src)).not.toMatch(/ring-offset-black\/\d+/)
+      },
+    )
+    it.each(ALL_FILES)(
+      '%s — text-white solid 은 gradient CTA + LoadingSpinner 예외만 허용 (실 코드)',
+      (_name, src) => {
+        const code = stripComments(src)
+        // solid text-white 는 gradient / border-white context (LoadingSpinner 에서 brand-contrast) 만 허용
+        const solidMatches = code.match(/text-white(?![a-z/-])/g) || []
+        const gradientContext = (code.match(
+          /text-white[^;"\n]*from-purple-600|from-purple-600[^;"\n]*text-white/gs,
+        ) || []).length
+        const loadingSpinnerContext = (code.match(
+          /border-t-white(?![a-z/-])/g,
+        ) || []).length
+        expect(solidMatches.length).toBe(gradientContext + loadingSpinnerContext)
+      },
+    )
+  })
+
+  describe('REQ-011 확장 — 토큰 사용 확인', () => {
+    it('index.tsx — bg-card/50 + border-border + text-foreground + text-muted-foreground 사용', () => {
+      expect(FILES['index']).toMatch(/bg-card\/50/)
+      expect(FILES['index']).toMatch(/border-border/)
+      expect(FILES['index']).toMatch(/text-foreground/)
+      expect(FILES['index']).toMatch(/text-muted-foreground/)
+    })
+    it('ai-tab-bar.tsx — bg-card/50 + border-border + text-muted-foreground 사용', () => {
+      expect(FILES['ai-tab-bar']).toMatch(/bg-card\/50/)
+      expect(FILES['ai-tab-bar']).toMatch(/border-border/)
+      expect(FILES['ai-tab-bar']).toMatch(/text-muted-foreground/)
+    })
+    it('ai-input-area.tsx — bg-card/50 + border-border + text-foreground + text-muted-foreground 사용', () => {
+      expect(FILES['ai-input-area']).toMatch(/bg-card\/50/)
+      expect(FILES['ai-input-area']).toMatch(/border-border/)
+      expect(FILES['ai-input-area']).toMatch(/text-foreground/)
+      expect(FILES['ai-input-area']).toMatch(/text-muted-foreground/)
+    })
+    it('ai-extract-button.tsx — ring-offset-background 사용 (focus-visible + focused)', () => {
+      expect(FILES['ai-extract-button']).toMatch(/ring-offset-background/)
+      expect(FILES['ai-extract-button']).toMatch(/ring-foreground\/60/)
+    })
+    it('ai-result-buttons.tsx — bg-card/50 + border-border + bg-muted + text-foreground + text-muted-foreground 사용', () => {
+      expect(FILES['ai-result-buttons']).toMatch(/bg-card\/50/)
+      expect(FILES['ai-result-buttons']).toMatch(/border-border/)
+      expect(FILES['ai-result-buttons']).toMatch(/bg-muted\/30/)
+      expect(FILES['ai-result-buttons']).toMatch(/text-foreground/)
+      expect(FILES['ai-result-buttons']).toMatch(/text-muted-foreground/)
+      expect(FILES['ai-result-buttons']).toMatch(/ring-offset-background/)
+    })
+    it('ai-button-item.tsx — ring-offset-background + border-border + bg-muted/30 + text-foreground/80 + text-muted-foreground 사용', () => {
+      expect(FILES['ai-button-item']).toMatch(/ring-offset-background/)
+      expect(FILES['ai-button-item']).toMatch(/border-border/)
+      expect(FILES['ai-button-item']).toMatch(/bg-muted\/30/)
+      expect(FILES['ai-button-item']).toMatch(/text-foreground\/80/)
+      expect(FILES['ai-button-item']).toMatch(/text-muted-foreground/)
+    })
+    it('ai-extract-json-viewer.tsx — bg-card/50 + border-border + text-foreground + text-muted-foreground 사용', () => {
+      expect(FILES['ai-extract-json-viewer']).toMatch(/bg-card\/50/)
+      expect(FILES['ai-extract-json-viewer']).toMatch(/border-border/)
+      expect(FILES['ai-extract-json-viewer']).toMatch(/text-foreground/)
+      expect(FILES['ai-extract-json-viewer']).toMatch(/text-muted-foreground/)
+      expect(FILES['ai-extract-json-viewer']).toMatch(/bg-muted\/50/)
+    })
+  })
+
+  describe('D-013 재적용 — ai-button-item / ai-warning-badges 상태색 WCAG AA', () => {
+    it('ai-button-item — text-green-400 제거 + text-emerald-600 도입 (applied 상태)', () => {
+      const code = stripComments(FILES['ai-button-item'])
+      expect(code).not.toMatch(/text-green-400/)
+      expect(code).toMatch(/text-emerald-600/)
+    })
+    it('ai-warning-badges — text-amber-300 제거 + text-amber-700 도입 (WCAG AA)', () => {
+      const code = stripComments(FILES['ai-warning-badges'])
+      expect(code).not.toMatch(/text-amber-300/)
+      expect(code).toMatch(/text-amber-700/)
+    })
+  })
+
+  describe('ripple wave 테마 적응 — ai-button-item', () => {
+    it('ripple wave 가 bg-foreground/30 으로 전환되었다 (bg-white/30 제거)', () => {
+      const code = stripComments(FILES['ai-button-item'])
+      expect(code).not.toMatch(/bg-white\/30/)
+      expect(code).toMatch(/bg-foreground\/30/)
+    })
+  })
+
+  describe('브랜드 고정 예외 유지 — gradient text-white + LoadingSpinner', () => {
+    it('ai-extract-button gradient from-purple-600 to-blue-600 text-white 유지 (D-010)', () => {
+      // 이 파일은 BASE_CLASSES 가 multi-line 문자열 concat 이므로 text-white 와 gradient 가 별도 줄에 존재.
+      // 양쪽 모두 동일 상수에 존재함을 증거로 삼는다.
+      const code = stripComments(FILES['ai-extract-button'])
+      expect(code).toMatch(/from-purple-600/)
+      expect(code).toMatch(/to-blue-600/)
+      expect(code).toMatch(/text-white(?![a-z/-])/)
+    })
+    it('ai-extract-button LoadingSpinner border-white/30 border-t-white 유지 (brand-contrast on gradient)', () => {
+      const code = stripComments(FILES['ai-extract-button'])
+      // LoadingSpinner 는 gradient 배경 위에 있으므로 brand-contrast 로 유지 (예외)
+      // 단, stripComments + 위 bg-white/\d+ 차단 테스트가 있어 별도 처리 필요 — 본 예외 검증은
+      // border-t-white (solid) 존재만 확인. border-white/30 은 alpha 형태로 위 테스트를 위반하므로
+      // ring/border-t-white 쪽은 alpha 가 아닌 solid 또는 주석 처리된 형태 검증.
+      expect(code).toMatch(/border-t-white(?![a-z/-])/)
+    })
+    it('ai-panel/index.tsx AI 로고 gradient from-purple-600 to-blue-600 text-white 유지 (D-010)', () => {
+      const code = stripComments(FILES['index'])
+      expect(code).toMatch(
+        /from-purple-600[^;"\n]*to-blue-600[^;"\n]*text-white|text-white[^;"\n]*from-purple-600[^;"\n]*to-blue-600/s,
+      )
+    })
+  })
+})
+
+// ============================================================================
+// T-THEME-10 — Legacy Dash-Preview 4파일 토큰 치환 (PR-7, D-016 확장)
+// ============================================================================
+
+describe('F1 Legacy Dash-Preview 토큰 치환 (T-THEME-10, PR-7)', () => {
+  const DP_DIR = '../components/dashboard-preview'
+  const FILES = {
+    'ai-panel-preview': readFileSync(
+      resolve(__dirname, `${DP_DIR}/ai-panel-preview.tsx`),
+      'utf8',
+    ),
+    'form-preview': readFileSync(
+      resolve(__dirname, `${DP_DIR}/form-preview.tsx`),
+      'utf8',
+    ),
+    'mobile-card-view': readFileSync(
+      resolve(__dirname, `${DP_DIR}/mobile-card-view.tsx`),
+      'utf8',
+    ),
+    'step-indicator': readFileSync(
+      resolve(__dirname, `${DP_DIR}/step-indicator.tsx`),
+      'utf8',
+    ),
+  }
+
+  /**
+   * 주석(JSDoc) 영역은 테스트 범위에서 제외하고 **실 코드 라인**만 검사한다.
+   * D-015 알파 패턴 원칙 — 주석 내 REQ-DASH3-* 레퍼런스는 보존.
+   */
+  function stripComments(src: string): string {
+    return src.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/[^\n]*/g, '')
+  }
+
+  describe('REQ-011 확장 (D-016) — 4파일 다크 하드코딩 제거', () => {
+    const ALL_FILES = Object.entries(FILES)
+
+    it.each(ALL_FILES)(
+      '%s — bg-gray-* 하드코딩 0건 (실 코드)',
+      (_name, src) => {
+        expect(stripComments(src)).not.toMatch(/bg-gray-\d+/)
+      },
+    )
+    it.each(ALL_FILES)(
+      '%s — text-gray-* 하드코딩 0건 (실 코드)',
+      (_name, src) => {
+        expect(stripComments(src)).not.toMatch(/text-gray-\d+/)
+      },
+    )
+    it.each(ALL_FILES)(
+      '%s — border-gray-* 하드코딩 0건 (실 코드)',
+      (_name, src) => {
+        expect(stripComments(src)).not.toMatch(/border-gray-\d+/)
+      },
+    )
+    it.each(ALL_FILES)(
+      '%s — text-white solid 은 gradient CTA 예외만 허용 (실 코드)',
+      (_name, src) => {
+        const code = stripComments(src)
+        const solidMatches = code.match(/text-white(?![a-z/-])/g) || []
+        const gradientContext = (code.match(
+          /text-white[^;"\n]*from-purple-600|from-purple-600[^;"\n]*text-white/gs,
+        ) || []).length
+        expect(solidMatches.length).toBe(gradientContext)
+      },
+    )
+    it.each(ALL_FILES)(
+      '%s — text-blue-400 하드코딩 0건 (실 코드)',
+      (_name, src) => {
+        expect(stripComments(src)).not.toMatch(/text-blue-400/)
+      },
+    )
+    it.each(ALL_FILES)(
+      '%s — text-green-400 하드코딩 0건 (실 코드)',
+      (_name, src) => {
+        expect(stripComments(src)).not.toMatch(/text-green-400/)
+      },
+    )
+    it.each(ALL_FILES)(
+      '%s — text-purple-300 하드코딩 0건 (실 코드)',
+      (_name, src) => {
+        expect(stripComments(src)).not.toMatch(/text-purple-300/)
+      },
+    )
+  })
+
+  describe('REQ-011 확장 — 토큰 사용 확인', () => {
+    const TOKEN_USING_FILES = Object.entries(FILES).filter(
+      ([name]) => name !== 'step-indicator',
+    )
+
+    it.each(TOKEN_USING_FILES)(
+      '%s — bg-card/50 사용',
+      (_name, src) => {
+        expect(src).toMatch(/bg-card\/50/)
+      },
+    )
+    it.each(TOKEN_USING_FILES)(
+      '%s — border-border 사용',
+      (_name, src) => {
+        expect(src).toMatch(/border-border/)
+      },
+    )
+    it.each(TOKEN_USING_FILES)(
+      '%s — text-foreground 사용',
+      (_name, src) => {
+        expect(src).toMatch(/text-foreground/)
+      },
+    )
+    it.each(TOKEN_USING_FILES)(
+      '%s — text-muted-foreground 사용',
+      (_name, src) => {
+        expect(src).toMatch(/text-muted-foreground/)
+      },
+    )
+  })
+
+  describe('D-011 재적용 — ai-panel-preview 탭 accent 전환', () => {
+    it('ai-panel-preview.tsx — border-accent 존재', () => {
+      expect(FILES['ai-panel-preview']).toMatch(/border-accent(?![a-z-])/)
+    })
+    it('ai-panel-preview.tsx — text-accent 존재', () => {
+      expect(FILES['ai-panel-preview']).toMatch(/text-accent(?![a-z-])/)
+    })
+  })
+
+  describe('D-013 재적용 — 상태색 변환 (green-400 → emerald-600)', () => {
+    it('ai-panel-preview.tsx — text-emerald-600 존재', () => {
+      expect(FILES['ai-panel-preview']).toMatch(/text-emerald-600/)
+    })
+    it('mobile-card-view.tsx — text-emerald-600 존재', () => {
+      expect(FILES['mobile-card-view']).toMatch(/text-emerald-600/)
+    })
+    it('ai-panel-preview.tsx — text-green-400 제거됨 (실 코드)', () => {
+      expect(stripComments(FILES['ai-panel-preview'])).not.toMatch(/text-green-400/)
+    })
+    it('mobile-card-view.tsx — text-green-400 제거됨 (실 코드)', () => {
+      expect(stripComments(FILES['mobile-card-view'])).not.toMatch(/text-green-400/)
+    })
+  })
+
+  describe('브랜드 예외 — step-indicator gradient 유지', () => {
+    it('step-indicator.tsx — active dot brand gradient 유지 (D-010)', () => {
+      expect(FILES['step-indicator']).toMatch(
+        /bg-gradient-to-r\s+from-purple-500\s+to-blue-500/,
+      )
+    })
+  })
+})
+
+// ---------------------------------------------------------------------------
+// T-THEME-11 — Products / Integrations 카드 배경 강화 (D-016, PR-7)
+// ---------------------------------------------------------------------------
+
+describe('F1 Products/Integrations 카드 배경 강화 (T-THEME-11, PR-7)', () => {
+  const PRODUCTS = readFileSync(
+    resolve(process.cwd(), 'src/components/sections/products.tsx'),
+    'utf-8',
+  )
+  const INTEGRATIONS = readFileSync(
+    resolve(process.cwd(), 'src/components/sections/integrations.tsx'),
+    'utf-8',
+  )
+
+  describe('D-016 QA — products placeholder 시각 강화', () => {
+    it('products.tsx — aspect-video 컨테이너에 bg-muted/50 적용', () => {
+      expect(PRODUCTS).toMatch(/aspect-video[^"]*bg-muted\/50/)
+    })
+
+    it('products.tsx — shadow-sm 존재 (깊이감 확보)', () => {
+      expect(PRODUCTS).toMatch(/aspect-video[^"]*shadow-sm/)
+    })
+
+    it('products.tsx — border border-border 유지', () => {
+      expect(PRODUCTS).toMatch(/aspect-video[^"]*border border-border/)
+    })
+
+    it('products.tsx — 기존 bg-card/50 placeholder 제거', () => {
+      const placeholderBlock = PRODUCTS.match(/aspect-video[^"]*"/s)?.[0] ?? ''
+      expect(placeholderBlock).not.toMatch(/bg-card\/50/)
+    })
+  })
+
+  describe('D-016 QA — integrations card 시각 강화', () => {
+    it('integrations.tsx — card 에 shadow-sm 적용', () => {
+      expect(INTEGRATIONS).toMatch(/bg-card[^"]*shadow-sm/)
+    })
+
+    it('integrations.tsx — bg-card + border border-border 유지', () => {
+      expect(INTEGRATIONS).toMatch(/bg-card border border-border/)
+    })
+  })
+})
+
+// ---------------------------------------------------------------------------
+// T-THEME-12 — Problems/order-form 미세 조정 (D-016, PR-7)
+// ---------------------------------------------------------------------------
+
+describe('F1 Problems/order-form 미세 조정 (T-THEME-12, PR-7)', () => {
+  const PROBLEMS = readFileSync(
+    resolve(process.cwd(), 'src/components/sections/problems.tsx'),
+    'utf-8',
+  )
+  const DATETIME = readFileSync(
+    resolve(
+      process.cwd(),
+      'src/components/dashboard-preview/ai-register-main/order-form/datetime-card.tsx',
+    ),
+    'utf-8',
+  )
+  const ESTIMATE = readFileSync(
+    resolve(
+      process.cwd(),
+      'src/components/dashboard-preview/ai-register-main/order-form/estimate-info-card.tsx',
+    ),
+    'utf-8',
+  )
+  const SETTLEMENT = readFileSync(
+    resolve(
+      process.cwd(),
+      'src/components/dashboard-preview/ai-register-main/order-form/settlement-section.tsx',
+    ),
+    'utf-8',
+  )
+  const TRANSPORT = readFileSync(
+    resolve(
+      process.cwd(),
+      'src/components/dashboard-preview/ai-register-main/order-form/transport-option-card.tsx',
+    ),
+    'utf-8',
+  )
+
+  describe('D-016 QA — problems before 텍스트 대비 강화', () => {
+    it('problems.tsx — before 텍스트 text-foreground/70 적용 (기존 text-muted-foreground 대체)', () => {
+      expect(PROBLEMS).toMatch(/text-foreground\/70[^"]*line-through/)
+    })
+  })
+
+  describe('D-016 QA — order-form 카드 shadow-sm 추가', () => {
+    it('datetime-card.tsx — 최상위 카드에 shadow-sm 포함', () => {
+      expect(DATETIME).toMatch(/bg-card\/50 border border-border[^'"]*shadow-sm/)
+    })
+
+    it('estimate-info-card.tsx — 최상위 카드에 shadow-sm 포함', () => {
+      expect(ESTIMATE).toMatch(/bg-card\/50 border border-border[^'"]*shadow-sm/)
+    })
+
+    it('settlement-section.tsx — 최상위 카드에 shadow-sm 포함', () => {
+      expect(SETTLEMENT).toMatch(/bg-card\/50 border border-border[^'"]*shadow-sm/)
+    })
+
+    it('transport-option-card.tsx — 최상위 카드에 shadow-sm 포함', () => {
+      expect(TRANSPORT).toMatch(/bg-card\/50 border border-border[^'"]*shadow-sm/)
+    })
+  })
+})

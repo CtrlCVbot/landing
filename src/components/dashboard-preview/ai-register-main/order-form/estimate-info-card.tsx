@@ -69,7 +69,7 @@ export interface EstimateInfoCardProps {
 // ---------------------------------------------------------------------------
 
 const BASE_CARD_CLASSES =
-  'bg-card/50 border border-border rounded-xl p-4 backdrop-blur-sm space-y-3'
+  'bg-card/50 border border-border shadow-sm rounded-xl p-4 backdrop-blur-sm space-y-3'
 
 const ACTIVE_GLOW_CLASSES = 'ring-1 ring-accent/30 shadow-lg shadow-accent/10'
 

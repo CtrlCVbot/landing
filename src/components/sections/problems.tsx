@@ -28,7 +28,7 @@ export function Problems() {
           >
             <div className="flex items-start gap-3">
               <X className="w-5 h-5 text-destructive mt-0.5 shrink-0" />
-              <span className="text-muted-foreground line-through">{problem.before}</span>
+              <span className="text-foreground/70 line-through">{problem.before}</span>
             </div>
             <div className="flex items-start gap-3 mt-3">
               <Check className="w-5 h-5 text-emerald-600 mt-0.5 shrink-0" />
