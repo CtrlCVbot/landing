@@ -81,6 +81,22 @@
 - PR-7 (T-THEME-10).
 - 근거: [decision-log D-016](./02-decision-log.md)
 
+**Feature pocket — order-form 5 파일 (D-017 확장)** (`src/components/dashboard-preview/ai-register-main/order-form/`):
+- `company-manager-section.tsx` (화주정보), `location-form.tsx` (상/하차지)
+- `cargo-info-form.tsx` (화물정보), `estimate-distance-info.tsx` (거리/시간 요약)
+- `register-success-dialog.tsx` (등록 성공 다이얼로그)
+- PR-7 (T-THEME-13). T-THEME-08 scope 해석 오류 정정 — dash-preview 7파일 외 order-form 5파일 추가 토큰화 주체가 F1.
+- 기존 `__tests__/*.test.tsx` 4파일의 legacy palette assertion (border-white/10 등) 동시 갱신.
+- 근거: [decision-log D-017](./02-decision-log.md)
+
+**라이트 팔레트 대비 강화 — globals.css (D-017)**:
+- `src/app/globals.css` `:root` 3 변수 값 조정 (T-THEME-14):
+  - `--landing-card: oklch(0.98 0.005 260 / 0.8)` → `#f1f5f9` (slate-100, alpha 제거)
+  - `--landing-border: #e5e7eb` → `#cbd5e1` (slate-300)
+  - `--landing-muted: #f3f4f6` → `#e2e8f0` (slate-200)
+- 다크 팔레트 불변. WCAG AA 재검증 PASS.
+- 근거: [decision-log D-017](./02-decision-log.md) 안 C 채택
+
 ### 2-3. 명시적 금지 (out-of-scope)
 
 다음은 F1 범위 밖 (Feature Package `02-scope-boundaries.md` §3 참조):

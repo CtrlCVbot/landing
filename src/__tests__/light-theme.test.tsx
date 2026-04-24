@@ -1191,3 +1191,147 @@ describe('F1 Problems/order-form 미세 조정 (T-THEME-12, PR-7)', () => {
     })
   })
 })
+
+// ---------------------------------------------------------------------------
+// T-THEME-13 — order-form 5파일 토큰화 잔여 해소 (D-017, PR-7, P0)
+// ---------------------------------------------------------------------------
+
+describe('F1 order-form 5파일 토큰화 (T-THEME-13, PR-7)', () => {
+  const ORDER_FORM_DIR =
+    '../components/dashboard-preview/ai-register-main/order-form'
+  const FILES = {
+    'company-manager-section': readFileSync(
+      resolve(__dirname, `${ORDER_FORM_DIR}/company-manager-section.tsx`),
+      'utf8',
+    ),
+    'location-form': readFileSync(
+      resolve(__dirname, `${ORDER_FORM_DIR}/location-form.tsx`),
+      'utf8',
+    ),
+    'cargo-info-form': readFileSync(
+      resolve(__dirname, `${ORDER_FORM_DIR}/cargo-info-form.tsx`),
+      'utf8',
+    ),
+    'estimate-distance-info': readFileSync(
+      resolve(__dirname, `${ORDER_FORM_DIR}/estimate-distance-info.tsx`),
+      'utf8',
+    ),
+    'register-success-dialog': readFileSync(
+      resolve(__dirname, `${ORDER_FORM_DIR}/register-success-dialog.tsx`),
+      'utf8',
+    ),
+  }
+  const ESTIMATE_INFO_CARD = readFileSync(
+    resolve(__dirname, `${ORDER_FORM_DIR}/estimate-info-card.tsx`),
+    'utf8',
+  )
+
+  /**
+   * 주석(JSDoc) 영역은 테스트 범위에서 제외하고 **실 코드 라인**만 검사한다.
+   * D-015 알파 패턴 원칙 — 주석 내 REQ-DASH3-* 레퍼런스는 보존.
+   */
+  function stripComments(src: string): string {
+    return src.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/[^\n]*/g, '')
+  }
+
+  describe('REQ-011 확장 (D-017) — 5파일 다크 하드코딩 제거', () => {
+    const ALL_FILES = Object.entries(FILES)
+
+    it.each(ALL_FILES)(
+      '%s — bg-white 알파 하드코딩 0건 (실 코드)',
+      (_name, src) => {
+        expect(stripComments(src)).not.toMatch(/bg-white\/\d+/)
+      },
+    )
+    it.each(ALL_FILES)(
+      '%s — border-white 알파 하드코딩 0건 (실 코드)',
+      (_name, src) => {
+        expect(stripComments(src)).not.toMatch(/border-white\/\d+/)
+      },
+    )
+    it.each(ALL_FILES)(
+      '%s — text-white 알파 하드코딩 0건 (실 코드)',
+      (_name, src) => {
+        expect(stripComments(src)).not.toMatch(/text-white\/\d+/)
+      },
+    )
+    it.each(ALL_FILES)(
+      '%s — text-white solid 하드코딩 0건 (gradient CTA 예외 제외, 실 코드)',
+      (_name, src) => {
+        const code = stripComments(src)
+        const solidMatches = code.match(/text-white(?![a-z/-])/g) || []
+        const gradientContext =
+          (code.match(
+            /text-white[^;"\n]*from-purple-600|from-purple-600[^;"\n]*text-white/gs,
+          ) || []).length
+        expect(solidMatches.length).toBe(gradientContext)
+      },
+    )
+    it.each(ALL_FILES)(
+      '%s — bg-gray-9* 하드코딩 0건 (실 코드)',
+      (_name, src) => {
+        expect(stripComments(src)).not.toMatch(/bg-gray-9\d+/)
+      },
+    )
+    it.each(ALL_FILES)(
+      '%s — text-gray-[234]00 하드코딩 0건 (실 코드)',
+      (_name, src) => {
+        expect(stripComments(src)).not.toMatch(/text-gray-[234]00/)
+      },
+    )
+  })
+
+  describe('REQ-011 확장 — 토큰 사용 확인', () => {
+    it('company-manager-section.tsx — bg-card/50 + border-border + text-foreground + text-muted-foreground 사용', () => {
+      expect(FILES['company-manager-section']).toMatch(/bg-card\/50/)
+      expect(FILES['company-manager-section']).toMatch(/border-border/)
+      expect(FILES['company-manager-section']).toMatch(/text-foreground/)
+      expect(FILES['company-manager-section']).toMatch(/text-muted-foreground/)
+    })
+    it('location-form.tsx — bg-card/50 + border-border + text-foreground + text-muted-foreground 사용', () => {
+      expect(FILES['location-form']).toMatch(/bg-card\/50/)
+      expect(FILES['location-form']).toMatch(/border-border/)
+      expect(FILES['location-form']).toMatch(/text-foreground/)
+      expect(FILES['location-form']).toMatch(/text-muted-foreground/)
+    })
+    it('cargo-info-form.tsx — bg-card/50 + border-border + text-foreground + text-muted-foreground 사용', () => {
+      expect(FILES['cargo-info-form']).toMatch(/bg-card\/50/)
+      expect(FILES['cargo-info-form']).toMatch(/border-border/)
+      expect(FILES['cargo-info-form']).toMatch(/text-foreground/)
+      expect(FILES['cargo-info-form']).toMatch(/text-muted-foreground/)
+    })
+    it('estimate-distance-info.tsx — text-foreground + text-muted-foreground 사용', () => {
+      expect(FILES['estimate-distance-info']).toMatch(/text-foreground/)
+      expect(FILES['estimate-distance-info']).toMatch(/text-muted-foreground/)
+    })
+    it('register-success-dialog.tsx — bg-card/50 + border-border + text-foreground + text-muted-foreground + bg-muted/50 사용', () => {
+      expect(FILES['register-success-dialog']).toMatch(/bg-card\/50/)
+      expect(FILES['register-success-dialog']).toMatch(/border-border/)
+      expect(FILES['register-success-dialog']).toMatch(/text-foreground/)
+      expect(FILES['register-success-dialog']).toMatch(/text-muted-foreground/)
+      expect(FILES['register-success-dialog']).toMatch(/bg-muted\/50/)
+    })
+    it('cargo-info-form.tsx — bg-card (펼침 패널, bg-gray-900 대체) 사용', () => {
+      // 펼침 패널 배경: bg-gray-900 → bg-card 로 치환
+      expect(stripComments(FILES['cargo-info-form'])).toMatch(/bg-card(?![\w/-])/)
+    })
+    it('register-success-dialog.tsx — bg-muted/70 hover 사용', () => {
+      expect(FILES['register-success-dialog']).toMatch(/bg-muted\/70/)
+    })
+  })
+
+  describe('D-010 브랜드 예외 — estimate-info-card gradient 유지 (regression guard)', () => {
+    it('estimate-info-card.tsx — gradient CTA (from-purple-600 to-blue-600) 유지', () => {
+      const code = stripComments(ESTIMATE_INFO_CARD)
+      expect(code).toMatch(/from-purple-600/)
+      expect(code).toMatch(/to-blue-600/)
+    })
+    it('estimate-info-card.tsx — gradient 위 text-white solid 유지 (D-010)', () => {
+      const code = stripComments(ESTIMATE_INFO_CARD)
+      // gradient CTA 컨텍스트에서만 text-white 허용
+      expect(code).toMatch(
+        /from-purple-600[^;"\n]*to-blue-600[^;"\n]*text-white|text-white[^;"\n]*from-purple-600[^;"\n]*to-blue-600/s,
+      )
+    })
+  })
+})

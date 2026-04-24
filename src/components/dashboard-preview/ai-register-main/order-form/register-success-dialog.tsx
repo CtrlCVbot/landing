@@ -14,9 +14,9 @@
  *  - `open=true`  → 기본 다이얼로그 구조 (제목/orderId/닫기).
  *  - CompanyManager 등 다른 컴포넌트와 props 격리 — open/orderId 만 받는다.
  *
- * 스타일 (REQ-DASH-005 landing 팔레트)
- *  - 컨테이너: `bg-white/5 border-white/10 rounded-xl p-6 backdrop-blur-md`.
- *  - 성공 아이콘: lucide `CheckCircle2` (`text-emerald-400`).
+ * 스타일 (REQ-DASH-005 landing 팔레트, T-THEME-13 토큰 치환)
+ *  - 컨테이너: `bg-card/50 border-border rounded-xl p-6 backdrop-blur-md` (원본: bg-white/5 border-white/10).
+ *  - 성공 아이콘: lucide `CheckCircle2` (`text-emerald-600`, D-013 일관 — 라이트 모드 Non-text Contrast 3:1 준수).
  *
  * 접근성 (REQ-DASH-007)
  *  - `role="dialog" aria-label="화물 등록 완료"` landmark.
@@ -53,7 +53,7 @@ export interface RegisterSuccessDialogProps {
 // ---------------------------------------------------------------------------
 
 const CARD_CLASSES =
-  'bg-white/5 border border-white/10 rounded-xl p-6 backdrop-blur-md space-y-4 max-w-sm mx-auto'
+  'bg-card/50 border border-border rounded-xl p-6 backdrop-blur-md space-y-4 max-w-sm mx-auto'
 
 // ---------------------------------------------------------------------------
 // Main Component
@@ -91,10 +91,10 @@ function SuccessHeader() {
       <CheckCircle2
         aria-hidden="true"
         data-icon="register-success"
-        className="h-12 w-12 text-emerald-400 shrink-0"
+        className="h-12 w-12 text-emerald-600 shrink-0"
       />
-      <h3 className="text-base font-semibold text-white">화물 등록 완료</h3>
-      <p className="text-xs text-white/60 text-center">
+      <h3 className="text-base font-semibold text-foreground">화물 등록 완료</h3>
+      <p className="text-xs text-muted-foreground text-center">
         화물이 성공적으로 등록되었습니다.
       </p>
     </div>
@@ -111,8 +111,8 @@ interface OrderIdBlockProps {
 
 function OrderIdBlock({ orderId }: OrderIdBlockProps) {
   return (
-    <div className="flex flex-col gap-1 items-center px-4 py-2 rounded-md bg-white/5 border border-white/10">
-      <span className="text-[10px] text-white/50">등록된 화물 ID</span>
+    <div className="flex flex-col gap-1 items-center px-4 py-2 rounded-md bg-card/50 border border-border">
+      <span className="text-[10px] text-muted-foreground">등록된 화물 ID</span>
       <span
         data-testid="register-success-order-id"
         className="font-mono text-sm text-accent tabular-nums"
@@ -135,7 +135,7 @@ function CloseButton() {
       <button
         type="button"
         data-testid="register-success-close"
-        className="px-4 py-2 rounded-md bg-white/10 text-white/80 text-xs font-medium hover:bg-white/20 transition-colors"
+        className="px-4 py-2 rounded-md bg-muted/50 text-foreground text-xs font-medium hover:bg-muted/70 transition-colors"
         onClick={() => {
           // Phase 1 범위 외 — Phase 4 에서 onClose 콜백 주입 예정.
         }}

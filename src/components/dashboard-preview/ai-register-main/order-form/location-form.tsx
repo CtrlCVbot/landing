@@ -23,8 +23,8 @@
  *  - `prefers-reduced-motion: reduce` 시 즉시 최종 상태 (`useFillInCaret` 내부 처리).
  *
  * 스타일 (REQ-DASH-005 landing 팔레트)
- *  - 카드: `bg-white/5 border-white/10 rounded-xl p-4`.
- *  - 제목: `text-accent` 아이콘 + `text-white` 라벨.
+ *  - 카드: `bg-card/50 border-border rounded-xl p-4` (T-THEME-13 토큰 치환; 원본: bg-white/5 border-white/10).
+ *  - 제목: `text-accent` 아이콘 + `text-foreground` 라벨 (T-THEME-13; 원본: text-white).
  *  - caret: `bg-accent w-[2px] h-4 animate-pulse` (값 등장 전 잠깐 깜빡임).
  *
  * 접근성 (REQ-DASH-007)
@@ -75,15 +75,15 @@ export interface LocationFormProps {
 // ---------------------------------------------------------------------------
 
 const CARD_CLASSES =
-  'bg-white/5 border border-white/10 rounded-xl p-4 space-y-3 backdrop-blur-sm'
+  'bg-card/50 border border-border rounded-xl p-4 space-y-3 backdrop-blur-sm'
 
 const CARET_CLASSES =
   'inline-block w-[2px] h-4 bg-accent ml-0.5 align-middle animate-pulse'
 
 const FIELD_ROW_CLASSES =
-  'flex items-center gap-2 text-xs text-white/70'
+  'flex items-center gap-2 text-xs text-foreground/80'
 
-const FIELD_LABEL_ICON_CLASSES = 'h-3.5 w-3.5 shrink-0 text-white/40'
+const FIELD_LABEL_ICON_CLASSES = 'h-3.5 w-3.5 shrink-0 text-muted-foreground'
 
 // ---------------------------------------------------------------------------
 // Sub-component — FilledField
@@ -120,12 +120,12 @@ function FilledField({
   return (
     <div className={FIELD_ROW_CLASSES}>
       {icon}
-      <span className="text-white/40 shrink-0">{label}</span>
+      <span className="text-muted-foreground shrink-0">{label}</span>
       <span
         className={
           monospace
-            ? 'font-mono truncate text-white/90'
-            : 'truncate text-white/90'
+            ? 'font-mono truncate text-foreground'
+            : 'truncate text-foreground'
         }
       >
         {shown}
@@ -170,7 +170,7 @@ export function LocationForm({ kind, data, active }: LocationFormProps) {
             data-icon={headerIconName}
             className="h-4 w-4 text-accent shrink-0"
           />
-          <h3 className="text-sm font-semibold text-white truncate">
+          <h3 className="text-sm font-semibold text-foreground truncate">
             {title}
           </h3>
         </div>
@@ -180,7 +180,7 @@ export function LocationForm({ kind, data, active }: LocationFormProps) {
           disabled
           data-testid={`${testId}-search-button`}
           aria-label="주소 검색"
-          className="inline-flex items-center gap-1 px-2 py-1 text-[11px] text-white/50 bg-white/5 border border-white/10 rounded-md cursor-not-allowed"
+          className="inline-flex items-center gap-1 px-2 py-1 text-[11px] text-muted-foreground bg-card/50 border border-border rounded-md cursor-not-allowed"
         >
           <Search
             aria-hidden="true"
@@ -192,7 +192,7 @@ export function LocationForm({ kind, data, active }: LocationFormProps) {
       </div>
 
       {/* Fields */}
-      <div className="flex flex-col gap-2 pt-1 border-t border-white/5">
+      <div className="flex flex-col gap-2 pt-1 border-t border-border/50">
         <FilledField
           icon={
             <Building

@@ -199,6 +199,19 @@ Draft §4 + PRD §7 에서 확정된 6 결정 + Tailwind 4 정정. 상세는 [`0
 | 영향 범위 | datetime-card (8지점) + estimate-info-card (8지점) + settlement-section (15+지점) + transport-option-card (5지점) + preview-chrome (3지점) + order-form-index (2지점). 총 40+지점. |
 | Rollback | 필요 시 알파 슬롯 세부 조정 (예: `text-foreground/70`) 가능. 하위 호환. |
 
+### D-017. F1 2차 범위 확장 — order-form 5파일 토큰화 + 라이트 팔레트 대비 강화 (T-THEME-13/14)
+
+| 항목 | 값 |
+|------|-----|
+| 결정일 | 2026-04-24 |
+| 결정자 | `/dev-run` T-THEME-09~12 완료 후 2차 preview QA + 사용자 승인 (권장 조합 선택) |
+| 배경 | T-THEME-09~12 완료 후 1440px 라이트 모드 브라우저 프리뷰 2차 QA 결과 다음 잔여 이슈 확인: ① **P0 — order-form 하위 5파일 토큰화 누락** (T-THEME-08 scope가 7파일만 커버, 사실 상 order-form 내부에는 10파일 — dash-preview 루트와 별개). 미토큰화 파일: `company-manager-section.tsx` (1열 화주정보 ~12지점), `location-form.tsx` (1열 상/하차지 ~10지점), `cargo-info-form.tsx` (2열 화물정보 ~15지점), `estimate-distance-info.tsx` (거리/시간 요약 ~4지점), `register-success-dialog.tsx` (등록 성공 다이얼로그 ~7지점). 총 ~48지점. 이 파일들은 카드 컨테이너가 `bg-white/5 border-white/10` + 내부 `text-white`, `text-white/40~90`, `border-white/5` 등 다크 전용 하드코딩 → 라이트 모드 흰 배경 위에서 **투명 테두리 + 흰색 텍스트**로 식별 불가. ② **P1 — 라이트 팔레트 배경 대 카드 대비 부족**. 측정치: `background #ffffff` vs `card oklch(0.98 / 0.8)` = 1.034:1, `background` vs `border #e5e7eb` = 1.238:1, `background` vs `muted #f3f4f6` = 1.101:1. WCAG는 텍스트 대비만 규정하나 시각 경계 구분은 통상 1.3:1 이상이 지각 가능 — 현재 팔레트는 모든 경계 대비 불충분. 근본 원인: `--landing-card` 값이 alpha 0.8로 흰 배경 위 거의 흰색 합성. |
+| 선택값 | **T-THEME-13 (P0, 1 인·일) + T-THEME-14 (P1, 0.5 인·일) 추가 — 합 1.5 인·일**. (a) T-13: order-form 5파일 D-015 알파 패턴 원칙 승계 토큰 치환 + 4개 기존 test palette assertion 갱신. (b) T-14: globals.css `:root` 3가지 변수 조정 안 C 채택 — `--landing-card: #f1f5f9` (slate-100, alpha 제거), `--landing-border: #cbd5e1` (slate-300), `--landing-muted: #e2e8f0` (slate-200). 다크 팔레트는 불변. |
+| 근거 | **T-13**: ① D-016 확장과 동일 원리 — T-THEME-08 scope 해석 오류 정정 (dash-preview 렌더 경로에 order-form 하위 파일 포함 누락). ② 1 Feature 완결 원칙 — order-form 5파일은 P0 사용자 경험 차단이므로 별도 Feature 분리 시 F1 미완결. ③ D-015 알파 패턴 원칙이 이미 ai-panel 8파일 + legacy 4파일에 적용된 선례 — 동일 규칙 확장 적용. **T-14**: ① 대비비 측정 결과 안 C가 `bg vs card` 1.096:1, `bg vs border` 1.485:1 로 3안 중 최대 개선. ② WCAG AA 재검증 PASS — `muted-foreground on card(C)` 6.95:1, `foreground on card(C)` 18.07:1. ③ 안 A (card만 조정)는 border 여전히 약함, 안 B (background 조정)는 Hero gradient 배경과 충돌 가능 — 안 C가 균형. ④ alpha 제거로 `bg-card/50` 합성값이 명확해져 T-09~13 광범위 사용 중인 알파 패턴 가독 향상. |
+| 영향 범위 | **T-13**: order-form 5파일 (~48지점) + 4개 test assertion 갱신 (`company-manager-section.test.tsx`, `cargo-info-form.test.tsx`, `location-form.test.tsx`, `register-success-dialog.test.tsx`) + `light-theme.test.tsx` T-THEME-13 describe 블록. **T-14**: `src/app/globals.css` `:root` 3 변수 값 변경 + `light-theme.test.tsx` T-THEME-01 WCAG AA 재검증 테스트 조정 + 스냅샷 ~15건 의도적 업데이트 예상. |
+| Rollback | T-14는 값 변경만이므로 즉시 복원 가능. T-13은 D-015/D-016 선례 승계이므로 롤백 시 동일 P0 회귀. |
+| 미처리 제외 | `register-success-dialog.tsx`는 대화상자이므로 렌더 경로에 따라 사용자 프리뷰에 안 보일 수 있으나 토큰화 포함 (향후 일관성 + WCAG 확보). |
+
 ### D-016. F1 범위 재정의 — ai-panel 8파일 + legacy 4파일 편입 (T-THEME-09/10/11/12)
 
 | 항목 | 값 |
@@ -253,6 +266,7 @@ Draft §4 각 결정 항목의 "거절된 대안" 은 [`03-design-decisions.md`]
 | 2026-04-23 | PR-1~5 + test/docs 5 커밋 생성 (08443ea/a4e0b76/c82f4e8/56b0a83/0d57b48). WARN-1 R-001 수치 정정 포함. |
 | 2026-04-24 | T-THEME-08 완료 — D-014(interactive-tooltip 반대 테마 유지) + D-015(dash-preview 알파 패턴 토큰 치환 원칙) 등록. 7파일 40+지점 치환 + D-013 settlement-section 재적용. F1 Phase A 완료 준비. |
 | 2026-04-24 | Preview QA 후 F1 범위 확장 — D-016(ai-panel 8파일 + legacy 4파일 F1 편입, T-THEME-09~12 신설 2 인·일) 등록. architecture-binding §2-3 수정 예정. |
+| 2026-04-24 | T-THEME-09~12 완료 후 2차 preview QA — D-017(order-form 5파일 토큰화 + 라이트 팔레트 대비 강화 안 C, T-THEME-13/14 신설 1.5 인·일) 등록. |
 | 2026-04-23 | T-THEME-04 구현 완료 — D-010(CTA gradient text-white 의도적 유지) 등록. ThemeToggle.tsx 신규 + header.tsx navbar 토큰 치환 + 15 신규 테스트. |
 | 2026-04-23 | T-THEME-05 구현 완료 — D-011(features.tsx Icon text-purple-400 → text-accent 전환) 등록. hero.tsx 3지점 + features.tsx 4지점 토큰 치환 + 16 신규 테스트. |
 | 2026-04-23 | T-THEME-07 구현 완료 — D-012(UI primitives + shared/ 편집 불요, 기존 shadcn 토큰화), D-013(problems/products 상태색 red-400→destructive, emerald-400→emerald-600) 등록. footer/cta/integrations/problems/products 5 sections 토큰 치환 + 24 신규 테스트 + 전체 754/754 PASS. |

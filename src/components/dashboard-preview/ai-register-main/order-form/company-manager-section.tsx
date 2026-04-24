@@ -10,7 +10,7 @@
  *  - `filled` prop 은 호환성을 위해 유지하되 기본 true. false 일 땐 placeholder "—".
  *
  * 스타일 (REQ-DASH-005 landing 팔레트)
- *  - 카드: `bg-white/5 border-white/10 rounded-xl backdrop-blur-sm`
+ *  - 카드: `bg-card/50 border-border rounded-xl backdrop-blur-sm` (T-THEME-13 토큰 치환; 원본: bg-white/5 border-white/10)
  *  - Pre-filled 배지: `text-accent bg-accent/10 border-accent/20`
  *  - 담당자 아바타: `bg-gradient-to-br from-purple-600/80 to-blue-600/80 rounded-full`
  *
@@ -53,7 +53,7 @@ export interface CompanyManagerSectionProps {
 // ---------------------------------------------------------------------------
 
 const CARD_CLASSES =
-  'bg-white/5 border border-white/10 rounded-xl backdrop-blur-sm p-4 space-y-3'
+  'bg-card/50 border border-border rounded-xl backdrop-blur-sm p-4 space-y-3'
 
 const PREFILLED_BADGE_CLASSES =
   'inline-flex items-center text-accent bg-accent/10 border border-accent/20 text-[10px] px-2 py-0.5 rounded-full'
@@ -95,7 +95,7 @@ export function CompanyManagerSection({
             data-icon="building2"
             className="h-4 w-4 text-accent shrink-0"
           />
-          <h3 className="text-sm font-semibold text-white truncate">
+          <h3 className="text-sm font-semibold text-foreground truncate">
             {companyName}
           </h3>
         </div>
@@ -110,19 +110,19 @@ export function CompanyManagerSection({
       </div>
 
       {/* 회사 상세: 사업자번호 + 대표 */}
-      <div className="flex flex-col gap-1 text-xs text-white/70">
+      <div className="flex flex-col gap-1 text-xs text-foreground/80">
         <div className="flex items-center gap-1.5">
-          <span className="text-white/40">사업자번호</span>
+          <span className="text-muted-foreground">사업자번호</span>
           <span className="font-mono">{businessNumber}</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="text-white/40">대표</span>
+          <span className="text-muted-foreground">대표</span>
           <span>{ceoName}</span>
         </div>
       </div>
 
       {/* 담당자 정보 카드: 아바타 + 이름/부서/연락처/이메일 */}
-      <div className="flex items-start gap-3 pt-2 border-t border-white/5">
+      <div className="flex items-start gap-3 pt-2 border-t border-border/50">
         <div
           data-testid="company-manager-avatar"
           className={AVATAR_CLASSES}
@@ -130,16 +130,16 @@ export function CompanyManagerSection({
           <User
             aria-hidden="true"
             data-icon="user"
-            className="h-5 w-5 text-white"
+            className="h-5 w-5 text-foreground"
           />
         </div>
         <div className="flex-1 min-w-0 space-y-1">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-white truncate">
+            <span className="text-sm font-medium text-foreground truncate">
               {managerName}
             </span>
           </div>
-          <div className="flex items-center gap-1.5 text-xs text-white/60">
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
             <Briefcase
               aria-hidden="true"
               data-icon="briefcase"
@@ -147,7 +147,7 @@ export function CompanyManagerSection({
             />
             <span className="truncate">{managerDepartment}</span>
           </div>
-          <div className="flex items-center gap-1.5 text-xs text-white/60">
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
             <Phone
               aria-hidden="true"
               data-icon="phone"
@@ -155,7 +155,7 @@ export function CompanyManagerSection({
             />
             <span className="font-mono truncate">{managerContact}</span>
           </div>
-          <div className="flex items-center gap-1.5 text-xs text-white/60">
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
             <Mail
               aria-hidden="true"
               data-icon="mail"

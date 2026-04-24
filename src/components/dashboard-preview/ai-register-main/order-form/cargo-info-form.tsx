@@ -20,11 +20,11 @@
  *  - `prefers-reduced-motion: reduce` 시 트랜지션은 소비 측 CSS 가 disable (이 컴포넌트는 data-*
  *    속성만 토글).
  *
- * 스타일 (REQ-DASH-005 landing 팔레트)
- *  - 카드: `bg-white/5 border-white/10 rounded-xl p-4 space-y-3`.
- *  - select trigger (disabled): `bg-white/5 border-white/10 text-white/80 cursor-not-allowed`.
- *  - 펼침 패널: `bg-gray-900 border-white/10 shadow-lg`, data-expanded 로 opacity/translate 제어.
- *  - 최근 화물 칩: `bg-white/5 border-white/10 text-white/70` — 데모 비활성.
+ * 스타일 (REQ-DASH-005 landing 팔레트, T-THEME-13 토큰 치환)
+ *  - 카드: `bg-card/50 border-border rounded-xl p-4 space-y-3` (원본: bg-white/5 border-white/10).
+ *  - select trigger (disabled): `bg-card/50 border-border text-foreground cursor-not-allowed` (원본: bg-white/5 border-white/10 text-white/80).
+ *  - 펼침 패널: `bg-card border-border shadow-lg` (원본: bg-gray-900 border-white/10).
+ *  - 최근 화물 칩: `bg-card/50 border-border text-foreground/80` (원본: bg-white/5 border-white/10 text-white/70).
  *  - caret: `bg-accent w-[2px] h-4 animate-pulse`.
  *
  * 접근성 (REQ-DASH-007)
@@ -89,22 +89,22 @@ export interface CargoInfoFormProps {
 // ---------------------------------------------------------------------------
 
 const CARD_CLASSES =
-  'bg-white/5 border border-white/10 rounded-xl p-4 space-y-3 backdrop-blur-sm'
+  'bg-card/50 border border-border rounded-xl p-4 space-y-3 backdrop-blur-sm'
 
 const CARET_CLASSES =
   'inline-block w-[2px] h-4 bg-accent ml-0.5 align-middle animate-pulse'
 
-const FIELD_LABEL_CLASSES = 'text-xs text-white/50 flex items-center gap-1.5 mb-1.5'
+const FIELD_LABEL_CLASSES = 'text-xs text-muted-foreground flex items-center gap-1.5 mb-1.5'
 
 const FIELD_LABEL_ICON_CLASSES = 'h-3.5 w-3.5 shrink-0'
 
 const SELECT_TRIGGER_BASE =
-  'w-full flex items-center justify-between gap-2 px-3 py-2 text-xs text-white/80 bg-white/5 border border-white/10 rounded-md cursor-not-allowed disabled:opacity-80 transition-colors'
+  'w-full flex items-center justify-between gap-2 px-3 py-2 text-xs text-foreground bg-card/50 border border-border rounded-md cursor-not-allowed disabled:opacity-80 transition-colors'
 
 const SELECT_TRIGGER_EXPANDED = 'border-accent/50 bg-accent/10'
 
 const SELECT_PANEL_BASE =
-  'relative mt-1 rounded-md border bg-gray-900 border-white/10 text-xs text-white/70 overflow-hidden transition-all duration-200 ease-out'
+  'relative mt-1 rounded-md border bg-card border-border text-xs text-foreground/80 overflow-hidden transition-all duration-200 ease-out'
 
 const SELECT_PANEL_CLOSED =
   'max-h-0 opacity-0 pointer-events-none'
@@ -113,7 +113,7 @@ const SELECT_PANEL_EXPANDED =
   'max-h-32 opacity-100'
 
 const CHIP_BASE_CLASSES =
-  'inline-flex items-center gap-1 px-2 py-1 text-[11px] rounded-md border border-white/10 bg-white/5 text-white/70 cursor-not-allowed'
+  'inline-flex items-center gap-1 px-2 py-1 text-[11px] rounded-md border border-border bg-card/50 text-foreground/80 cursor-not-allowed'
 
 const DROPDOWN_OPEN_DURATION_MS = 600
 
@@ -155,8 +155,8 @@ function FilledTextField({
       <div
         className={
           multiline
-            ? 'min-h-[3rem] px-3 py-2 text-xs text-white/90 bg-white/5 border border-white/10 rounded-md whitespace-pre-wrap'
-            : 'px-3 py-2 text-xs text-white/90 bg-white/5 border border-white/10 rounded-md'
+            ? 'min-h-[3rem] px-3 py-2 text-xs text-foreground bg-card/50 border border-border rounded-md whitespace-pre-wrap'
+            : 'px-3 py-2 text-xs text-foreground bg-card/50 border border-border rounded-md'
         }
       >
         <span>{shown}</span>
@@ -224,7 +224,7 @@ function DropdownSelect({
         <span className="truncate">{value}</span>
         <ChevronDown
           aria-hidden="true"
-          className="h-3.5 w-3.5 shrink-0 text-white/50"
+          className="h-3.5 w-3.5 shrink-0 text-muted-foreground"
         />
       </button>
       <div
@@ -317,7 +317,7 @@ export function CargoInfoForm({
           data-icon="container"
           className="h-4 w-4 text-accent shrink-0"
         />
-        <h3 className="text-sm font-semibold text-white truncate">화물 정보</h3>
+        <h3 className="text-sm font-semibold text-foreground truncate">화물 정보</h3>
       </div>
 
       {/* 차량 타입 / 중량 select (#7 dropdown 대상) */}

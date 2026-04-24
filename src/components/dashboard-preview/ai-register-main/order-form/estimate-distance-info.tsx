@@ -12,9 +12,9 @@
  *  - 레이아웃 유지를 위해 visible=false 에도 null 반환이 아닌 placeholder 로 자리 유지
  *    (Col 2 상단 예약 공간 — 상하 이동 방지).
  *
- * 스타일 (REQ-DASH-005 landing 팔레트)
+ * 스타일 (REQ-DASH-005 landing 팔레트, T-THEME-13 토큰 치환)
  *  - 카드: `bg-accent/5 border-accent/20 rounded-xl p-4` — "예상 결과" 속성의 약한 accent 강조.
- *  - 숫자: `font-bold text-white` — 수치 가독성.
+ *  - 숫자: `font-bold text-foreground` (원본: text-white) — 수치 가독성.
  *  - 아이콘: lucide `Route` — mm-broker `LandPlot` 대비 landing 라이브러리와 톤 일치.
  *
  * 접근성 (REQ-DASH-007)
@@ -59,11 +59,11 @@ const ROW_CLASSES = 'flex items-center gap-2 text-sm'
 
 const ICON_CLASSES = 'h-4 w-4 shrink-0 text-accent'
 
-const LABEL_CLASSES = 'text-white/70 shrink-0'
+const LABEL_CLASSES = 'text-foreground/80 shrink-0'
 
-const VALUE_CLASSES = 'font-bold text-white tabular-nums'
+const VALUE_CLASSES = 'font-bold text-foreground tabular-nums'
 
-const PLACEHOLDER_CLASSES = 'text-white/50'
+const PLACEHOLDER_CLASSES = 'text-muted-foreground'
 
 // ---------------------------------------------------------------------------
 // Main Component

@@ -448,7 +448,7 @@ describe('CargoInfoForm — TC-DASH3-UNIT-DROP (#7 dropdown)', () => {
 // ---------------------------------------------------------------------------
 
 describe('CargoInfoForm — TC-DASH3-UNIT-CARGOFORM (구조 / landing 팔레트 / 접근성)', () => {
-  it('카드 className 은 landing 팔레트 (bg-white/5 border-white/10) 를 가진다', () => {
+  it('카드 className 은 landing 팔레트 (bg-card/50 border-border) 를 가진다 (T-THEME-13 토큰 치환; 원본: bg-white/5 border-white/10)', () => {
     render(
       <CargoInfoForm
         vehicle={VEHICLE}
@@ -457,8 +457,8 @@ describe('CargoInfoForm — TC-DASH3-UNIT-CARGOFORM (구조 / landing 팔레트 
       />,
     )
     const card = screen.getByTestId('cargo-info-form')
-    expect(card.className).toMatch(/bg-white\/5/)
-    expect(card.className).toMatch(/border-white\/10/)
+    expect(card.className).toMatch(/bg-card\/50/)
+    expect(card.className).toMatch(/border-border(?![a-z-])/)
   })
 
   it('role="region" + aria-label "화물 정보" 로 landmark 를 제공한다', () => {

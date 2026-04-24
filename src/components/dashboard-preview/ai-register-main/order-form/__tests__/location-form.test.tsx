@@ -240,20 +240,20 @@ describe('LocationForm — TC-DASH3-UNIT-LOCFORM (주소 검색 버튼)', () => 
 // ---------------------------------------------------------------------------
 
 describe('LocationForm — TC-DASH3-UNIT-LOCFORM (구조 / landing 팔레트)', () => {
-  it('카드 className 은 landing 팔레트 (bg-white/5 border-white/10 rounded-xl p-4) 를 가진다', () => {
+  it('카드 className 은 landing 팔레트 (bg-card/50 border-border rounded-xl p-4) 를 가진다 (T-THEME-13 토큰 치환; 원본: bg-white/5 border-white/10)', () => {
     render(<LocationForm kind="pickup" data={PICKUP} active={false} />)
     const card = screen.getByTestId('location-form-pickup')
-    expect(card.className).toMatch(/bg-white\/5/)
-    expect(card.className).toMatch(/border-white\/10/)
+    expect(card.className).toMatch(/bg-card\/50/)
+    expect(card.className).toMatch(/border-border(?![a-z-])/)
     expect(card.className).toMatch(/rounded-xl/)
     expect(card.className).toMatch(/p-4/)
   })
 
-  it('delivery kind 도 동일한 landing 팔레트 카드 스타일을 갖는다', () => {
+  it('delivery kind 도 동일한 landing 팔레트 카드 스타일을 갖는다 (T-THEME-13 토큰 치환; 원본: bg-white/5 border-white/10)', () => {
     render(<LocationForm kind="delivery" data={DELIVERY} active={false} />)
     const card = screen.getByTestId('location-form-delivery')
-    expect(card.className).toMatch(/bg-white\/5/)
-    expect(card.className).toMatch(/border-white\/10/)
+    expect(card.className).toMatch(/bg-card\/50/)
+    expect(card.className).toMatch(/border-border(?![a-z-])/)
     expect(card.className).toMatch(/rounded-xl/)
     expect(card.className).toMatch(/p-4/)
   })

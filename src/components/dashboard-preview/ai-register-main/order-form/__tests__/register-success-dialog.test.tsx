@@ -83,11 +83,11 @@ describe('RegisterSuccessDialog — TC-DASH3-UNIT-SUCCESSOFF (open=true 구조)'
     ).toBeInTheDocument()
   })
 
-  it('open=true 시 landing 팔레트 (bg-white/5 border-white/10 rounded-xl) 가 적용된다', () => {
+  it('open=true 시 landing 팔레트 (bg-card/50 border-border rounded-xl) 가 적용된다 (T-THEME-13 토큰 치환; 원본: bg-white/5 border-white/10)', () => {
     render(<RegisterSuccessDialog open={true} orderId="order-1" />)
     const dialog = screen.getByTestId('register-success-dialog')
-    expect(dialog.className).toMatch(/bg-white\/5/)
-    expect(dialog.className).toMatch(/border-white\/10/)
+    expect(dialog.className).toMatch(/bg-card\/50/)
+    expect(dialog.className).toMatch(/border-border(?![a-z-])/)
     expect(dialog.className).toMatch(/rounded-xl/)
   })
 

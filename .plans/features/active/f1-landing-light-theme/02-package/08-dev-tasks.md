@@ -22,9 +22,11 @@
 | T-THEME-10 | Legacy 4파일 토큰 치환 (D-016, **P1**) | PR-7 | T-THEME-09 | 4 | 0.5 인·일 |
 | T-THEME-11 | Products/Integrations 카드 배경 강화 (D-016, **P1**) | PR-7 | T-THEME-10 | 2 | 0.25 인·일 |
 | T-THEME-12 | Problems/order-form 미세 조정 (D-016, **P2**) | PR-7 | T-THEME-11 | 2+ | 0.25 인·일 |
+| T-THEME-13 | order-form 5파일 토큰화 잔여 해소 (D-017, **P0**) | PR-7 | T-THEME-12 | 5+4 | 1 인·일 |
+| T-THEME-14 | 라이트 팔레트 대비 강화 안 C (D-017, **P1**) | PR-7 | T-THEME-13 | 1 | 0.5 인·일 |
 
-**합계**: 11 인·일 (T-THEME-06 skip 반영 + T-THEME-09~12 D-016 확장 +2 인·일, 직렬) / 약 10.5 인·일 (PR 병렬).
-**PR 개수**: 6 → **6** (PR-4 Skip, PR-7 신설 D-016, [decision-log D-003](../00-context/02-decision-log.md) + [D-016](../00-context/02-decision-log.md) 참조).
+**합계**: 12.5 인·일 (T-THEME-06 skip + D-016 확장 +2 + D-017 확장 +1.5, 직렬).
+**PR 개수**: 6 → **6** (PR-4 Skip, PR-7 확장 D-016/D-017 통합, [decision-log D-003/D-016/D-017](../00-context/02-decision-log.md) 참조).
 
 ---
 
@@ -351,6 +353,70 @@ T-THEME-09 와 동일 (D-015 알파 패턴 원칙).
 
 ---
 
+## T-THEME-13 — order-form 5파일 토큰화 잔여 해소 (D-017, P0)
+
+**REQ**: REQ-011 확장 (D-017)
+**PR**: PR-7 (T-THEME-12 이후 직렬)
+**Priority**: **P0** (1440px 라이트 모드에서 1열 화주정보/상차지/하차지 + 2열 화물정보 카드 텍스트/테두리 미표시)
+
+### Scope (5 소스 + 4 test + 1 통합 test)
+- `src/components/dashboard-preview/ai-register-main/order-form/company-manager-section.tsx` (~12 지점, 1열 화주정보)
+- `src/components/dashboard-preview/ai-register-main/order-form/location-form.tsx` (~10 지점, 1열 상/하차지)
+- `src/components/dashboard-preview/ai-register-main/order-form/cargo-info-form.tsx` (~15 지점, 2열 화물정보)
+- `src/components/dashboard-preview/ai-register-main/order-form/estimate-distance-info.tsx` (~4 지점, 거리/시간)
+- `src/components/dashboard-preview/ai-register-main/order-form/register-success-dialog.tsx` (~7 지점, 다이얼로그)
+- 기존 test 갱신: `__tests__/{company-manager-section,cargo-info-form,location-form,register-success-dialog}.test.tsx` palette assertion 4건
+- 통합 test: `src/__tests__/light-theme.test.tsx` T-THEME-13 describe 블록
+
+### 치환 규칙 (D-015 알파 패턴 원칙 승계)
+- `bg-white/5` → `bg-card/50`
+- `border-white/10` → `border-border`
+- `border-white/5` → `border-border/50`
+- `text-white` → `text-foreground` (단, D-010 gradient 예외 유지)
+- `text-white/40~60` → `text-muted-foreground`
+- `text-white/70` → `text-foreground/80`
+- `text-white/80~90` → `text-foreground`
+- `bg-gray-900` (cargo-info 펼침 패널) → `bg-card`
+- `bg-white/10` (dialog 버튼) → `bg-muted/50`
+
+### Acceptance
+- [ ] 5파일 3중 grep 0건 (gradient 예외 제외)
+- [ ] 4개 기존 test assertion 신규 토큰으로 갱신
+- [ ] `pnpm typecheck` 0 errors
+- [ ] `pnpm test` 전체 PASS
+- [ ] 1440px 라이트 프리뷰: 1열 3 카드 + 2열 화물 카드 완전 가시
+
+---
+
+## T-THEME-14 — 라이트 팔레트 대비 강화 안 C (D-017, P1)
+
+**REQ**: REQ-002 개선 (D-017)
+**PR**: PR-7 (T-THEME-13 이후)
+**Priority**: **P1** (배경-카드 경계 시각 구분)
+
+### Scope
+- `src/app/globals.css` `:root` 3 변수 값 변경:
+  - `--landing-card: oklch(0.98 0.005 260 / 0.8)` → `#f1f5f9` (slate-100)
+  - `--landing-border: #e5e7eb` → `#cbd5e1` (slate-300)
+  - `--landing-muted: #f3f4f6` → `#e2e8f0` (slate-200)
+- `src/__tests__/light-theme.test.tsx` T-THEME-14 describe 블록 + 기존 REQ-002 WCAG AA 테스트 재검증
+
+### 대비비 재검증 (WCAG AA)
+- `foreground #0a0a0a` on `card #f1f5f9`: 18.07:1 ✅ AAA
+- `muted-foreground #4b5563` on `card #f1f5f9`: 6.95:1 ✅ AA
+- `foreground` on `muted #e2e8f0`: 16.15:1 ✅ AAA
+- `background #ffffff` vs `card #f1f5f9`: 1.096:1 (경계 구분 가능)
+- `background` vs `border #cbd5e1`: 1.485:1 (카드 테두리 명확화)
+
+### Acceptance
+- [ ] `:root` 3 변수 값 변경
+- [ ] 다크 팔레트 불변
+- [ ] axe color-contrast 라이트 모드 0 violations
+- [ ] 기존 스냅샷 변경 확인 (의도적 업데이트)
+- [ ] 1440px 라이트 프리뷰: 배경-카드-border 경계 명확
+
+---
+
 ## 공통 검증 (전 TASK)
 
 각 TASK 완료 시 실행:
@@ -376,5 +442,6 @@ pnpm test src/__tests__/light-theme.test.tsx    # 0 failures (누적)
 | PR-5 | T-THEME-07 | footer + shared UI (cta, integrations, problems, products, footer + ui/ + shared/) |
 | PR-6 | T-THEME-08 | dash-preview 7파일 |
 | PR-7 | T-THEME-09~12 | ai-panel 8 + legacy 4 + products/integrations + problems/order-form (D-016) |
+| PR-7 | T-THEME-13~14 | order-form 5 + 라이트 팔레트 대비 강화 안 C (D-017) |
 
 **D+7 진척 평가** (2026-05-02): PR-1 + PR-2/3 merge 완료 여부 확인. 미달 시 Phase A 1주 연장 (Epic §6 리스크 6).
