@@ -10,18 +10,19 @@
 
 ### F1 — 라이트 모드 전환 인프라 (landing 전역)
 
-- **IDEA**: [IDEA-20260423-002](../../../ideas/00-inbox/IDEA-20260423-002.md)
+- **IDEA**: [IDEA-20260423-002](../../../archive/f1-landing-light-theme/sources/ideas/IDEA-20260423-002.md)
 - **Lane**: Standard (전역 팔레트 + 전환 인프라 + **landing 사이트 전역** 컴포넌트 스윕, 2026-04-23 범위 확장)
 - **RICE 예상**: 스크리닝 시 확정 — 사용자 모든 세션·전 페이지 영향 (Reach 최대), 라이트/다크 시각 선호 만족 (Impact 큼), 트리거 방식 미정 (Confidence 중간), landing 전역 스윕 범위 매우 큼 (Effort 매우 큼)
 - **범위**: `src/app/globals.css` `@theme inline` 토큰 이중화 (**Tailwind 4 — `tailwind.config.ts` 미사용**, PRD §7.1 정정 반영), `src/app/layout.tsx` `ThemeProvider` 또는 `data-theme` 속성. **landing 사이트 전역 컴포넌트 스윕** — `src/app/page.tsx` · `src/components/**/*.tsx` (hero · features · pricing · testimonials · footer · navbar 등 메인 섹션 + dash-preview 하위 7 개 파일 + shared UI) 의 `bg-white/5`·`text-white`·`from-gray-900/50`·`border-gray-800` 류 다크 하드코딩 클래스 토큰 치환. 전수 조사는 `grep` 기반 후보 목록 → 토큰 매핑 결정표 작성. 전환 트리거 방식·초기 모드·hydration 방어 등은 Draft §4 에서 확정 (next-themes + system follow + 3 중 방어).
-- **Draft**: [`.plans/drafts/f1-landing-light-theme/01-draft.md`](../../../drafts/f1-landing-light-theme/01-draft.md) (Standard/A/dev)
-- **PRD**: [`.plans/drafts/f1-landing-light-theme/02-prd.md`](../../../drafts/f1-landing-light-theme/02-prd.md) (REQ-14 + NFR-10 + SM-10, PCC 5/5 PASS)
-- **Feature Package**: [`.plans/features/active/f1-landing-light-theme/`](../../../features/active/f1-landing-light-theme/00-context/01-product-context.md) (Bridge 완료 2026-04-23, TASK **14 건 구현 완료** T-THEME-01~14, T-06 skip per D-003, **PR-1~7 직접 main 머지**)
+- **Draft**: [`.plans/archive/f1-landing-light-theme/sources/drafts/01-draft.md`](../../../archive/f1-landing-light-theme/sources/drafts/01-draft.md) (Standard/A/dev)
+- **PRD**: [`.plans/archive/f1-landing-light-theme/sources/drafts/02-prd.md`](../../../archive/f1-landing-light-theme/sources/drafts/02-prd.md) (REQ-14 + NFR-10 + SM-10, PCC 5/5 PASS)
+- **Feature Package**: [`.plans/archive/f1-landing-light-theme/sources/feature-package/`](../../../archive/f1-landing-light-theme/sources/feature-package/00-context/01-product-context.md) (Bridge 완료 2026-04-23, TASK **14 건 구현 완료** T-THEME-01~14, T-06 skip per D-003, **PR-1~7 직접 main 머지**)
+- **Archive**: [ARCHIVE-F1](../../../archive/f1-landing-light-theme/ARCHIVE-F1.md)
 - **구현 이력**: T-THEME-01~08 완료 (08443ea/a4e0b76/c82f4e8/56b0a83/0d57b48/a7bbda4) → D-016 확장 T-THEME-09~12 (8e3523f/af70fb4/9555339) → D-017 확장 T-THEME-13~14 (446c718/08cabd6). 총 10+ 커밋.
 - **주요 결정**: D-005(토큰 13개), D-009(NFR-007 PASS), D-010(CTA gradient 예외), D-011(text-purple-400→accent), D-013(상태색 emerald-600/destructive), D-014(tooltip 반대테마), D-015(알파 패턴), **D-016(ai-panel+legacy 확장), D-017(order-form+palette 안 C)**.
 - **검증**: 980/980 tests PASS, typecheck 0, lint 0, build 164 kB (baseline +1 kB). dev-verify PASS with WARN (ERROR 0).
 - **포함 이슈**: [1]
-- **상태**: **implemented** (2026-04-24, /dev-verify 완료 · /plan-archive 대기)
+- **상태**: **archived** (2026-04-24, archive bundle 생성 + sources 이동 완료)
 
 ### F2 — Mock 스키마 재설계 (추출/적용 분리 + 시나리오 세트)
 
@@ -61,14 +62,15 @@
 
 ### F5 — UI 잔재 정리 (JSON 뷰어 숨김 + 라벨 변경)
 
-- **IDEA**: [IDEA-20260423-001](../../../ideas/00-inbox/IDEA-20260423-001.md)
+- **IDEA**: [IDEA-20260423-001](../../../archive/f5-ui-residue-cleanup/sources/ideas/IDEA-20260423-001.md)
 - **Lane**: Lite (렌더 제외·엔트리 제거·치환 위주, 단 참조 지점 분산)
 - **RICE 예상**: 스크리닝 시 확정 — 화면 군더더기 숨김 (Impact 중하), 참조 지점 많아 Effort 중간
 - **범위**: `AiExtractJsonViewer` 컴포넌트 파일 **유지** + `ai-panel/index.tsx` 의 import · JSX 렌더 제거 + `hit-areas.ts` `ai-json-viewer` 엔트리 제거 + `mock-data.ts` tooltip `ai-json-viewer` 엔트리 제거 (`jsonViewerOpen` 필드는 유지 — F2 스키마 재설계 시 일괄 이관) + 통합 테스트 "JSON 뷰어 미렌더" 단정으로 갱신 (이슈 [5] Proposal A 변형 — 파일 유지 + 화면 숨김 방향, 2026-04-23 수정). `estimate-info-card.tsx` 의 "자동 배차" 문자열을 "자동 배차 대기" 로 교체 + tooltip `auto-dispatch` 문구·JSDoc·테스트 기대 문자열 동기 여부 결정 (이슈 [6]).
-- **Draft**: [`.plans/drafts/f5-ui-residue-cleanup/01-draft.md`](../../../drafts/f5-ui-residue-cleanup/01-draft.md) (Lite/B/dev)
-- **Feature Package**: [`.plans/features/active/f5-ui-residue-cleanup/`](../../../features/active/f5-ui-residue-cleanup/00-context/01-product-context.md) (Bridge 완료 2026-04-23, TASK 4 건 예정 T-CLEANUP-01~04)
+- **Draft**: [`.plans/archive/f5-ui-residue-cleanup/sources/drafts/01-draft.md`](../../../archive/f5-ui-residue-cleanup/sources/drafts/01-draft.md) (Lite/B/dev)
+- **Feature Package**: [`.plans/archive/f5-ui-residue-cleanup/sources/feature-package/`](../../../archive/f5-ui-residue-cleanup/sources/feature-package/00-context/01-product-context.md) (Bridge 완료 2026-04-23, TASK 4 건 예정 T-CLEANUP-01~04)
+- **Archive**: [ARCHIVE-F5](../../../archive/f5-ui-residue-cleanup/ARCHIVE-F5.md)
 - **포함 이슈**: [5], [6]
-- **상태**: approved
+- **상태**: **archived** (2026-04-24, archive bundle 생성 + sources 이동 완료)
 
 ---
 
@@ -252,14 +254,14 @@ TeamCreate team_name="dash-preview-phase4-phase-a"
 - [x] 라이트 모드 MVP 작동 (next-themes + data-theme + system follow + 3중 방어, NFR-007 PASS)
 - [x] JSON 뷰어 화면 비노출 확인 (F5 T-CLEANUP-01 완료, ai-panel/index.tsx 렌더 제거)
 - [x] "자동 배차 대기" 라벨 반영 확인 (F5 T-CLEANUP-02 완료)
-- [ ] axe-core 라이트 모드 0 violations (**landing 전역** 기준) — **사용자 육안 QA 대기** (1440/1280/768/390 뷰포트 + 다크 회귀)
+- [x] 사용자 육안 QA 확인 완료 (2026-04-24, 1440/1280/768/390 뷰포트 + 다크 회귀). 자동 a11y는 직전 `pnpm test` 의 기존 axe suite PASS 근거를 사용.
 - [ ] Phase A 회고 (선택, Phase B 착수 전)
-- [ ] `/plan-archive f1-landing-light-theme` + `/plan-archive f5-ui-residue-cleanup` — Feature 번들화 + `.plans/archive/` 이동 + index 등록
+- [x] `/plan-archive f1-landing-light-theme` + `/plan-archive f5-ui-residue-cleanup` — Feature 번들화 + `.plans/archive/` 이동 + index 등록 (2026-04-24)
 
 **Phase A 도달 현황** (2026-04-24 세션 종료 시점):
 - 코드·테스트·빌드: 완료 (F1 + F5 양쪽 PASS)
 - 문서: 완료 (D-001~D-017, 대시보드 동기)
-- **잔여**: 사용자 육안 QA 1건 + /plan-archive 2건
+- **잔여**: 없음 (Phase B PRD/Bridge 착수 대기)
 
 ---
 
@@ -420,11 +422,11 @@ Epic 상태는 **`active` 유지** (Phase B/C 완료까지). 모든 자식 Featu
 
 | Feature | 상태 | TASK 진행 | 테스트 | 번들 영향 | 리뷰 |
 |---|:---:|:---:|:---:|:---:|:---:|
-| F1 라이트 모드 | **implemented** | **14/14** (T-06 skip) | **980 PASS** | **+1 kB (164 kB)** | **/dev-verify PASS with WARN (ERROR 0)** |
+| F1 라이트 모드 | **archived** | **14/14** (T-06 skip) | **980 PASS** | **+1 kB (164 kB)** | **/dev-verify PASS with WARN (ERROR 0)** |
 | F2 Mock 재설계 | pending | — | — | — | — |
 | F3 옵션↔요금 파생 | pending | — | — | — | — |
 | F4 레이아웃+HitArea | **archived** | 5/5 TASK + D-F4-011 | build PASS, 990 PASS, typecheck PASS, lint PASS, browser spot check PASS | 165 kB | /dev-verify PASS |
-| F5 UI 잔재 정리 | implemented | 4/4 | 624 PASS | — | /dev-verify PASS |
+| F5 UI 잔재 정리 | **archived** | 4/4 | 624 PASS | — | /dev-verify PASS |
 
 상태 값: `pending` / `screening` / `approved` / `active` / `archived`.
 
@@ -459,3 +461,4 @@ Epic 상태는 **`active` 유지** (Phase B/C 완료까지). 모든 자식 Featu
 | 2026-04-24 | 사용자 스크린샷 QA 반영 — static bounds만으로는 tooltip/hit-area가 실제 컴포넌트 위치와 어긋나는 문제가 재현되어 D-F4-010으로 `data-hit-area-id` target DOMRect 우선 측정 방식을 적용. `pnpm test` 990 PASS, build first load JS 165 kB. |
 | 2026-04-27 | F4 browser spot check 완료 — 1440/1024/768 viewport에서 target 18개와 hit-area 18개 모두 매칭, max delta 0~0.1px. 초기 fallback 노출 방지를 위해 D-F4-011 적용. |
 | 2026-04-27 | F4 archive 실행 — `ARCHIVE-F4.md` 생성, IDEA/screening/draft/feature package sources 이동, archive index/backlog/screening matrix 갱신. |
+| 2026-04-24 | Phase A archive 실행 — F1/F5 archive bundle 생성, 원본 planning files 를 `.plans/archive/{slug}/sources/` 로 이동, archive index/backlog 갱신. |

@@ -47,14 +47,14 @@ Phase A (F1 + F5 병렬) 는 2026-04-24 완료. main 에 머지된 구현 커밋
 - F1: 980/980 tests PASS, 14 TASK (T-06 skip), globals.css 이중화 + landing 전역 토큰 치환 완료
 - F5: 624 tests PASS, AiExtractJsonViewer 렌더 제거 + "자동 배차 대기" 라벨 완료
 
-**Phase A 잔여 3건 — 먼저 처리**:
+**Phase A 잔여 상태 — 2026-04-24 업데이트**:
 
 1. **사용자 육안 QA** (브라우저 1440/1280/768/390 + 다크 회귀)
-   - 사용자가 직접 확인할 수도 있음. 다음 Phase 진입 전 사용자 확인 요청.
-2. **/plan-archive f1-landing-light-theme**
-   - `.plans/features/active/f1-landing-light-theme/` → `.plans/archive/` 로 이동. IDEA frontmatter `approved → archived`.
-3. **/plan-archive f5-ui-residue-cleanup**
-   - 동일 패턴.
+   - 완료. 2026-04-24 사용자 확인.
+2. **/plan-archive f1-landing-light-theme** — 완료
+   - `.plans/archive/f1-landing-light-theme/ARCHIVE-F1.md` 생성, 원본은 `sources/` 로 이동.
+3. **/plan-archive f5-ui-residue-cleanup** — 완료
+   - `.plans/archive/f5-ui-residue-cleanup/ARCHIVE-F5.md` 생성, 원본은 `sources/` 로 이동.
 
 ---
 
@@ -146,8 +146,8 @@ F2 와 F4 에 대해 각각:
 | `.plans/epics/20-active/EPIC-20260422-001/01-children-features.md` | 5 Feature 실행 지도 + 의존성 매트릭스 + Phase A/B/C 로드맵 |
 | `.plans/archive/dash-preview-phase3/improvements/issues.md` | 10 이슈 원본 (F2 범위 [2-1~2-5], F4 범위 [3], [4]) |
 | `.plans/archive/dash-preview-phase3/improvements/proposals.md` | 방안 A/B/C + 공통 C1/C2 |
-| `.plans/features/active/f1-landing-light-theme/00-context/02-decision-log.md` | Phase A D-001~D-017 (참고용) |
-| `.plans/features/active/f1-landing-light-theme/03-dev-notes/dev-verification-report.md` | Phase A DVC 검증 결과 |
+| `.plans/archive/f1-landing-light-theme/sources/feature-package/00-context/02-decision-log.md` | Phase A D-001~D-017 (참고용) |
+| `.plans/archive/f1-landing-light-theme/sources/feature-package/03-dev-notes/dev-verification-report.md` | Phase A DVC 검증 결과 |
 | `.plans/project/00-dev-architecture.md` | 프로젝트 아키텍처 SSOT |
 | `CLAUDE.md` (루트 + `apps/landing/`) | 프로젝트 핵심 원칙 |
 
@@ -187,4 +187,4 @@ Phase B 착수 전 먼저:
 | 적용 Feature | F2 (Mock 재설계) + F4 (레이아웃/Hit-Area) |
 | 이전 Phase | Phase A 완료 (커밋 `eb8aedd` 까지) |
 | 다음 Phase | Phase C (F3 옵션↔요금 파생) — Phase B 완료 후 별도 인수인계 예정 |
-| 관련 선례 | `.plans/features/active/f1-landing-light-theme/02-package/08-dev-tasks.md` (14 TASK 분할 패턴 참조) |
+| 관련 선례 | `.plans/archive/f1-landing-light-theme/sources/feature-package/02-package/08-dev-tasks.md` (14 TASK 분할 패턴 참조) |
