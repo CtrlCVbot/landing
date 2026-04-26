@@ -196,6 +196,7 @@ export function DateTimeCard({
       role="region"
       aria-label={ariaLabel}
       data-testid={testId}
+      data-hit-area-id={isPickup ? 'form-pickup-datetime' : 'form-delivery-datetime'}
       data-kind={kind}
       className={CARD_CLASSES}
     >

@@ -155,6 +155,24 @@ describe('Phase 3 hit-areas (M4-04)', () => {
   })
 
   // -------------------------------------------------------------------------
+  // F4 — DateTime 2열 layout bounds 재정렬
+  // -------------------------------------------------------------------------
+
+  it('F4: pickup/delivery DateTime hit-area 는 같은 행에서 좌우 2열로 정렬된다', () => {
+    const pickup = DESKTOP_HIT_AREAS.find((a) => a.id === 'form-pickup-datetime')
+    const delivery = DESKTOP_HIT_AREAS.find((a) => a.id === 'form-delivery-datetime')
+
+    expect(pickup?.bounds).toEqual({ x: 766, y: 106, width: 164, height: 96 })
+    expect(delivery?.bounds).toEqual({ x: 946, y: 106, width: 164, height: 96 })
+  })
+
+  it('F4: Cargo hit-area 는 DateTime 2열 아래로 당겨진 y 좌표를 사용한다', () => {
+    const cargo = DESKTOP_HIT_AREAS.find((a) => a.id === 'form-cargo-info')
+
+    expect(cargo?.bounds).toEqual({ x: 766, y: 214, width: 344, height: 200 })
+  })
+
+  // -------------------------------------------------------------------------
   // getMinSize — scaleFactor 0.40 (Tablet) 기준 재계산
   // -------------------------------------------------------------------------
 

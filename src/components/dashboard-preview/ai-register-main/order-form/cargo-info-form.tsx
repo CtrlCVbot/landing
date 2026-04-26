@@ -308,6 +308,7 @@ export function CargoInfoForm({
       role="region"
       aria-label="화물 정보"
       data-testid="cargo-info-form"
+      data-hit-area-id="form-cargo-info"
       className={CARD_CLASSES}
     >
       {/* Header: Container 아이콘 + 제목 */}

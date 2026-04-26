@@ -12,7 +12,7 @@
  *
  * 컬럼 구성 (M3-01)
  *  - Col 1: CompanyManagerSection (pre-filled) + LocationForm(pickup) + LocationForm(delivery)
- *  - Col 2: EstimateDistanceInfo + DateTimeCard(pickup) + DateTimeCard(delivery) + CargoInfoForm
+ *  - Col 2: EstimateDistanceInfo + DateTimeCard(pickup/delivery 2열) + CargoInfoForm
  *  - Col 3: TransportOptionCard + EstimateInfoCard + SettlementSection
  *
  * AI_APPLY 2단 구조 (M3-11, REQ-DASH3-041 / 042 / 043)
@@ -278,20 +278,25 @@ export function OrderFormContainer({ step, formData }: OrderFormContainerProps) 
           duration={formData.estimate.duration}
           visible={distanceVisible}
         />
-        <DateTimeCard
-          kind="pickup"
-          date={formData.pickup.date}
-          time={formData.pickup.time}
-          datePresetActive={asDateTimePreset(formData.pickup.datePresetActive)}
-          active={partial.pickup}
-        />
-        <DateTimeCard
-          kind="delivery"
-          date={formData.delivery.date}
-          time={formData.delivery.time}
-          datePresetActive={asDateTimePreset(formData.delivery.datePresetActive)}
-          active={partial.delivery}
-        />
+        <div
+          data-testid="datetime-card-grid"
+          className="grid grid-cols-1 md:grid-cols-2 gap-4"
+        >
+          <DateTimeCard
+            kind="pickup"
+            date={formData.pickup.date}
+            time={formData.pickup.time}
+            datePresetActive={asDateTimePreset(formData.pickup.datePresetActive)}
+            active={partial.pickup}
+          />
+          <DateTimeCard
+            kind="delivery"
+            date={formData.delivery.date}
+            time={formData.delivery.time}
+            datePresetActive={asDateTimePreset(formData.delivery.datePresetActive)}
+            active={partial.delivery}
+          />
+        </div>
         <CargoInfoForm
           vehicle={formData.vehicle}
           cargo={formData.cargo}

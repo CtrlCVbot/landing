@@ -177,6 +177,25 @@ describe('OrderFormContainer 자식 주입 (M3-01 — TC-DASH3-INT-ORDERFORM)', 
       const delivery = screen.getByTestId('location-form-delivery')
       expect(col1).toContainElement(delivery)
     })
+
+    it('DOM 기반 hit-area 측정을 위한 marker를 Col 1 카드에 부여한다', () => {
+      render(
+        <OrderFormContainer step={INITIAL_STEP} formData={PREVIEW_MOCK_DATA.formData} />,
+      )
+
+      expect(screen.getByTestId('company-manager-section')).toHaveAttribute(
+        'data-hit-area-id',
+        'form-company-manager',
+      )
+      expect(screen.getByTestId('location-form-pickup')).toHaveAttribute(
+        'data-hit-area-id',
+        'form-pickup-location',
+      )
+      expect(screen.getByTestId('location-form-delivery')).toHaveAttribute(
+        'data-hit-area-id',
+        'form-delivery-location',
+      )
+    })
   })
 
   // -----------------------------------------------------------------
@@ -213,6 +232,22 @@ describe('OrderFormContainer 자식 주입 (M3-01 — TC-DASH3-INT-ORDERFORM)', 
       expect(col2).toContainElement(deliveryDT)
     })
 
+    it('DateTimeCard 2개를 md 이상 2열 wrapper 안에 배치한다 (F4 T-F4-LAYOUT-01)', () => {
+      render(
+        <OrderFormContainer step={INITIAL_STEP} formData={PREVIEW_MOCK_DATA.formData} />,
+      )
+
+      const col2 = screen.getByTestId('col-2')
+      const dateTimeGrid = screen.getByTestId('datetime-card-grid')
+      expect(col2).toContainElement(dateTimeGrid)
+      expect(dateTimeGrid).toHaveClass('grid')
+      expect(dateTimeGrid).toHaveClass('grid-cols-1')
+      expect(dateTimeGrid).toHaveClass('md:grid-cols-2')
+      expect(dateTimeGrid).toHaveClass('gap-4')
+      expect(dateTimeGrid).toContainElement(screen.getByTestId('datetime-card-pickup'))
+      expect(dateTimeGrid).toContainElement(screen.getByTestId('datetime-card-delivery'))
+    })
+
     it('CargoInfoForm 을 Col 2 에 배치한다', () => {
       render(
         <OrderFormContainer step={INITIAL_STEP} formData={PREVIEW_MOCK_DATA.formData} />,
@@ -221,6 +256,29 @@ describe('OrderFormContainer 자식 주입 (M3-01 — TC-DASH3-INT-ORDERFORM)', 
       const col2 = screen.getByTestId('col-2')
       const cargo = screen.getByTestId('cargo-info-form')
       expect(col2).toContainElement(cargo)
+    })
+
+    it('DOM 기반 hit-area 측정을 위한 marker를 Col 2 카드에 부여한다', () => {
+      render(
+        <OrderFormContainer step={INITIAL_STEP} formData={PREVIEW_MOCK_DATA.formData} />,
+      )
+
+      expect(screen.getByTestId('estimate-distance-info')).toHaveAttribute(
+        'data-hit-area-id',
+        'form-estimate-distance',
+      )
+      expect(screen.getByTestId('datetime-card-pickup')).toHaveAttribute(
+        'data-hit-area-id',
+        'form-pickup-datetime',
+      )
+      expect(screen.getByTestId('datetime-card-delivery')).toHaveAttribute(
+        'data-hit-area-id',
+        'form-delivery-datetime',
+      )
+      expect(screen.getByTestId('cargo-info-form')).toHaveAttribute(
+        'data-hit-area-id',
+        'form-cargo-info',
+      )
     })
   })
 
@@ -256,6 +314,29 @@ describe('OrderFormContainer 자식 주입 (M3-01 — TC-DASH3-INT-ORDERFORM)', 
       const col3 = screen.getByTestId('col-3')
       const settlement = screen.getByTestId('settlement-section')
       expect(col3).toContainElement(settlement)
+    })
+
+    it('DOM 기반 hit-area 측정을 위한 marker를 Col 3 카드에 부여한다', () => {
+      render(
+        <OrderFormContainer step={INITIAL_STEP} formData={PREVIEW_MOCK_DATA.formData} />,
+      )
+
+      expect(screen.getByTestId('transport-option-card')).toHaveAttribute(
+        'data-hit-area-id',
+        'form-transport-options',
+      )
+      expect(screen.getByTestId('estimate-info-card')).toHaveAttribute(
+        'data-hit-area-id',
+        'form-estimate-info',
+      )
+      expect(screen.getByTestId('estimate-auto-dispatch-toggle')).toHaveAttribute(
+        'data-hit-area-id',
+        'form-auto-dispatch',
+      )
+      expect(screen.getByTestId('settlement-section')).toHaveAttribute(
+        'data-hit-area-id',
+        'form-settlement',
+      )
     })
   })
 

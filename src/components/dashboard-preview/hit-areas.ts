@@ -45,10 +45,11 @@ export type Viewport = 'desktop' | 'tablet'
 //  - AiPanel:  좌측 380px 고정, y 16~884
 //  - OrderForm: 우측 flex-1 (≈1060px), 3-column grid (col 350px × 3 + gap)
 //    * Col 1: x 396 ~ 746  (pickup/delivery 입력 중심)
-//    * Col 2: x 766 ~ 1116 (distance/datetime/cargo)
+//    * Col 2: x 766 ~ 1116 (distance + datetime 2열 + cargo)
 //    * Col 3: x 1136 ~ 1486 (options/estimate/settlement/auto-dispatch)
+//  - F4: DateTimeCard 2개를 Col 2 내부 2열(164px + 16px gap + 164px)로 재정렬.
 //
-// Tablet 축약은 폐기되어 getHitAreas('tablet') 도 동일 19 영역 반환 (M4-04 gate).
+// Tablet 축약은 폐기되어 getHitAreas('tablet') 도 동일 18 영역 반환 (M4-04 + F5).
 // 각 영역은 원본 좌표 기준 44×44 이상을 만족한다 (REQ-DASH-044).
 
 export const DESKTOP_HIT_AREAS: ReadonlyArray<HitAreaConfig> = [
@@ -127,17 +128,17 @@ export const DESKTOP_HIT_AREAS: ReadonlyArray<HitAreaConfig> = [
   },
   {
     id: 'form-pickup-datetime',
-    bounds: { x: 766, y: 106, width: 344, height: 96 },
+    bounds: { x: 766, y: 106, width: 164, height: 96 },
     tooltipKey: 'pickup-datetime',
   },
   {
     id: 'form-delivery-datetime',
-    bounds: { x: 766, y: 214, width: 344, height: 96 },
+    bounds: { x: 946, y: 106, width: 164, height: 96 },
     tooltipKey: 'delivery-datetime',
   },
   {
     id: 'form-cargo-info',
-    bounds: { x: 766, y: 322, width: 344, height: 200 },
+    bounds: { x: 766, y: 214, width: 344, height: 200 },
     tooltipKey: 'cargo-info',
   },
 
@@ -167,7 +168,7 @@ export const DESKTOP_HIT_AREAS: ReadonlyArray<HitAreaConfig> = [
 ] as const
 
 /**
- * Tablet 축약 폐기 — Desktop 과 동일 19 영역을 반환 (M4-04 / REQ-DASH3-037).
+ * Tablet 축약 폐기 — Desktop 과 동일 18 영역을 반환 (M4-04 / REQ-DASH3-037 + F5).
  * Tablet 에서도 3-col grid 전체가 스케일 축소된 형태로 렌더되므로 동일 hit 영역을 사용한다.
  * 최소 크기는 `getMinSize('tablet')` 가 scaleFactor 0.40 기준으로 계산한다.
  */

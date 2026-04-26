@@ -81,6 +81,7 @@ export function AiInputArea({
         role="textbox"
         aria-readonly="true"
         aria-label="AI 입력 영역 (데모)"
+        data-hit-area-id="ai-input"
         data-focus-active={focused ? 'true' : 'false'}
         className={
           'bg-card/50 border rounded-lg p-3 min-h-[140px] text-sm text-foreground whitespace-pre-wrap transition-shadow ' +

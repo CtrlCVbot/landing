@@ -134,6 +134,7 @@ export function SettlementSection({
       role="region"
       aria-label="정산 정보"
       data-testid="settlement-section"
+      data-hit-area-id="form-settlement"
       data-active={active}
       className={cardClassName}
     >

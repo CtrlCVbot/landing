@@ -79,6 +79,7 @@ export function EstimateDistanceInfo({
       role="region"
       aria-label="예상 거리 정보"
       data-testid="estimate-distance-info"
+      data-hit-area-id="form-estimate-distance"
       data-visible={visible}
       className={CARD_CLASSES}
     >

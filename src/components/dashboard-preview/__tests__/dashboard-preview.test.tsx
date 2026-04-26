@@ -22,10 +22,11 @@
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
 
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest'
 
 import { DashboardPreview } from '@/components/dashboard-preview/dashboard-preview'
+import { DESKTOP_HIT_AREAS } from '@/components/dashboard-preview/hit-areas'
 
 // ---------------------------------------------------------------------------
 // Mocks
@@ -268,6 +269,29 @@ describe('DashboardPreview — Phase 3 Feature flag', () => {
       render(<DashboardPreview />)
       const scaledInner = screen.getByTestId('scaled-content-inner')
       expect(scaledInner.style.transform).toBe('scale(0.4)')
+    })
+  })
+
+  describe('F4 overlay anchor', () => {
+    it('interactive overlay is anchored inside scaled content and uses unscaled bounds', () => {
+      setDesktop()
+      render(<DashboardPreview />)
+
+      fireEvent.click(
+        screen.getByLabelText('AI 화물 등록 워크플로우 데모 미리보기'),
+      )
+
+      const scaledInner = screen.getByTestId('scaled-content-inner')
+      const overlay = screen.getByTestId('interactive-overlay')
+      const aiInput = DESKTOP_HIT_AREAS.find((area) => area.id === 'ai-input')!
+
+      expect(scaledInner).toContainElement(overlay)
+      expect(screen.getByTestId('hit-area-ai-input').style.left).toBe(
+        `${aiInput.bounds.x}px`,
+      )
+      expect(screen.getByTestId('hit-area-ai-input').style.top).toBe(
+        `${aiInput.bounds.y}px`,
+      )
     })
   })
 

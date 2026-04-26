@@ -137,6 +137,7 @@ export function EstimateInfoCard(props: EstimateInfoCardProps) {
       role="region"
       aria-label="예상 운임/거리"
       data-testid="estimate-info-card"
+      data-hit-area-id="form-estimate-info"
       data-active={active}
       className={cardClassName}
     >
@@ -220,6 +221,7 @@ function AutoDispatchToggle({ autoDispatch }: AutoDispatchToggleProps) {
   return (
     <div
       data-testid="estimate-auto-dispatch-toggle"
+      data-hit-area-id="form-auto-dispatch"
       data-auto-dispatch={autoDispatch}
       className={`flex items-center gap-2 px-3 py-2 rounded-lg ${toggleClassName}`}
     >

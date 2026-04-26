@@ -237,6 +237,35 @@ describe('AiPanelContainer 자식 주입 (M2-01)', () => {
     expect(screen.queryByTestId('ai-json-body')).not.toBeInTheDocument()
   })
 
+  it('DOM 기반 hit-area 측정을 위한 marker를 AiPanel 핵심 영역에 부여한다', () => {
+    render(
+      <AiPanelContainer
+        step={AI_APPLY_STEP}
+        aiInput={PREVIEW_MOCK_DATA.aiInput}
+        aiResult={PREVIEW_MOCK_DATA.aiResult}
+      />,
+    )
+
+    expect(screen.getByRole('tablist', { name: 'AI 입력 타입 선택' })).toHaveAttribute(
+      'data-hit-area-id',
+      'ai-tab-bar',
+    )
+    expect(screen.getByRole('textbox', { name: 'AI 입력 영역 (데모)' })).toHaveAttribute(
+      'data-hit-area-id',
+      'ai-input',
+    )
+    expect(screen.getByRole('button', { name: '재추출' })).toHaveAttribute(
+      'data-hit-area-id',
+      'ai-extract-button',
+    )
+    for (const id of ['departure', 'destination', 'cargo', 'fare'] as const) {
+      expect(screen.getByTestId(`ai-category-${id}`)).toHaveAttribute(
+        'data-hit-area-id',
+        `ai-result-${id}`,
+      )
+    }
+  })
+
   it('헤더에 step.label 표시 (INITIAL → "초기 화면")', () => {
     render(
       <AiPanelContainer

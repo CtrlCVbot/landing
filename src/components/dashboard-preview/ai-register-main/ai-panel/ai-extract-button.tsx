@@ -94,6 +94,7 @@ export function AiExtractButton({
     <button
       type="button"
       disabled={disabled}
+      data-hit-area-id="ai-extract-button"
       data-pressed={pressed}
       data-state={state}
       data-focus-active={focused ? 'true' : 'false'}

@@ -85,6 +85,7 @@ export function CompanyManagerSection({
       role="region"
       aria-label="회사 및 담당자 정보"
       data-testid="company-manager-section"
+      data-hit-area-id="form-company-manager"
       className={CARD_CLASSES}
     >
       {/* Header: 회사명 + pre-filled 배지 */}

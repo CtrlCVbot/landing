@@ -151,6 +151,7 @@ export function TransportOptionCard({
       role="group"
       aria-label="운송 옵션"
       data-testid="transport-option-card"
+      data-hit-area-id="form-transport-options"
       className={CARD_CLASSES}
     >
       <div className="flex items-center gap-2 min-w-0">

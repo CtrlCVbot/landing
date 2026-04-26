@@ -1,9 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useCallback, useLayoutEffect, useRef, useState } from 'react'
 import { cn } from '@/lib/utils'
 import { PREVIEW_MOCK_DATA } from '@/lib/mock-data'
-import type { HitAreaConfig } from './hit-areas'
+import type { HitAreaBounds, HitAreaConfig } from './hit-areas'
 import { InteractiveTooltip } from './interactive-tooltip'
 
 // ---------------------------------------------------------------------------
@@ -31,13 +31,73 @@ interface InteractiveOverlayProps {
 // Component
 // ---------------------------------------------------------------------------
 
+type BoundsById = Readonly<Record<string, HitAreaBounds>>
+
+function scaleBounds(bounds: HitAreaBounds, scaleFactor: number): HitAreaBounds {
+  return {
+    x: bounds.x * scaleFactor,
+    y: bounds.y * scaleFactor,
+    width: bounds.width * scaleFactor,
+    height: bounds.height * scaleFactor,
+  }
+}
+
+function getTransformScale(
+  overlay: HTMLDivElement,
+  overlayRect: DOMRect,
+): { scaleX: number; scaleY: number } {
+  const scaleX =
+    overlay.offsetWidth > 0 && overlayRect.width > 0
+      ? overlayRect.width / overlay.offsetWidth
+      : 1
+  const scaleY =
+    overlay.offsetHeight > 0 && overlayRect.height > 0
+      ? overlayRect.height / overlay.offsetHeight
+      : scaleX
+
+  return { scaleX, scaleY }
+}
+
+function toOverlayBounds(
+  targetRect: DOMRect,
+  overlayRect: DOMRect,
+  scale: { scaleX: number; scaleY: number },
+): HitAreaBounds {
+  return {
+    x: (targetRect.left - overlayRect.left) / scale.scaleX,
+    y: (targetRect.top - overlayRect.top) / scale.scaleY,
+    width: targetRect.width / scale.scaleX,
+    height: targetRect.height / scale.scaleY,
+  }
+}
+
+function areBoundsEqual(a: HitAreaBounds, b: HitAreaBounds): boolean {
+  return (
+    a.x === b.x &&
+    a.y === b.y &&
+    a.width === b.width &&
+    a.height === b.height
+  )
+}
+
+function areBoundsMapsEqual(a: BoundsById | null, b: BoundsById): boolean {
+  if (a === null) return false
+
+  const aKeys = Object.keys(a)
+  const bKeys = Object.keys(b)
+  if (aKeys.length !== bKeys.length) return false
+
+  return aKeys.every((key) => b[key] !== undefined && areBoundsEqual(a[key], b[key]))
+}
+
 /**
  * Phase 2 인터랙티브 모드의 투명 오버레이 (REQ-DASH-043).
  *
  * - 축소 뷰 위에 `position: absolute; inset: 0` 로 겹침
  * - 컨테이너는 `pointer-events-none` — 축소 뷰의 일반 흐름을 방해하지 않는다
  * - 각 HitArea button은 `pointer-events-auto` — 개별 영역에서만 클릭 수신
- * - 원본 좌표(bounds)는 `scaleFactor`를 곱해 화면 좌표로 변환
+ * - 실제 DOM target이 있으면 DOMRect를 overlay 좌표로 변환
+ * - DOM target이 없으면 원본 좌표(bounds)에 `scaleFactor`를 곱해 fallback 렌더링
  *
  * Hover/클릭 동작 (REQ-DASH-036, REQ-DASH-038, REQ-DASH-039):
  * - mouseEnter → `ring-2 ring-purple-500` 하이라이트 + `InteractiveTooltip` 표시
@@ -61,9 +121,80 @@ export function InteractiveOverlay({
   isAreaEnabled,
   className,
 }: InteractiveOverlayProps) {
+  const overlayRef = useRef<HTMLDivElement>(null)
+  const [measuredBounds, setMeasuredBounds] = useState<BoundsById | null>(null)
   const [hoveredId, setHoveredId] = useState<string | null>(null)
   const [focusedId, setFocusedId] = useState<string | null>(null)
   const tooltips = PREVIEW_MOCK_DATA.tooltips
+
+  const measureHitAreas = useCallback(() => {
+    const overlay = overlayRef.current
+    const root = overlay?.parentElement
+    if (!overlay || !root) return
+
+    const overlayRect = overlay.getBoundingClientRect()
+    const scale = getTransformScale(overlay, overlayRect)
+    const nextBounds: Record<string, HitAreaBounds> = {}
+
+    for (const area of hitAreas) {
+      const target = root.querySelector<HTMLElement>(
+        `[data-hit-area-id="${area.id}"]`,
+      )
+      if (!target) continue
+
+      nextBounds[area.id] = toOverlayBounds(
+        target.getBoundingClientRect(),
+        overlayRect,
+        scale,
+      )
+    }
+
+    setMeasuredBounds((current) =>
+      areBoundsMapsEqual(current, nextBounds) ? current : nextBounds,
+    )
+  }, [hitAreas])
+
+  useLayoutEffect(() => {
+    measureHitAreas()
+
+    const overlay = overlayRef.current
+    const root = overlay?.parentElement
+    if (!overlay || !root) return
+
+    const animationFrameId =
+      typeof window.requestAnimationFrame === 'function'
+        ? window.requestAnimationFrame(measureHitAreas)
+        : null
+
+    const resizeObserver =
+      typeof ResizeObserver === 'undefined'
+        ? null
+        : new ResizeObserver(() => measureHitAreas())
+
+    resizeObserver?.observe(root)
+    resizeObserver?.observe(overlay)
+
+    for (const area of hitAreas) {
+      const target = root.querySelector<HTMLElement>(
+        `[data-hit-area-id="${area.id}"]`,
+      )
+      if (target) {
+        resizeObserver?.observe(target)
+      }
+    }
+
+    window.addEventListener('resize', measureHitAreas)
+    return () => {
+      if (
+        animationFrameId !== null &&
+        typeof window.cancelAnimationFrame === 'function'
+      ) {
+        window.cancelAnimationFrame(animationFrameId)
+      }
+      resizeObserver?.disconnect()
+      window.removeEventListener('resize', measureHitAreas)
+    }
+  }, [hitAreas, measureHitAreas])
 
   // hover가 우선권을 갖되, 없으면 focus된 영역이 툴팁/하이라이트를 구동한다.
   const activeId = hoveredId ?? focusedId
@@ -73,6 +204,7 @@ export function InteractiveOverlay({
       : null
 
   const handleMouseEnter = (id: string) => {
+    measureHitAreas()
     setHoveredId(id)
   }
 
@@ -81,6 +213,7 @@ export function InteractiveOverlay({
   }
 
   const handleFocus = (id: string) => {
+    measureHitAreas()
     setFocusedId(id)
   }
 
@@ -116,56 +249,61 @@ export function InteractiveOverlay({
     }
   }
 
+  const isMeasurementReady = measuredBounds !== null
+
   return (
     <div
+      ref={overlayRef}
       data-testid="interactive-overlay"
       className={cn('absolute inset-0 pointer-events-none', className)}
       role="region"
       aria-label="AI 화물 등록 데모 체험 영역"
     >
-      {hitAreas.map((area) => {
-        const isHighlighted =
-          hoveredId === area.id || focusedId === area.id
-        const enabled = computeEnabled(area)
-        return (
-          <button
-            key={area.id}
-            data-testid={`hit-area-${area.id}`}
-            data-area-id={area.id}
-            type="button"
-            aria-label={tooltips[area.tooltipKey]}
-            aria-disabled={!enabled}
-            className={cn(
-              'absolute pointer-events-auto transition-all duration-200 rounded',
-              'focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-1',
-              enabled ? 'cursor-pointer' : 'cursor-not-allowed',
-              isHighlighted && 'ring-2 ring-purple-500',
-            )}
-            style={{
-              left: `${area.bounds.x * scaleFactor}px`,
-              top: `${area.bounds.y * scaleFactor}px`,
-              width: `${area.bounds.width * scaleFactor}px`,
-              height: `${area.bounds.height * scaleFactor}px`,
-            }}
-            onMouseEnter={() => handleMouseEnter(area.id)}
-            onMouseLeave={handleMouseLeave}
-            onFocus={() => handleFocus(area.id)}
-            onBlur={handleBlur}
-            onClick={() => handleExecute(area)}
-            onKeyDown={(event) => handleKeyDown(event, area)}
-          />
-        )
-      })}
+      {isMeasurementReady &&
+        hitAreas.map((area) => {
+          const isHighlighted =
+            hoveredId === area.id || focusedId === area.id
+          const enabled = computeEnabled(area)
+          const bounds =
+            measuredBounds[area.id] ?? scaleBounds(area.bounds, scaleFactor)
 
-      {activeArea !== null && (
+          return (
+            <button
+              key={area.id}
+              data-testid={`hit-area-${area.id}`}
+              data-area-id={area.id}
+              type="button"
+              aria-label={tooltips[area.tooltipKey]}
+              aria-disabled={!enabled}
+              className={cn(
+                'absolute pointer-events-auto transition-all duration-200 rounded',
+                'focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-1',
+                enabled ? 'cursor-pointer' : 'cursor-not-allowed',
+                isHighlighted && 'ring-2 ring-purple-500',
+              )}
+              style={{
+                left: `${bounds.x}px`,
+                top: `${bounds.y}px`,
+                width: `${bounds.width}px`,
+                height: `${bounds.height}px`,
+              }}
+              onMouseEnter={() => handleMouseEnter(area.id)}
+              onMouseLeave={handleMouseLeave}
+              onFocus={() => handleFocus(area.id)}
+              onBlur={handleBlur}
+              onClick={() => handleExecute(area)}
+              onKeyDown={(event) => handleKeyDown(event, area)}
+            />
+          )
+        })}
+
+      {isMeasurementReady && activeArea !== null && (
         <InteractiveTooltip
           text={tooltips[activeArea.tooltipKey]}
-          anchorBounds={{
-            x: activeArea.bounds.x * scaleFactor,
-            y: activeArea.bounds.y * scaleFactor,
-            width: activeArea.bounds.width * scaleFactor,
-            height: activeArea.bounds.height * scaleFactor,
-          }}
+          anchorBounds={
+            measuredBounds[activeArea.id] ??
+            scaleBounds(activeArea.bounds, scaleFactor)
+          }
         />
       )}
     </div>

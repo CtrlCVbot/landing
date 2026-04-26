@@ -159,6 +159,7 @@ export function LocationForm({ kind, data, active }: LocationFormProps) {
       role="region"
       aria-label={ariaLabel}
       data-testid={testId}
+      data-hit-area-id={isPickup ? 'form-pickup-location' : 'form-delivery-location'}
       data-kind={kind}
       className={CARD_CLASSES}
     >

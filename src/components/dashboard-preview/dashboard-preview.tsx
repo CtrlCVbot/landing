@@ -149,6 +149,28 @@ export function DashboardPreview({ className }: DashboardPreviewProps) {
     interactive.enterInteractive()
   }
 
+  const previewContent = (
+    <div className="relative">
+      {/* T-DASH3-M1-04: Phase 3 Feature flag 분기. */}
+      {dashV3Enabled ? (
+        <AiRegisterMain step={step} mockData={PREVIEW_MOCK_DATA} />
+      ) : (
+        <div className="flex h-full">
+          <AiPanelPreview aiPanelState={step.aiPanelState} />
+          <FormPreview formState={step.formState} className="flex-1" />
+        </div>
+      )}
+      {interactive.mode === 'interactive' && (
+        <InteractiveOverlay
+          hitAreas={hitAreas}
+          scaleFactor={1}
+          onAreaExecute={handleAreaExecute}
+          isAreaEnabled={isAreaEnabled}
+        />
+      )}
+    </div>
+  )
+
   return (
     <motion.div
       variants={previewFadeIn}
@@ -165,25 +187,7 @@ export function DashboardPreview({ className }: DashboardPreviewProps) {
       aria-label="AI 화물 등록 워크플로우 데모 미리보기"
     >
       <div className="relative">
-        <PreviewChrome scaleFactor={scaleFactor}>
-          {/* T-DASH3-M1-04: Phase 3 Feature flag 분기. */}
-          {dashV3Enabled ? (
-            <AiRegisterMain step={step} mockData={PREVIEW_MOCK_DATA} />
-          ) : (
-            <div className="flex h-full">
-              <AiPanelPreview aiPanelState={step.aiPanelState} />
-              <FormPreview formState={step.formState} className="flex-1" />
-            </div>
-          )}
-        </PreviewChrome>
-        {interactive.mode === 'interactive' && (
-          <InteractiveOverlay
-            hitAreas={hitAreas}
-            scaleFactor={scaleFactor}
-            onAreaExecute={handleAreaExecute}
-            isAreaEnabled={isAreaEnabled}
-          />
-        )}
+        <PreviewChrome scaleFactor={scaleFactor}>{previewContent}</PreviewChrome>
       </div>
       <StepIndicator
         totalSteps={PREVIEW_STEPS.length}

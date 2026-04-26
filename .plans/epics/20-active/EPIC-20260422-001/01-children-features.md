@@ -43,12 +43,21 @@
 
 ### F4 — 레이아웃 정비 + Hit-Area 재정렬
 
-- **IDEA**: 미등록
+- **IDEA**: [IDEA-20260424-002](../../../archive/f4-layout-hit-area-realignment/sources/ideas/IDEA-20260424-002.md)
 - **Lane**: Standard (hit-area 전 좌표 + Tablet 분리 검토 + overlay 앵커 재설계 검토)
 - **RICE 예상**: 스크리닝 시 확정 — 세로 밀도 개선 + 툴팁 정확도 직결 (Impact 큼), Proposal A/B/C 중 선택 따라 Effort 변동 큼
-- **범위**: Col 2 내부 pickup/delivery `DateTimeCard` 를 `grid grid-cols-2 gap-4` 로 래핑 (이슈 [3] Proposal A 기본). `src/components/dashboard-preview/hit-areas.ts` 의 19 개 bounds 를 실제 DOM 기준으로 재측정 (또는 Proposal B "DOM 측정 기반 동적 bounds" 로 재설계 여부 결정). `TABLET_HIT_AREAS = DESKTOP_HIT_AREAS` 단일화 유지 여부 결정. `interactive-overlay.tsx` 의 앵커를 ScaledContent 내부로 이동 여부 결정 (이슈 [4] Proposal A).
+- **범위**: Col 2 내부 pickup/delivery `DateTimeCard` 를 `grid grid-cols-2 gap-4` 로 래핑 (이슈 [3] Proposal A 기본). `src/components/dashboard-preview/hit-areas.ts` 의 현재 18개 bounds 를 실제 DOM 기준으로 재측정 (또는 Proposal B "DOM 측정 기반 동적 bounds" 로 재설계 여부 결정). `TABLET_HIT_AREAS = DESKTOP_HIT_AREAS` 단일화 유지 여부 결정. `interactive-overlay.tsx` 의 앵커를 ScaledContent 내부로 이동 여부 결정 (이슈 [4] Proposal A).
+- **Screening**: [SCREENING-20260424-002](../../../archive/f4-layout-hit-area-realignment/sources/ideas/SCREENING-20260424-002.md) — Go, 72.8, Standard
+- **Draft**: [`.plans/archive/f4-layout-hit-area-realignment/sources/drafts/01-draft.md`](../../../archive/f4-layout-hit-area-realignment/sources/drafts/01-draft.md) (Standard/B/dev)
+- **PRD**: [`.plans/archive/f4-layout-hit-area-realignment/sources/drafts/02-prd.md`](../../../archive/f4-layout-hit-area-realignment/sources/drafts/02-prd.md)
+- **PRD Review**: [`.plans/archive/f4-layout-hit-area-realignment/sources/drafts/03-prd-review.md`](../../../archive/f4-layout-hit-area-realignment/sources/drafts/03-prd-review.md) — Approve, critical/high 없음
+- **Feature Context**: [`.plans/archive/f4-layout-hit-area-realignment/sources/feature-package/00-context/`](../../../archive/f4-layout-hit-area-realignment/sources/feature-package/00-context/00-index.md) (Bridge 완료)
+- **Feature Package**: [`.plans/archive/f4-layout-hit-area-realignment/sources/feature-package/02-package/`](../../../archive/f4-layout-hit-area-realignment/sources/feature-package/02-package/00-overview.md) (TASK 5건 구현 완료, D-F4-010/D-F4-011 반영, `/dev-verify` PASS)
+- **Archive**: [ARCHIVE-F4](../../../archive/f4-layout-hit-area-realignment/ARCHIVE-F4.md)
+- **구현 이력**: T-F4-LAYOUT-01~05 완료 — DateTime 2열 래핑, 18 bounds 재정렬, Tablet 공유 유지, overlay anchor ScaledContent 내부 이동, `data-hit-area-id` 기반 DOMRect 측정, 첫 측정 전 fallback 미렌더, evidence 갱신.
+- **검증**: `pnpm build` PASS, `pnpm test` 990 PASS, `pnpm typecheck` PASS, `pnpm lint` PASS with warnings, browser spot check PASS(1440/1024/768, max delta 0~0.1px).
 - **포함 이슈**: [3], [4]
-- **상태**: pending
+- **상태**: **archived** (2026-04-27, archive bundle 생성 + sources 이동 완료)
 
 ### F5 — UI 잔재 정리 (JSON 뷰어 숨김 + 라벨 변경)
 
@@ -304,7 +313,7 @@ Phase B 는 Phase A 의 `/plan-idea → /plan-screen → /plan-draft → /plan-p
 - 산출: 두 Feature 모두 Standard draft + 시나리오 + scope/routing metadata
 - 초점:
   - F2: `extractedFrame` / `appliedFrame`, `PREVIEW_MOCK_SCENARIOS`, 세트 선택 트리거 방식 확정
-  - F4: 2열 레이아웃 범위, 19 bounds 재측정 방식, Tablet 분리 여부, overlay anchor 위치 확정
+  - F4: 2열 레이아웃 범위, 18 bounds 재측정 방식, Tablet 분리 여부, overlay anchor 위치 확정
 
 ### Step 4. PRD 작성
 
@@ -380,7 +389,7 @@ Phase B 는 Phase A 의 `/plan-idea → /plan-screen → /plan-draft → /plan-p
 ### Phase B 종료 조건 (M-Epic-2, 2026-05-14 예정)
 
 - [ ] F2 IDEA → screening → draft → PRD → bridge → implementation → archive 완료
-- [ ] F4 IDEA → screening → draft → PRD → bridge → implementation → archive 완료
+- [x] F4 IDEA → screening → draft → PRD review → bridge → implementation → verify → archive 완료
 - [ ] `src/lib/mock-data.ts` 에 `extractedFrame` / `appliedFrame` + `PREVIEW_MOCK_SCENARIOS` 정착
 - [ ] `order-form/index.tsx` 의 Step 기반 가시성 제어와 `fare ↔ estimate.amount` 정합성 검증 완료
 - [ ] `src/components/dashboard-preview/hit-areas.ts` 19 bounds 재측정 및 Tablet/overlay 결정이 decision log 에 기록됨
@@ -414,7 +423,7 @@ Epic 상태는 **`active` 유지** (Phase B/C 완료까지). 모든 자식 Featu
 | F1 라이트 모드 | **implemented** | **14/14** (T-06 skip) | **980 PASS** | **+1 kB (164 kB)** | **/dev-verify PASS with WARN (ERROR 0)** |
 | F2 Mock 재설계 | pending | — | — | — | — |
 | F3 옵션↔요금 파생 | pending | — | — | — | — |
-| F4 레이아웃+HitArea | pending | — | — | — | — |
+| F4 레이아웃+HitArea | **archived** | 5/5 TASK + D-F4-011 | build PASS, 990 PASS, typecheck PASS, lint PASS, browser spot check PASS | 165 kB | /dev-verify PASS |
 | F5 UI 잔재 정리 | implemented | 4/4 | 624 PASS | — | /dev-verify PASS |
 
 상태 값: `pending` / `screening` / `approved` / `active` / `archived`.
@@ -445,3 +454,8 @@ Epic 상태는 **`active` 유지** (Phase B/C 완료까지). 모든 자식 Featu
 | 2026-04-23 | Phase A Step 9 /dev-feature 완료 (F1 + F5) — Architecture Profile detected → approved. F5 /dev-run 완료 (T-CLEANUP-01~04, 5 커밋, 624 tests PASS, DVC PASS, F5 상태 `implemented`). F1 /dev-run 새 세션에서 진행. F1 PR-4 Skip 결정 (D-003, pricing/testimonials 미존재). |
 | 2026-04-24 | F1 /dev-run 완료 — T-THEME-01~08 (PR-1~6) + preview QA 2회 (D-016/D-017 확장) → T-THEME-09~14 추가 구현. 총 14 TASK (T-06 skip), 980/980 tests PASS, typecheck 0, lint 0, build +1 kB. /dev-verify PASS with WARN (ERROR 0). F1 상태 `approved → implemented`. **Phase A M-Epic-1 도달 — /plan-archive 대기**. |
 | 2026-04-24 | `phase-b-handoff-prompt.md` 기반으로 §4 에 Phase B 착수 전 체크, 9단계 실행 로드맵, 종료 조건을 추가. Phase A 잔여 3건 확인 순서와 F2/F4 파이프라인·검증·아카이브 기준 동기화. |
+| 2026-04-24 | F4 `/dev-run` 실행 완료 — T-F4-LAYOUT-01~05 구현, 18 hit-area 기준 정렬, overlay anchor 내부 이동, `pnpm test` 984 PASS + typecheck/lint PASS. 다음 단계는 `/dev-verify` 후 archive. |
+| 2026-04-24 | F4 `/dev-verify` 실행 완료 — `pnpm build`, `pnpm typecheck`, `pnpm lint`, `pnpm test` PASS. lint/test warning은 archive 전 차단 이슈 아님으로 분리. |
+| 2026-04-24 | 사용자 스크린샷 QA 반영 — static bounds만으로는 tooltip/hit-area가 실제 컴포넌트 위치와 어긋나는 문제가 재현되어 D-F4-010으로 `data-hit-area-id` target DOMRect 우선 측정 방식을 적용. `pnpm test` 990 PASS, build first load JS 165 kB. |
+| 2026-04-27 | F4 browser spot check 완료 — 1440/1024/768 viewport에서 target 18개와 hit-area 18개 모두 매칭, max delta 0~0.1px. 초기 fallback 노출 방지를 위해 D-F4-011 적용. |
+| 2026-04-27 | F4 archive 실행 — `ARCHIVE-F4.md` 생성, IDEA/screening/draft/feature package sources 이동, archive index/backlog/screening matrix 갱신. |

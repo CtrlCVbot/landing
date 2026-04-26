@@ -101,6 +101,7 @@ export function AiResultButtons({
           <div
             key={group.id}
             data-testid={`ai-category-${group.id}`}
+            data-hit-area-id={`ai-result-${group.id}`}
             role="group"
             aria-label={`AI 추출 결과 — ${group.label}`}
             data-focus-active={isFocused ? 'true' : 'false'}

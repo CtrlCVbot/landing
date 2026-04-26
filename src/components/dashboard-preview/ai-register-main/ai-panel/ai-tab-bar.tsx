@@ -42,6 +42,7 @@ export function AiTabBar({ activeTab, onTabChange }: AiTabBarProps) {
     <div
       role="tablist"
       aria-label="AI 입력 타입 선택"
+      data-hit-area-id="ai-tab-bar"
       className="grid grid-cols-2 gap-0 bg-card/50 border border-border rounded-lg p-1"
     >
       {TABS.map(({ key, label }) => {
