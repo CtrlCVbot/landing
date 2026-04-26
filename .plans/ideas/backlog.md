@@ -15,6 +15,7 @@
 |---|---|---|---|---|---|---|---|
 | IDEA-20260423-001 | F5 UI 잔재 정리 (AiExtractJsonViewer 숨김 + '자동 배차 대기' 라벨) | improvement | archived | 2026-04-23 | `archive/f5-ui-residue-cleanup/sources/ideas` | [링크](../archive/f5-ui-residue-cleanup/sources/ideas/IDEA-20260423-001.md) | [EPIC-20260422-001](../epics/20-active/EPIC-20260422-001/00-epic-brief.md) |
 | IDEA-20260423-002 | F1 라이트 모드 전환 인프라 (토큰 이중화 + ThemeProvider) | improvement | archived | 2026-04-23 | `archive/f1-landing-light-theme/sources/ideas` | [링크](../archive/f1-landing-light-theme/sources/ideas/IDEA-20260423-002.md) | [EPIC-20260422-001](../epics/20-active/EPIC-20260422-001/00-epic-brief.md) |
+| IDEA-20260424-001 | F2 Mock 스키마 재설계 | feature | approved | 2026-04-24 | `20-approved` | [링크](20-approved/IDEA-20260424-001.md) | [EPIC-20260422-001](../epics/20-active/EPIC-20260422-001/00-epic-brief.md) |
 | IDEA-20260424-002 | F4 레이아웃 정비 + Hit-Area 재정렬 | feature | archived | 2026-04-24 | `archive/f4-layout-hit-area-realignment/sources/ideas` | [링크](../archive/f4-layout-hit-area-realignment/sources/ideas/IDEA-20260424-002.md) | [EPIC-20260422-001](../epics/20-active/EPIC-20260422-001/00-epic-brief.md) |
 
 ---
@@ -41,3 +42,7 @@
 | 2026-04-24 | IDEA-20260424-002 (F4) screening Go 승인 + draft 생성 (`f4-layout-hit-area-realignment`) |
 | 2026-04-27 | IDEA-20260424-002 (F4) 상태 `approved → archived` — DOMRect hit-area 보강, browser spot check, archive bundle 생성 및 sources 이동 |
 | 2026-04-24 | IDEA-20260423-001 (F5), IDEA-20260423-002 (F1) 상태 `approved → archived` — Phase A archive bundle 생성 및 sources 이동 |
+| 2026-04-24 | IDEA-20260424-001 (F2), IDEA-20260424-002 (F4) 등록 — Phase B 착수 입력 생성, 마지막 채번 002 |
+| 2026-04-24 | IDEA-20260424-001 (F2) screening Go 승인 + draft 생성 (`f2-mock-schema-redesign`) |
+| 2026-04-24 | IDEA-20260424-001 (F2), IDEA-20260424-002 (F4) PRD 작성 및 PRD review 완료 — 두 리뷰 모두 Approve, critical/high 없음. Bridge 대기 상태로 전환 |
+| 2026-04-24 | IDEA-20260424-002 (F4), IDEA-20260424-001 (F2) Bridge 완료 — active feature `00-context` 생성, 다음 단계 `/dev-feature` |

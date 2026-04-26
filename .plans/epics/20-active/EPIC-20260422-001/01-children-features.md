@@ -26,12 +26,17 @@
 
 ### F2 — Mock 스키마 재설계 (추출/적용 분리 + 시나리오 세트)
 
-- **IDEA**: 미등록
+- **IDEA**: [IDEA-20260424-001](../../../ideas/20-approved/IDEA-20260424-001.md)
 - **Lane**: Standard (스키마·주입 로직·테스트 광범위 갱신)
 - **RICE 예상**: 스크리닝 시 확정 — Phase 3 내러티브 완성도 직결 (Impact 최고), 공통 방안 C1+C2 선행 투자 필요 (Effort 큼)
 - **범위**: `src/lib/mock-data.ts` 에 `extractedFrame` / `appliedFrame` 분리 스키마 도입 + `PREVIEW_MOCK_SCENARIOS: [세트A, B, C, (D)]` 배열화 + 세트 선택기 함수 (랜덤/고정/버튼 트리거 중 `/plan-draft` 결정). `order-form/index.tsx` 에서 `EstimateInfoCard` · `SettlementSection` 에 Step 기반 `visible` prop 주입. AI 카테고리 `fare` 값을 `estimate.amount` 와 일치시켜 자릿수 혼동 제거. `dashboard-preview.tsx` 에 세트 선택 트리거 UI 추가 (옵션).
+- **Screening**: [SCREENING-20260424-001](../../../ideas/20-approved/SCREENING-20260424-001.md) — Go, 77.65, Standard
+- **Draft**: [`.plans/drafts/f2-mock-schema-redesign/01-draft.md`](../../../drafts/f2-mock-schema-redesign/01-draft.md) (Standard/B/dev)
+- **PRD**: [`.plans/drafts/f2-mock-schema-redesign/02-prd.md`](../../../drafts/f2-mock-schema-redesign/02-prd.md)
+- **PRD Review**: [`.plans/drafts/f2-mock-schema-redesign/03-prd-review.md`](../../../drafts/f2-mock-schema-redesign/03-prd-review.md) — Approve, critical/high 없음
+- **Feature Context**: [`.plans/features/active/f2-mock-schema-redesign/00-context/`](../../../features/active/f2-mock-schema-redesign/00-context/00-index.md) (Bridge 완료)
 - **포함 이슈**: [2-1], [2-2], [2-3], [2-4]
-- **상태**: pending
+- **상태**: active (Feature Package + TASK 정의 완료, `/dev-run` 대기)
 
 ### F3 — 옵션↔추가요금 파생 로직
 
@@ -269,11 +274,12 @@ TeamCreate team_name="dash-preview-phase4-phase-a"
 
 Phase B 는 Epic 이 이미 **`active` 상태**이므로 `draft → planning → active` 전이를 다시 밟지 않는다. 대신 **Phase A 잔여 3건 확인 + baseline 재확인** 후 Step 1부터 진입한다.
 
-- [ ] 사용자 육안 QA 완료 여부 확인 (브라우저 1440/1280/768/390 + 다크 회귀)
-- [ ] `/plan-archive f1-landing-light-theme`
-- [ ] `/plan-archive f5-ui-residue-cleanup`
-- [ ] `git log --oneline -15` · `git status` · `pnpm test` 로 현재 baseline 재확인
-- [ ] F2 ↔ F4 의존성 매트릭스 `✓` 병렬 가능 재확인
+- [x] 사용자 육안 QA 완료 여부 확인 (브라우저 1440/1280/768/390 + 다크 회귀, 사용자 확인)
+- [x] `/plan-archive f1-landing-light-theme`
+- [x] `/plan-archive f5-ui-residue-cleanup`
+- [x] `git log --oneline -15` · `git status` · `pnpm test` 로 현재 baseline 재확인 (2026-04-24)
+- [x] F2 ↔ F4 의존성 매트릭스 `✓` 병렬 가능 재확인
+- [x] F2/F4 IDEA 등록 완료 (`IDEA-20260424-001`, `IDEA-20260424-002`)
 
 ---
 
@@ -327,8 +333,9 @@ Phase B 는 Phase A 의 `/plan-idea → /plan-screen → /plan-draft → /plan-p
 - 실행 주체: `plan-prd-writer`
 - 산출: F2/F4 각각 10섹션 PRD
 - Checkpoint: `plan-reviewer` PCC 리뷰 + 사용자 승인 후 다음 단계 진행
+- 2026-04-24 현황: F4/F2 PRD와 PRD Review 작성 완료. 두 리뷰 모두 Approve, critical/high 없음. 사용자 요청 범위에 따라 Step 5 Bridge는 미실행.
 
-### Step 5. Bridge (Feature Package 전환)
+### Step 5. Bridge (Feature Package 전환) — 완료 (2026-04-24)
 
 ```bash
 /plan-bridge {F2-slug}
@@ -338,6 +345,7 @@ Phase B 는 Phase A 의 `/plan-idea → /plan-screen → /plan-draft → /plan-p
 - 실행 주체: `plan-bridge-writer`
 - 산출: `.plans/features/active/{slug}/00-context/` 4종 컨텍스트 + `08-epic-binding.md`
 - 메모: Epic 상태는 이미 `active` 이므로 binding 만 동기하면 된다
+- 2026-04-24 현황: F4/F2 둘 다 active feature `00-context` 생성 완료. 공식 TASK 문서는 Step 6 `/dev-feature`에서 생성.
 
 ### Step 6. Feature Package 승격 + TASK 정의
 
@@ -349,6 +357,7 @@ Phase B 는 Phase A 의 `/plan-idea → /plan-screen → /plan-draft → /plan-p
 - 실행 주체: `dev-feature`
 - 산출: 구현 TASK, architecture binding, decision log 구조 확정
 - 규칙: Allowed Target Paths 밖 수정이 필요하면 binding 먼저 갱신
+- 2026-04-24 현황: F2/F4 모두 `02-package` 생성 완료. 공식 TASK 문서와 테스트 케이스가 준비되어 다음 단계는 Step 7 `/dev-run`.
 
 ### Step 7. 병렬 구현
 
@@ -390,13 +399,13 @@ Phase B 는 Phase A 의 `/plan-idea → /plan-screen → /plan-draft → /plan-p
 
 ### Phase B 종료 조건 (M-Epic-2, 2026-05-14 예정)
 
-- [ ] F2 IDEA → screening → draft → PRD → bridge → implementation → archive 완료
+- [ ] F2 IDEA → screening → draft → PRD review → bridge 완료, implementation → archive 대기
 - [x] F4 IDEA → screening → draft → PRD review → bridge → implementation → verify → archive 완료
 - [ ] `src/lib/mock-data.ts` 에 `extractedFrame` / `appliedFrame` + `PREVIEW_MOCK_SCENARIOS` 정착
 - [ ] `order-form/index.tsx` 의 Step 기반 가시성 제어와 `fare ↔ estimate.amount` 정합성 검증 완료
-- [ ] `src/components/dashboard-preview/hit-areas.ts` 19 bounds 재측정 및 Tablet/overlay 결정이 decision log 에 기록됨
-- [ ] fresh `pnpm test` + 필요한 `typecheck` / `lint` / `build` + `/dev-verify` 통과 증거 확보
-- [ ] `/plan-archive {F2-slug}` + `/plan-archive {F4-slug}` 완료
+- [x] `src/components/dashboard-preview/hit-areas.ts` 18 bounds 재측정 및 Tablet/overlay 결정이 decision log 에 기록됨
+- [ ] fresh `pnpm test` + 필요한 `typecheck` / `lint` / `build` + `/dev-verify` 통과 증거 확보 (F4 완료, F2 대기)
+- [ ] `/plan-archive {F2-slug}` 완료. F4는 archive 완료
 - [ ] F3 (Phase C) 착수 입력이 정리되고 Epic 은 `active` 상태 유지
 
 ---
@@ -409,7 +418,7 @@ Phase A 완료 후 **세션 종료** (context 50% 규칙 + 사용자 결정). Ph
 # Phase B 시작 시 (다른 세션)
 /plan-idea "F2 Mock 스키마 재설계 ..." --epic=EPIC-20260422-001   # Step 1 재개
 /plan-idea "F4 레이아웃 정비 + Hit-Area ..." --epic=EPIC-20260422-001
-# 이하 Step 3 (advance 생략 — active 유지) → Step 4 screening → Step 5 draft → ...
+# 이하 Step 6 dev-feature부터 재개 (Step 1~5: IDEA, screening, draft, PRD review, Bridge 완료)
 ```
 
 Epic 상태는 **`active` 유지** (Phase B/C 완료까지). 모든 자식 Feature `archived` 시 `/plan-epic advance EPIC-20260422-001 --to=completed` 후 `--to=archived` 2 단 전이 → `/plan-epic archive EPIC-20260422-001` 단일 커맨드로도 가능.
@@ -423,7 +432,7 @@ Epic 상태는 **`active` 유지** (Phase B/C 완료까지). 모든 자식 Featu
 | Feature | 상태 | TASK 진행 | 테스트 | 번들 영향 | 리뷰 |
 |---|:---:|:---:|:---:|:---:|:---:|
 | F1 라이트 모드 | **archived** | **14/14** (T-06 skip) | **980 PASS** | **+1 kB (164 kB)** | **/dev-verify PASS with WARN (ERROR 0)** |
-| F2 Mock 재설계 | pending | — | — | — | — |
+| F2 Mock 재설계 | active | screening + draft + PRD review + Bridge + Feature Package | — | — | /dev-run 대기 |
 | F3 옵션↔요금 파생 | pending | — | — | — | — |
 | F4 레이아웃+HitArea | **archived** | 5/5 TASK + D-F4-011 | build PASS, 990 PASS, typecheck PASS, lint PASS, browser spot check PASS | 165 kB | /dev-verify PASS |
 | F5 UI 잔재 정리 | **archived** | 4/4 | 624 PASS | — | /dev-verify PASS |
@@ -456,9 +465,13 @@ Epic 상태는 **`active` 유지** (Phase B/C 완료까지). 모든 자식 Featu
 | 2026-04-23 | Phase A Step 9 /dev-feature 완료 (F1 + F5) — Architecture Profile detected → approved. F5 /dev-run 완료 (T-CLEANUP-01~04, 5 커밋, 624 tests PASS, DVC PASS, F5 상태 `implemented`). F1 /dev-run 새 세션에서 진행. F1 PR-4 Skip 결정 (D-003, pricing/testimonials 미존재). |
 | 2026-04-24 | F1 /dev-run 완료 — T-THEME-01~08 (PR-1~6) + preview QA 2회 (D-016/D-017 확장) → T-THEME-09~14 추가 구현. 총 14 TASK (T-06 skip), 980/980 tests PASS, typecheck 0, lint 0, build +1 kB. /dev-verify PASS with WARN (ERROR 0). F1 상태 `approved → implemented`. **Phase A M-Epic-1 도달 — /plan-archive 대기**. |
 | 2026-04-24 | `phase-b-handoff-prompt.md` 기반으로 §4 에 Phase B 착수 전 체크, 9단계 실행 로드맵, 종료 조건을 추가. Phase A 잔여 3건 확인 순서와 F2/F4 파이프라인·검증·아카이브 기준 동기화. |
+| 2026-04-24 | Phase A archive 실행 — F1/F5 archive bundle 생성, 원본 planning files 를 `.plans/archive/{slug}/sources/` 로 이동, archive index/backlog 갱신. F2/F4 Phase B IDEA (`IDEA-20260424-001`, `IDEA-20260424-002`) 등록. |
+| 2026-04-24 | 사용자 육안 QA 확인 반영. F4/F2 screening Go 승인 및 draft 생성 완료. F2/F4 상태를 `approved` 로 갱신하고 다음 실행 범위를 PRD로 설정. |
+| 2026-04-24 | Phase B Step 4 일부 실행 — F4/F2 PRD 작성 및 PRD review 완료. 두 리뷰 모두 Approve, critical/high 없음. 사용자 요청 범위에 따라 Bridge 생성을 다음 단계로 남김. |
+| 2026-04-24 | Phase B Step 5 실행 — F4/F2 Bridge 완료. `.plans/features/active/{slug}/00-context/` 생성, Epic binding 작성, 다음 단계를 `/dev-feature`로 전환. |
+| 2026-04-24 | Phase B Step 6 실행 — F2/F4 `02-package`와 `03-dev-notes` 템플릿 생성. TASK 정의 완료, 다음 단계를 `/dev-run`으로 전환. |
 | 2026-04-24 | F4 `/dev-run` 실행 완료 — T-F4-LAYOUT-01~05 구현, 18 hit-area 기준 정렬, overlay anchor 내부 이동, `pnpm test` 984 PASS + typecheck/lint PASS. 다음 단계는 `/dev-verify` 후 archive. |
 | 2026-04-24 | F4 `/dev-verify` 실행 완료 — `pnpm build`, `pnpm typecheck`, `pnpm lint`, `pnpm test` PASS. lint/test warning은 archive 전 차단 이슈 아님으로 분리. |
 | 2026-04-24 | 사용자 스크린샷 QA 반영 — static bounds만으로는 tooltip/hit-area가 실제 컴포넌트 위치와 어긋나는 문제가 재현되어 D-F4-010으로 `data-hit-area-id` target DOMRect 우선 측정 방식을 적용. `pnpm test` 990 PASS, build first load JS 165 kB. |
 | 2026-04-27 | F4 browser spot check 완료 — 1440/1024/768 viewport에서 target 18개와 hit-area 18개 모두 매칭, max delta 0~0.1px. 초기 fallback 노출 방지를 위해 D-F4-011 적용. |
 | 2026-04-27 | F4 archive 실행 — `ARCHIVE-F4.md` 생성, IDEA/screening/draft/feature package sources 이동, archive index/backlog/screening matrix 갱신. |
-| 2026-04-24 | Phase A archive 실행 — F1/F5 archive bundle 생성, 원본 planning files 를 `.plans/archive/{slug}/sources/` 로 이동, archive index/backlog 갱신. |

@@ -10,7 +10,7 @@
 
 1. 새 Claude Code 세션 열기 (또는 다른 AI에 붙여넣기)
 2. 아래 `## 프롬프트 내용` 섹션의 모든 마크다운을 **한 번에** 복사 붙여넣기
-3. AI가 Phase A 잔여 확인 → Phase B Step 1부터 순차 진행
+3. AI가 Phase B Step 7 `/dev-run`부터 순차 진행
 
 ---
 
@@ -62,18 +62,18 @@ Phase A (F1 + F5 병렬) 는 2026-04-24 완료. main 에 머지된 구현 커밋
 
 `.plans/epics/20-active/EPIC-20260422-001/01-children-features.md` §3 Phase B 섹션 참조.
 
-- **F2 — Mock 스키마 재설계** (Standard, pending)
+- **F2 — Mock 스키마 재설계** (Standard, active, draft + PRD review + Bridge + Feature Package 완료, `/dev-run` 대기)
   - `src/lib/mock-data.ts` 에 `extractedFrame` / `appliedFrame` 분리
   - `PREVIEW_MOCK_SCENARIOS: [세트A, B, C, ...]` 배열화 + 선택기 함수
   - `order-form/index.tsx` 에서 Step 기반 가시성 제어
   - AI 카테고리 `fare` 값을 `estimate.amount` 와 일치
   - 포함 이슈: [2-1], [2-2], [2-3], [2-4]
 
-- **F4 — 레이아웃 정비 + Hit-Area 재정렬** (Standard, pending)
+- **F4 — 레이아웃 정비 + Hit-Area 재정렬** (Standard, **archived**, D-F4-011 + browser spot check 완료)
   - Col 2 내부 pickup/delivery DateTimeCard 를 `grid-cols-2 gap-4` 로 래핑
-  - `src/components/dashboard-preview/hit-areas.ts` 의 19 bounds 재측정
-  - `TABLET_HIT_AREAS = DESKTOP_HIT_AREAS` 단일화 유지 여부 결정
-  - `interactive-overlay.tsx` 앵커를 ScaledContent 내부로 이동 여부
+  - `src/components/dashboard-preview/hit-areas.ts` 의 18 target 기준 유지
+  - `TABLET_HIT_AREAS = DESKTOP_HIT_AREAS` metadata 공유 유지
+  - `interactive-overlay.tsx` 앵커를 ScaledContent 내부로 이동하고 DOMRect 우선 측정 적용
   - 포함 이슈: [3], [4]
 
 **의존성 매트릭스** (§2): F2 ↔ F4 = `✓` 완전 독립 병렬 가능.
@@ -83,43 +83,24 @@ Phase A (F1 + F5 병렬) 는 2026-04-24 완료. main 에 머지된 구현 커밋
 
 ### Phase B 실행 파이프라인 (§4 Phase A Step 재활용)
 
-F2 와 F4 에 대해 각각:
+F4는 완료되었으므로, 남은 실행은 F2 중심으로 진행한다:
 
 ```bash
-# Step 1: IDEA 등록 (Epic 연결 optional 이지만 권장)
-/plan-idea "F2 Mock 스키마 재설계 — extractedFrame/appliedFrame 분리 + ..." --epic=EPIC-20260422-001
-/plan-idea "F4 레이아웃 정비 — Col 2 2열 래핑 + hit-areas 재측정 + ..." --epic=EPIC-20260422-001
+# Step 1~5: 완료 (2026-04-24)
+# F2: IDEA-20260424-001 -> screening Go -> draft f2-mock-schema-redesign
+# F4: IDEA-20260424-002 -> archive 완료 (2026-04-27)
+# F2/F4: PRD 작성 + PRD review Approve 완료, critical/high 없음
+# F2/F4: Bridge 완료. F4는 archive sources로 이동 완료
 
-# Step 2: Screening (초기 승인 게이트, Critical checkpoint — 자동 통과 금지)
-/plan-screen {F2-IDEA-ID} --framework=rice
-/plan-screen {F4-IDEA-ID} --framework=rice
-
-# Step 3: Draft (Lite/Standard 판정 + 시나리오 + copy/dev 유형)
-/plan-draft {F2-IDEA-ID}   # 예상: Standard/B(부분 완성)/dev
-/plan-draft {F4-IDEA-ID}   # 예상: Standard/B/dev
-
-# Step 4: PRD (Standard Feature 만)
-/plan-prd .plans/drafts/{F2-slug}/
-/plan-prd .plans/drafts/{F4-slug}/
-
-# Step 5: Bridge (Feature Package 전환 + Epic binding 생성)
-/plan-bridge {F2-slug}
-/plan-bridge {F4-slug}
-
-# Step 6: Feature Package 공식 승격 + TASK 정의
+# Step 6: Feature Package 공식 승격 + TASK 정의 (완료, 2026-04-24)
 /dev-feature .plans/features/active/{F2-slug}/
-/dev-feature .plans/features/active/{F4-slug}/
 
-# Step 7: 병렬 구현 (dev-implementer 에이전트 자율 TDD 루프)
+# Step 7: F2 구현 (dev-implementer 에이전트 자율 TDD 루프)
 /dev-run .plans/features/active/{F2-slug}/
-/dev-run .plans/features/active/{F4-slug}/
-# 또는 TeamCreate 로 병렬화
 
 # Step 8: 검증 + 아카이브
 /dev-verify .plans/features/active/{F2-slug}/
-/dev-verify .plans/features/active/{F4-slug}/
 /plan-archive {F2-slug}
-/plan-archive {F4-slug}
 
 # Step 9: Phase C 진입 준비 (F3 옵션↔요금 파생)
 ```
@@ -132,7 +113,7 @@ F2 와 F4 에 대해 각각:
 2. **Architecture binding** — 각 Feature 의 `06-architecture-binding.md` §2 Allowed Target Paths 범위만 수정. 범위 이탈 시 binding 먼저 갱신.
 3. **Decision Log** — 각 Feature 의 `02-decision-log.md` 에 D-00N 번호로 누적. Phase A 의 D-001~D-017 은 F1/F5 용이므로 별도 번호 체계.
 4. **Commit 분할** — 기능 단위 커밋 분할 (1 TASK = 1 커밋 권장, 또는 논리 단위 묶음). 테스트는 해당 구현 커밋에 포함 (append-only light-theme.test.tsx 분할 선례 참조).
-5. **Critical Checkpoint** — `/plan-screen` 후 사용자 Go 승인, PRD 리뷰 후 승인, 각 TASK 완료 후 `dev-code-reviewer` PASS + 사용자 승인. `autoProceedOnPass` false 기본 (D-004).
+5. **Critical Checkpoint** — `/plan-screen` 후 사용자 Go 승인 완료. 다음 checkpoint는 PRD 리뷰 후 승인, 각 TASK 완료 후 `dev-code-reviewer` PASS + 사용자 승인. `autoProceedOnPass` false 기본 (D-004).
 6. **Agent Edit Race** — write-capable 에이전트(dev-implementer, plan-*-writer 등) 완료 후 메인 세션이 같은 파일 Edit 전 Read 재호출 필수. `verification.md` § Agent Edit Race 참조.
 7. **Date calculation** — 날짜·요일·D-day 계산 시 반드시 `date` 또는 `python3` 사용. 머릿속 계산 금지 (`date-calculation.md`).
 
@@ -155,17 +136,17 @@ F2 와 F4 에 대해 각각:
 
 ### 요청
 
-Phase B 착수 전 먼저:
+다음 세션에서 먼저:
 
-1. Epic `01-children-features.md` §3 Phase B + §4 Step 1~9 숙지
-2. **Phase A 잔여 3건** 확인 — 사용자에게 육안 QA + `/plan-archive` 2건 실행 여부 확인. 미실행이면 먼저 처리 권장.
+1. Epic `01-children-features.md` §3 Phase B + §4 Step 6~9 숙지
+2. F2/F4 PRD, PRD review, Bridge context 확인 — 두 리뷰 모두 Approve, critical/high 없음.
 3. F2/F4 의존성 매트릭스 재확인 (`✓` 병렬 가능)
 4. 현재 레포 상태 확인:
    - `git log --oneline -15`
    - `git status`
    - `pnpm test` (980+ PASS 기준 baseline)
 
-그 후 **Step 1 F2 IDEA 등록**부터 순차 진행.
+그 후 **Step 7 `/dev-run`**부터 순차 진행.
 
 필요한 경우 사용자에게 경로·범위·판정을 질문하여 가정을 명시한 뒤 진행 (`interaction.md` "State Assumptions Before Coding" 원칙).
 
