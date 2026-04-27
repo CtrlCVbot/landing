@@ -224,6 +224,60 @@ describe('F1 globals.css 토큰 이중화 (T-THEME-01, PR-1)', () => {
 })
 
 // ============================================================================
+// T-HLG-TOKEN-02 — Hero liquid gradient theme token alignment
+// ============================================================================
+
+describe('Hero liquid gradient theme token alignment (T-HLG-TOKEN-02)', () => {
+  const HERO_GRADIENT_TOKENS = [
+    'primary',
+    'secondary',
+    'highlight',
+    'surface',
+    'opacity',
+    'blur',
+  ] as const
+
+  it('@theme inline 에 hero gradient color token이 연결된다', () => {
+    expect(CSS).toMatch(/--color-hero-gradient-primary:\s*var\(--hero-gradient-primary\)/)
+    expect(CSS).toMatch(/--color-hero-gradient-secondary:\s*var\(--hero-gradient-secondary\)/)
+    expect(CSS).toMatch(/--color-hero-gradient-highlight:\s*var\(--hero-gradient-highlight\)/)
+  })
+
+  it.each(HERO_GRADIENT_TOKENS)(
+    ':root 에 --hero-gradient-%s token이 정의된다',
+    (token) => {
+      const rootMatch = CSS.match(/:root\s*\{([\s\S]*?)\r?\n\}/)
+      expect(rootMatch).not.toBeNull()
+      expect(rootMatch![1]).toMatch(
+        new RegExp(`--hero-gradient-${token.replace(/-/g, '\\-')}\\s*:`),
+      )
+    },
+  )
+
+  it.each(HERO_GRADIENT_TOKENS)(
+    '[data-theme="dark"] 에 --hero-gradient-%s token이 정의된다',
+    (token) => {
+      const darkMatch = CSS.match(/\[data-theme="dark"\]\s*\{([\s\S]*?)\r?\n\}/)
+      expect(darkMatch).not.toBeNull()
+      expect(darkMatch![1]).toMatch(
+        new RegExp(`--hero-gradient-${token.replace(/-/g, '\\-')}\\s*:`),
+      )
+    },
+  )
+
+  it('hero gradient token은 기존 accent token을 기반으로 한다', () => {
+    expect(CSS).toMatch(/--hero-gradient-primary:\s*color-mix\(in oklab,\s*var\(--landing-accent-start\)/)
+    expect(CSS).toMatch(/--hero-gradient-secondary:\s*color-mix\(in oklab,\s*var\(--landing-accent-end\)/)
+  })
+
+  it('hero liquid gradient CSS가 reduced motion에서 animation을 제거한다', () => {
+    expect(CSS).toMatch(/\.hero-liquid-gradient-background__field/)
+    expect(CSS).toMatch(/@keyframes\s+hero-liquid-gradient-drift/)
+    expect(CSS).toMatch(/@media\s*\(prefers-reduced-motion:\s*reduce\)[\s\S]*\.hero-liquid-gradient-background__field[\s\S]*animation:\s*none\s*!important/)
+  })
+})
+
+// ============================================================================
 // T-THEME-02 — layout.tsx ThemeProvider 주입 + next-themes dependency
 // ============================================================================
 

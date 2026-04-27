@@ -3,19 +3,21 @@
 import { motion } from 'framer-motion'
 import { fadeInUp } from '@/lib/motion'
 import { GradientBlob } from '@/components/shared/gradient-blob'
+import { HeroLiquidGradientBackground } from '@/components/shared/hero-liquid-gradient-background'
 import { DashboardPreview } from '@/components/dashboard-preview/dashboard-preview'
 
 export function Hero() {
   return (
-    <section className="min-h-screen flex flex-col items-center justify-center text-center pt-16 relative overflow-hidden">
-      <GradientBlob className="-top-20 -left-20 w-96 h-96" />
-      <GradientBlob className="-bottom-20 -right-20 w-80 h-80" />
+    <section className="min-h-screen flex flex-col items-center justify-center text-center pt-16 relative isolate overflow-hidden">
+      <HeroLiquidGradientBackground />
+      <GradientBlob className="-top-20 -left-20 z-0 w-96 h-96" />
+      <GradientBlob className="-bottom-20 -right-20 z-0 w-80 h-80" />
 
       <motion.h1
         variants={fadeInUp}
         initial="hidden"
         animate="visible"
-        className="text-4xl md:text-5xl lg:text-7xl font-bold text-foreground"
+        className="relative z-10 text-4xl md:text-5xl lg:text-7xl font-bold text-foreground"
       >
         운송 운영을 한눈에
       </motion.h1>
@@ -25,7 +27,7 @@ export function Hero() {
         initial="hidden"
         animate="visible"
         transition={{ delay: 0.2 }}
-        className="text-lg md:text-xl text-muted-foreground mt-6"
+        className="relative z-10 text-lg md:text-xl text-muted-foreground mt-6"
       >
         오더부터 정산까지
       </motion.p>
@@ -35,7 +37,7 @@ export function Hero() {
         initial="hidden"
         animate="visible"
         transition={{ delay: 0.4 }}
-        className="mt-10 flex gap-4 flex-col sm:flex-row"
+        className="relative z-10 mt-10 flex gap-4 flex-col sm:flex-row"
       >
         <a
           href="#contact"
@@ -59,7 +61,7 @@ export function Hero() {
        * 별도 래퍼에서 max-w-[1440px]로 확장해 OrderForm의 lg:grid-cols-3
        * (≥1024px) 충족에 필요한 가용폭(≈1060px)을 확보한다.
        */}
-      <div className="mt-16 w-full flex justify-center">
+      <div className="relative z-10 mt-16 w-full flex justify-center">
         <div className="max-w-[1440px] w-full">
           <DashboardPreview />
         </div>

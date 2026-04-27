@@ -18,7 +18,7 @@
 | IDEA-20260423-002 | F1 라이트 모드 전환 인프라 (토큰 이중화 + ThemeProvider) | improvement | archived | 2026-04-23 | `archive/f1-landing-light-theme/sources/ideas` | [링크](../archive/f1-landing-light-theme/sources/ideas/IDEA-20260423-002.md) | [EPIC-20260422-001](../epics/20-active/EPIC-20260422-001/00-epic-brief.md) |
 | IDEA-20260424-001 | F2 Mock 스키마 재설계 | feature | archived | 2026-04-24 | `archive/f2-mock-schema-redesign/sources/ideas` | [링크](../archive/f2-mock-schema-redesign/sources/ideas/IDEA-20260424-001.md) | [EPIC-20260422-001](../epics/20-active/EPIC-20260422-001/00-epic-brief.md) |
 | IDEA-20260424-002 | F4 레이아웃 정비 + Hit-Area 재정렬 | feature | archived | 2026-04-24 | `archive/f4-layout-hit-area-realignment/sources/ideas` | [링크](../archive/f4-layout-hit-area-realignment/sources/ideas/IDEA-20260424-002.md) | [EPIC-20260422-001](../epics/20-active/EPIC-20260422-001/00-epic-brief.md) |
-| IDEA-20260427-001 | Hero 섹션 interactive liquid gradient 배경 도입 | improvement | new | 2026-04-27 | `00-inbox` | [링크](00-inbox/IDEA-20260427-001.md) | - |
+| IDEA-20260427-001 | Hero 섹션 interactive liquid gradient 배경 도입 | improvement | archived | 2026-04-27 | `archive/hero-liquid-gradient-background/sources/ideas` | [링크](../archive/hero-liquid-gradient-background/sources/ideas/IDEA-20260427-001.md) | - |
 
 ---
 
@@ -50,3 +50,6 @@
 | 2026-04-24 | IDEA-20260424-002 (F4), IDEA-20260424-001 (F2) Bridge 완료 — active feature `00-context` 생성, 다음 단계 `/dev-feature` |
 | 2026-04-27 | IDEA-20260424-001 (F2) 상태 `approved → archived` — mock schema 재설계, random scenario rotation, staged apply timing 구현 및 archive bundle 생성 |
 | 2026-04-27 | IDEA-20260427-001 신규 등록: Hero 배경 전용 interactive liquid gradient 탐색 아이디어 |
+| 2026-04-27 | IDEA-20260427-001 상태 `new → screened` — RICE 59.1, Hold 제안, Lite lane |
+| 2026-04-27 | IDEA-20260427-001 사용자 override 승인 + draft/bridge/dev 진행 (`hero-liquid-gradient-background`) |
+| 2026-04-27 | IDEA-20260427-001 상태 `screened → archived` — hero liquid gradient 구현, theme 대응, animation QA evidence 포함 archive bundle 생성 |

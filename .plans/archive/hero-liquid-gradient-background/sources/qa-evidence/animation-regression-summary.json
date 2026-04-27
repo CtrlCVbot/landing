@@ -1,0 +1,42 @@
+{
+  "generatedAt": "2026-04-27T01:59:50.488Z",
+  "url": "http://localhost:3100",
+  "before": {
+    "animationName": "hero-liquid-gradient-drift",
+    "animationDuration": "9s",
+    "animationPlayState": "running",
+    "transform": "matrix(1.16744, -0.007184, 0.007184, 1.16744, -57.6296, -18.5699)",
+    "opacity": "0.72",
+    "filter": "blur(48px)",
+    "reducedMotion": false
+  },
+  "after": {
+    "animationName": "hero-liquid-gradient-drift",
+    "animationDuration": "9s",
+    "animationPlayState": "running",
+    "transform": "matrix(1.21699, 0.0574029, -0.0574029, 1.21699, 48.7719, 24.3646)",
+    "opacity": "0.72",
+    "filter": "blur(48px)",
+    "reducedMotion": false
+  },
+  "delta": {
+    "x": 106.4,
+    "y": 42.93,
+    "scale": 0.0509
+  },
+  "transformChanged": true,
+  "reducedMotion": {
+    "animationName": "none",
+    "animationDuration": "1e-05s",
+    "animationPlayState": "running",
+    "transform": "none",
+    "opacity": "0.5184",
+    "filter": "blur(38px)",
+    "reducedMotion": true
+  },
+  "screenshots": [
+    "output/hero-liquid-gradient-qa/preview-animation-regression-before.png",
+    "output/hero-liquid-gradient-qa/preview-animation-regression-after.png",
+    "output/hero-liquid-gradient-qa/preview-animation-regression-reduced-motion.png"
+  ]
+}

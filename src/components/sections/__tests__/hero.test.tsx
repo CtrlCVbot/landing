@@ -31,21 +31,18 @@ vi.mock('framer-motion', () => ({
     h1: ({
       children,
       className,
-      ..._rest
     }: React.HTMLAttributes<HTMLHeadingElement>) => (
       <h1 className={className}>{children}</h1>
     ),
     p: ({
       children,
       className,
-      ..._rest
     }: React.HTMLAttributes<HTMLParagraphElement>) => (
       <p className={className}>{children}</p>
     ),
     div: ({
       children,
       className,
-      ..._rest
     }: React.HTMLAttributes<HTMLDivElement>) => (
       <div className={className}>{children}</div>
     ),
@@ -118,5 +115,42 @@ describe('Hero — DashboardPreview wrapper (T-DASH3-M1-08)', () => {
       expect(screen.getByText('운송 운영을 한눈에')).toBeInTheDocument()
       expect(screen.getByText('오더부터 정산까지')).toBeInTheDocument()
     })
+  })
+})
+
+describe('Hero — liquid gradient background (T-HLG-TEST-01)', () => {
+  it('decorative liquid gradient background layer를 렌더링한다', () => {
+    render(<Hero />)
+    const background = screen.getByTestId('hero-liquid-gradient-background')
+
+    expect(background).toBeInTheDocument()
+    expect(background).toHaveAttribute('aria-hidden', 'true')
+  })
+
+  it('background layer가 CTA 상호작용을 가로채지 않는다', () => {
+    render(<Hero />)
+    const background = screen.getByTestId('hero-liquid-gradient-background')
+    const cta = screen.getByRole('link', { name: '도입 문의하기' })
+
+    expect(background.className).toContain('pointer-events-none')
+    expect(cta).toHaveAttribute('href', '#contact')
+  })
+
+  it('background와 foreground layer 순서가 class로 명시된다', () => {
+    render(<Hero />)
+    const background = screen.getByTestId('hero-liquid-gradient-background')
+    const title = screen.getByRole('heading', { name: '운송 운영을 한눈에' })
+    const preview = screen.getByTestId('dashboard-preview')
+    const previewOuter = preview.parentElement?.parentElement
+
+    expect(background.className).toContain('z-0')
+    expect(title.className).toContain('z-10')
+    expect(previewOuter?.className).toContain('z-10')
+  })
+
+  it('기존 GradientBlob fallback을 보존한다', () => {
+    render(<Hero />)
+
+    expect(screen.getAllByTestId('gradient-blob')).toHaveLength(2)
   })
 })

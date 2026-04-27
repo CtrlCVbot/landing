@@ -1,0 +1,66 @@
+{
+  "generatedAt": "2026-04-27T02:05:42.072Z",
+  "url": "http://localhost:3100",
+  "before": {
+    "hasBackground": true,
+    "ariaHidden": "true",
+    "pointerEvents": "none",
+    "zIndex": "0",
+    "animationName": "hero-liquid-gradient-drift",
+    "animationDuration": "9s",
+    "animationPlayState": "running",
+    "transform": "matrix(1.16743, -0.00718505, 0.00718505, 1.16743, -57.6313, -18.5706)",
+    "opacity": "0.72",
+    "filter": "blur(48px)",
+    "reducedMotion": false,
+    "previewVisible": true,
+    "scrollWidth": 1440,
+    "viewportWidth": 1440,
+    "overflowX": false
+  },
+  "after": {
+    "hasBackground": true,
+    "ariaHidden": "true",
+    "pointerEvents": "none",
+    "zIndex": "0",
+    "animationName": "hero-liquid-gradient-drift",
+    "animationDuration": "9s",
+    "animationPlayState": "running",
+    "transform": "matrix(1.21746, 0.0580636, -0.0580636, 1.21746, 49.862, 24.8044)",
+    "opacity": "0.72",
+    "filter": "blur(48px)",
+    "reducedMotion": false,
+    "previewVisible": true,
+    "scrollWidth": 1440,
+    "viewportWidth": 1440,
+    "overflowX": false
+  },
+  "delta": {
+    "x": 107.49,
+    "y": 43.38,
+    "scale": 0.0514
+  },
+  "transformChanged": true,
+  "reducedMotion": {
+    "hasBackground": true,
+    "ariaHidden": "true",
+    "pointerEvents": "none",
+    "zIndex": "0",
+    "animationName": "none",
+    "animationDuration": "1e-05s",
+    "animationPlayState": "running",
+    "transform": "none",
+    "opacity": "0.5184",
+    "filter": "blur(38px)",
+    "reducedMotion": true,
+    "previewVisible": true,
+    "scrollWidth": 390,
+    "viewportWidth": 390,
+    "overflowX": false
+  },
+  "screenshots": [
+    "output/hero-liquid-gradient-qa/dev-verify-preview-before.png",
+    "output/hero-liquid-gradient-qa/dev-verify-preview-after.png",
+    "output/hero-liquid-gradient-qa/dev-verify-reduced-motion.png"
+  ]
+}
