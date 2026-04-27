@@ -417,40 +417,184 @@ const TOOLTIPS: Readonly<Record<string, string>> = {
 // Main export
 // ---------------------------------------------------------------------------
 
-export const PREVIEW_MOCK_DATA: PreviewMockData = {
-  aiInput: {
-    activeTab: 'text',
-    textValue: AI_INPUT_MESSAGE,
-    message: AI_INPUT_MESSAGE,
-  },
-  aiResult: {
+export type PreviewScenarioId = 'default' | 'partial' | 'mismatch-risk'
+
+export interface PreviewExtractedFrame {
+  readonly aiInput: PreviewMockData['aiInput']
+  readonly aiResult: PreviewMockData['aiResult']
+}
+
+export interface PreviewAppliedFrame {
+  readonly formData: PreviewMockData['formData']
+}
+
+export interface PreviewMockScenario {
+  readonly id: PreviewScenarioId
+  readonly label: string
+  readonly description: string
+  readonly extractedFrame: PreviewExtractedFrame
+  readonly appliedFrame: PreviewAppliedFrame
+}
+
+export const DEFAULT_PREVIEW_SCENARIO_ID: PreviewScenarioId = 'default'
+
+const DEFAULT_AI_INPUT: PreviewMockData['aiInput'] = {
+  activeTab: 'text',
+  textValue: AI_INPUT_MESSAGE,
+  message: AI_INPUT_MESSAGE,
+} as const
+
+const DEFAULT_FORM_DATA: PreviewMockData['formData'] = {
+  company: COMPANY_MOCK,
+  manager: MANAGER_MOCK,
+  availableManagers: AVAILABLE_MANAGERS_MOCK,
+  pickup: PICKUP_MOCK,
+  delivery: DELIVERY_MOCK,
+  vehicle: VEHICLE_MOCK,
+  cargo: CARGO_MOCK,
+  options: OPTIONS_MOCK,
+  estimate: ESTIMATE_MOCK,
+  settlement: SETTLEMENT_MOCK,
+  dialogs: DIALOGS_MOCK,
+} as const
+
+function replaceFareAmount(
+  categories: ReadonlyArray<AiCategoryGroup>,
+  displayValue: string,
+  evidenceSnippet: string,
+): ReadonlyArray<AiCategoryGroup> {
+  return categories.map((category) => {
+    if (category.id !== 'fare') return category
+
+    return {
+      ...category,
+      buttons: category.buttons.map((button) =>
+        button.fieldKey === 'fare-amount'
+          ? {
+              ...button,
+              displayValue,
+              evidenceSnippet,
+            }
+          : button,
+      ),
+    }
+  })
+}
+
+function buildAiResult(
+  categories: ReadonlyArray<AiCategoryGroup>,
+  fareEvidence: string,
+  warnings: ReadonlyArray<string> = [],
+): PreviewMockData['aiResult'] {
+  return {
     extractState: 'idle',
-    categories: AI_CATEGORIES,
-    warnings: [],
+    categories,
+    warnings,
     evidence: {
       'departure-address1': '서울 강남구 물류센터',
       'destination-address1': '대전 유성구 산업단지',
       'cargo-vehicleType': '5톤 카고',
       'cargo-cargoName': '파레트 공산품 3파레트',
-      'fare-amount': '예상 운임 42만원',
+      'fare-amount': fareEvidence,
     },
     jsonViewerOpen: false,
+  } as const
+}
+
+const DEFAULT_AI_CATEGORIES = replaceFareAmount(
+  AI_CATEGORIES,
+  '850,000원',
+  '예상 운임 85만원',
+)
+
+const PARTIAL_AI_CATEGORIES: ReadonlyArray<AiCategoryGroup> = DEFAULT_AI_CATEGORIES.map(
+  (category) => {
+    if (category.id !== 'cargo') return category
+
+    return {
+      ...category,
+      buttons: category.buttons.map((button) =>
+        button.fieldKey === 'cargo-cargoName'
+          ? {
+              ...button,
+              status: 'unavailable',
+              unavailableReason: '품목 수량 확인 필요',
+              fallbackQuery: '품목 수량 확인',
+            }
+          : button,
+      ),
+    }
   },
-  formData: {
-    company: COMPANY_MOCK,
-    manager: MANAGER_MOCK,
-    availableManagers: AVAILABLE_MANAGERS_MOCK,
-    pickup: PICKUP_MOCK,
-    delivery: DELIVERY_MOCK,
-    vehicle: VEHICLE_MOCK,
-    cargo: CARGO_MOCK,
-    options: OPTIONS_MOCK,
-    estimate: ESTIMATE_MOCK,
-    settlement: SETTLEMENT_MOCK,
-    dialogs: DIALOGS_MOCK,
+)
+
+export const PREVIEW_MOCK_SCENARIOS: ReadonlyArray<PreviewMockScenario> = [
+  {
+    id: 'default',
+    label: 'Default',
+    description: 'Default preview fixture with consistent extracted and applied fare.',
+    extractedFrame: {
+      aiInput: DEFAULT_AI_INPUT,
+      aiResult: buildAiResult(DEFAULT_AI_CATEGORIES, '예상 운임 85만원'),
+    },
+    appliedFrame: {
+      formData: DEFAULT_FORM_DATA,
+    },
   },
-  tooltips: TOOLTIPS,
-} as const
+  {
+    id: 'partial',
+    label: 'Partial',
+    description: 'Partial extraction fixture with one cargo field requiring confirmation.',
+    extractedFrame: {
+      aiInput: DEFAULT_AI_INPUT,
+      aiResult: buildAiResult(PARTIAL_AI_CATEGORIES, '예상 운임 85만원', [
+        '품목 수량 확인 필요',
+      ]),
+    },
+    appliedFrame: {
+      formData: DEFAULT_FORM_DATA,
+    },
+  },
+  {
+    id: 'mismatch-risk',
+    label: 'Mismatch Risk',
+    description: 'Test fixture for extracted fare and applied estimate mismatch.',
+    extractedFrame: {
+      aiInput: DEFAULT_AI_INPUT,
+      aiResult: buildAiResult(AI_CATEGORIES, '예상 운임 42만원', [
+        '추출 운임과 적용 견적이 다를 수 있음',
+      ]),
+    },
+    appliedFrame: {
+      formData: DEFAULT_FORM_DATA,
+    },
+  },
+] as const
+
+export function selectPreviewMockScenario(
+  scenarioId: PreviewScenarioId | string = DEFAULT_PREVIEW_SCENARIO_ID,
+): PreviewMockScenario {
+  return (
+    PREVIEW_MOCK_SCENARIOS.find((scenario) => scenario.id === scenarioId) ??
+    getDefaultPreviewMockScenario()
+  )
+}
+
+export function getDefaultPreviewMockScenario(): PreviewMockScenario {
+  return PREVIEW_MOCK_SCENARIOS[0]!
+}
+
+export function createPreviewMockData(
+  scenario: PreviewMockScenario = getDefaultPreviewMockScenario(),
+): PreviewMockData {
+  return {
+    aiInput: scenario.extractedFrame.aiInput,
+    aiResult: scenario.extractedFrame.aiResult,
+    formData: scenario.appliedFrame.formData,
+    tooltips: TOOLTIPS,
+  } as const
+}
+
+export const PREVIEW_MOCK_DATA: PreviewMockData = createPreviewMockData()
 
 // ---------------------------------------------------------------------------
 // Phase 1/2 backward compatibility helpers

@@ -10,7 +10,29 @@
  * Phase 1/2 backward compatibility는 legacy/mock-data.test.ts 가 LEGACY=true 시 검증.
  */
 import { describe, it, expect } from 'vitest'
-import { PREVIEW_MOCK_DATA } from '@/lib/mock-data'
+import {
+  PREVIEW_MOCK_DATA,
+  PREVIEW_MOCK_SCENARIOS,
+  createPreviewMockData,
+  getDefaultPreviewMockScenario,
+  selectPreviewMockScenario,
+} from '@/lib/mock-data'
+
+function parseWonDisplay(displayValue: string): number {
+  return Number(displayValue.replace(/[^\d]/g, ''))
+}
+
+function getExtractedFareAmount(scenario = getDefaultPreviewMockScenario()): number {
+  const fareCategory = scenario.extractedFrame.aiResult.categories.find(
+    (category) => category.id === 'fare',
+  )
+  const fareButton = fareCategory?.buttons.find(
+    (button) => button.fieldKey === 'fare-amount',
+  )
+
+  expect(fareButton).toBeDefined()
+  return parseWonDisplay(fareButton?.displayValue ?? '')
+}
 
 describe('PREVIEW_MOCK_DATA (Phase 3 full schema)', () => {
   // --------------------------------------------------------------------
@@ -333,5 +355,65 @@ describe('PREVIEW_MOCK_DATA (Phase 3 full schema)', () => {
         expect(PREVIEW_MOCK_DATA.tooltips[key]).toBeTruthy()
       }
     })
+  })
+})
+
+describe('PREVIEW_MOCK_SCENARIOS (F2 frame split)', () => {
+  it('defines at least default, partial, and mismatch-risk scenarios', () => {
+    const ids = PREVIEW_MOCK_SCENARIOS.map((scenario) => scenario.id)
+
+    expect(PREVIEW_MOCK_SCENARIOS.length).toBeGreaterThanOrEqual(3)
+    expect(ids).toEqual(expect.arrayContaining(['default', 'partial', 'mismatch-risk']))
+  })
+
+  it('keeps extractedFrame and appliedFrame separate for every scenario', () => {
+    for (const scenario of PREVIEW_MOCK_SCENARIOS) {
+      expect(scenario.extractedFrame).toHaveProperty('aiInput')
+      expect(scenario.extractedFrame).toHaveProperty('aiResult')
+      expect(scenario.appliedFrame).toHaveProperty('formData')
+      expect(scenario.appliedFrame).not.toHaveProperty('aiResult')
+      expect(scenario.extractedFrame).not.toHaveProperty('formData')
+    }
+  })
+
+  it('selects the default scenario deterministically, including unknown input fallback', () => {
+    const byDefault = selectPreviewMockScenario()
+    const byId = selectPreviewMockScenario('default')
+    const byUnknown = selectPreviewMockScenario('unknown-scenario')
+
+    expect(byDefault.id).toBe('default')
+    expect(byId).toBe(byDefault)
+    expect(byUnknown).toBe(byDefault)
+  })
+
+  it('builds PREVIEW_MOCK_DATA from the default scenario as a compatibility object', () => {
+    const defaultScenario = getDefaultPreviewMockScenario()
+
+    expect(PREVIEW_MOCK_DATA).toEqual(createPreviewMockData(defaultScenario))
+    expect(PREVIEW_MOCK_DATA.aiInput).toBe(defaultScenario.extractedFrame.aiInput)
+    expect(PREVIEW_MOCK_DATA.aiResult).toBe(defaultScenario.extractedFrame.aiResult)
+    expect(PREVIEW_MOCK_DATA.formData).toBe(defaultScenario.appliedFrame.formData)
+  })
+
+  it('keeps the default extracted fare consistent with the applied estimate amount', () => {
+    const defaultScenario = getDefaultPreviewMockScenario()
+
+    expect(getExtractedFareAmount(defaultScenario)).toBe(
+      defaultScenario.appliedFrame.formData.estimate.amount,
+    )
+  })
+
+  it('keeps mismatch-risk as a fixture where extracted fare and applied estimate differ', () => {
+    const mismatchRisk = selectPreviewMockScenario('mismatch-risk')
+
+    expect(getExtractedFareAmount(mismatchRisk)).not.toBe(
+      mismatchRisk.appliedFrame.formData.estimate.amount,
+    )
+  })
+
+  it('keeps jsonViewerOpen closed inside extracted frames', () => {
+    for (const scenario of PREVIEW_MOCK_SCENARIOS) {
+      expect(scenario.extractedFrame.aiResult.jsonViewerOpen).toBe(false)
+    }
   })
 })

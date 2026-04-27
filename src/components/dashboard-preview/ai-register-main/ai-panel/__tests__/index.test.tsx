@@ -31,7 +31,7 @@ import { render, screen, act } from '@testing-library/react'
 import { afterEach, beforeEach, describe, it, expect, vi } from 'vitest'
 
 import { AiPanelContainer } from '@/components/dashboard-preview/ai-register-main/ai-panel'
-import { PREVIEW_MOCK_DATA } from '@/lib/mock-data'
+import { PREVIEW_MOCK_DATA, selectPreviewMockScenario } from '@/lib/mock-data'
 import { PREVIEW_STEPS } from '@/lib/preview-steps'
 
 const INITIAL_STEP = PREVIEW_STEPS[0]!
@@ -110,6 +110,27 @@ describe('AiPanelContainer shell (M1-03)', () => {
     expect(aside).toHaveClass('flex')
     expect(aside).toHaveClass('flex-col')
     expect(aside).toHaveClass('overflow-hidden')
+  })
+})
+
+describe('AiPanelContainer F2 extractedFrame source', () => {
+  it('renders AI result values from extractedFrame, not appliedFrame', () => {
+    const scenario = selectPreviewMockScenario('mismatch-risk')
+    const fareButton = scenario.extractedFrame.aiResult.categories
+      .find((category) => category.id === 'fare')
+      ?.buttons.find((button) => button.fieldKey === 'fare-amount')
+
+    expect(fareButton).toBeDefined()
+
+    render(
+      <AiPanelContainer
+        step={AI_APPLY_STEP}
+        aiInput={scenario.extractedFrame.aiInput}
+        aiResult={scenario.extractedFrame.aiResult}
+      />,
+    )
+
+    expect(screen.getByText(fareButton!.displayValue)).toBeInTheDocument()
   })
 })
 

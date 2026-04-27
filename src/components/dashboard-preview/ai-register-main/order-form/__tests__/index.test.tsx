@@ -33,13 +33,38 @@ import {
   OrderFormContainer,
   stripTransportOptionPrefix,
 } from '@/components/dashboard-preview/ai-register-main/order-form'
-import { PREVIEW_MOCK_DATA } from '@/lib/mock-data'
+import { PREVIEW_MOCK_DATA, selectPreviewMockScenario } from '@/lib/mock-data'
 import { PREVIEW_STEPS } from '@/lib/preview-steps'
 
 const INITIAL_STEP = PREVIEW_STEPS[0]!
 const AI_INPUT_STEP = PREVIEW_STEPS[1]!
 const AI_EXTRACT_STEP = PREVIEW_STEPS[2]!
 const AI_APPLY_STEP = PREVIEW_STEPS[3]!
+
+describe('OrderFormContainer F2 appliedFrame source', () => {
+  it('renders estimate values from appliedFrame, not extractedFrame', () => {
+    vi.useFakeTimers()
+    const scenario = selectPreviewMockScenario('mismatch-risk')
+    const amount = scenario.appliedFrame.formData.estimate.amount.toLocaleString()
+
+    try {
+      render(
+        <OrderFormContainer
+          step={AI_APPLY_STEP}
+          formData={scenario.appliedFrame.formData}
+        />,
+      )
+
+      act(() => {
+        vi.advanceTimersByTime(500)
+      })
+
+      expect(screen.getByTestId('estimate-info-amount')).toHaveTextContent(amount)
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+})
 
 // ===========================================================================
 // M1-03 — shell 레이아웃 (기존 검증 유지)

@@ -76,6 +76,11 @@ export interface FormStateSnapshot {
   readonly estimateAmount: number | null
 }
 
+export interface StepVisibilityState {
+  readonly estimateVisible: boolean
+  readonly settlementVisible: boolean
+}
+
 /** AI_APPLY partialBeat (안 B) — 카테고리 순차 적용 */
 export interface AiApplyPartialBeat {
   readonly categoryOrder: ReadonlyArray<AiCategoryId>
@@ -320,6 +325,13 @@ function buildFormState(
     highlightedCard: base.highlightedSection,
     estimateAmount,
   }
+}
+
+export function getStepVisibilityState(step: Pick<PreviewStep, 'formState'>): StepVisibilityState {
+  return {
+    estimateVisible: step.formState.estimateVisible,
+    settlementVisible: step.formState.settlementVisible,
+  } as const
 }
 
 // =============================================================================

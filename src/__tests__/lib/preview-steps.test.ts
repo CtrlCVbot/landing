@@ -14,7 +14,7 @@
  * Phase 1/2 backward compatibility는 legacy/preview-steps.test.ts 가 LEGACY=true 시 검증.
  */
 import { describe, it, expect } from 'vitest'
-import { PREVIEW_STEPS } from '@/lib/preview-steps'
+import { PREVIEW_STEPS, getStepVisibilityState } from '@/lib/preview-steps'
 import type { PreviewStep, StepId } from '@/lib/preview-steps'
 import { PREVIEW_MOCK_DATA } from '@/lib/mock-data'
 
@@ -323,5 +323,28 @@ describe('PREVIEW_STEPS (Phase 3 4단계)', () => {
       const steps: readonly PreviewStep[] = PREVIEW_STEPS
       expect(steps).toBeDefined()
     })
+  })
+})
+
+describe('PREVIEW_STEPS (F2 visibility state)', () => {
+  it('hides estimate and settlement values before AI_APPLY', () => {
+    for (const step of PREVIEW_STEPS.slice(0, 3)) {
+      const visibility = getStepVisibilityState(step)
+
+      expect(visibility.estimateVisible).toBe(false)
+      expect(visibility.settlementVisible).toBe(false)
+      expect(step.formState.estimateAmount).toBeNull()
+    }
+  })
+
+  it('reveals estimate and settlement values at AI_APPLY only', () => {
+    const aiApply = PREVIEW_STEPS.find((step) => step.id === 'AI_APPLY')
+
+    expect(aiApply).toBeDefined()
+    expect(getStepVisibilityState(aiApply!).estimateVisible).toBe(true)
+    expect(getStepVisibilityState(aiApply!).settlementVisible).toBe(true)
+    expect(aiApply!.formState.estimateAmount).toBe(
+      PREVIEW_MOCK_DATA.formData.estimate.amount,
+    )
   })
 })

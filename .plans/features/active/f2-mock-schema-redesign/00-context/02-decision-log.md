@@ -40,13 +40,13 @@
 
 | ID | 결정 필요 항목 | 기본안 |
 |---|---|---|
-| D-F2-TBD-001 | compatibility helper API | 기존 consumers가 한 번에 깨지지 않도록 adapter 우선 |
-| D-F2-TBD-002 | `jsonViewerOpen` 처리 | 유지/이관/제거 중 하나를 구현 전 확정 |
-| D-F2-TBD-003 | mismatch-risk scenario 노출 범위 | 테스트 fixture 중심, user-facing UI는 제외 |
+| D-F2-008 | compatibility helper API | `selectPreviewMockScenario`, `getDefaultPreviewMockScenario`, `createPreviewMockData` |
+| D-F2-009 | `jsonViewerOpen` 처리 | `extractedFrame.aiResult.jsonViewerOpen`에 유지하되 기본값은 `false` |
+| D-F2-010 | mismatch-risk scenario 노출 범위 | 테스트 fixture 중심, user-facing UI는 제외 |
 
 ## 4. 구현 중 신규 결정
 
-아직 없음. 구현 중 다음 형식으로 append한다.
+아래 결정은 2026-04-27 `/dev-run` 구현 중 확정했다.
 
 ```md
 ### D-F2-NNN. {결정 제목}
@@ -59,3 +59,33 @@
 | 영향 범위 | {파일/TASK 영향} |
 | Rollback | {되돌리기 방법} |
 ```
+
+### D-F2-008. Compatibility helper API
+
+| 항목 | 값 |
+|---|---|
+| 결정일 | 2026-04-27 |
+| 배경 | 기존 consumer가 `PREVIEW_MOCK_DATA` 단일 객체에 의존하므로 frame split을 바로 노출하면 연쇄 수정 위험이 있음. |
+| 선택값 | `selectPreviewMockScenario`, `getDefaultPreviewMockScenario`, `createPreviewMockData`를 제공하고 `PREVIEW_MOCK_DATA`는 default scenario 기반 compatibility object로 유지. |
+| 영향 범위 | `src/lib/mock-data.ts`, mock-data/AI panel/order form tests |
+| Rollback | `PREVIEW_MOCK_DATA` 직접 객체 export로 되돌리고 helper export 제거 |
+
+### D-F2-009. `jsonViewerOpen` handling
+
+| 항목 | 값 |
+|---|---|
+| 결정일 | 2026-04-27 |
+| 배경 | F5에서 JSON viewer UI는 제거됐지만 schema compatibility와 tests는 boolean field를 요구함. |
+| 선택값 | `extractedFrame.aiResult.jsonViewerOpen`에 유지하고 모든 scenario 기본값은 `false`. |
+| 영향 범위 | `src/lib/mock-data.ts`, `src/__tests__/lib/mock-data.test.ts` |
+| Rollback | json viewer UI가 복구될 때 scenario별 open state로 확장 |
+
+### D-F2-010. `mismatch-risk` exposure
+
+| 항목 | 값 |
+|---|---|
+| 결정일 | 2026-04-27 |
+| 배경 | fee mismatch 회귀를 검증해야 하지만 MVP에서 user-facing scenario selector는 제외됨. |
+| 선택값 | `mismatch-risk`는 test fixture로만 제공하고 공개 selector UI는 만들지 않음. |
+| 영향 범위 | `src/lib/mock-data.ts`, AI panel/order form source tests |
+| Rollback | F3 이후 내부 debug selector가 승인되면 scenario picker로 연결 |
