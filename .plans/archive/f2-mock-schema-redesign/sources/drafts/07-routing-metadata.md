@@ -16,6 +16,10 @@
   "prd": "02-prd.md",
   "review": "03-prd-review.md",
   "feature_package": "../../features/active/f2-mock-schema-redesign/00-context/00-index.md",
-  "next": "dev-feature"
+  "next": "archive-complete"
 }
 ```
+
+## 2026-04-27 Routing Closeout
+
+F2는 `dev-feature`와 `dev-run` 이후 fresh verification을 통과했고, `/plan-archive f2-mock-schema-redesign`로 archive 완료 상태가 됐다. 후속 routing은 Phase C의 F3 옵션↔추가요금 파생 로직이다.

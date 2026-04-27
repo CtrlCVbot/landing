@@ -14,9 +14,9 @@
 | 항목 | 판정 | 메모 |
 |---|---|---|
 | 최종 판정 | Approve | PRD 10 섹션과 요구사항 ID 체계가 충족됨 |
-| 다음 단계 | plan-bridge 대기 | 사용자 승인 후 `/plan-bridge f2-mock-schema-redesign` 실행 가능 |
+| 다음 단계 | archive 완료 | `/plan-bridge`, `/dev-feature`, `/dev-run`, fresh verification, archive 완료 |
 | 차단 이슈 | 없음 | critical/high 피드백 없음 |
-| 남은 피드백 | 있음 | schema compatibility helper와 `jsonViewerOpen` 처리는 Bridge/Dev 단계에서 구체화 필요 |
+| 남은 피드백 | 해소 | schema compatibility helper, `jsonViewerOpen`, random scenario, staged reveal 결정 기록 완료 |
 
 ## 2. 4축 평가
 
@@ -62,6 +62,14 @@
 | F2-PRD-FB-02 | medium | 2 / 1 / 1 / 4 | likely | queued | `jsonViewerOpen` 유지/이관/제거 결정은 구현 전에 decision log에서 확정 필요 |
 | F2-PRD-FB-03 | low | 1 / 1 / 0 / 2 | tentative | queued | scenario selector UI는 Could로 분리되어 있으나, 사용자 요청이 생기면 별도 scope 확인 필요 |
 
+### 2026-04-27 피드백 반영 결과
+
+| ID | 상태 | 반영 |
+|---|---|---|
+| F2-PRD-FB-01 | resolved | `selectPreviewMockScenario`, `getDefaultPreviewMockScenario`, `createPreviewMockData`, `selectRandomPreviewMockScenario`로 helper API 확정 |
+| F2-PRD-FB-02 | resolved | `jsonViewerOpen=false`를 `extractedFrame.aiResult` 내부에 유지 |
+| F2-PRD-FB-03 | resolved | 공개 selector UI는 제외하고 random preview loop만 적용 |
+
 ## 6. 자동 반영 여부
 
 | 항목 | 상태 | 이유 |
@@ -88,3 +96,4 @@
 |---|---|
 | 2026-04-24 | F2 PRD 리뷰 작성 — Approve 판정, PCC 5종 PASS, medium 2건/low 1건 후속 피드백 등록. |
 | 2026-04-24 | 후속 `/plan-bridge f2-mock-schema-redesign` 완료 링크 추가. |
+| 2026-04-27 | 구현 완료 후 리뷰 피드백 3건 해소 상태로 갱신. |

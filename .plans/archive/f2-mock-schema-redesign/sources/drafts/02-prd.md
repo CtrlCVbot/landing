@@ -7,7 +7,7 @@
 > **Draft**: [01-draft.md](./01-draft.md)
 > **Routing metadata**: [07-routing-metadata.md](./07-routing-metadata.md)
 > **작성일**: 2026-04-24
-> **상태**: draft (PRD review 완료 후 plan-bridge 대기)
+> **상태**: archived (2026-04-27 구현/검증/아카이브 완료)
 > **schema**: PRD 10 섹션 표준
 
 ---
@@ -30,9 +30,10 @@ Phase 3 이후 피드백은 "AI가 무엇을 읽었는지"와 "폼에 무엇이 
 
 - `extractedFrame`을 AI panel/result 표시 기준으로 정의한다.
 - `appliedFrame`을 order form과 settlement 표시 기준으로 정의한다.
-- `PREVIEW_MOCK_SCENARIOS`를 최소 3개 이상 도입한다: default, partial, mismatch-risk.
+- `PREVIEW_MOCK_SCENARIOS`를 최소 5개 이상 도입하고, demo-safe randomizable scenario를 3개 이상 둔다.
 - default scenario에서 AI category `fare`와 `estimate.amount` 정합성을 보장한다.
-- `AI_EXTRACT` 전에는 estimate/settlement 완성값이 노출되지 않도록 Step 기반 visibility를 명시한다.
+- `AI_APPLY` 전에는 CompanyManager 외 추출 대상 완성값이 노출되지 않도록 Step 기반 visibility를 명시한다.
+- `AI_APPLY` 내부에서 파트별 적용 타이밍을 세분화한다.
 - F3가 F2 schema 위에 `OPTION_FEE_MAP`을 얹을 수 있도록 확장 지점을 남긴다.
 
 ### Non-Goals
@@ -55,21 +56,25 @@ Phase 3 이후 피드백은 "AI가 무엇을 읽었는지"와 "폼에 무엇이 
 
 | ID | 요구사항 | 우선순위 | 수용 기준 |
 |---|---|:---:|---|
-| REQ-f2-mock-schema-001 | `PREVIEW_MOCK_SCENARIOS` 배열을 도입한다. | Must | 최소 3개 scenario가 존재한다: default, partial, mismatch-risk. |
+| REQ-f2-mock-schema-001 | `PREVIEW_MOCK_SCENARIOS` 배열을 도입한다. | Must | 총 5개 scenario와 demo-safe randomizable scenario 3개 이상이 존재한다. |
 | REQ-f2-mock-schema-002 | 각 scenario에 `extractedFrame`을 정의한다. | Must | AI panel/result에서 쓰는 값은 `extractedFrame`을 기준으로 읽힌다. |
 | REQ-f2-mock-schema-003 | 각 scenario에 `appliedFrame`을 정의한다. | Must | order form, estimate, settlement에서 쓰는 값은 `appliedFrame`을 기준으로 읽힌다. |
-| REQ-f2-mock-schema-004 | deterministic default scenario selector helper를 제공한다. | Must | 기본 preview는 항상 같은 default scenario를 사용하며 테스트가 흔들리지 않는다. |
+| REQ-f2-mock-schema-004 | deterministic helper와 random helper를 제공한다. | Must | 테스트는 deterministic하게 선택하고 preview loop는 직전 scenario를 제외해 random 선택한다. |
 | REQ-f2-mock-schema-005 | `fare`와 `estimate.amount` 정합성을 검증한다. | Must | default scenario에서 두 값이 일치하거나 명시적 변환 규칙으로 같은 의미임이 테스트된다. |
 | REQ-f2-mock-schema-006 | Step 기반 visibility state를 명시적으로 생성한다. | Must | `estimateVisible`, `settlementVisible` 또는 동등한 상태가 Step에서 파생된다. |
-| REQ-f2-mock-schema-007 | `AI_EXTRACT` 이전에는 estimate/settlement 완성값이 노출되지 않는다. | Must | 관련 컴포넌트 렌더 테스트가 pre-apply 단계의 미노출을 검증한다. |
+| REQ-f2-mock-schema-007 | `AI_APPLY` 이전에는 CompanyManager 외 추출 대상 완성값이 노출되지 않는다. | Must | 상/하차지, 일시, 화물, 옵션, estimate, settlement가 placeholder/neutral 상태임을 검증한다. |
 | REQ-f2-mock-schema-008 | `AI_APPLY` 이후에는 `appliedFrame` 기준 값이 order form에 반영된다. | Must | `EstimateInfoCard`, `SettlementSection`이 `appliedFrame` 기준으로 표시된다. |
 | REQ-f2-mock-schema-009 | 기존 `jsonViewerOpen` 필드는 새 schema 안에서 유지, 이관, 제거 중 하나로 정리한다. | Should | 결정 결과가 decision log에 남고 테스트 기대값이 동기화된다. |
 | REQ-f2-mock-schema-010 | 사용자-facing scenario selector UI는 MVP 범위에서 제외한다. | Could | 필요 시 별도 옵션으로 문서화하되 F2 Must 범위에 포함하지 않는다. |
+| REQ-f2-mock-schema-011 | `AI_APPLY` 내부 파트별 reveal timeline을 제공한다. | Must | 상차지 → 하차지 → 예상 운임/거리 → 화물/차량+옵션 → 정산 순서가 테스트된다. |
+| REQ-f2-mock-schema-012 | `mismatch-risk`는 random preview에서 제외한다. | Must | fixture-only scenario는 test helper로만 선택 가능하다. |
 
 ## 6. UX Requirements
 
 - Step이 진행되기 전 완성 수치를 먼저 보여주지 않는다.
 - AI panel은 `extractedFrame`을 기준으로 "읽은 값"을 보여주고, order form은 `appliedFrame`을 기준으로 "적용된 값"을 보여준다.
+- CompanyManager는 pre-filled 상태로 유지하되, 추출 대상 전체는 적용 전 placeholder 또는 neutral state를 유지한다.
+- `AI_APPLY` 내부에서는 파트별 적용 순서를 눈으로 확인할 수 있을 만큼 animation을 느리게 유지한다.
 - partial scenario는 빈 값이나 불완전 값이 사용자에게 혼란스럽지 않도록 placeholder 또는 pending state를 유지한다.
 - mismatch-risk scenario는 실제 화면에서 오류처럼 보이기보다 검증용 scenario로 다룬다.
 - scenario selector UI는 이번 MVP에서는 숨겨진 helper 수준으로 두어 preview 첫 화면을 복잡하게 만들지 않는다.
@@ -78,7 +83,7 @@ Phase 3 이후 피드백은 "AI가 무엇을 읽었는지"와 "폼에 무엇이 
 
 - 주요 예상 파일은 `src/lib/mock-data.ts`, `src/lib/preview-steps.ts`, `src/components/dashboard-preview/order-form/index.tsx`, AI panel 관련 integration test다.
 - schema migration은 기존 테스트를 한 번에 깨뜨릴 수 있으므로 compatibility helper 또는 단계적 adapter를 우선 고려한다.
-- `PREVIEW_MOCK_SCENARIOS`는 테스트 안정성을 위해 deterministic default selector를 기본값으로 둔다.
+- `PREVIEW_MOCK_SCENARIOS`는 테스트 안정성을 위해 deterministic selector를 유지하고, preview demo 다양성을 위해 randomizable selector를 별도로 둔다.
 - F3는 F2 이후 진행되므로 F2 schema에 fee 확장 지점을 남기되, 실제 `OPTION_FEE_MAP`은 구현하지 않는다.
 - F4와 병렬 진행 시 layout/hit-area 파일은 건드리지 않는다.
 
@@ -132,3 +137,5 @@ Phase 3 이후 피드백은 "AI가 무엇을 읽었는지"와 "폼에 무엇이 
 |---|---|
 | 2026-04-24 | 초안 작성 — PRD 10 섹션, REQ 10건, UX/Tech/Milestone/Risk/Success Metric 정리. Bridge는 사용자 요청 범위에서 제외. |
 | 2026-04-24 | `/plan-bridge f2-mock-schema-redesign` 실행 — active feature `00-context` 생성 완료, next step을 `/dev-feature`로 전환. |
+| 2026-04-27 | 구현 중 사용자 피드백 반영 — random scenario rotation, pre-apply full hidden state, staged reveal timeline, animation slowdown 추가. |
+| 2026-04-27 | fresh verification 완료 — `pnpm test` 45 files / 1039 tests, `typecheck`, `lint`, `build` PASS. Archive 완료. |

@@ -12,7 +12,7 @@
 
 ## 1. 한 줄 요약
 
-dash-preview의 mock data를 `extractedFrame`(AI가 읽은 값)과 `appliedFrame`(폼에 적용된 값)으로 분리하고, `PREVIEW_MOCK_SCENARIOS`와 Step visibility를 도입해 F3 옵션 요금 파생 로직이 얹힐 수 있는 안정된 기반을 만든다.
+dash-preview의 mock data를 `extractedFrame`(AI가 읽은 값)과 `appliedFrame`(폼에 적용된 값)으로 분리하고, demo-safe random scenario와 `AI_APPLY` 내부 파트별 reveal timeline을 도입해 실제 추출/적용 흐름처럼 보이는 preview 기반을 만든다.
 
 ---
 
@@ -37,8 +37,13 @@ dash-preview의 mock data를 `extractedFrame`(AI가 읽은 값)과 `appliedFrame
 ```txt
 src/lib/mock-data.ts
 src/lib/preview-steps.ts
+src/components/dashboard-preview/dashboard-preview.tsx
 src/components/dashboard-preview/ai-register-main/ai-panel/index.tsx
 src/components/dashboard-preview/ai-register-main/order-form/index.tsx
+src/components/dashboard-preview/ai-register-main/order-form/location-form.tsx
+src/components/dashboard-preview/ai-register-main/order-form/datetime-card.tsx
+src/components/dashboard-preview/ai-register-main/order-form/cargo-info-form.tsx
+src/components/dashboard-preview/ai-register-main/order-form/transport-option-card.tsx
 src/components/dashboard-preview/ai-register-main/order-form/estimate-info-card.tsx
 src/components/dashboard-preview/ai-register-main/order-form/settlement-section.tsx
 ```
@@ -48,10 +53,15 @@ src/components/dashboard-preview/ai-register-main/order-form/settlement-section.
 ```txt
 src/__tests__/lib/mock-data.test.ts
 src/__tests__/lib/preview-steps.test.ts
+src/components/dashboard-preview/__tests__/dashboard-preview.test.tsx
 src/components/dashboard-preview/ai-register-main/ai-panel/__tests__/index.test.tsx
 src/components/dashboard-preview/ai-register-main/ai-panel/__tests__/flow.test.tsx
+src/components/dashboard-preview/ai-register-main/ai-panel/__tests__/ai-result-buttons.test.tsx
 src/components/dashboard-preview/ai-register-main/order-form/__tests__/index.test.tsx
+src/components/dashboard-preview/ai-register-main/order-form/__tests__/cargo-info-form.test.tsx
+src/components/dashboard-preview/ai-register-main/order-form/__tests__/estimate-info-card.test.tsx
 src/components/dashboard-preview/ai-register-main/order-form/__tests__/settlement-section.test.tsx
+src/components/dashboard-preview/ai-register-main/order-form/__tests__/transport-option-card.test.tsx
 ```
 
 ### 3-3. Plan evidence
@@ -75,10 +85,11 @@ backend route, persistence, 실제 AI API
 
 | 레이어 | 경로 | 변경 성격 |
 |---|---|---|
-| Utility/Data | `src/lib/mock-data.ts` | scenario array, frame split, selector/helper |
-| Utility/Data | `src/lib/preview-steps.ts` | Step visibility 파생 상태 |
+| Utility/Data | `src/lib/mock-data.ts` | scenario array, frame split, random selector/helper |
+| Utility/Data | `src/lib/preview-steps.ts` | Step visibility 파생 상태, `formRevealTimeline`, duration |
+| Presentation | `dashboard-preview.tsx` | preview loop 시작 시 scenario rotation |
 | Presentation | `ai-panel/index.tsx` | `extractedFrame` source 연결 |
-| Presentation | `order-form/**` | `appliedFrame` source 연결 및 표시 제어 |
+| Presentation | `order-form/**` | `appliedFrame` source 연결, hidden/revealed 표시 제어 |
 | Tests | allowed test paths | schema, visibility, source 연결 검증 |
 
 ---
@@ -140,16 +151,29 @@ backend route, persistence, 실제 AI API
 | Lane | Standard | Standard | 일치 |
 | Feature type | dev | dev | 일치 |
 | REQ 개수 | 10 | 10 | 일치 |
-| 예상 TASK | 6 | 6 | 일치 |
+| 예상 TASK | 6 + 구현 중 확장 2 | 6 + 확장 2 | 일치 |
 | F4 충돌 회피 | `hit-areas.ts`/overlay 금지 | 금지 경로 명시 | 일치 |
 | F3 선행 기반 | fee 확장 지점만 남김 | `OPTION_FEE_MAP` 미구현 | 일치 |
 
 ---
 
-## 10. 다음 단계
+## 10. 구현 완료 요약
+
+| 항목 | 결과 |
+|---|---|
+| Frame split | `extractedFrame` / `appliedFrame` 도입 완료 |
+| Scenario set | 5개 scenario, randomizable 3개 |
+| Random rotation | Step 4 → Step 1 전환 시 교체, 직전 scenario 제외 |
+| Pre-apply hidden state | CompanyManager 외 추출 대상 전체 placeholder/neutral 처리 |
+| Staged apply | pickup 0ms, delivery 650ms, estimate 900ms, cargo/options 1300ms, settlement 2200ms |
+| Verification | `git diff --check`, `pnpm typecheck`, `pnpm lint`, `pnpm test`, `pnpm build` 통과 |
+
+---
+
+## 11. 다음 단계
 
 ```bash
-/dev-run .plans/features/active/f2-mock-schema-redesign/
+/plan-archive f2-mock-schema-redesign
 ```
 
-권장 순서는 F4 layout이 먼저 끝난 뒤 F2 schema를 적용하는 것이다. 병렬 구현도 가능하지만, `order-form/index.tsx`는 두 Feature가 모두 볼 수 있으므로 같은 시간대 동시 편집은 피한다.
+F2 구현과 fresh 검증은 완료됐다. archive 이후 Phase C의 F3 옵션↔추가요금 파생 로직으로 넘어갈 수 있다.

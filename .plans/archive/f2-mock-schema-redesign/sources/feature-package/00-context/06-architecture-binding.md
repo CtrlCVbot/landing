@@ -25,27 +25,41 @@ F2는 `src/lib`의 mock/step data와 dashboard-preview pocket의 presentation �
 | Layer | Path | 용도 |
 |---|---|---|
 | Utility/Data | `src/lib/mock-data.ts` | scenario array, frame split, selector/helper |
-| Utility/Data | `src/lib/preview-steps.ts` | Step visibility state |
+| Utility/Data | `src/lib/preview-steps.ts` | Step visibility state, `formRevealTimeline`, duration constants |
+| Presentation | `src/components/dashboard-preview/dashboard-preview.tsx` | loop-start scenario rotation |
 | Presentation | `src/components/dashboard-preview/ai-register-main/ai-panel/index.tsx` | `extractedFrame` source 연결 |
 | Presentation | `src/components/dashboard-preview/ai-register-main/order-form/index.tsx` | `appliedFrame` source 연결 |
+| Presentation | `src/components/dashboard-preview/ai-register-main/order-form/location-form.tsx` | hidden/revealed placeholder 표시 |
+| Presentation | `src/components/dashboard-preview/ai-register-main/order-form/datetime-card.tsx` | hidden/revealed placeholder 표시 |
+| Presentation | `src/components/dashboard-preview/ai-register-main/order-form/cargo-info-form.tsx` | hidden/revealed placeholder 표시 |
+| Presentation | `src/components/dashboard-preview/ai-register-main/order-form/transport-option-card.tsx` | hidden 상태 neutral, revealed 상태 options checked |
 | Presentation | `src/components/dashboard-preview/ai-register-main/order-form/estimate-info-card.tsx` | visibility/value source 최소 조정 |
 | Presentation | `src/components/dashboard-preview/ai-register-main/order-form/settlement-section.tsx` | visibility/value source 최소 조정 |
 | Test | `src/__tests__/lib/mock-data.test.ts` | schema/consistency |
 | Test | `src/__tests__/lib/preview-steps.test.ts` | Step visibility |
+| Test | `src/components/dashboard-preview/__tests__/dashboard-preview.test.tsx` | scenario rotation |
 | Test | `src/components/dashboard-preview/ai-register-main/ai-panel/__tests__/index.test.tsx` | AI source |
 | Test | `src/components/dashboard-preview/ai-register-main/ai-panel/__tests__/flow.test.tsx` | AI flow |
+| Test | `src/components/dashboard-preview/ai-register-main/ai-panel/__tests__/ai-result-buttons.test.tsx` | AI result compatibility |
 | Test | `src/components/dashboard-preview/ai-register-main/order-form/__tests__/index.test.tsx` | order form source |
+| Test | `src/components/dashboard-preview/ai-register-main/order-form/__tests__/cargo-info-form.test.tsx` | hidden/revealed cargo state |
+| Test | `src/components/dashboard-preview/ai-register-main/order-form/__tests__/estimate-info-card.test.tsx` | hidden/rolling estimate state |
 | Test | `src/components/dashboard-preview/ai-register-main/order-form/__tests__/settlement-section.test.tsx` | settlement visibility |
+| Test | `src/components/dashboard-preview/ai-register-main/order-form/__tests__/transport-option-card.test.tsx` | hidden/revealed option checked state |
 | Plan evidence | `.plans/features/active/f2-mock-schema-redesign/03-dev-notes/**` | migration notes |
 
 ## 3. Recommended Test Paths
 
 - `src/__tests__/lib/mock-data.test.ts`
 - `src/__tests__/lib/preview-steps.test.ts`
+- `src/components/dashboard-preview/__tests__/dashboard-preview.test.tsx`
 - `src/components/dashboard-preview/ai-register-main/ai-panel/__tests__/index.test.tsx`
 - `src/components/dashboard-preview/ai-register-main/ai-panel/__tests__/flow.test.tsx`
 - `src/components/dashboard-preview/ai-register-main/order-form/__tests__/index.test.tsx`
+- `src/components/dashboard-preview/ai-register-main/order-form/__tests__/cargo-info-form.test.tsx`
+- `src/components/dashboard-preview/ai-register-main/order-form/__tests__/estimate-info-card.test.tsx`
 - `src/components/dashboard-preview/ai-register-main/order-form/__tests__/settlement-section.test.tsx`
+- `src/components/dashboard-preview/ai-register-main/order-form/__tests__/transport-option-card.test.tsx`
 
 ## 4. Shared Package Touch Points
 
@@ -62,6 +76,7 @@ F2는 `src/lib`의 mock/step data와 dashboard-preview pocket의 presentation �
 | `pnpm typecheck` | TypeScript 0 errors |
 | `pnpm lint` | 신규 lint error 없음 |
 | `pnpm test` | 전체 회귀 통과 |
+| `pnpm build` | production build 통과 |
 
 ## 6. 금지
 
@@ -69,3 +84,13 @@ F2는 `src/lib`의 mock/step data와 dashboard-preview pocket의 presentation �
 - `interactive-overlay.tsx` anchor 변경 금지.
 - 실제 AI API, backend route, persistence 추가 금지.
 - `tailwind.config.ts` 추가/수정 금지.
+
+## 7. 구현 후 실제 검증 기록
+
+| 검증 | 결과 | 메모 |
+|---|---|---|
+| `git diff --check` | PASS | whitespace error 없음 |
+| `pnpm typecheck` | PASS | `tsc --noEmit` |
+| `pnpm lint` | PASS with warnings | 기존 unused var / hook dependency / Next workspace warning |
+| `pnpm test` | PASS | 45 files / 1039 tests |
+| `pnpm build` | PASS | 단독 재실행 기준 production build 성공 |

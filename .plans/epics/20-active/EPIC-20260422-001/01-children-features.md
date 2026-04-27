@@ -26,17 +26,22 @@
 
 ### F2 — Mock 스키마 재설계 (추출/적용 분리 + 시나리오 세트)
 
-- **IDEA**: [IDEA-20260424-001](../../../ideas/20-approved/IDEA-20260424-001.md)
+- **IDEA**: [IDEA-20260424-001](../../../archive/f2-mock-schema-redesign/sources/ideas/IDEA-20260424-001.md)
 - **Lane**: Standard (스키마·주입 로직·테스트 광범위 갱신)
 - **RICE 예상**: 스크리닝 시 확정 — Phase 3 내러티브 완성도 직결 (Impact 최고), 공통 방안 C1+C2 선행 투자 필요 (Effort 큼)
-- **범위**: `src/lib/mock-data.ts` 에 `extractedFrame` / `appliedFrame` 분리 스키마 도입 + `PREVIEW_MOCK_SCENARIOS: [세트A, B, C, (D)]` 배열화 + 세트 선택기 함수 (랜덤/고정/버튼 트리거 중 `/plan-draft` 결정). `order-form/index.tsx` 에서 `EstimateInfoCard` · `SettlementSection` 에 Step 기반 `visible` prop 주입. AI 카테고리 `fare` 값을 `estimate.amount` 와 일치시켜 자릿수 혼동 제거. `dashboard-preview.tsx` 에 세트 선택 트리거 UI 추가 (옵션).
-- **Screening**: [SCREENING-20260424-001](../../../ideas/20-approved/SCREENING-20260424-001.md) — Go, 77.65, Standard
-- **Draft**: [`.plans/drafts/f2-mock-schema-redesign/01-draft.md`](../../../drafts/f2-mock-schema-redesign/01-draft.md) (Standard/B/dev)
-- **PRD**: [`.plans/drafts/f2-mock-schema-redesign/02-prd.md`](../../../drafts/f2-mock-schema-redesign/02-prd.md)
-- **PRD Review**: [`.plans/drafts/f2-mock-schema-redesign/03-prd-review.md`](../../../drafts/f2-mock-schema-redesign/03-prd-review.md) — Approve, critical/high 없음
-- **Feature Context**: [`.plans/features/active/f2-mock-schema-redesign/00-context/`](../../../features/active/f2-mock-schema-redesign/00-context/00-index.md) (Bridge 완료)
+- **범위**: `src/lib/mock-data.ts` 에 `extractedFrame` / `appliedFrame` 분리 스키마 도입 + `PREVIEW_MOCK_SCENARIOS` 5개 구성 + demo-safe randomizable scenario 3개(`default`, `regional-cold-chain`, `short-industrial-hop`) 순환. `partial`, `mismatch-risk`는 fixture-only 유지. `dashboard-preview.tsx` 는 Step 4 → Step 1 전환 시 직전 scenario를 제외하고 random 선택. `order-form/**` 는 CompanyManager 외 추출 대상 전체를 적용 전 placeholder/neutral 상태로 숨기고, `AI_APPLY` 내부에서 상차지 → 하차지 → 예상 운임/거리 → 화물/차량+옵션 → 정산 순서로 적용한다. 공개 scenario selector UI는 만들지 않는다.
+- **Screening**: [SCREENING-20260424-001](../../../archive/f2-mock-schema-redesign/sources/ideas/SCREENING-20260424-001.md) — Go, 77.65, Standard
+- **Draft**: [`.plans/archive/f2-mock-schema-redesign/sources/drafts/01-draft.md`](../../../archive/f2-mock-schema-redesign/sources/drafts/01-draft.md) (Standard/B/dev)
+- **PRD**: [`.plans/archive/f2-mock-schema-redesign/sources/drafts/02-prd.md`](../../../archive/f2-mock-schema-redesign/sources/drafts/02-prd.md)
+- **PRD Review**: [`.plans/archive/f2-mock-schema-redesign/sources/drafts/03-prd-review.md`](../../../archive/f2-mock-schema-redesign/sources/drafts/03-prd-review.md) — Approve, 구현 후 feedback resolved
+- **Feature Context**: [`.plans/archive/f2-mock-schema-redesign/sources/feature-package/00-context/`](../../../archive/f2-mock-schema-redesign/sources/feature-package/00-context/00-index.md) (Bridge 완료)
+- **Feature Package**: [`.plans/archive/f2-mock-schema-redesign/sources/feature-package/02-package/`](../../../archive/f2-mock-schema-redesign/sources/feature-package/02-package/00-overview.md) (TASK 8건 구현 완료, D-F2-011~D-F2-015 반영)
+- **Archive**: [ARCHIVE-F2](../../../archive/f2-mock-schema-redesign/ARCHIVE-F2.md)
+- **구현 이력**: T-F2-SCHEMA-01~06 + 추가 확장 T-F2-RANDOM-07/T-F2-STAGED-08 완료. frame split, compatibility helper, random scenario rotation, pre-apply hidden state, staged reveal timeline, animation slowdown 반영.
+- **주요 결정**: D-F2-008(helper API), D-F2-009(`jsonViewerOpen=false` 유지), D-F2-010(`mismatch-risk` fixture-only), D-F2-011(random rotation), D-F2-012(pre-apply full placeholder), D-F2-013(staged reveal timeline), D-F2-014(animation slowdown), D-F2-015(verification gate).
+- **검증**: `git diff --check` PASS, `pnpm typecheck` PASS, `pnpm lint` PASS with warnings, `pnpm test` 45 files / 1039 tests PASS, `pnpm build` PASS. Manual preview evidence: `output/verification/dash-preview-step4-staged-samples.json`.
 - **포함 이슈**: [2-1], [2-2], [2-3], [2-4]
-- **상태**: active (Feature Package + TASK 정의 완료, `/dev-run` 대기)
+- **상태**: **archived** (2026-04-27, archive bundle 생성 + sources 이동 완료)
 
 ### F3 — 옵션↔추가요금 파생 로직
 
@@ -399,14 +404,14 @@ Phase B 는 Phase A 의 `/plan-idea → /plan-screen → /plan-draft → /plan-p
 
 ### Phase B 종료 조건 (M-Epic-2, 2026-05-14 예정)
 
-- [ ] F2 IDEA → screening → draft → PRD review → bridge 완료, implementation → archive 대기
+- [x] F2 IDEA → screening → draft → PRD review → bridge → implementation → verify → archive 완료
 - [x] F4 IDEA → screening → draft → PRD review → bridge → implementation → verify → archive 완료
-- [ ] `src/lib/mock-data.ts` 에 `extractedFrame` / `appliedFrame` + `PREVIEW_MOCK_SCENARIOS` 정착
-- [ ] `order-form/index.tsx` 의 Step 기반 가시성 제어와 `fare ↔ estimate.amount` 정합성 검증 완료
+- [x] `src/lib/mock-data.ts` 에 `extractedFrame` / `appliedFrame` + `PREVIEW_MOCK_SCENARIOS` 정착
+- [x] `order-form/index.tsx` 의 Step 기반 가시성 제어와 `fare ↔ estimate.amount` 정합성 검증 완료
 - [x] `src/components/dashboard-preview/hit-areas.ts` 18 bounds 재측정 및 Tablet/overlay 결정이 decision log 에 기록됨
-- [ ] fresh `pnpm test` + 필요한 `typecheck` / `lint` / `build` + `/dev-verify` 통과 증거 확보 (F4 완료, F2 대기)
-- [ ] `/plan-archive {F2-slug}` 완료. F4는 archive 완료
-- [ ] F3 (Phase C) 착수 입력이 정리되고 Epic 은 `active` 상태 유지
+- [x] fresh `pnpm test` + 필요한 `typecheck` / `lint` / `build` 통과 증거 확보 (F4/F2 완료)
+- [x] `/plan-archive {F2-slug}` 완료. F4도 archive 완료
+- [x] F3 (Phase C) 착수 입력이 정리되고 Epic 은 `active` 상태 유지
 
 ---
 
@@ -432,7 +437,7 @@ Epic 상태는 **`active` 유지** (Phase B/C 완료까지). 모든 자식 Featu
 | Feature | 상태 | TASK 진행 | 테스트 | 번들 영향 | 리뷰 |
 |---|:---:|:---:|:---:|:---:|:---:|
 | F1 라이트 모드 | **archived** | **14/14** (T-06 skip) | **980 PASS** | **+1 kB (164 kB)** | **/dev-verify PASS with WARN (ERROR 0)** |
-| F2 Mock 재설계 | active | screening + draft + PRD review + Bridge + Feature Package | — | — | /dev-run 대기 |
+| F2 Mock 재설계 | **archived** | 8/8 TASK | 1039 PASS, typecheck/lint/build PASS | route `/` 167 kB | verification PASS |
 | F3 옵션↔요금 파생 | pending | — | — | — | — |
 | F4 레이아웃+HitArea | **archived** | 5/5 TASK + D-F4-011 | build PASS, 990 PASS, typecheck PASS, lint PASS, browser spot check PASS | 165 kB | /dev-verify PASS |
 | F5 UI 잔재 정리 | **archived** | 4/4 | 624 PASS | — | /dev-verify PASS |
@@ -475,3 +480,5 @@ Epic 상태는 **`active` 유지** (Phase B/C 완료까지). 모든 자식 Featu
 | 2026-04-24 | 사용자 스크린샷 QA 반영 — static bounds만으로는 tooltip/hit-area가 실제 컴포넌트 위치와 어긋나는 문제가 재현되어 D-F4-010으로 `data-hit-area-id` target DOMRect 우선 측정 방식을 적용. `pnpm test` 990 PASS, build first load JS 165 kB. |
 | 2026-04-27 | F4 browser spot check 완료 — 1440/1024/768 viewport에서 target 18개와 hit-area 18개 모두 매칭, max delta 0~0.1px. 초기 fallback 노출 방지를 위해 D-F4-011 적용. |
 | 2026-04-27 | F4 archive 실행 — `ARCHIVE-F4.md` 생성, IDEA/screening/draft/feature package sources 이동, archive index/backlog/screening matrix 갱신. |
+| 2026-04-27 | F2 구현/검증 완료 — frame split, demo-safe random scenario rotation, pre-apply full placeholder, `AI_APPLY` staged reveal timeline, animation slowdown 반영. `pnpm test` 45 files / 1039 tests, `typecheck`, `lint`, `build` PASS. |
+| 2026-04-27 | F2 archive 실행 — `ARCHIVE-F2.md` 생성, IDEA/screening/draft/feature package sources 이동, archive index/backlog/screening matrix 갱신. Phase B 종료 조건 충족, Phase C F3 착수 준비. |

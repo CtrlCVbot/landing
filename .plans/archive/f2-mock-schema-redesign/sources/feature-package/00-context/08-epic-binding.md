@@ -26,7 +26,7 @@
 | Hybrid | false |
 | 병렬 Feature | F4 레이아웃 정비 + Hit-Area 재정렬 |
 | 후속 Feature | F3 옵션↔추가요금 파생 |
-| 다음 단계 | `/dev-feature .plans/features/active/f2-mock-schema-redesign/` |
+| 다음 단계 | `/plan-archive f2-mock-schema-redesign` 완료 후 F3 착수 |
 
 ## 3. Epic 성공 지표 연결
 
@@ -53,10 +53,13 @@
 | 2026-04-24 IDEA/Screen/Draft | active | approved |
 | 2026-04-24 PRD Review | active | approved, Bridge 대기 |
 | 2026-04-24 Bridge | active | active feature context 생성 |
-| 다음 `/dev-feature` 이후 | active | TASK 정의 대기 |
+| 2026-04-24 `/dev-feature` | active | TASK 정의 완료 |
+| 2026-04-27 `/dev-run` + verify | active | implemented, fresh verification PASS |
+| 2026-04-27 archive | active | archived |
 
 ## 6. 변경 이력
 
 | 날짜 | 내용 |
 |---|---|
 | 2026-04-24 | Bridge 생성 — F2 active feature context와 Epic binding 작성. |
+| 2026-04-27 | 구현/검증/아카이브 결과 반영 — F2 상태 archived, Phase C F3 착수 준비. |

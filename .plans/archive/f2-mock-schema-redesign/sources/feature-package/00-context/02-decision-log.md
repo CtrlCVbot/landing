@@ -89,3 +89,53 @@
 | 선택값 | `mismatch-risk`는 test fixture로만 제공하고 공개 selector UI는 만들지 않음. |
 | 영향 범위 | `src/lib/mock-data.ts`, AI panel/order form source tests |
 | Rollback | F3 이후 내부 debug selector가 승인되면 scenario picker로 연결 |
+
+### D-F2-011. Demo-safe random scenario rotation
+
+| 항목 | 값 |
+|---|---|
+| 결정일 | 2026-04-27 |
+| 배경 | 사용자가 mock data가 매번 같은 값만 반복되어 각 입력값 적용을 확인하기 어렵다고 피드백했다. |
+| 선택값 | `default`, `regional-cold-chain`, `short-industrial-hop` 3개를 `randomizable=true`로 두고 preview loop가 마지막 Step에서 Step 1로 돌아올 때 새 scenario를 선택한다. |
+| 영향 범위 | `src/lib/mock-data.ts`, `src/components/dashboard-preview/dashboard-preview.tsx`, dashboard-preview tests |
+| Rollback | `DashboardPreview`에서 random helper 호출을 제거하고 `getDefaultPreviewMockScenario()`로 고정한다. |
+
+### D-F2-012. Pre-apply full target placeholder
+
+| 항목 | 값 |
+|---|---|
+| 결정일 | 2026-04-27 |
+| 배경 | 추출 전에 정산 정보, 예상 운임/거리, 운송 옵션, 화물 정보에 실제 값이 보여 적용 오류처럼 보일 수 있었다. |
+| 선택값 | CompanyManager만 pre-filled로 유지하고 상/하차지, 일시, 화물, 옵션, estimate, settlement는 `AI_APPLY` 전까지 placeholder/neutral 상태로 표시한다. |
+| 영향 범위 | `order-form/index.tsx`, `location-form.tsx`, `datetime-card.tsx`, `cargo-info-form.tsx`, `transport-option-card.tsx`, `estimate-info-card.tsx`, `settlement-section.tsx`, component tests |
+| Rollback | 각 child card의 `revealed`/`visible` prop을 제거하고 기존 `step.formState`만 사용한다. |
+
+### D-F2-013. `AI_APPLY` staged reveal timeline
+
+| 항목 | 값 |
+|---|---|
+| 결정일 | 2026-04-27 |
+| 배경 | 파트별 적용 순서를 사용자가 눈으로 확인해야 했고, estimate/settlement는 각 파트의 의미에 맞춰 늦게 보여야 했다. |
+| 선택값 | `formRevealTimeline`을 추가하고 `pickupAt=0`, `deliveryAt=650`, `estimateAt=900`, `cargoAt=1300`, `optionsAt=1300`, `fareAt=1950`, `settlementAt=2200`으로 확정한다. |
+| 영향 범위 | `preview-steps.ts`, `order-form/index.tsx`, 하위 카드 tests |
+| Rollback | `formRevealTimeline`을 제거하고 `AI_APPLY` 진입 시 모든 값을 동시에 표시한다. |
+
+### D-F2-014. Rolling trigger 분리와 animation slowdown
+
+| 항목 | 값 |
+|---|---|
+| 결정일 | 2026-04-27 |
+| 배경 | 기존 animation이 빨라 파트별 적용을 확인하기 어려웠고 estimate와 settlement rolling이 같은 trigger를 공유했다. |
+| 선택값 | Step duration을 `800/2200/1400/4200ms`, partial interval을 `650ms`, all beat를 `1200ms`로 늦추고 estimate rolling은 `estimateAt`, settlement rolling은 `settlementAt`으로 분리한다. |
+| 영향 범위 | `preview-steps.ts`, `ai-panel/index.tsx`, `estimate-info-card.tsx`, `settlement-section.tsx`, `transport-option-card.tsx` |
+| Rollback | duration constants와 rolling trigger를 이전 단일 trigger 방식으로 되돌린다. |
+
+### D-F2-015. Verification gate 결과
+
+| 항목 | 값 |
+|---|---|
+| 결정일 | 2026-04-27 |
+| 배경 | archive 전 fresh verification evidence가 필요했다. |
+| 선택값 | `git diff --check`, `pnpm typecheck`, `pnpm lint`, `pnpm test`, `pnpm build`를 실행했고 최종 gate는 PASS로 기록한다. |
+| 영향 범위 | release checklist, archive bundle |
+| Rollback | 해당 없음. 실패가 발생하면 archive를 보류하고 수정 루프를 재개한다. |

@@ -30,3 +30,4 @@
 | 2026-04-23 | EPIC-20260422-001 상태 전이 `draft → planning` (자식 IDEA 2 건 등록 후 게이트 통과) |
 | 2026-04-23 | EPIC-20260422-001 상태 전이 `planning → active` (F5/F1 approved + Draft/PRD/Bridge 완료 + Children §1 F5/F1 상태 `inbox → approved` 갱신 + binding Epic 상태 라인 동기) |
 | 2026-04-24 | Phase A archive 완료 (F1/F5 archived) + Phase B IDEA 2건 등록 (F2/F4) |
+| 2026-04-27 | Phase B archive 완료 (F4/F2 archived) + Phase C F3 착수 준비 |

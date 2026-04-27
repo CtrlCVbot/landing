@@ -18,17 +18,19 @@
 | 항목 | 결정 |
 |---|---|
 | 선택값 | `PREVIEW_MOCK_SCENARIOS.length >= 3` |
-| 필수 scenario | default, partial, mismatch-risk |
-| 기본 selector | deterministic default helper |
-| 이유 | 테스트 안정성과 demo 예측 가능성 우선 |
+| 최종 scenario | default, regional-cold-chain, short-industrial-hop, partial, mismatch-risk |
+| randomizable | default, regional-cold-chain, short-industrial-hop |
+| fixture-only | partial, mismatch-risk |
+| 기본 selector | deterministic helper + random helper 병행 |
+| 이유 | 테스트 안정성과 demo 다양성 동시 확보 |
 
 ## 3. Step visibility
 
 | 항목 | 결정 |
 |---|---|
-| 선택값 | Step에서 `estimateVisible`, `settlementVisible` 또는 동등한 상태 파생 |
-| 목표 | `AI_EXTRACT` 전 estimate/settlement 완성값 미노출 |
-| 검증 | `AI_APPLY` 전/후 렌더 차이 테스트 |
+| 선택값 | Step에서 기본 visibility를 만들고 `AI_APPLY` 내부는 `formRevealTimeline`으로 세분화 |
+| 목표 | `AI_APPLY` 전 전체 추출 대상 값 미노출 |
+| 검증 | `INITIAL`/`AI_INPUT`/`AI_EXTRACT` hidden state와 `AI_APPLY` staged reveal 테스트 |
 
 ## 4. Fee consistency
 
@@ -52,3 +54,22 @@
 |---|---|
 | 선택값 | `hit-areas.ts`, `interactive-overlay.tsx` 편집 금지 |
 | 이유 | F4 layout/hit-area 범위와 병렬 가능성 유지 |
+
+## 7. Staged Apply Timing
+
+| 항목 | 결정 |
+|---|---|
+| 선택값 | 4-dot Step 구조 유지, `AI_APPLY` 내부 reveal만 세분화 |
+| 순서 | 상차지 → 하차지 → 예상 운임/거리 → 화물/차량+운송 옵션 → 정산 정보 |
+| 타이밍 | `0 / 650 / 900 / 1300 / 2200ms` 중심 |
+| 이유 | 사용자가 파트별 적용을 눈으로 따라갈 수 있게 하기 위함 |
+
+## 8. Animation Speed
+
+| 항목 | 결정 |
+|---|---|
+| Step duration | `800 / 2200 / 1400 / 4200ms` |
+| partial interval | `650ms` |
+| all beat | `1200ms` |
+| number rolling | `700ms` |
+| option stroke | `350ms` |

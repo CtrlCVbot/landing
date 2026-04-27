@@ -26,10 +26,10 @@
 
 | 영역 | 경로 | 확인한 내용 | 최종 리포트 활용 |
 | --- | --- | --- | --- |
-| Epic children | `.plans/epics/20-active/EPIC-20260422-001/01-children-features.md` | F1/F5 archived, F2/F4 approved and Bridge complete, Phase B next step is `/dev-feature`. | 현재 pipeline state의 source |
-| F2 PRD Review | `.plans/drafts/f2-mock-schema-redesign/03-prd-review.md` | Verdict `Approve`, critical/high 없음, medium feedback 2건, low feedback 1건. | Codex PRD review 품질과 남은 feedback 예시 |
+| Epic children | `.plans/epics/20-active/EPIC-20260422-001/01-children-features.md` | F1/F5/F4/F2 archived, Phase B 종료 조건 충족, Phase C F3 착수 준비. | 현재 pipeline state의 source |
+| F2 PRD Review | `.plans/archive/f2-mock-schema-redesign/sources/drafts/03-prd-review.md` | Verdict `Approve`, 구현 후 feedback resolved, archive 완료. | Codex PRD review 품질과 feedback 해소 예시 |
 | F4 PRD Review | `.plans/archive/f4-layout-hit-area-realignment/sources/drafts/03-prd-review.md` | Verdict `Approve`, critical/high 없음, medium feedback 1건, low feedback 1건. | Codex PRD review 품질과 남은 feedback 예시 |
-| F2 Bridge context | `.plans/features/active/f2-mock-schema-redesign/00-context/` | `00-index`, `01-prd-freeze`, `01-product-context`, `02-decision-log`, `02-scope-boundaries`, `03-design-decisions`, `04-implementation-hints`, `06-architecture-binding`, `08-epic-binding` 총 9개 파일. | Codex Bridge output 구조 |
+| F2 Bridge context | `.plans/archive/f2-mock-schema-redesign/sources/feature-package/00-context/` | `00-index`, `01-prd-freeze`, `01-product-context`, `02-decision-log`, `02-scope-boundaries`, `03-design-decisions`, `04-implementation-hints`, `06-architecture-binding`, `08-epic-binding` 총 9개 파일. | Codex Bridge output 구조 |
 | F4 Bridge context | `.plans/archive/f4-layout-hit-area-realignment/sources/feature-package/00-context/` | F2와 같은 9개 context 파일 구조. | Codex Bridge output 구조 |
 | Phase A feedback | `.plans/kit-feedback/phase-a-dry-run-20260423/` | pipeline overview, positive findings, pain points, improvement proposals, command-agent matrix가 이미 문서 패키지로 존재합니다. | 기존 feedback과 새 Codex 개선 후보 매핑 |
 
@@ -47,7 +47,7 @@
 | 공백 | 영향 | 최종 리포트 처리 |
 | --- | --- | --- |
 | Claude Code 세션 transcript 원문 없음 | 실제 대화 흐름의 불편함은 archive/commit으로만 추정해야 합니다. | "archive와 commit 기준 관찰"로 명시합니다. |
-| F2/F4 `/dev-feature` 미실행 | Bridge 이후 구현 준비도는 검증했지만 구현 단계 피드백은 아직 없습니다. | Phase B dev feedback은 후속 리포트로 분리합니다. |
+| Phase B dev feedback 최신화 필요 | F2/F4 구현과 archive가 완료되어 기존 "Bridge 이후" 근거는 오래된 상태입니다. | 최종 리포트 작성 시 F2/F4 archive bundle을 최신 evidence로 사용합니다. |
 | Codex subagent 병렬 구현 경험 없음 | Codex worker ownership/race를 현재 작업에서 직접 측정하지 않았습니다. | 개선 후보로만 두고 verified finding처럼 쓰지 않습니다. |
 | `%SystemDrive%/` untracked 원인 미확인 | repo hygiene 리스크는 보이나 이번 작업의 근거는 부족합니다. | 남은 리스크로만 기록합니다. |
 | `package.json` unstaged 변경 출처 미확인 | 문서 패키지와 무관한 변경입니다. | 최종 리포트에서 범위 제외로 명시합니다. |

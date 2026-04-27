@@ -11,3 +11,4 @@
 | F5 | [f5-ui-residue-cleanup](f5-ui-residue-cleanup/ARCHIVE-F5.md) | Phase A F5 — UI 잔재 정리 | Lite | 5.95 | P1-P2-P3-P7-Dev-Verify | 2026-04-24 | apps/landing/src/components/dashboard-preview/ | 0 |
 | F1 | [f1-landing-light-theme](f1-landing-light-theme/ARCHIVE-F1.md) | Phase A F1 — 라이트 모드 전환 인프라 | Standard | 1.89 | P1-P2-P3-P4-P7-Dev-Verify | 2026-04-24 | apps/landing/src/app + src/components/ | 0 |
 | F4 | [f4-layout-hit-area-realignment](f4-layout-hit-area-realignment/ARCHIVE-F4.md) | Phase B F4 — 레이아웃 정비 + Hit-Area 재정렬 | Standard | 72.8 | P1-P2-P3-P4-P7-Dev-Verify | 2026-04-27 | apps/landing/src/components/dashboard-preview/ | 0 |
+| F2 | [f2-mock-schema-redesign](f2-mock-schema-redesign/ARCHIVE-F2.md) | Phase B F2 — Mock 스키마 재설계 | Standard | 77.65 | P1-P2-P3-P4-P7-Dev-Verify | 2026-04-27 | apps/landing/src/lib + apps/landing/src/components/dashboard-preview/ | 0 |
