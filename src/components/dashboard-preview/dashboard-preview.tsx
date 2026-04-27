@@ -1,11 +1,14 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import { previewFadeIn } from '@/lib/motion'
-import { PREVIEW_MOCK_DATA } from '@/lib/mock-data'
+import {
+  createPreviewMockData,
+  selectRandomPreviewMockScenario,
+} from '@/lib/mock-data'
 import { PREVIEW_STEPS } from '@/lib/preview-steps'
 import { useMediaQuery } from '@/hooks/use-media-query'
 import { useAutoPlay } from './use-auto-play'
@@ -66,6 +69,14 @@ const AREA_TO_STEP: Readonly<Record<string, number>> = {
   'result-fare': 3,
 } as const
 
+export function shouldRotatePreviewScenario(
+  previousStepIndex: number,
+  currentStepIndex: number,
+  stepCount: number,
+): boolean {
+  return stepCount > 1 && previousStepIndex === stepCount - 1 && currentStepIndex === 0
+}
+
 // ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
@@ -87,6 +98,32 @@ export function DashboardPreview({ className }: DashboardPreviewProps) {
     steps: PREVIEW_STEPS,
     enabled: !prefersReducedMotion && !isMobile,
   })
+  const [mockScenario, setMockScenario] = useState(() =>
+    selectRandomPreviewMockScenario(),
+  )
+  const previousStepRef = useRef(currentStep)
+  const previewMockData = useMemo(
+    () => createPreviewMockData(mockScenario),
+    [mockScenario],
+  )
+
+  useEffect(() => {
+    const previousStep = previousStepRef.current
+
+    if (
+      shouldRotatePreviewScenario(
+        previousStep,
+        currentStep,
+        PREVIEW_STEPS.length,
+      )
+    ) {
+      setMockScenario((previousScenario) =>
+        selectRandomPreviewMockScenario({ excludeId: previousScenario.id }),
+      )
+    }
+
+    previousStepRef.current = currentStep
+  }, [currentStep])
 
   // 모드 전환에 따른 useAutoPlay 제어
   useEffect(() => {
@@ -153,7 +190,7 @@ export function DashboardPreview({ className }: DashboardPreviewProps) {
     <div className="relative">
       {/* T-DASH3-M1-04: Phase 3 Feature flag 분기. */}
       {dashV3Enabled ? (
-        <AiRegisterMain step={step} mockData={PREVIEW_MOCK_DATA} />
+        <AiRegisterMain step={step} mockData={previewMockData} />
       ) : (
         <div className="flex h-full">
           <AiPanelPreview aiPanelState={step.aiPanelState} />

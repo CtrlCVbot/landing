@@ -126,6 +126,16 @@ export interface AiApplyAllBeat {
 }
 
 /** 조작감 타이밍 트랙 (Phase 1 스펙 §7-2 + §11) */
+export interface FormRevealTimeline {
+  readonly pickupAt: number
+  readonly deliveryAt: number
+  readonly estimateAt: number
+  readonly cargoAt: number
+  readonly optionsAt: number
+  readonly fareAt: number
+  readonly settlementAt: number
+}
+
 export interface InteractionsTrack {
   /** #1 fake-typing (AI_INPUT) */
   readonly typingRhythm?: {
@@ -153,6 +163,7 @@ export interface InteractionsTrack {
   }>
   /** #10 column pulse — 섹션 Border Pulse 대상 (REQ-DASH3-029) */
   readonly columnPulseTargets?: ReadonlyArray<string>
+  readonly formRevealTimeline?: FormRevealTimeline
 }
 
 // =============================================================================
@@ -206,13 +217,13 @@ export interface PreviewStep {
 // Constants — durations (PRD §6-1)
 // =============================================================================
 
-const DURATION_INITIAL = 500
-const DURATION_AI_INPUT = 1500
-const DURATION_AI_EXTRACT = 1000
-const DURATION_AI_APPLY = 2500
+const DURATION_INITIAL = 800
+const DURATION_AI_INPUT = 2200
+const DURATION_AI_EXTRACT = 1400
+const DURATION_AI_APPLY = 4200
 
-const PARTIAL_INTERVAL_MS = 300
-const ALL_BEAT_MS = 800
+const PARTIAL_INTERVAL_MS = 650
+const ALL_BEAT_MS = 1200
 
 const CATEGORY_ORDER: ReadonlyArray<AiCategoryId> = [
   'departure',
@@ -441,6 +452,16 @@ const COLUMN_PULSE_TARGETS: ReadonlyArray<string> = [
   'col-3',
 ] as const
 
+const FORM_REVEAL_TIMELINE: FormRevealTimeline = {
+  pickupAt: 0,
+  deliveryAt: PARTIAL_INTERVAL_MS,
+  estimateAt: 900,
+  cargoAt: PARTIAL_INTERVAL_MS * 2,
+  optionsAt: PARTIAL_INTERVAL_MS * 2,
+  fareAt: PARTIAL_INTERVAL_MS * 3,
+  settlementAt: 2200,
+} as const
+
 // =============================================================================
 // Step snapshots
 // =============================================================================
@@ -582,6 +603,7 @@ const AI_APPLY_STEP: PreviewStep = (() => {
     },
     numberRollingTargets: NUMBER_ROLLING_TARGETS,
     columnPulseTargets: COLUMN_PULSE_TARGETS,
+    formRevealTimeline: FORM_REVEAL_TIMELINE,
   }
   return {
     id: 'AI_APPLY',

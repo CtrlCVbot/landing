@@ -25,7 +25,10 @@ import path from 'node:path'
 import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest'
 
-import { DashboardPreview } from '@/components/dashboard-preview/dashboard-preview'
+import {
+  DashboardPreview,
+  shouldRotatePreviewScenario,
+} from '@/components/dashboard-preview/dashboard-preview'
 import { DESKTOP_HIT_AREAS } from '@/components/dashboard-preview/hit-areas'
 
 // ---------------------------------------------------------------------------
@@ -174,6 +177,15 @@ describe('DashboardPreview — Phase 3 Feature flag', () => {
       render(<DashboardPreview />)
       expect(screen.queryByTestId('ai-panel')).not.toBeInTheDocument()
       expect(screen.queryByTestId('form-preview')).not.toBeInTheDocument()
+    })
+  })
+
+  describe('preview scenario rotation helper', () => {
+    it('rotates only when the preview wraps from the last step back to Step 1', () => {
+      expect(shouldRotatePreviewScenario(3, 0, 4)).toBe(true)
+      expect(shouldRotatePreviewScenario(2, 3, 4)).toBe(false)
+      expect(shouldRotatePreviewScenario(0, 1, 4)).toBe(false)
+      expect(shouldRotatePreviewScenario(3, 2, 4)).toBe(false)
     })
   })
 

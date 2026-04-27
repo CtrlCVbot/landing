@@ -47,6 +47,7 @@ export type TransportOptionKey = keyof TransportOptions
 
 export interface TransportOptionCardProps {
   readonly options: TransportOptions
+  readonly revealed?: boolean
   /**
    * #9 stroke 애니 대상 키 배열. 여기 포함된 옵션만 AI_APPLY beat 에서 stroke-dashoffset 애니.
    * 미지정 → 모든 옵션 정적 체크.
@@ -124,7 +125,7 @@ function OptionItem({
           strokeDasharray={STROKE_DASH_TOTAL}
           strokeDashoffset={dashOffset}
           style={{
-            transition: 'stroke-dashoffset 200ms ease-out',
+            transition: 'stroke-dashoffset 350ms ease-out',
           }}
         />
       </svg>
@@ -139,6 +140,7 @@ function OptionItem({
 
 export function TransportOptionCard({
   options,
+  revealed = true,
   strokeTargets,
   strokeTriggerAt,
 }: TransportOptionCardProps) {
@@ -152,6 +154,7 @@ export function TransportOptionCard({
       aria-label="운송 옵션"
       data-testid="transport-option-card"
       data-hit-area-id="form-transport-options"
+      data-revealed={revealed}
       className={CARD_CLASSES}
     >
       <div className="flex items-center gap-2 min-w-0">
@@ -165,7 +168,7 @@ export function TransportOptionCard({
 
       <div className="grid grid-cols-2 gap-2">
         {OPTION_LABELS.map(({ key, label }) => {
-          const checked = options[key]
+          const checked = revealed && options[key]
           const isAnimTarget = strokeTargets?.includes(key) ?? false
 
           // dashoffset 계산

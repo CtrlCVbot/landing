@@ -77,6 +77,7 @@ export interface CargoInfoFormProps {
    * false → pre-filled 값 그대로 노출 (caret 숨김).
    */
   readonly active: boolean
+  readonly revealed?: boolean
   /**
    * #7 dropdown 펼침 연출 제어.
    * 미지정/null 이면 select 는 항상 닫힘.
@@ -129,6 +130,7 @@ interface FilledTextFieldProps {
   readonly label: string
   readonly value: string
   readonly active: boolean
+  readonly revealed: boolean
   readonly multiline?: boolean
   readonly testId?: string
 }
@@ -137,6 +139,7 @@ function FilledTextField({
   label,
   value,
   active,
+  revealed,
   multiline = false,
   testId,
 }: FilledTextFieldProps) {
@@ -144,8 +147,8 @@ function FilledTextField({
     active,
   })
 
-  const shown = active ? displayedValue : value
-  const showCaret = active && isFilling && caretVisible
+  const shown = revealed ? (active ? displayedValue : value) : '—'
+  const showCaret = revealed && active && isFilling && caretVisible
 
   return (
     <div data-testid={testId}>
@@ -294,6 +297,7 @@ export function CargoInfoForm({
   vehicle,
   cargo,
   active,
+  revealed = true,
   dropdownBeat,
 }: CargoInfoFormProps) {
   const expandedTarget = useDropdownBeat(dropdownBeat)
@@ -309,6 +313,7 @@ export function CargoInfoForm({
       aria-label="화물 정보"
       data-testid="cargo-info-form"
       data-hit-area-id="form-cargo-info"
+      data-revealed={revealed}
       className={CARD_CLASSES}
     >
       {/* Header: Container 아이콘 + 제목 */}
@@ -332,9 +337,9 @@ export function CargoInfoForm({
               className={FIELD_LABEL_ICON_CLASSES}
             />
           }
-          value={vehicle.type}
+          value={revealed ? vehicle.type : '선택 전'}
           options={VEHICLE_TYPE_OPTIONS}
-          expanded={vehicleTypeExpanded}
+          expanded={revealed && vehicleTypeExpanded}
         />
         <DropdownSelect
           targetId="weight"
@@ -345,9 +350,9 @@ export function CargoInfoForm({
               className={FIELD_LABEL_ICON_CLASSES}
             />
           }
-          value={vehicle.weight}
+          value={revealed ? vehicle.weight : '선택 전'}
           options={VEHICLE_WEIGHT_OPTIONS}
-          expanded={weightExpanded}
+          expanded={revealed && weightExpanded}
         />
       </div>
 
@@ -356,6 +361,7 @@ export function CargoInfoForm({
         label="화물 품목"
         value={cargo.name}
         active={active}
+        revealed={revealed}
         testId="cargo-name-field"
       />
 
@@ -364,6 +370,7 @@ export function CargoInfoForm({
         label="비고"
         value={cargo.remark}
         active={active}
+        revealed={revealed}
         multiline
         testId="cargo-remark-field"
       />
@@ -381,16 +388,18 @@ export function CargoInfoForm({
           data-testid="cargo-recent-suggestions"
           className="flex flex-wrap gap-1.5"
         >
-          {vehicle.recentCargoSuggestions.map((suggestion) => (
-            <button
-              key={suggestion}
-              type="button"
-              disabled
-              className={CHIP_BASE_CLASSES}
-            >
-              <span>{suggestion}</span>
-            </button>
-          ))}
+          {(revealed ? vehicle.recentCargoSuggestions : ['적용 전']).map(
+            (suggestion) => (
+              <button
+                key={suggestion}
+                type="button"
+                disabled
+                className={CHIP_BASE_CLASSES}
+              >
+                <span>{suggestion}</span>
+              </button>
+            ),
+          )}
         </div>
       </div>
     </section>

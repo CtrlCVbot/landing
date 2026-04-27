@@ -19,7 +19,7 @@
  *  - AI_APPLY Step 에서 partialBeat / allBeat 기반 active / trigger 가 자식에 전달되는지 검증.
  */
 
-import { act, render, screen } from '@testing-library/react'
+import { act, render, screen, within } from '@testing-library/react'
 import {
   afterEach,
   beforeEach,
@@ -41,6 +41,89 @@ const AI_INPUT_STEP = PREVIEW_STEPS[1]!
 const AI_EXTRACT_STEP = PREVIEW_STEPS[2]!
 const AI_APPLY_STEP = PREVIEW_STEPS[3]!
 
+const HIDDEN_FORM_STEPS = [
+  ['INITIAL', INITIAL_STEP],
+  ['AI_INPUT', AI_INPUT_STEP],
+  ['AI_EXTRACT', AI_EXTRACT_STEP],
+] as const
+
+function installRafShim(): () => void {
+  const originalRaf = globalThis.requestAnimationFrame
+  const originalCaf = globalThis.cancelAnimationFrame
+  const originalNow = performance.now.bind(performance)
+  const FRAME_MS = 16
+  let nowRef = 0
+
+  globalThis.requestAnimationFrame = ((cb: FrameRequestCallback) =>
+    setTimeout(() => {
+      nowRef += FRAME_MS
+      cb(nowRef)
+    }, FRAME_MS) as unknown as number) as typeof requestAnimationFrame
+  globalThis.cancelAnimationFrame = ((id: number) =>
+    clearTimeout(id as unknown as ReturnType<typeof setTimeout>)) as typeof cancelAnimationFrame
+  ;(performance as unknown as { now: () => number }).now = () => nowRef
+
+  return () => {
+    globalThis.requestAnimationFrame = originalRaf
+    globalThis.cancelAnimationFrame = originalCaf
+    ;(performance as unknown as { now: () => number }).now = originalNow
+  }
+}
+
+let teardownRaf: (() => void) | null = null
+
+beforeEach(() => {
+  teardownRaf = installRafShim()
+})
+
+afterEach(() => {
+  teardownRaf?.()
+  teardownRaf = null
+  vi.useRealTimers()
+})
+
+function expectExtractionTargetsHidden() {
+  const formData = PREVIEW_MOCK_DATA.formData
+
+  expect(screen.getByTestId('location-form-pickup')).not.toHaveTextContent(
+    formData.pickup.roadAddress,
+  )
+  expect(screen.getByTestId('location-form-delivery')).not.toHaveTextContent(
+    formData.delivery.roadAddress,
+  )
+  expect(screen.getByTestId('datetime-card-pickup')).toHaveTextContent('선택 전')
+  expect(screen.getByTestId('datetime-card-delivery')).toHaveTextContent('선택 전')
+
+  expect(screen.getByTestId('cargo-vehicle-type-trigger')).not.toHaveTextContent(
+    formData.vehicle.type,
+  )
+  expect(screen.getByTestId('cargo-weight-trigger')).not.toHaveTextContent(
+    formData.vehicle.weight,
+  )
+  expect(screen.getByTestId('cargo-name-field')).not.toHaveTextContent(
+    formData.cargo.name,
+  )
+
+  expect(screen.getByTestId('transport-option-direct')).toHaveAttribute(
+    'data-checked',
+    'false',
+  )
+  expect(screen.getByTestId('transport-option-forklift')).toHaveAttribute(
+    'data-checked',
+    'false',
+  )
+
+  const estimate = screen.getByTestId('estimate-info-card')
+  expect(estimate).toHaveAttribute('data-visible', 'false')
+  expect(estimate).toHaveTextContent('적용 전')
+  expect(estimate.textContent).not.toMatch(/360|300|850[,.]?000/)
+
+  const settlement = screen.getByTestId('settlement-section')
+  expect(settlement).toHaveAttribute('data-visible', 'false')
+  expect(settlement).toHaveTextContent('정산 전')
+  expect(settlement.textContent).not.toMatch(/850[,.]?000|750[,.]?000|100[,.]?000|30[,.]?000/)
+}
+
 describe('OrderFormContainer F2 appliedFrame source', () => {
   it('renders estimate values from appliedFrame, not extractedFrame', () => {
     vi.useFakeTimers()
@@ -56,7 +139,10 @@ describe('OrderFormContainer F2 appliedFrame source', () => {
       )
 
       act(() => {
-        vi.advanceTimersByTime(500)
+        vi.advanceTimersByTime(900)
+      })
+      act(() => {
+        vi.advanceTimersByTime(1000)
       })
 
       expect(screen.getByTestId('estimate-info-amount')).toHaveTextContent(amount)
@@ -66,9 +152,217 @@ describe('OrderFormContainer F2 appliedFrame source', () => {
   })
 })
 
+describe('OrderFormContainer pre-apply reveal state', () => {
+  it.each(HIDDEN_FORM_STEPS)(
+    '%s hides extraction target values before AI_APPLY',
+    (_label, step) => {
+      render(
+        <OrderFormContainer
+          step={step}
+          formData={PREVIEW_MOCK_DATA.formData}
+        />,
+      )
+
+      expectExtractionTargetsHidden()
+    },
+  )
+
+  it('AI_APPLY reveals selected scenario values in the order form', () => {
+    vi.useFakeTimers()
+    const scenario = selectPreviewMockScenario('short-industrial-hop')
+    const formData = scenario.appliedFrame.formData
+
+    try {
+      render(<OrderFormContainer step={AI_APPLY_STEP} formData={formData} />)
+
+      act(() => {
+        vi.advanceTimersByTime(900)
+      })
+      act(() => {
+        vi.advanceTimersByTime(1000)
+      })
+      act(() => {
+        vi.advanceTimersByTime(500)
+      })
+      act(() => {
+        vi.advanceTimersByTime(1000)
+      })
+
+      expect(screen.getByTestId('location-form-pickup')).toHaveTextContent(
+        formData.pickup.roadAddress,
+      )
+      expect(screen.getByTestId('datetime-card-pickup')).toHaveTextContent(
+        formData.pickup.date,
+      )
+      expect(screen.getByTestId('cargo-vehicle-type-trigger')).toHaveTextContent(
+        formData.vehicle.type,
+      )
+      expect(
+        within(screen.getByTestId('cargo-name-field')).getByText(formData.cargo.name),
+      ).toBeInTheDocument()
+      expect(screen.getByTestId('estimate-info-amount')).toHaveTextContent(
+        formData.estimate.amount.toLocaleString(),
+      )
+      expect(screen.getByTestId('settlement-total-profit')).toHaveTextContent(
+        formData.settlement.totals.profit.toLocaleString(),
+      )
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+})
+
 // ===========================================================================
 // M1-03 — shell 레이아웃 (기존 검증 유지)
 // ===========================================================================
+
+describe('OrderFormContainer AI_APPLY staged reveal timeline', () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  it('at mount reveals pickup first and keeps later sections hidden', () => {
+    render(
+      <OrderFormContainer step={AI_APPLY_STEP} formData={PREVIEW_MOCK_DATA.formData} />,
+    )
+
+    expect(screen.getByTestId('location-form-pickup')).toHaveAttribute(
+      'data-revealed',
+      'true',
+    )
+    expect(screen.getByTestId('location-form-delivery')).toHaveAttribute(
+      'data-revealed',
+      'false',
+    )
+    expect(screen.getByTestId('estimate-info-card')).toHaveAttribute(
+      'data-visible',
+      'false',
+    )
+    expect(screen.getByTestId('cargo-info-form')).toHaveAttribute(
+      'data-revealed',
+      'false',
+    )
+    expect(screen.getByTestId('transport-option-card')).toHaveAttribute(
+      'data-revealed',
+      'false',
+    )
+    expect(screen.getByTestId('settlement-section')).toHaveAttribute(
+      'data-visible',
+      'false',
+    )
+  })
+
+  it('after estimateAt reveals pickup, delivery, and full estimate card values', () => {
+    const formData = PREVIEW_MOCK_DATA.formData
+    render(<OrderFormContainer step={AI_APPLY_STEP} formData={formData} />)
+
+    act(() => {
+      vi.advanceTimersByTime(899)
+    })
+    expect(screen.getByTestId('estimate-info-card')).toHaveAttribute(
+      'data-visible',
+      'false',
+    )
+
+    act(() => {
+      vi.advanceTimersByTime(1)
+    })
+    act(() => {
+      vi.advanceTimersByTime(1000)
+    })
+
+    expect(screen.getByTestId('location-form-pickup')).toHaveTextContent(
+      formData.pickup.roadAddress,
+    )
+    expect(screen.getByTestId('location-form-delivery')).toHaveTextContent(
+      formData.delivery.roadAddress,
+    )
+    expect(screen.getByTestId('estimate-info-card')).toHaveAttribute(
+      'data-visible',
+      'true',
+    )
+    expect(screen.getByTestId('estimate-info-distance')).toHaveTextContent(
+      String(formData.estimate.distance),
+    )
+    expect(screen.getByTestId('estimate-info-duration')).toHaveTextContent(
+      String(formData.estimate.duration),
+    )
+    expect(screen.getByTestId('estimate-info-amount')).toHaveTextContent(
+      formData.estimate.amount.toLocaleString(),
+    )
+  })
+
+  it('after cargoAt reveals cargo details and scenario transport options together', () => {
+    const formData = selectPreviewMockScenario('regional-cold-chain').appliedFrame.formData
+    render(<OrderFormContainer step={AI_APPLY_STEP} formData={formData} />)
+
+    act(() => {
+      vi.advanceTimersByTime(1299)
+    })
+    expect(screen.getByTestId('cargo-info-form')).toHaveAttribute(
+      'data-revealed',
+      'false',
+    )
+    expect(screen.getByTestId('transport-option-card')).toHaveAttribute(
+      'data-revealed',
+      'false',
+    )
+
+    act(() => {
+      vi.advanceTimersByTime(1)
+    })
+
+    expect(screen.getByTestId('cargo-info-form')).toHaveAttribute(
+      'data-revealed',
+      'true',
+    )
+    expect(screen.getByTestId('cargo-vehicle-type-trigger')).toHaveTextContent(
+      formData.vehicle.type,
+    )
+    expect(screen.getByTestId('transport-option-card')).toHaveAttribute(
+      'data-revealed',
+      'true',
+    )
+    for (const [key, checked] of Object.entries(formData.options)) {
+      expect(screen.getByTestId(`transport-option-${key}`)).toHaveAttribute(
+        'data-checked',
+        checked ? 'true' : 'false',
+      )
+    }
+  })
+
+  it('after settlementAt reveals settlement values from the selected scenario', () => {
+    const formData = PREVIEW_MOCK_DATA.formData
+    render(<OrderFormContainer step={AI_APPLY_STEP} formData={formData} />)
+
+    act(() => {
+      vi.advanceTimersByTime(2199)
+    })
+    expect(screen.getByTestId('settlement-section')).toHaveAttribute(
+      'data-visible',
+      'false',
+    )
+
+    act(() => {
+      vi.advanceTimersByTime(1)
+    })
+    act(() => {
+      vi.advanceTimersByTime(1000)
+    })
+
+    expect(screen.getByTestId('settlement-section')).toHaveAttribute(
+      'data-visible',
+      'true',
+    )
+    expect(screen.getByTestId('settlement-total-profit')).toHaveTextContent(
+      formData.settlement.totals.profit.toLocaleString(),
+    )
+  })
+})
 
 describe('OrderFormContainer shell', () => {
   describe('TC-DASH3-INT-COLS', () => {
@@ -445,13 +739,19 @@ describe('OrderFormContainer AI_APPLY 2단 구조 (M3-01 / M3-11)', () => {
     })
 
     it('AI_APPLY: visible=true → 수치 표시', () => {
+      vi.useFakeTimers()
       render(
         <OrderFormContainer step={AI_APPLY_STEP} formData={PREVIEW_MOCK_DATA.formData} />,
       )
 
       const distanceInfo = screen.getByTestId('estimate-distance-info')
+      expect(distanceInfo).toHaveAttribute('data-visible', 'false')
+      act(() => {
+        vi.advanceTimersByTime(900)
+      })
       expect(distanceInfo).toHaveAttribute('data-visible', 'true')
       expect(distanceInfo).not.toHaveTextContent('측정 전')
+      vi.useRealTimers()
     })
   })
 
@@ -508,31 +808,41 @@ describe('OrderFormContainer AI_APPLY 2단 구조 (M3-01 / M3-11)', () => {
       render(
         <OrderFormContainer step={INITIAL_STEP} formData={PREVIEW_MOCK_DATA.formData} />,
       )
-      // 'direct' 옵션은 checked=true
+      // AI_APPLY 전에는 실제 option 값이 숨겨져 unchecked 상태로 보인다.
       const direct = screen.getByTestId('transport-option-direct')
-      expect(direct).toHaveAttribute('data-checked', 'true')
+      expect(direct).toHaveAttribute('data-checked', 'false')
       // polyline data-animating 속성을 확인 (allBeat 미활성)
       const polyline = direct.querySelector('polyline')
       expect(polyline).toHaveAttribute('data-animating', 'false')
     })
 
     it('AI_APPLY: option stroke 애니 활성 (direct 는 strokeTargets 에 포함되어 animating=true)', () => {
+      vi.useFakeTimers()
       render(
         <OrderFormContainer step={AI_APPLY_STEP} formData={PREVIEW_MOCK_DATA.formData} />,
       )
+      act(() => {
+        vi.advanceTimersByTime(1300)
+      })
       const direct = screen.getByTestId('transport-option-direct')
       const polyline = direct.querySelector('polyline')
       // strokeTargets 에 'direct' 포함 + options.direct=true → animating=true
       expect(polyline).toHaveAttribute('data-animating', 'true')
+      vi.useRealTimers()
     })
 
     it('AI_APPLY: forklift 도 strokeTargets 에 포함 + checked=true → animating=true', () => {
+      vi.useFakeTimers()
       render(
         <OrderFormContainer step={AI_APPLY_STEP} formData={PREVIEW_MOCK_DATA.formData} />,
       )
+      act(() => {
+        vi.advanceTimersByTime(1300)
+      })
       const forklift = screen.getByTestId('transport-option-forklift')
       const polyline = forklift.querySelector('polyline')
       expect(polyline).toHaveAttribute('data-animating', 'true')
+      vi.useRealTimers()
     })
   })
 })
@@ -630,7 +940,7 @@ describe('OrderFormContainer CargoInfoForm dropdownBeat 주입 (M3-review#1)', (
       <OrderFormContainer step={AI_APPLY_STEP} formData={PREVIEW_MOCK_DATA.formData} />,
     )
     act(() => {
-      vi.advanceTimersByTime(600)
+      vi.advanceTimersByTime(1300)
     })
     expect(screen.getByTestId('cargo-vehicle-type-trigger')).toHaveAttribute(
       'data-expanded',
@@ -643,7 +953,7 @@ describe('OrderFormContainer CargoInfoForm dropdownBeat 주입 (M3-review#1)', (
       <OrderFormContainer step={AI_APPLY_STEP} formData={PREVIEW_MOCK_DATA.formData} />,
     )
     act(() => {
-      vi.advanceTimersByTime(600)
+      vi.advanceTimersByTime(1300)
     })
     expect(screen.getByTestId('cargo-weight-trigger')).toHaveAttribute(
       'data-expanded',
@@ -707,7 +1017,7 @@ describe('OrderFormContainer — M4-03 #10 Column-wise Border Pulse', () => {
       <OrderFormContainer step={AI_APPLY_STEP} formData={PREVIEW_MOCK_DATA.formData} />,
     )
     act(() => {
-      vi.advanceTimersByTime(600)
+      vi.advanceTimersByTime(1300)
     })
     expect(screen.getByTestId('col-2')).toHaveAttribute('data-pulse-active', 'true')
   })
@@ -717,7 +1027,7 @@ describe('OrderFormContainer — M4-03 #10 Column-wise Border Pulse', () => {
       <OrderFormContainer step={AI_APPLY_STEP} formData={PREVIEW_MOCK_DATA.formData} />,
     )
     act(() => {
-      vi.advanceTimersByTime(1500)
+      vi.advanceTimersByTime(900)
     })
     expect(screen.getByTestId('col-3')).toHaveAttribute('data-pulse-active', 'true')
   })

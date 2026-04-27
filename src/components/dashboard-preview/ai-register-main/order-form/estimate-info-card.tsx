@@ -50,6 +50,7 @@ export interface EstimateInfoCardProps {
   readonly amount: number
   /** 자동 배차 대기 토글 활성 여부 */
   readonly autoDispatch: boolean
+  readonly visible?: boolean
   /**
    * #8 number-rolling 활성 여부.
    *  - false → 최종값 즉시 정적 표시.
@@ -73,7 +74,7 @@ const BASE_CARD_CLASSES =
 
 const ACTIVE_GLOW_CLASSES = 'ring-1 ring-accent/30 shadow-lg shadow-accent/10'
 
-const ROLLING_DURATION_MS = 400
+const ROLLING_DURATION_MS = 700
 
 // D-010 — 브랜드 gradient CTA: text-white 고정 유지 (양 테마 공통 가독).
 const TOGGLE_ON_CLASSES =
@@ -125,7 +126,7 @@ function useRollingValues(
 // ---------------------------------------------------------------------------
 
 export function EstimateInfoCard(props: EstimateInfoCardProps) {
-  const { autoDispatch, active } = props
+  const { autoDispatch, active, visible = true } = props
   const rolling = useRollingValues(props)
 
   const cardClassName = active
@@ -139,6 +140,7 @@ export function EstimateInfoCard(props: EstimateInfoCardProps) {
       data-testid="estimate-info-card"
       data-hit-area-id="form-estimate-info"
       data-active={active}
+      data-visible={visible}
       className={cardClassName}
     >
       <CardHeader />
@@ -146,8 +148,9 @@ export function EstimateInfoCard(props: EstimateInfoCardProps) {
         distance={rolling.distance}
         duration={rolling.duration}
         amount={rolling.amount}
+        visible={visible}
       />
-      <AutoDispatchToggle autoDispatch={autoDispatch} />
+      <AutoDispatchToggle autoDispatch={autoDispatch} visible={visible} />
     </section>
   )
 }
@@ -179,9 +182,10 @@ interface MetricGridProps {
   readonly distance: number
   readonly duration: number
   readonly amount: number
+  readonly visible: boolean
 }
 
-function MetricGrid({ distance, duration, amount }: MetricGridProps) {
+function MetricGrid({ distance, duration, amount, visible }: MetricGridProps) {
   return (
     <div className="grid grid-cols-3 gap-2">
       <MetricCell
@@ -189,18 +193,21 @@ function MetricGrid({ distance, duration, amount }: MetricGridProps) {
         label="거리"
         value={distance}
         unit="km"
+        visible={visible}
       />
       <MetricCell
         testId="estimate-info-duration"
         label="소요"
         value={duration}
         unit="분"
+        visible={visible}
       />
       <MetricCell
         testId="estimate-info-amount"
         label="운임"
         value={amount}
         unit="원"
+        visible={visible}
         formatThousands
       />
     </div>
@@ -213,22 +220,28 @@ function MetricGrid({ distance, duration, amount }: MetricGridProps) {
 
 interface AutoDispatchToggleProps {
   readonly autoDispatch: boolean
+  readonly visible: boolean
 }
 
-function AutoDispatchToggle({ autoDispatch }: AutoDispatchToggleProps) {
-  const toggleClassName = autoDispatch ? TOGGLE_ON_CLASSES : TOGGLE_OFF_CLASSES
+function AutoDispatchToggle({
+  autoDispatch,
+  visible,
+}: AutoDispatchToggleProps) {
+  const enabled = visible && autoDispatch
+  const toggleClassName = enabled ? TOGGLE_ON_CLASSES : TOGGLE_OFF_CLASSES
 
   return (
     <div
       data-testid="estimate-auto-dispatch-toggle"
       data-hit-area-id="form-auto-dispatch"
-      data-auto-dispatch={autoDispatch}
+      data-auto-dispatch={enabled}
+      aria-disabled={!visible}
       className={`flex items-center gap-2 px-3 py-2 rounded-lg ${toggleClassName}`}
     >
       <Zap aria-hidden="true" className="h-4 w-4 shrink-0" />
       <span className="text-xs font-medium">자동 배차 대기</span>
       <span className="ml-auto text-xs font-semibold tabular-nums">
-        {autoDispatch ? 'ON' : 'OFF'}
+        {visible ? (autoDispatch ? 'ON' : 'OFF') : '적용 전'}
       </span>
     </div>
   )
@@ -243,6 +256,7 @@ interface MetricCellProps {
   readonly label: string
   readonly value: number
   readonly unit: string
+  readonly visible: boolean
   /** true 시 천 단위 구분자 (toLocaleString) 적용 */
   readonly formatThousands?: boolean
 }
@@ -252,6 +266,7 @@ function MetricCell({
   label,
   value,
   unit,
+  visible,
   formatThousands = false,
 }: MetricCellProps) {
   const formatted = formatThousands ? value.toLocaleString() : String(value)
@@ -265,10 +280,16 @@ function MetricCell({
         data-testid={testId}
         className="text-sm font-bold text-foreground tabular-nums"
       >
-        {formatted}
-        <span className="ml-0.5 text-[10px] font-normal text-muted-foreground">
-          {unit}
-        </span>
+        {visible ? (
+          <>
+            {formatted}
+            <span className="ml-0.5 text-[10px] font-normal text-muted-foreground">
+              {unit}
+            </span>
+          </>
+        ) : (
+          <span className="text-muted-foreground">—</span>
+        )}
       </span>
     </div>
   )

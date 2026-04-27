@@ -67,6 +67,7 @@ export interface DateTimeCardProps {
    * false → pre-filled 값 그대로 노출 (caret 숨김).
    */
   readonly active: boolean
+  readonly revealed?: boolean
 }
 
 // ---------------------------------------------------------------------------
@@ -130,6 +131,7 @@ interface FilledDateTimeFieldProps {
   readonly label: string
   readonly value: string
   readonly active: boolean
+  readonly revealed: boolean
   readonly monospace?: boolean
 }
 
@@ -142,14 +144,15 @@ function FilledDateTimeField({
   label,
   value,
   active,
+  revealed,
   monospace = false,
 }: FilledDateTimeFieldProps) {
   const { displayedValue, caretVisible, isFilling } = useFillInCaret(value, {
     active,
   })
 
-  const shown = active ? displayedValue : value
-  const showCaret = active && isFilling && caretVisible
+  const shown = revealed ? (active ? displayedValue : value) : '선택 전'
+  const showCaret = revealed && active && isFilling && caretVisible
 
   return (
     <div className={FIELD_ROW_CLASSES}>
@@ -185,6 +188,7 @@ export function DateTimeCard({
   time,
   datePresetActive,
   active,
+  revealed = true,
 }: DateTimeCardProps) {
   const isPickup = kind === 'pickup'
   const title = isPickup ? '상차 일시' : '하차 일시'
@@ -198,6 +202,7 @@ export function DateTimeCard({
       data-testid={testId}
       data-hit-area-id={isPickup ? 'form-pickup-datetime' : 'form-delivery-datetime'}
       data-kind={kind}
+      data-revealed={revealed}
       className={CARD_CLASSES}
     >
       {/* Header: 제목 + Calendar 아이콘 */}
@@ -216,7 +221,7 @@ export function DateTimeCard({
           <PresetButton
             key={preset}
             label={preset}
-            active={datePresetActive === preset}
+            active={revealed && datePresetActive === preset}
           />
         ))}
       </div>
@@ -233,6 +238,7 @@ export function DateTimeCard({
           label="날짜"
           value={date}
           active={active}
+          revealed={revealed}
           monospace
         />
         <FilledDateTimeField
@@ -246,6 +252,7 @@ export function DateTimeCard({
           label="시간"
           value={time}
           active={active}
+          revealed={revealed}
           monospace
         />
       </div>

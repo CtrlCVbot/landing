@@ -136,6 +136,21 @@ afterEach(() => {
 // ---------------------------------------------------------------------------
 
 describe('SettlementSection — TC-DASH3-UNIT-SETTLEMENT (기본 렌더)', () => {
+  it('visible=false 이면 청구/배차/수익/추가요금 숫자를 숨기고 정산 전 상태를 표시한다', () => {
+    render(
+      <SettlementSection
+        settlement={SETTLEMENT_FIXTURE}
+        active={false}
+        visible={false}
+      />,
+    )
+
+    const section = screen.getByTestId('settlement-section')
+    expect(section).toHaveAttribute('data-visible', 'false')
+    expect(section).toHaveTextContent('정산 전')
+    expect(section.textContent).not.toMatch(/850[,.]?000|750[,.]?000|880[,.]?000|780[,.]?000|100[,.]?000|30[,.]?000/)
+  })
+
   it('chargeBaseAmount 값이 표시된다 (850,000)', () => {
     render(
       <SettlementSection settlement={SETTLEMENT_FIXTURE} active={false} />,

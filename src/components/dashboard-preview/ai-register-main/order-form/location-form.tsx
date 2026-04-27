@@ -68,6 +68,7 @@ export interface LocationFormProps {
    * false → pre-filled 값 그대로 노출 (caret 숨김).
    */
   readonly active: boolean
+  readonly revealed?: boolean
 }
 
 // ---------------------------------------------------------------------------
@@ -94,6 +95,7 @@ interface FilledFieldProps {
   readonly label: string
   readonly value: string
   readonly active: boolean
+  readonly revealed: boolean
   readonly monospace?: boolean
 }
 
@@ -106,6 +108,7 @@ function FilledField({
   label,
   value,
   active,
+  revealed,
   monospace = false,
 }: FilledFieldProps) {
   const { displayedValue, caretVisible, isFilling } = useFillInCaret(value, {
@@ -114,8 +117,8 @@ function FilledField({
 
   // active=false 이면 pre-filled 로 즉시 노출.
   // active=true 이면 useFillInCaret 결과를 따름 (초기: '' + caret, delay 후: value).
-  const shown = active ? displayedValue : value
-  const showCaret = active && isFilling && caretVisible
+  const shown = revealed ? (active ? displayedValue : value) : '—'
+  const showCaret = revealed && active && isFilling && caretVisible
 
   return (
     <div className={FIELD_ROW_CLASSES}>
@@ -145,7 +148,12 @@ function FilledField({
 // Main Component
 // ---------------------------------------------------------------------------
 
-export function LocationForm({ kind, data, active }: LocationFormProps) {
+export function LocationForm({
+  kind,
+  data,
+  active,
+  revealed = true,
+}: LocationFormProps) {
   const isPickup = kind === 'pickup'
   const title = isPickup ? '상차지' : '하차지'
   const ariaLabel = `${title} 정보`
@@ -161,6 +169,7 @@ export function LocationForm({ kind, data, active }: LocationFormProps) {
       data-testid={testId}
       data-hit-area-id={isPickup ? 'form-pickup-location' : 'form-delivery-location'}
       data-kind={kind}
+      data-revealed={revealed}
       className={CARD_CLASSES}
     >
       {/* Header: 제목 + 아이콘 */}
@@ -204,6 +213,7 @@ export function LocationForm({ kind, data, active }: LocationFormProps) {
           label="회사명"
           value={data.company}
           active={active}
+          revealed={revealed}
         />
         <FilledField
           icon={
@@ -215,6 +225,7 @@ export function LocationForm({ kind, data, active }: LocationFormProps) {
           label="주소"
           value={data.roadAddress}
           active={active}
+          revealed={revealed}
         />
         <FilledField
           icon={
@@ -226,6 +237,7 @@ export function LocationForm({ kind, data, active }: LocationFormProps) {
           label="담당자"
           value={data.contactName}
           active={active}
+          revealed={revealed}
         />
         <FilledField
           icon={
@@ -237,6 +249,7 @@ export function LocationForm({ kind, data, active }: LocationFormProps) {
           label="연락처"
           value={data.contactPhone}
           active={active}
+          revealed={revealed}
           monospace
         />
       </div>

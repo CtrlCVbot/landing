@@ -51,7 +51,7 @@ import { AiWarningBadges } from './ai-warning-badges'
  * AI_APPLY partialBeat.intervalMs(300) 보다 약간 넉넉하게 설정하여 press 비트와
  * 겹치지 않도록 조율한다 (REQ-DASH3-021).
  */
-const FOCUS_WALK_INTERVAL_MS = 400
+const FOCUS_WALK_INTERVAL_MS = 650
 
 export interface AiPanelContainerProps {
   readonly step: PreviewStep

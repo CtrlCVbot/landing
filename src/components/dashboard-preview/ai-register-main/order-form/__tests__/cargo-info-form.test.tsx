@@ -79,6 +79,27 @@ afterEach(() => {
 // ---------------------------------------------------------------------------
 
 describe('CargoInfoForm — TC-DASH3-UNIT-CARGOFORM (기본 렌더)', () => {
+  it('revealed=false 이면 차량/화물 실제 값을 숨기고 placeholder 를 표시한다', () => {
+    render(
+      <CargoInfoForm
+        vehicle={VEHICLE}
+        cargo={CARGO}
+        active={false}
+        revealed={false}
+      />,
+    )
+
+    expect(screen.getByTestId('cargo-vehicle-type-trigger')).toHaveTextContent(
+      '선택 전',
+    )
+    expect(screen.getByTestId('cargo-weight-trigger')).toHaveTextContent('선택 전')
+    expect(screen.getByTestId('cargo-name-field')).not.toHaveTextContent(CARGO.name)
+    expect(screen.getByTestId('cargo-remark-field')).not.toHaveTextContent(CARGO.remark)
+    expect(screen.getByTestId('cargo-recent-suggestions')).toHaveTextContent(
+      '적용 전',
+    )
+  })
+
   it('차량 타입(vehicle.type) 값이 select trigger 에 렌더된다', () => {
     render(
       <CargoInfoForm

@@ -28,6 +28,7 @@
 'use client'
 
 import { useColumnPulse } from '@/components/dashboard-preview/interactions/use-column-pulse'
+import { useTriggerAt } from '@/components/dashboard-preview/interactions/use-trigger-at'
 import type { PreviewMockData } from '@/lib/mock-data'
 import type { PreviewStep } from '@/lib/preview-steps'
 import type { TransportOptionKey } from './transport-option-card'
@@ -97,7 +98,6 @@ function computePartialBeatFlags(step: PreviewStep): PartialBeatActiveFlags {
 interface AllBeatFlags {
   readonly active: boolean
   readonly strokeTargets: ReadonlyArray<TransportOptionKey>
-  readonly rollingTriggerAt: number | null
 }
 
 /**
@@ -113,11 +113,11 @@ interface AllBeatFlags {
  */
 function computeAllBeatFlags(step: PreviewStep): AllBeatFlags {
   if (step.id !== 'AI_APPLY') {
-    return { active: false, strokeTargets: [], rollingTriggerAt: null }
+    return { active: false, strokeTargets: [] }
   }
   const allBeat = step.interactions.allBeat
   if (!allBeat) {
-    return { active: false, strokeTargets: [], rollingTriggerAt: null }
+    return { active: false, strokeTargets: [] }
   }
   const strokeTargets = allBeat.toggleStrokeTargets
     .map(stripTransportOptionPrefix)
@@ -125,7 +125,6 @@ function computeAllBeatFlags(step: PreviewStep): AllBeatFlags {
   return {
     active: true,
     strokeTargets,
-    rollingTriggerAt: 0,
   }
 }
 
@@ -173,8 +172,8 @@ export function stripTransportOptionPrefix(
  */
 const COLUMN_PULSE_OFFSETS_MS = {
   col1: 0,
-  col2: 600,
-  col3: 1500,
+  col2: 1300,
+  col3: 900,
 } as const
 
 /** Column pulse 활성 시 적용하는 ring + shadow 클래스 조합. */
@@ -200,11 +199,88 @@ export function OrderFormContainer({ step, formData }: OrderFormContainerProps) 
   const partial = computePartialBeatFlags(step)
   const allBeat = computeAllBeatFlags(step)
 
+  const {
+    pickupFilled,
+    deliveryFilled,
+    pickupDateTimeFilled,
+    deliveryDateTimeFilled,
+    vehicleFilled,
+    cargoFilled,
+    estimateVisible,
+    settlementVisible,
+  } = step.formState
+
   // DistanceInfo: AI_APPLY 이후 수치 노출. 이전 Step 은 "측정 전" placeholder.
-  const distanceVisible = step.id === 'AI_APPLY'
+  const formRevealTimeline = step.interactions.formRevealTimeline
+  const useStagedReveal =
+    step.id === 'AI_APPLY' && formRevealTimeline !== undefined
+  const timelineActive = useStagedReveal
+
+  const pickupTimelineTriggered = useTriggerAt({
+    active: timelineActive,
+    triggerAt: formRevealTimeline?.pickupAt ?? null,
+  })
+  const deliveryTimelineReached = useTriggerAt({
+    active: timelineActive,
+    triggerAt: formRevealTimeline?.deliveryAt ?? null,
+  })
+  const estimateTimelineReached = useTriggerAt({
+    active: timelineActive,
+    triggerAt: formRevealTimeline?.estimateAt ?? null,
+  })
+  const cargoTimelineReached = useTriggerAt({
+    active: timelineActive,
+    triggerAt: formRevealTimeline?.cargoAt ?? null,
+  })
+  const optionsTimelineReached = useTriggerAt({
+    active: timelineActive,
+    triggerAt: formRevealTimeline?.optionsAt ?? null,
+  })
+  const settlementTimelineReached = useTriggerAt({
+    active: timelineActive,
+    triggerAt: formRevealTimeline?.settlementAt ?? null,
+  })
+
+  const pickupTimelineReached =
+    (timelineActive && formRevealTimeline?.pickupAt === 0) ||
+    pickupTimelineTriggered
+
+  const pickupRevealed =
+    pickupFilled && (!useStagedReveal || pickupTimelineReached)
+  const deliveryRevealed =
+    deliveryFilled && (!useStagedReveal || deliveryTimelineReached)
+  const pickupDateTimeRevealed =
+    pickupDateTimeFilled && (!useStagedReveal || pickupTimelineReached)
+  const deliveryDateTimeRevealed =
+    deliveryDateTimeFilled && (!useStagedReveal || deliveryTimelineReached)
+  const estimateVisibleNow =
+    estimateVisible && (!useStagedReveal || estimateTimelineReached)
+  const cargoRevealed =
+    (vehicleFilled || cargoFilled) && (!useStagedReveal || cargoTimelineReached)
+  const optionsRevealed =
+    step.id === 'AI_APPLY'
+      ? !useStagedReveal || optionsTimelineReached
+      : step.formState.optionsActive.length > 0
+  const settlementVisibleNow =
+    settlementVisible && (!useStagedReveal || settlementTimelineReached)
+
+  const distanceVisible = estimateVisibleNow
+  const optionStrokeTriggerAt = useStagedReveal
+    ? (formRevealTimeline?.optionsAt ?? null)
+    : 0
+  const estimateRollingTriggerAt = useStagedReveal
+    ? (formRevealTimeline?.estimateAt ?? null)
+    : 0
+  const settlementRollingTriggerAt = useStagedReveal
+    ? (formRevealTimeline?.settlementAt ?? null)
+    : 0
 
   // Stroke trigger: active 이면 mount 즉시 발동 (offset 0). 비활성 상태에선 null.
-  const strokeTriggerAt = allBeat.active ? 0 : null
+  const strokeTriggerAt = allBeat.active ? optionStrokeTriggerAt : null
+  const estimateRollingTrigger =
+    allBeat.active && estimateVisible ? estimateRollingTriggerAt : null
+  const settlementRollingTrigger =
+    allBeat.active && settlementVisible ? settlementRollingTriggerAt : null
 
   // Column pulse (M4-03 + review#1) — AI_APPLY 에서 columnPulseTargets SSOT 를 소비.
   //   - targets: ReadonlySet<'col-1'|'col-2'|'col-3'> (AI_APPLY 외 Step 은 빈 Set)
@@ -252,12 +328,14 @@ export function OrderFormContainer({ step, formData }: OrderFormContainerProps) 
         <LocationForm
           kind="pickup"
           data={formData.pickup}
-          active={partial.pickup}
+          active={partial.pickup && pickupRevealed}
+          revealed={pickupRevealed}
         />
         <LocationForm
           kind="delivery"
           data={formData.delivery}
-          active={partial.delivery}
+          active={partial.delivery && deliveryRevealed}
+          revealed={deliveryRevealed}
         />
       </div>
 
@@ -287,20 +365,23 @@ export function OrderFormContainer({ step, formData }: OrderFormContainerProps) 
             date={formData.pickup.date}
             time={formData.pickup.time}
             datePresetActive={asDateTimePreset(formData.pickup.datePresetActive)}
-            active={partial.pickup}
+            active={partial.pickup && pickupDateTimeRevealed}
+            revealed={pickupDateTimeRevealed}
           />
           <DateTimeCard
             kind="delivery"
             date={formData.delivery.date}
             time={formData.delivery.time}
             datePresetActive={asDateTimePreset(formData.delivery.datePresetActive)}
-            active={partial.delivery}
+            active={partial.delivery && deliveryDateTimeRevealed}
+            revealed={deliveryDateTimeRevealed}
           />
         </div>
         <CargoInfoForm
           vehicle={formData.vehicle}
           cargo={formData.cargo}
-          active={partial.cargo}
+          active={partial.cargo && cargoRevealed}
+          revealed={cargoRevealed}
           dropdownBeat={
             step.id === 'AI_APPLY'
               ? step.interactions.partialBeat?.dropdownBeat
@@ -323,6 +404,7 @@ export function OrderFormContainer({ step, formData }: OrderFormContainerProps) 
       >
         <TransportOptionCard
           options={formData.options}
+          revealed={optionsRevealed}
           strokeTargets={allBeat.strokeTargets}
           strokeTriggerAt={strokeTriggerAt}
         />
@@ -332,12 +414,14 @@ export function OrderFormContainer({ step, formData }: OrderFormContainerProps) 
           amount={formData.estimate.amount}
           autoDispatch={formData.estimate.autoDispatch}
           active={allBeat.active}
-          rollingTriggerAt={allBeat.rollingTriggerAt}
+          visible={estimateVisibleNow}
+          rollingTriggerAt={estimateRollingTrigger}
         />
         <SettlementSection
           settlement={formData.settlement}
           active={allBeat.active}
-          rollingTriggerAt={allBeat.rollingTriggerAt}
+          visible={settlementVisibleNow}
+          rollingTriggerAt={settlementRollingTrigger}
         />
       </div>
     </section>

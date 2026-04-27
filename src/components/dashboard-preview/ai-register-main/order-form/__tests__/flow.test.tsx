@@ -22,8 +22,8 @@
  *  - AiPanel fill-in 동기화는 ai-panel/flow.test.tsx 에서 다룸.
  */
 
-import { render, screen } from '@testing-library/react'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { act, render, screen } from '@testing-library/react'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { OrderFormContainer } from '@/components/dashboard-preview/ai-register-main/order-form'
 import { PREVIEW_MOCK_DATA } from '@/lib/mock-data'
@@ -64,6 +64,10 @@ beforeEach(() => {
   vi.useFakeTimers()
 })
 
+afterEach(() => {
+  vi.useRealTimers()
+})
+
 // ---------------------------------------------------------------------------
 // TC-DASH3-INT-FLOW-ORDERFORM — INITIAL
 // ---------------------------------------------------------------------------
@@ -81,25 +85,26 @@ describe('OrderForm 플로우 — INITIAL (빈 폼)', () => {
       ).toBeInTheDocument()
     })
 
-    it('LocationForm(pickup) caret 비활성 — pre-filled 값만 표시', () => {
-      const { container } = render(
+    it('LocationForm(pickup) caret 비활성 — 추출 전 값은 숨김', () => {
+      render(
         <OrderFormContainer step={step} formData={PREVIEW_MOCK_DATA.formData} />,
       )
       const pickup = screen.getByTestId('location-form-pickup')
       // active=false → caret 미렌더
       expect(pickup.querySelector('[data-caret]')).toBeNull()
-      // pre-filled 값 노출 확인
-      expect(container).toHaveTextContent(PREVIEW_MOCK_DATA.formData.pickup.company)
+      expect(pickup).toHaveAttribute('data-revealed', 'false')
+      expect(pickup).not.toHaveTextContent(PREVIEW_MOCK_DATA.formData.pickup.company)
+      expect(pickup).toHaveTextContent('—')
     })
 
-    it('LocationForm(delivery) caret 비활성 — pre-filled 값만 표시', () => {
-      const { container } = render(
+    it('LocationForm(delivery) caret 비활성 — 추출 전 값은 숨김', () => {
+      render(
         <OrderFormContainer step={step} formData={PREVIEW_MOCK_DATA.formData} />,
       )
-      const delivery = container.querySelector(
-        '[data-testid="location-form-delivery"]',
-      )!
+      const delivery = screen.getByTestId('location-form-delivery')
       expect(delivery.querySelector('[data-caret]')).toBeNull()
+      expect(delivery).toHaveAttribute('data-revealed', 'false')
+      expect(delivery).not.toHaveTextContent(PREVIEW_MOCK_DATA.formData.delivery.company)
     })
   })
 
@@ -294,6 +299,9 @@ describe('OrderForm 플로우 — AI_APPLY partialBeat (카테고리 순차 fill
     const { container } = render(
       <OrderFormContainer step={step} formData={PREVIEW_MOCK_DATA.formData} />,
     )
+    act(() => {
+      vi.advanceTimersByTime(650)
+    })
     const delivery = container.querySelector(
       '[data-testid="location-form-delivery"]',
     )!
@@ -304,6 +312,9 @@ describe('OrderForm 플로우 — AI_APPLY partialBeat (카테고리 순차 fill
     const { container } = render(
       <OrderFormContainer step={step} formData={PREVIEW_MOCK_DATA.formData} />,
     )
+    act(() => {
+      vi.advanceTimersByTime(1300)
+    })
     const cargo = container.querySelector('[data-testid="cargo-info-form"]')!
     expect(cargo.querySelectorAll('[data-caret]').length).toBeGreaterThan(0)
   })
@@ -322,6 +333,9 @@ describe('OrderForm 플로우 — AI_APPLY partialBeat (카테고리 순차 fill
     const { container } = render(
       <OrderFormContainer step={step} formData={PREVIEW_MOCK_DATA.formData} />,
     )
+    act(() => {
+      vi.advanceTimersByTime(650)
+    })
     const deliveryDT = container.querySelector(
       '[data-testid="datetime-card-delivery"]',
     )!
@@ -351,6 +365,9 @@ describe('OrderForm 플로우 — AI_APPLY allBeat (전체 비트)', () => {
     )
     // strokeTargets 는 8개 모두 포함하지만, animating = checked && isAnimTarget 이므로
     // 실제로 data-animating=true 인 것은 options.direct / options.forklift = true 2개.
+    act(() => {
+      vi.advanceTimersByTime(1300)
+    })
     const direct = screen.getByTestId('transport-option-direct')
     const forklift = screen.getByTestId('transport-option-forklift')
     expect(direct.querySelector('polyline')).toHaveAttribute(
@@ -396,6 +413,9 @@ describe('OrderForm 플로우 — AI_APPLY allBeat (전체 비트)', () => {
     render(
       <OrderFormContainer step={step} formData={PREVIEW_MOCK_DATA.formData} />,
     )
+    act(() => {
+      vi.advanceTimersByTime(900)
+    })
     const distanceInfo = screen.getByTestId('estimate-distance-info')
     expect(distanceInfo).toHaveAttribute('data-visible', 'true')
     expect(distanceInfo).not.toHaveTextContent('측정 전')
@@ -409,6 +429,9 @@ describe('OrderForm 플로우 — AI_APPLY allBeat (전체 비트)', () => {
     render(
       <OrderFormContainer step={step} formData={PREVIEW_MOCK_DATA.formData} />,
     )
+    act(() => {
+      vi.advanceTimersByTime(900)
+    })
     const toggle = screen.getByTestId('estimate-auto-dispatch-toggle')
     expect(toggle).toHaveAttribute('data-auto-dispatch', 'true')
     expect(toggle).toHaveTextContent('ON')
@@ -462,6 +485,9 @@ describe('OrderForm 플로우 — Step 전환 (INITIAL → AI_APPLY 토글)', ()
         formData={PREVIEW_MOCK_DATA.formData}
       />,
     )
+    act(() => {
+      vi.advanceTimersByTime(900)
+    })
     expect(screen.getByTestId('estimate-distance-info')).toHaveAttribute(
       'data-visible',
       'true',

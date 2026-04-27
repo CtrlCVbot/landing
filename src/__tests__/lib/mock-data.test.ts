@@ -15,7 +15,9 @@ import {
   PREVIEW_MOCK_SCENARIOS,
   createPreviewMockData,
   getDefaultPreviewMockScenario,
+  getRandomizablePreviewMockScenarios,
   selectPreviewMockScenario,
+  selectRandomPreviewMockScenario,
 } from '@/lib/mock-data'
 
 function parseWonDisplay(displayValue: string): number {
@@ -414,6 +416,59 @@ describe('PREVIEW_MOCK_SCENARIOS (F2 frame split)', () => {
   it('keeps jsonViewerOpen closed inside extracted frames', () => {
     for (const scenario of PREVIEW_MOCK_SCENARIOS) {
       expect(scenario.extractedFrame.aiResult.jsonViewerOpen).toBe(false)
+    }
+  })
+})
+
+describe('PREVIEW_MOCK_SCENARIOS random preview pool', () => {
+  it('exposes at least three demo-safe randomizable scenarios', () => {
+    const randomizable = getRandomizablePreviewMockScenarios()
+    const ids = randomizable.map((scenario) => scenario.id)
+
+    expect(randomizable.length).toBeGreaterThanOrEqual(3)
+    expect(ids).toEqual(
+      expect.arrayContaining([
+        'default',
+        'regional-cold-chain',
+        'short-industrial-hop',
+      ]),
+    )
+  })
+
+  it('keeps mismatch-risk out of the random preview pool', () => {
+    const ids = getRandomizablePreviewMockScenarios().map(
+      (scenario) => scenario.id,
+    )
+    const mismatchRisk = selectPreviewMockScenario('mismatch-risk')
+
+    expect(mismatchRisk.randomizable).toBe(false)
+    expect(ids).not.toContain('mismatch-risk')
+  })
+
+  it('selects a scenario deterministically when random() is injected', () => {
+    const pool = getRandomizablePreviewMockScenarios()
+
+    expect(selectRandomPreviewMockScenario({ random: () => 0 })).toBe(pool[0])
+    expect(selectRandomPreviewMockScenario({ random: () => 0.999 })).toBe(
+      pool[pool.length - 1],
+    )
+  })
+
+  it('does not select the excluded previous scenario when alternatives exist', () => {
+    const previous = getRandomizablePreviewMockScenarios()[0]!
+    const selected = selectRandomPreviewMockScenario({
+      excludeId: previous.id,
+      random: () => 0,
+    })
+
+    expect(selected.id).not.toBe(previous.id)
+  })
+
+  it('keeps extracted fare and applied estimate consistent for every demo scenario', () => {
+    for (const scenario of getRandomizablePreviewMockScenarios()) {
+      expect(getExtractedFareAmount(scenario)).toBe(
+        scenario.appliedFrame.formData.estimate.amount,
+      )
     }
   })
 })

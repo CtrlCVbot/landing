@@ -46,6 +46,7 @@ import type { SettlementMock } from '@/lib/mock-data'
 
 export interface SettlementSectionProps {
   readonly settlement: SettlementMock
+  readonly visible?: boolean
   /**
    * #8 number-rolling 활성 여부.
    *  - false → 최종값 즉시 정적 표시.
@@ -69,7 +70,7 @@ const BASE_CARD_CLASSES =
 
 const ACTIVE_GLOW_CLASSES = 'ring-1 ring-accent/30 shadow-lg shadow-accent/10'
 
-const ROLLING_DURATION_MS = 400
+const ROLLING_DURATION_MS = 700
 
 // ---------------------------------------------------------------------------
 // Rolling values hook — 합계 3 수치를 단일 진입점으로 묶는다.
@@ -122,6 +123,7 @@ export function SettlementSection({
   settlement,
   active,
   rollingTriggerAt,
+  visible = true,
 }: SettlementSectionProps) {
   const rolling = useRollingTotals(settlement.totals, active, rollingTriggerAt)
 
@@ -136,18 +138,21 @@ export function SettlementSection({
       data-testid="settlement-section"
       data-hit-area-id="form-settlement"
       data-active={active}
+      data-visible={visible}
       className={cardClassName}
     >
       <CardHeader />
       <BaseAmountGrid
         chargeBaseAmount={settlement.chargeBaseAmount}
         dispatchBaseAmount={settlement.dispatchBaseAmount}
+        visible={visible}
       />
-      <AdditionalFeesList fees={settlement.additionalFees} />
+      <AdditionalFeesList fees={settlement.additionalFees} visible={visible} />
       <TotalsRow
         chargeTotal={rolling.chargeTotal}
         dispatchTotal={rolling.dispatchTotal}
         profit={rolling.profit}
+        visible={visible}
       />
     </section>
   )
@@ -177,11 +182,13 @@ function CardHeader() {
 interface BaseAmountGridProps {
   readonly chargeBaseAmount: number
   readonly dispatchBaseAmount: number
+  readonly visible: boolean
 }
 
 function BaseAmountGrid({
   chargeBaseAmount,
   dispatchBaseAmount,
+  visible,
 }: BaseAmountGridProps) {
   return (
     <div className="grid grid-cols-2 gap-2">
@@ -189,11 +196,13 @@ function BaseAmountGrid({
         testId="settlement-base-charge"
         label="청구 기본"
         value={chargeBaseAmount}
+        visible={visible}
       />
       <BaseAmountCell
         testId="settlement-base-dispatch"
         label="배차 기본"
         value={dispatchBaseAmount}
+        visible={visible}
       />
     </div>
   )
@@ -203,9 +212,15 @@ interface BaseAmountCellProps {
   readonly testId: string
   readonly label: string
   readonly value: number
+  readonly visible: boolean
 }
 
-function BaseAmountCell({ testId, label, value }: BaseAmountCellProps) {
+function BaseAmountCell({
+  testId,
+  label,
+  value,
+  visible,
+}: BaseAmountCellProps) {
   return (
     <div className="flex flex-col gap-0.5 items-start px-2 py-2 rounded-md bg-card/50 border border-border">
       <span className="text-[10px] text-muted-foreground">{label}</span>
@@ -213,8 +228,14 @@ function BaseAmountCell({ testId, label, value }: BaseAmountCellProps) {
         data-testid={testId}
         className="text-sm font-bold text-foreground tabular-nums"
       >
-        {value.toLocaleString()}
-        <span className="ml-0.5 text-[10px] font-normal text-muted-foreground">원</span>
+        {visible ? (
+          <>
+            {value.toLocaleString()}
+            <span className="ml-0.5 text-[10px] font-normal text-muted-foreground">원</span>
+          </>
+        ) : (
+          <span className="text-muted-foreground">—</span>
+        )}
       </span>
     </div>
   )
@@ -226,9 +247,21 @@ function BaseAmountCell({ testId, label, value }: BaseAmountCellProps) {
 
 interface AdditionalFeesListProps {
   readonly fees: SettlementMock['additionalFees']
+  readonly visible: boolean
 }
 
-function AdditionalFeesList({ fees }: AdditionalFeesListProps) {
+function AdditionalFeesList({ fees, visible }: AdditionalFeesListProps) {
+  if (!visible) {
+    return (
+      <div
+        data-testid="settlement-fees-pending"
+        className="text-[10px] text-muted-foreground italic px-1"
+      >
+        정산 전
+      </div>
+    )
+  }
+
   if (fees.length === 0) {
     return (
       <div
@@ -288,9 +321,15 @@ interface TotalsRowProps {
   readonly chargeTotal: number
   readonly dispatchTotal: number
   readonly profit: number
+  readonly visible: boolean
 }
 
-function TotalsRow({ chargeTotal, dispatchTotal, profit }: TotalsRowProps) {
+function TotalsRow({
+  chargeTotal,
+  dispatchTotal,
+  profit,
+  visible,
+}: TotalsRowProps) {
   const profitClassName =
     profit > 0
       ? 'text-emerald-600'
@@ -304,16 +343,19 @@ function TotalsRow({ chargeTotal, dispatchTotal, profit }: TotalsRowProps) {
         testId="settlement-total-charge"
         label="청구 합계"
         value={chargeTotal}
+        visible={visible}
       />
       <TotalCell
         testId="settlement-total-dispatch"
         label="지급 합계"
         value={dispatchTotal}
+        visible={visible}
       />
       <TotalCell
         testId="settlement-total-profit"
         label="수익"
         value={profit}
+        visible={visible}
         valueClassName={profitClassName}
       />
     </div>
@@ -324,6 +366,7 @@ interface TotalCellProps {
   readonly testId: string
   readonly label: string
   readonly value: number
+  readonly visible: boolean
   readonly valueClassName?: string
 }
 
@@ -331,6 +374,7 @@ function TotalCell({
   testId,
   label,
   value,
+  visible,
   valueClassName = 'text-foreground',
 }: TotalCellProps) {
   return (
@@ -340,8 +384,14 @@ function TotalCell({
         data-testid={testId}
         className={`text-sm font-bold tabular-nums ${valueClassName}`}
       >
-        {value.toLocaleString()}
-        <span className="ml-0.5 text-[10px] font-normal text-muted-foreground">원</span>
+        {visible ? (
+          <>
+            {value.toLocaleString()}
+            <span className="ml-0.5 text-[10px] font-normal text-muted-foreground">원</span>
+          </>
+        ) : (
+          <span className="text-muted-foreground">—</span>
+        )}
       </span>
     </div>
   )

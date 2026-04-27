@@ -118,6 +118,26 @@ afterEach(() => {
 // ---------------------------------------------------------------------------
 
 describe('EstimateInfoCard — TC-DASH3-UNIT-ESTINFO (기본 렌더)', () => {
+  it('visible=false 이면 거리/소요/운임/ON 값을 숨기고 적용 전 상태를 표시한다', () => {
+    render(
+      <EstimateInfoCard
+        distance={DISTANCE_KM}
+        duration={DURATION_MIN}
+        amount={AMOUNT_KRW}
+        autoDispatch={true}
+        active={false}
+        visible={false}
+      />,
+    )
+
+    const card = screen.getByTestId('estimate-info-card')
+    expect(card).toHaveAttribute('data-visible', 'false')
+    expect(card.textContent).not.toMatch(/360|300|850[,.]?000|ON/)
+    expect(screen.getByTestId('estimate-auto-dispatch-toggle')).toHaveTextContent(
+      '적용 전',
+    )
+  })
+
   it('distance / duration / amount 3 수치가 모두 렌더된다 (active=false)', () => {
     render(
       <EstimateInfoCard
@@ -289,7 +309,7 @@ describe('EstimateInfoCard — TC-DASH3-UNIT-ROLL (#8 number-rolling)', () => {
     )
     // 500ms 경과 — duration 상한 도달
     act(() => {
-      vi.advanceTimersByTime(500)
+      vi.advanceTimersByTime(700)
     })
     const card = screen.getByTestId('estimate-info-card')
     expect(card.textContent).toMatch(/360/)

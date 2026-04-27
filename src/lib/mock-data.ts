@@ -417,7 +417,12 @@ const TOOLTIPS: Readonly<Record<string, string>> = {
 // Main export
 // ---------------------------------------------------------------------------
 
-export type PreviewScenarioId = 'default' | 'partial' | 'mismatch-risk'
+export type PreviewScenarioId =
+  | 'default'
+  | 'regional-cold-chain'
+  | 'short-industrial-hop'
+  | 'partial'
+  | 'mismatch-risk'
 
 export interface PreviewExtractedFrame {
   readonly aiInput: PreviewMockData['aiInput']
@@ -432,6 +437,7 @@ export interface PreviewMockScenario {
   readonly id: PreviewScenarioId
   readonly label: string
   readonly description: string
+  readonly randomizable: boolean
   readonly extractedFrame: PreviewExtractedFrame
   readonly appliedFrame: PreviewAppliedFrame
 }
@@ -443,6 +449,22 @@ const DEFAULT_AI_INPUT: PreviewMockData['aiInput'] = {
   textValue: AI_INPUT_MESSAGE,
   message: AI_INPUT_MESSAGE,
 } as const
+
+function createTextAiInput(textValue: string): PreviewMockData['aiInput'] {
+  return {
+    activeTab: 'text',
+    textValue,
+    message: textValue,
+  } as const
+}
+
+const REGIONAL_COLD_CHAIN_AI_INPUT = createTextAiInput(
+  '인천 남동 콜드허브에서 광주 첨단 메디랩으로 1톤 냉장 의약품 샘플박스 보내주세요. 2026-04-19 08:30 상차, 14:30 하차, 예상 운임 420,000원입니다. 급송, 직행, 특수 옵션 필요합니다.',
+)
+
+const SHORT_INDUSTRIAL_HOP_AI_INPUT = createTextAiInput(
+  '수원 권선 산업단지에서 평택 고덕 팩토리로 2.5톤 윙바디 전자부품 박스 운송 부탁합니다. 2026-04-18 11:00 상차, 13:00 하차, 예상 운임 360,000원이고 지게차와 수작업이 필요합니다.',
+)
 
 const DEFAULT_FORM_DATA: PreviewMockData['formData'] = {
   company: COMPANY_MOCK,
@@ -456,6 +478,133 @@ const DEFAULT_FORM_DATA: PreviewMockData['formData'] = {
   estimate: ESTIMATE_MOCK,
   settlement: SETTLEMENT_MOCK,
   dialogs: DIALOGS_MOCK,
+} as const
+
+const REGIONAL_COLD_CHAIN_FORM_DATA: PreviewMockData['formData'] = {
+  ...DEFAULT_FORM_DATA,
+  pickup: {
+    ...PICKUP_MOCK,
+    company: '인천콜드허브',
+    address: '인천광역시 남동구 남동서로 44',
+    roadAddress: '인천광역시 남동구 남동서로 44',
+    jibunAddress: '인천광역시 남동구 고잔동 721-7',
+    detailAddress: '냉장 A동 2번 도크',
+    latitude: 37.4012,
+    longitude: 126.6968,
+    contactName: '박센터장',
+    date: '2026-04-19',
+    time: '08:30',
+  },
+  delivery: {
+    ...DELIVERY_MOCK,
+    company: '광주첨단메디랩',
+    address: '광주광역시 광산구 첨단과기로 123',
+    roadAddress: '광주광역시 광산구 첨단과기로 123',
+    jibunAddress: '광주광역시 광산구 월계동 890-3',
+    detailAddress: '의약품 입고장',
+    latitude: 35.2218,
+    longitude: 126.8495,
+    contactName: '정담당',
+    date: '2026-04-19',
+    time: '14:30',
+  },
+  vehicle: {
+    type: '냉장',
+    weight: '1톤',
+    recentCargoSuggestions: ['의약품', '냉장식품', '샘플박스'],
+  },
+  cargo: {
+    name: '의약품 샘플박스',
+    remark: '2~8도 유지',
+  },
+  options: {
+    ...OPTIONS_MOCK,
+    fast: true,
+    direct: true,
+    forklift: false,
+    special: true,
+  },
+  estimate: {
+    distance: 310,
+    duration: 240,
+    amount: 420000,
+    autoDispatch: true,
+  },
+  settlement: {
+    chargeBaseAmount: 420000,
+    dispatchBaseAmount: 360000,
+    additionalFees: [
+      { id: 'fee-cold', type: '냉장관리', amount: 20000, memo: '온도 유지', target: 'both' },
+    ],
+    totals: {
+      chargeTotal: 440000,
+      dispatchTotal: 380000,
+      profit: 60000,
+    },
+  },
+} as const
+
+const SHORT_INDUSTRIAL_HOP_FORM_DATA: PreviewMockData['formData'] = {
+  ...DEFAULT_FORM_DATA,
+  pickup: {
+    ...PICKUP_MOCK,
+    company: '수원산단물류',
+    address: '경기도 수원시 권선구 산업로 101',
+    roadAddress: '경기도 수원시 권선구 산업로 101',
+    jibunAddress: '경기도 수원시 권선구 고색동 921-4',
+    detailAddress: 'B동 상차장',
+    latitude: 37.2497,
+    longitude: 126.9837,
+    contactName: '최주임',
+    date: '2026-04-18',
+    time: '11:00',
+  },
+  delivery: {
+    ...DELIVERY_MOCK,
+    company: '평택고덕팩토리',
+    address: '경기도 평택시 고덕면 첨단대로 77',
+    roadAddress: '경기도 평택시 고덕면 첨단대로 77',
+    jibunAddress: '경기도 평택시 고덕면 여염리 1648',
+    detailAddress: '3번 게이트',
+    latitude: 37.0454,
+    longitude: 127.0466,
+    contactName: '문대리',
+    date: '2026-04-18',
+    time: '13:00',
+  },
+  vehicle: {
+    type: '윙바디',
+    weight: '2.5톤',
+    recentCargoSuggestions: ['부품박스', '설비자재', '완충재'],
+  },
+  cargo: {
+    name: '전자부품 박스',
+    remark: '상차 전 수량 확인',
+  },
+  options: {
+    ...OPTIONS_MOCK,
+    direct: true,
+    forklift: true,
+    manual: true,
+  },
+  estimate: {
+    distance: 70,
+    duration: 90,
+    amount: 360000,
+    autoDispatch: false,
+  },
+  settlement: {
+    chargeBaseAmount: 360000,
+    dispatchBaseAmount: 310000,
+    additionalFees: [
+      { id: 'fee-waiting', type: '대기료', amount: 10000, memo: '현장 대기', target: 'charge' },
+    ],
+    totals: {
+      chargeTotal: 370000,
+      dispatchTotal: 310000,
+      profit: 60000,
+    },
+  },
 } as const
 
 function replaceFareAmount(
@@ -485,20 +634,90 @@ function buildAiResult(
   categories: ReadonlyArray<AiCategoryGroup>,
   fareEvidence: string,
   warnings: ReadonlyArray<string> = [],
+  evidence: Readonly<Record<string, string>> = {
+    'departure-address1': '서울 강남구 물류센터',
+    'destination-address1': '대전 유성구 산업단지',
+    'cargo-vehicleType': '5톤 카고',
+    'cargo-cargoName': '파레트 공산품 3파레트',
+    'fare-amount': fareEvidence,
+  },
 ): PreviewMockData['aiResult'] {
   return {
     extractState: 'idle',
     categories,
     warnings,
-    evidence: {
-      'departure-address1': '서울 강남구 물류센터',
-      'destination-address1': '대전 유성구 산업단지',
-      'cargo-vehicleType': '5톤 카고',
-      'cargo-cargoName': '파레트 공산품 3파레트',
-      'fare-amount': fareEvidence,
-    },
+    evidence,
     jsonViewerOpen: false,
   } as const
+}
+
+function replaceCategoryButtonValues(
+  categories: ReadonlyArray<AiCategoryGroup>,
+  values: Readonly<
+    Record<
+      string,
+      {
+        readonly displayValue: string
+        readonly evidenceSnippet: string
+      }
+    >
+  >,
+): ReadonlyArray<AiCategoryGroup> {
+  return categories.map((category) => ({
+    ...category,
+    buttons: category.buttons.map((button) => {
+      const next = values[button.fieldKey]
+      return next === undefined
+        ? button
+        : {
+            ...button,
+            displayValue: next.displayValue,
+            evidenceSnippet: next.evidenceSnippet,
+          }
+    }),
+  }))
+}
+
+function buildScenarioAiResult(
+  formData: PreviewMockData['formData'],
+  fareEvidence: string,
+): PreviewMockData['aiResult'] {
+  const fareDisplay = `${formData.estimate.amount.toLocaleString()}원`
+  const vehicleDisplay = `${formData.vehicle.type} ${formData.vehicle.weight}`
+  const categories = replaceCategoryButtonValues(AI_CATEGORIES, {
+    'departure-address1': {
+      displayValue: formData.pickup.roadAddress,
+      evidenceSnippet: formData.pickup.address,
+    },
+    'departure-datetime': {
+      displayValue: `${formData.pickup.date} ${formData.pickup.time}`,
+      evidenceSnippet: `${formData.pickup.date} ${formData.pickup.time} 상차`,
+    },
+    'destination-address1': {
+      displayValue: formData.delivery.roadAddress,
+      evidenceSnippet: formData.delivery.address,
+    },
+    'cargo-vehicleType': {
+      displayValue: vehicleDisplay,
+      evidenceSnippet: vehicleDisplay,
+    },
+    'cargo-cargoName': {
+      displayValue: formData.cargo.name,
+      evidenceSnippet: formData.cargo.name,
+    },
+    'fare-amount': {
+      displayValue: fareDisplay,
+      evidenceSnippet: fareEvidence,
+    },
+  })
+
+  return buildAiResult(categories, fareEvidence, [], {
+    'departure-address1': formData.pickup.address,
+    'destination-address1': formData.delivery.address,
+    'cargo-vehicleType': vehicleDisplay,
+    'cargo-cargoName': formData.cargo.name,
+    'fare-amount': fareEvidence,
+  })
 }
 
 const DEFAULT_AI_CATEGORIES = replaceFareAmount(
@@ -532,6 +751,7 @@ export const PREVIEW_MOCK_SCENARIOS: ReadonlyArray<PreviewMockScenario> = [
     id: 'default',
     label: 'Default',
     description: 'Default preview fixture with consistent extracted and applied fare.',
+    randomizable: true,
     extractedFrame: {
       aiInput: DEFAULT_AI_INPUT,
       aiResult: buildAiResult(DEFAULT_AI_CATEGORIES, '예상 운임 85만원'),
@@ -541,9 +761,42 @@ export const PREVIEW_MOCK_SCENARIOS: ReadonlyArray<PreviewMockScenario> = [
     },
   },
   {
+    id: 'regional-cold-chain',
+    label: 'Regional Cold Chain',
+    description: 'Demo-safe cold-chain regional route with consistent fare.',
+    randomizable: true,
+    extractedFrame: {
+      aiInput: REGIONAL_COLD_CHAIN_AI_INPUT,
+      aiResult: buildScenarioAiResult(
+        REGIONAL_COLD_CHAIN_FORM_DATA,
+        '예상 운임 42만원',
+      ),
+    },
+    appliedFrame: {
+      formData: REGIONAL_COLD_CHAIN_FORM_DATA,
+    },
+  },
+  {
+    id: 'short-industrial-hop',
+    label: 'Short Industrial Hop',
+    description: 'Demo-safe short industrial route with consistent fare.',
+    randomizable: true,
+    extractedFrame: {
+      aiInput: SHORT_INDUSTRIAL_HOP_AI_INPUT,
+      aiResult: buildScenarioAiResult(
+        SHORT_INDUSTRIAL_HOP_FORM_DATA,
+        '예상 운임 36만원',
+      ),
+    },
+    appliedFrame: {
+      formData: SHORT_INDUSTRIAL_HOP_FORM_DATA,
+    },
+  },
+  {
     id: 'partial',
     label: 'Partial',
     description: 'Partial extraction fixture with one cargo field requiring confirmation.',
+    randomizable: false,
     extractedFrame: {
       aiInput: DEFAULT_AI_INPUT,
       aiResult: buildAiResult(PARTIAL_AI_CATEGORIES, '예상 운임 85만원', [
@@ -558,6 +811,7 @@ export const PREVIEW_MOCK_SCENARIOS: ReadonlyArray<PreviewMockScenario> = [
     id: 'mismatch-risk',
     label: 'Mismatch Risk',
     description: 'Test fixture for extracted fare and applied estimate mismatch.',
+    randomizable: false,
     extractedFrame: {
       aiInput: DEFAULT_AI_INPUT,
       aiResult: buildAiResult(AI_CATEGORIES, '예상 운임 42만원', [
@@ -569,6 +823,37 @@ export const PREVIEW_MOCK_SCENARIOS: ReadonlyArray<PreviewMockScenario> = [
     },
   },
 ] as const
+
+export function getRandomizablePreviewMockScenarios(): ReadonlyArray<PreviewMockScenario> {
+  return PREVIEW_MOCK_SCENARIOS.filter((scenario) => scenario.randomizable)
+}
+
+export interface SelectRandomPreviewMockScenarioOptions {
+  readonly excludeId?: PreviewScenarioId | string
+  readonly random?: () => number
+}
+
+function normalizeRandomValue(value: number): number {
+  if (!Number.isFinite(value)) return 0
+  if (value <= 0) return 0
+  if (value >= 1) return 0.999999999999
+  return value
+}
+
+export function selectRandomPreviewMockScenario({
+  excludeId,
+  random = Math.random,
+}: SelectRandomPreviewMockScenarioOptions = {}): PreviewMockScenario {
+  const randomizable = getRandomizablePreviewMockScenarios()
+  const candidates =
+    excludeId !== undefined && randomizable.length > 1
+      ? randomizable.filter((scenario) => scenario.id !== excludeId)
+      : randomizable
+  const pool = candidates.length > 0 ? candidates : randomizable
+  const index = Math.floor(normalizeRandomValue(random()) * pool.length)
+
+  return pool[index] ?? getDefaultPreviewMockScenario()
+}
 
 export function selectPreviewMockScenario(
   scenarioId: PreviewScenarioId | string = DEFAULT_PREVIEW_SCENARIO_ID,

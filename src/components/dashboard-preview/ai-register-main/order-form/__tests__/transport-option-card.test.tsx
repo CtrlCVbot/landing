@@ -100,6 +100,24 @@ afterEach(() => {
 // ---------------------------------------------------------------------------
 
 describe('TransportOptionCard — TC-DASH3-UNIT-TRANSOPT (8 옵션 렌더)', () => {
+  it('revealed=false 이면 실제 옵션 값과 무관하게 모두 unchecked 로 보인다', () => {
+    render(
+      <TransportOptionCard
+        options={OPTIONS_DIRECT_FORKLIFT}
+        revealed={false}
+      />,
+    )
+
+    expect(screen.getByTestId('transport-option-direct')).toHaveAttribute(
+      'data-checked',
+      'false',
+    )
+    expect(screen.getByTestId('transport-option-forklift')).toHaveAttribute(
+      'data-checked',
+      'false',
+    )
+  })
+
   it('8개 옵션 항목이 렌더된다 (fast/roundTrip/direct/trace/forklift/manual/cod/special)', () => {
     render(<TransportOptionCard options={OPTIONS_ALL_FALSE} />)
     const keys: Array<keyof TransportOptions> = [

@@ -371,7 +371,7 @@ describe('AiPanelContainer partialBeat 카테고리 순차 press (M3-11)', () =>
 
     // 299ms: 아직 press 전
     act(() => {
-      vi.advanceTimersByTime(299)
+      vi.advanceTimersByTime(649)
     })
     expect(btn).toHaveAttribute('data-pressed', 'false')
 
@@ -395,7 +395,7 @@ describe('AiPanelContainer partialBeat 카테고리 순차 press (M3-11)', () =>
     expect(btn).toHaveAttribute('data-pressed', 'false')
 
     act(() => {
-      vi.advanceTimersByTime(599)
+      vi.advanceTimersByTime(1299)
     })
     expect(btn).toHaveAttribute('data-pressed', 'false')
 
@@ -418,7 +418,7 @@ describe('AiPanelContainer partialBeat 카테고리 순차 press (M3-11)', () =>
     expect(btn).toHaveAttribute('data-pressed', 'false')
 
     act(() => {
-      vi.advanceTimersByTime(899)
+      vi.advanceTimersByTime(1949)
     })
     expect(btn).toHaveAttribute('data-pressed', 'false')
 
@@ -552,7 +552,7 @@ describe('AiPanelContainer #2 focus-walk 적용 (M4-01)', () => {
     )
 
     act(() => {
-      vi.advanceTimersByTime(400)
+      vi.advanceTimersByTime(650)
     })
 
     const departureGroup = screen.getByRole('group', {
