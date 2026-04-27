@@ -43,3 +43,9 @@ next-env.d.ts
 CLAUDE-KIT-QUICKSTART.md
 CLAUDE.md
 AGENTS.md
+
+# references
+/.references/*
+
+# output
+/output/*
