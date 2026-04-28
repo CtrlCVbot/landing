@@ -61,17 +61,19 @@
   ],
   "draft_status": "completed",
   "prd_status": "draft-reviewed",
-  "review_status": "PASS with noted follow-up",
+  "review_status": "PASS, follow-up resolved",
   "wireframe_status": "draft-reviewed",
   "bridge_status": "completed",
+  "dev_status": "completed",
+  "implementation_commit": "c06cd06",
   "wireframes": {
     "screens": "../../wireframes/hero-01-reference-hero-refresh/screens.md",
     "navigation": "../../wireframes/hero-01-reference-hero-refresh/navigation.md",
     "components": "../../wireframes/hero-01-reference-hero-refresh/components.md",
     "review": "../../wireframes/hero-01-reference-hero-refresh/04-wireframe-review.md"
   },
-  "next": "dev-run",
-  "next_command": "/dev-run .plans/features/active/hero-01-reference-hero-refresh",
-  "fallback_next": "revise-wireframe or plan-design if visual direction changes before implementation"
+  "next": "plan-archive optional",
+  "next_command": "/plan-archive hero-01-reference-hero-refresh",
+  "fallback_next": "/plan-improve hero-01-reference-hero-refresh \"<요청명>\" if a new improvement request appears"
 }
 ```

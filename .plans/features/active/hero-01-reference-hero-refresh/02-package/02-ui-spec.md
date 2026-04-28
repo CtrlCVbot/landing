@@ -84,13 +84,14 @@ Mobile acceptance:
 
 | Theme | Base | Accent | Guard |
 |---|---|---|---|
-| Light | white 또는 current light surface | violet/blue + cyan/warm low opacity | washed-out text 방지 veil |
-| Dark | near black current dark surface | vivid violet/blue + cyan/warm depth | over-saturation 방지 veil |
+| Light | `#f8fafc` muted light surface | lavender/cyan low-opacity field, reduced pastel spread | washed-out text 방지 veil + muted bottom fade |
+| Dark | `#05030a` black-purple surface | purple-centered `aurora/tide`, weak blue edge depth, purple glow | black-purple bottom fade + over-saturation 방지 veil |
 
 Theme 원칙:
 
 - `globals.css`의 현재 CSS variable 구조를 우선 사용한다.
-- 한 색상 계열만 반복되는 palette를 피한다.
+- 한 색상 계열만 반복되는 palette를 피하되, dark mode에서는 purple field를 중심으로 두고 cyan/yellow 확산은 제한한다.
+- Hero 하단 30~40%는 `hero-bottom-fade`로 다음 섹션 배경에 자연스럽게 닫힌다.
 - light/dark 모두 screenshot review로 확인한다.
 
 ---

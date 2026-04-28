@@ -75,3 +75,18 @@ pnpm run build
 ```
 
 Browser evidence는 desktop light/dark, mobile light/dark, reduced-motion을 각각 확인한다. 이 feature는 시각 품질이 핵심이므로 자동 테스트만으로 release-ready를 선언하지 않는다.
+
+---
+
+## 7. Executed Evidence
+
+| Check | Result | Evidence |
+|---|---|---|
+| `pnpm run test -- hero light-theme` | Pass | 2 files, 408 tests |
+| `pnpm run typecheck` | Pass | `tsc --noEmit` |
+| `pnpm run lint` | Pass | 기존 dashboard-preview warning만 있음 |
+| `pnpm run build` | Pass | Next.js production build/export 완료 |
+| Browser QA | Pass | `output/hero-01-parity-qa/browser-qa.json`, `failureCount: 0` |
+| User visual approval | Pass | "만족 스럽습니다" 피드백 수신 |
+
+Browser QA는 `localhost:3103`의 최신 dev server 기준으로 desktop light/dark, transition screenshots, mobile light/dark, reduced-motion을 확인했다. 기존 `localhost:3101` process는 stale `500` 상태였으므로 release evidence에는 포함하지 않는다.

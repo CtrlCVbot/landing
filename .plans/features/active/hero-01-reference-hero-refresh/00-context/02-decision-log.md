@@ -1,7 +1,7 @@
 # Decision Log: hero-01-reference-hero-refresh
 
 > **Feature Slug**: `hero-01-reference-hero-refresh`
-> **Status**: accepted for dev handoff
+> **Status**: implemented, user-approved, pushed
 > **Created**: 2026-04-28
 
 ---
@@ -29,6 +29,29 @@
 | `O-HR-002` | Canvas 2D 구현 route 최종 채택 여부 | lifecycle 구현 비용과 visual gap evidence를 비교한다. |
 | `O-HR-003` | CSS fallback의 token 이름 | `globals.css`의 현재 `--hero-gradient-*` 구조와 가장 덜 충돌하는 이름을 선택한다. |
 | `O-HR-004` | screenshot evidence 저장 위치 | 기존 output 관례가 있으면 따르고, 없으면 `output/hero-01-parity-qa/`를 사용한다. |
+
+---
+
+## 2-1. Resolved Implementation Decisions
+
+| ID | Resolution | Evidence |
+|---|---|---|
+| `O-HR-001` | 기존 `HeroLiquidGradientBackground` 이름을 유지하고 내부 구현을 Canvas 2D + CSS fallback으로 확장했다. | `src/components/shared/hero-liquid-gradient-background.tsx` |
+| `O-HR-002` | Canvas 2D route를 최종 채택했다. | `data-implementation-route="canvas-2d-css-fallback"`, browser QA `failureCount: 0` |
+| `O-HR-003` | `--hero-field-*` token family를 사용한다. | `src/app/globals.css`, `src/__tests__/light-theme.test.tsx` |
+| `O-HR-004` | `output/hero-01-parity-qa/`에 browser QA evidence를 저장한다. | desktop/mobile/reduced-motion screenshots, `browser-qa.json` |
+
+---
+
+## 2-2. Final Color Decision
+
+| Decision | Result |
+|---|---|
+| Dark field | `#05030a` base 위에 `aurora/tide` purple 중심 field로 확정 |
+| Bright accent | cyan/yellow 확산은 줄이고 `signal`은 edge depth, `warm`은 purple glow로 제한 |
+| Hero bottom | `hero-bottom-fade` decorative layer와 canvas bottom veil로 black-purple transition 적용 |
+| Light field | pastel 확산을 줄인 muted lavender/cyan field로 확정 |
+| Approval | 사용자 확인: "만족 스럽습니다" 이후 `c06cd06` push 완료 |
 
 ---
 

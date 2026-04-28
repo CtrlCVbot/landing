@@ -78,8 +78,8 @@
 |---|---|:---:|---|
 | REQ-hero-01-reference-hero-refresh-001 | Hero background는 first viewport 전체를 덮는 full-bleed liquid field로 보인다. | Must | desktop screenshot에서 background가 작은 장식이 아니라 Hero의 주 시각 신호로 보인다. |
 | REQ-hero-01-reference-hero-refresh-002 | background layer는 `canvas` 또는 canvas-like structure를 사용할 수 있어야 한다. | Must | Canvas 2D 후보를 선택하면 DPR, resize, cleanup, visibility handling 기준이 dev task에 포함된다. |
-| REQ-hero-01-reference-hero-refresh-003 | light mode palette는 current theme token에서 파생한다. | Must | `#ffffff`, `#7c3aed`, `#2563eb`, cyan/warm 후보가 token 또는 equivalent value로 연결된다. |
-| REQ-hero-01-reference-hero-refresh-004 | dark mode palette는 current theme token에서 파생한다. | Must | `#0a0a0a`, `#9333ea`, `#3b82f6`, cyan/warm 후보가 token 또는 equivalent value로 연결된다. |
+| REQ-hero-01-reference-hero-refresh-003 | light mode palette는 current theme token에서 파생한다. | Must | `#f8fafc` muted base와 lavender/cyan field가 `--hero-field-*` token으로 연결된다. |
+| REQ-hero-01-reference-hero-refresh-004 | dark mode palette는 current theme token에서 파생한다. | Must | `#05030a` base와 purple-centered `aurora/tide` field가 연결되고 하단은 black-purple fade로 닫힌다. |
 | REQ-hero-01-reference-hero-refresh-005 | headline, subtitle, CTA는 모든 theme에서 읽을 수 있어야 한다. | Must | screenshot review와 contrast check에서 CTA/heading이 background에 묻히지 않는다. |
 | REQ-hero-01-reference-hero-refresh-006 | CTA와 link click 영역은 background layer에 가로막히지 않는다. | Must | background layer는 `pointer-events: none` 또는 동등한 처리로 클릭을 가로채지 않는다. |
 | REQ-hero-01-reference-hero-refresh-007 | palette는 violet/blue 단색화가 되지 않도록 highlight 색을 포함한다. | Must | cyan 또는 warm accent가 적어도 1개 이상 포함되고 light/dark screenshot에서 식별된다. |
@@ -198,14 +198,25 @@
 - **Review 파일**: `.plans/drafts/hero-01-reference-hero-refresh/03-prd-review.md`
 - **Routing metadata**: `.plans/drafts/hero-01-reference-hero-refresh/07-routing-metadata.md`
 
-## 12. Next Steps
+## 12. Implementation Delta
+
+| Item | Final Result |
+|---|---|
+| Dark palette | `#05030a` base with purple-centered `aurora/tide`; cyan/yellow spread reduced |
+| Light palette | muted lavender/cyan field with reduced pastel expansion |
+| Hero bottom | `hero-bottom-fade` and canvas bottom veil prevent bright blob clipping into the next section |
+| Route | Canvas 2D + CSS fallback; no new graphics dependency |
+| Verification | targeted tests, typecheck, lint, build, browser QA passed |
+| Approval | user visual approval received and `c06cd06` pushed |
+
+## 13. Next Steps
 
 1. `03-prd-review.md`의 PRD 리뷰 판정을 확인한다.
 2. first viewport hierarchy 변경이 포함되므로 `/plan-wireframe .plans/drafts/hero-01-reference-hero-refresh/`로 P5를 진행한다.
 3. wireframe에서 desktop/mobile Hero 배치와 reference 요소 mapping을 확정한다.
 4. 이후 `/plan-bridge`에서 Standard dev handoff context를 생성한다.
 
-## 13. Change History
+## 14. Change History
 
 | 날짜 | 내용 |
 |---|---|

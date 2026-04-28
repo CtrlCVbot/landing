@@ -2,9 +2,11 @@
 
 > **Feature**: hero-01 레퍼런스 기반 Hero 섹션 재개선
 > **Scope**: Standard
-> **Status**: Phase C bridge package complete, ready for `/dev-run` planning review
+> **Status**: Dev complete, user-approved, pushed to `origin/main`
 > **Created**: 2026-04-28
 > **Plan Bridge**: completed
+> **Implementation Commit**: `c06cd06 feat: hero-01 레퍼런스 기반 Hero 배경 개선`
+> **Pipeline Position**: P1-P7 + Dev complete, closeout documented, P8 archive optional/pending
 
 ---
 
@@ -16,7 +18,7 @@
 | 01 | `01-prd-freeze.md` | 완료 | PRD freeze, 요구사항 alias, 변경 통제 기준 |
 | 02 | `02-decision-log.md` | 완료 | 수용된 결정, 보류 결정, out-of-scope |
 | 06 | `06-architecture-binding.md` | 완료 | 구조 SSOT 기반 허용 경로와 검증 경계 |
-| 07 | `07-routing-metadata.md` | 완료 | Standard bridge 이후 `/dev-run` 라우팅 metadata |
+| 07 | `07-routing-metadata.md` | 완료 | Standard bridge 이후 Dev 완료 및 P8 archive 선택 metadata |
 
 ## 1-1. Package Files
 
@@ -30,6 +32,7 @@
 | 08 | `../02-package/08-dev-tasks.md` | 완료 | M1~M5 구현 task 목록 |
 | 09 | `../02-package/09-test-cases.md` | 완료 | 자동 테스트, browser visual QA, release evidence |
 | 10 | `../02-package/10-release-checklist.md` | 완료 | 구현 완료 전 evidence checklist |
+| 11 | `../02-package/11-pipeline-closeout.md` | 완료 | Claude Kit pipeline 기준 현재 완료/잔여 단계 정리 |
 
 ---
 
@@ -80,8 +83,6 @@
 
 ## 5. Next Step
 
-Phase C bridge 산출물은 완료됐다. 다음 단계는 문서 review 후 구현 실행이다.
+P1-P7 산출물과 Dev 구현이 완료되었고, 사용자 visual approval 후 `main`에 push되었다.
 
-```bash
-/dev-run .plans/features/active/hero-01-reference-hero-refresh
-```
+남은 pipeline은 선택 단계인 P8 archive뿐이다. archive를 진행하지 않는 동안에는 본 feature package를 active 상태로 유지하고, 새 개선 요청은 `/plan-improve hero-01-reference-hero-refresh "<요청명>"` 형태로 별도 improvement loop로 분리한다.

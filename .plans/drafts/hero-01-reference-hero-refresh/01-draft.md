@@ -81,7 +81,7 @@
 
 | Token | Light 후보 | Dark 후보 | 역할 |
 |---|---|---|---|
-| `--hero-field-base` | `#ffffff` | `#0a0a0a` | 기존 background와 theme 일관성 유지 |
+| `--hero-field-base` | `#f8fafc` | `#05030a` | muted light surface와 dark purple field 기준 |
 | `--hero-field-primary` | `#7c3aed` 30-36% | `#9333ea` 48-56% | violet 주 accent |
 | `--hero-field-secondary` | `#2563eb` 24-30% | `#3b82f6` 38-46% | blue 보조 accent |
 | `--hero-field-highlight` | `#06b6d4` 14-20% | `#22d3ee` 20-28% | cyan highlight |
@@ -89,6 +89,17 @@
 | `--hero-field-contrast-veil` | `rgba(255,255,255,0.52)` | `rgba(0,0,0,0.34)` | 텍스트와 CTA 대비 보호 |
 
 PRD에서는 위 값을 확정값이 아니라 검증 가능한 후보로 다룬다. Browser QA에서 light/dark screenshot을 보고 opacity와 veil 강도를 조정한다.
+
+### 6-1. Final Implemented Palette
+
+| Token | Light | Dark | Role |
+|---|---|---|---|
+| `--hero-field-base` | `#f8fafc` | `#05030a` | final base field |
+| `--hero-field-aurora-rgb` | `139 92 246` | `126 34 206` | purple main accent |
+| `--hero-field-tide-rgb` | `99 102 241` | `88 80 236` | purple-blue secondary accent |
+| `--hero-field-signal-rgb` | `14 165 233` | `30 64 175` | muted cyan/edge depth |
+| `--hero-field-warm-rgb` | `168 85 247` | `168 85 247` | purple glow, not yellow warmth |
+| `--hero-field-bottom-fade` | `rgba(248,250,252,0.94)` | `rgba(5,3,10,0.96)` | Hero 하단 transition 보호 |
 
 ## 7. Hero layout 초안
 
@@ -174,7 +185,17 @@ PRD에서는 위 값을 확정값이 아니라 검증 가능한 후보로 다룬
 | Bridge 필요 | true | Standard lane이므로 PRD/review 이후 dev handoff context가 필요하다. |
 | 다음 경로 | `/plan-prd` | 상세 요구사항과 decision gate를 확정한다. |
 
-## 14. 다음 단계
+## 14. Implementation Delta
+
+| Item | Final Result |
+|---|---|
+| Pipeline route | Standard copy-dev hybrid completed through Dev |
+| Color decision | dark purple field + black-purple bottom fade; light muted lavender/cyan |
+| Scope control | reference controls, color adjuster, export UI, custom cursor excluded |
+| Evidence | browser QA `failureCount: 0`, user visual approval, pushed commit `c06cd06` |
+| Remaining | optional P8 archive or future `/plan-improve` loop |
+
+## 15. 다음 단계
 
 1. `/plan-prd .plans/drafts/hero-01-reference-hero-refresh/`로 상세 PRD를 작성한다.
 2. PRD에서 구현 후보를 `Canvas 2D 우선 검토 + CSS fallback + WebGL gate`로 비교 확정한다.

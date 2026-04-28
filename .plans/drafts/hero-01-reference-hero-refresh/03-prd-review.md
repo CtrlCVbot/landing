@@ -4,7 +4,7 @@
 > **Draft**: [01-draft.md](./01-draft.md)
 > **Routing metadata**: [07-routing-metadata.md](./07-routing-metadata.md)
 > **작성일**: 2026-04-28
-> **상태**: PASS with noted follow-up
+> **상태**: PASS, follow-up resolved
 
 ---
 
@@ -44,7 +44,7 @@
 | PCC-02 Screen ↔ Feature | PASS | 승인 IDEA 기반 draft `01-draft.md` 존재 |
 | PCC-03 Feature ↔ PRD | PASS | draft의 reference fidelity, theme adaptation, implementation route, risk가 PRD에 반영됨 |
 | PCC-04 PRD ↔ Wireframe | PENDING | 다음 단계가 wireframe이므로 아직 산출물 없음 |
-| PCC-06 Reference Gap ↔ Detail PRD | PASS with follow-up | formal gap board는 없지만 draft/PRD에 reference include/exclude와 current gap table이 반영됨. wireframe에서 visual mapping을 더 구체화해야 함 |
+| PCC-06 Reference Gap ↔ Detail PRD | PASS, follow-up resolved | draft/PRD reference include/exclude, wireframe mapping, browser QA, user approval까지 완료됨 |
 | PCC-07~09 Epic 계층 | 해당 없음 | Epic binding 없음 |
 
 ## 4. Feedback Items
@@ -75,11 +75,11 @@
 
 ## 5. Review Decision
 
-**PASS with noted follow-up**.
+**PASS, follow-up resolved**.
 
 PRD는 Standard lane과 Scenario C에 맞게 작성됐다. 구현으로 바로 넘어가지 않고, first viewport hierarchy와 mobile layout을 잠글 수 있도록 `/plan-wireframe`을 다음 단계로 확정하는 것이 맞다.
 
-남은 follow-up은 formal visual mapping이다. PRD에는 reference include/exclude와 current gap이 반영되어 있지만, wireframe에서는 `hero-01`의 full-bleed field, heading hierarchy, CTA 위치, `DashboardPreview` 위치를 화면 단위로 구체화해야 한다.
+남은 follow-up이던 formal visual mapping은 wireframe과 dev implementation에서 처리되었다. 최종 상태는 dark purple field, light muted lavender/cyan field, `hero-bottom-fade` transition, browser QA `failureCount: 0`, 사용자 visual approval로 정리한다.
 
 ## 6. Next Steps
 

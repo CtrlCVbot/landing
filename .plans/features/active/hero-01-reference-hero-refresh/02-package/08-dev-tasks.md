@@ -99,3 +99,17 @@
 3. `T-HR-M3-01`~`T-HR-M3-03`
 4. `T-HR-M4-01`~`T-HR-M4-03`
 5. `T-HR-M5-01`~`T-HR-M5-02`
+
+---
+
+## Implementation Completion Status
+
+| Milestone | Status | Evidence |
+|---|---|---|
+| M1 Route and foundation | Done | `HeroLiquidGradientBackground` kept, Canvas 2D + CSS fallback route recorded |
+| M2 Field and motion | Done | `--hero-field-*` tokens, canvas repaint, reduced-motion/static fallback |
+| M3 Hierarchy/readability | Done | Hero shell keeps headline/CTA/`DashboardPreview`; `hero-bottom-fade` added below content |
+| M4 Regression guards | Done | `hero.test.tsx`, `light-theme.test.tsx` updated |
+| M5 QA/release prep | Done | `pnpm run test -- hero light-theme`, typecheck, lint, build, browser QA passed |
+
+Final implementation was committed and pushed as `c06cd06 feat: hero-01 레퍼런스 기반 Hero 배경 개선`.

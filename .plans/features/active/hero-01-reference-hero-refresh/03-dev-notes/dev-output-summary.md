@@ -87,7 +87,7 @@
 
 | 항목 | 수준 | 대응 |
 |---|---|---|
-| Visual taste final approval | medium | 사용자가 screenshot 또는 local URL에서 최종 선호 확인 |
+| Visual taste final approval | resolved | 사용자 피드백 "만족 스럽습니다" 수신 |
 | Existing lint warnings | low | dashboard-preview 기존 warning. 이번 Hero 변경 blocker 아님 |
 | Existing `localhost:3101` 500 | low | 기존 preview process가 stale 상태. 최신 검증은 새 dev server `localhost:3103`에서 수행 |
 
@@ -95,8 +95,8 @@
 
 ## 7. Next Step
 
-1. 사용자 visual review를 받는다.
-2. 필요한 미세 조정이 없으면 feature 관련 파일만 분리해 commit한다.
+1. P8 archive 실행 여부를 결정한다.
+2. 새 색감/레이아웃 피드백이 생기면 `/plan-improve hero-01-reference-hero-refresh "<요청명>"`로 별도 improvement loop를 시작한다.
 
 ---
 
@@ -111,3 +111,5 @@
 | Hero bottom transition | `hero-bottom-fade` decorative layer와 canvas bottom veil 추가 |
 | Light mode palette | pastel 확산을 줄이고 muted lavender/cyan 중심으로 조정 |
 | Browser QA | `localhost:3103` 기준 `failureCount: 0`, desktop/mobile/reduced-motion 통과 |
+| Commit/push | `c06cd06` pushed to `origin/main` |
+| User approval | "만족 스럽습니다" 피드백 수신 |

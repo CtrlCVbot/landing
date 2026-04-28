@@ -75,7 +75,7 @@ output/hero-01-parity-qa/
 | Headline priority | 완료 | desktop/mobile screenshot에서 headline이 first visual anchor |
 | Primary CTA clarity | 완료 | CTA는 field 위에서 visible, `#contact` 유지 |
 | `DashboardPreview` visual weight | 완료 | CTA 아래 제품 증거 영역으로 유지. 내부 business flow 변경 없음 |
-| Light palette fit | 완료 | cyan/warm accent 포함, light screenshot 확인 |
+| Light palette fit | 완료 | muted lavender/cyan 중심, pastel 과다 확산 없음 |
 | Dark palette depth | 완료 | purple 중심 field, weak blue edge depth, 하단 black-purple fade 확인 |
 | Mobile stability | 완료 | mobile light/dark `overflowX: 0`, text/CTA/preview overlap 없음 |
 
@@ -87,4 +87,20 @@ output/hero-01-parity-qa/
 |---|---|---|
 | Critical/high feedback | 없음 | self-review와 automated/browser QA에서 blocker 없음 |
 | Remaining intentional differences | 있음 | reference controls/custom cursor/footer는 production에서 의도적으로 제외 |
-| Release-ready decision | 준비됨 | dev implementation + evidence complete. 최종 review/commit 분리 필요 |
+| Release-ready decision | 완료 | dev implementation + evidence complete, 사용자 visual approval 수신, `c06cd06` push 완료 |
+
+---
+
+## 7. Pipeline Closeout
+
+| Stage | Status | Evidence |
+|---|---|---|
+| P1 Idea | Done | `IDEA-20260427-004.md` |
+| P2 Screening | Done | `SCREENING-20260427-004.md` |
+| P3 Draft | Done | `.plans/drafts/hero-01-reference-hero-refresh/01-draft.md` |
+| P4 PRD | Done | `.plans/drafts/hero-01-reference-hero-refresh/02-prd.md`, review PASS |
+| P5 Wireframe | Done | `.plans/wireframes/hero-01-reference-hero-refresh/` |
+| P6 Stitch | Not required | no external Stitch HTML beyond local reference adaptation |
+| P7 Bridge | Done | `00-context/`, `02-package/` handoff package |
+| Dev | Done | `c06cd06` pushed to `origin/main` |
+| P8 Archive | Pending optional | archive only after the user wants to close active package |

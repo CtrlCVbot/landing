@@ -51,8 +51,8 @@
 
 | 상태 | 렌더링 규칙 |
 |---|---|
-| light | `#ffffff` base 위에 낮은 opacity field |
-| dark | `#0a0a0a` base 위에 더 높은 saturation field |
+| light | `#f8fafc` muted base 위에 lavender/cyan low-opacity field |
+| dark | `#05030a` base 위에 purple-centered field와 black-purple bottom fade |
 | pointer idle | ambient blob drift |
 | pointer active | desktop에서만 subtle pointer highlight |
 | mobile | 낮은 blob 수, 낮은 blur, capped DPR |

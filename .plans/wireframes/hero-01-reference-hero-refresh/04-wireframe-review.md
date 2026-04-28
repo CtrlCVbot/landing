@@ -5,7 +5,7 @@
 > **Components**: [components.md](./components.md)
 > **PRD**: [../../drafts/hero-01-reference-hero-refresh/02-prd.md](../../drafts/hero-01-reference-hero-refresh/02-prd.md)
 > **작성일**: 2026-04-28
-> **상태**: PASS with noted follow-up
+> **상태**: PASS, follow-up resolved
 
 ---
 
@@ -28,7 +28,7 @@
 | PCC-02 Screen ↔ Feature | PASS | Draft와 PRD가 존재하고 wireframe slug가 일치 |
 | PCC-03 Feature ↔ PRD | PASS | PRD의 reference fidelity, theme, motion, CTA, mobile 요구사항이 wireframe에 반영 |
 | PCC-04 PRD ↔ Wireframe | PASS | PRD 주요 화면과 REQ 16건이 wireframe 산출물에 mapping됨 |
-| PCC-06 Reference Gap ↔ Detail PRD | PASS with follow-up | reference include/exclude와 DOM leakage guard가 명시됨. 이후 visual gap board는 browser QA에서 보강 필요 |
+| PCC-06 Reference Gap ↔ Detail PRD | PASS, follow-up resolved | reference include/exclude, DOM leakage guard, browser QA, user approval까지 완료됨 |
 | PCC-07~09 Epic 계층 | 해당 없음 | Epic binding 없음 |
 
 ## 3. Feedback Items
@@ -55,11 +55,11 @@
 
 ## 4. Review Decision
 
-**PASS with noted follow-up**.
+**PASS, follow-up resolved**.
 
 Wireframe은 PRD의 주요 요구사항을 충족한다. 다음 단계는 Standard lane에 맞춰 `/plan-bridge`로 dev handoff context를 만드는 것이다.
 
-남은 follow-up은 screenshot 기반 visual gap board다. 현재 wireframe은 구조와 mapping을 정의했지만 실제 시각 차이는 browser QA에서 확인해야 한다.
+남은 follow-up이던 screenshot 기반 visual gap review는 browser QA와 사용자 visual approval로 처리되었다. `output/hero-01-parity-qa/browser-qa.json`은 `failureCount: 0`이며, dark/light/mobile/reduced-motion evidence가 존재한다.
 
 ## 5. Next Steps
 

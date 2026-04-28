@@ -46,7 +46,7 @@ Viewport 1440 x 900
 |  +--------------------------------------------------------------------------+  |
 |  | HeroFieldLayer (canvas or canvas-like full bleed)                         |  |
 |  | - base field fills entire viewport                                        |  |
-|  | - multi-blob color depth: violet + blue + cyan/warm                       |  |
+|  | - purple-centered multi-blob field with weak blue depth and muted light state |  |
 |  | - subtle pointer highlight on desktop                                     |  |
 |  | - contrast veil behind content                                           |  |
 |  +--------------------------------------------------------------------------+  |
@@ -82,8 +82,8 @@ Viewport 1440 x 900
 
 | 상태 | 표현 | 연결 REQ |
 |---|---|---|
-| Default light | white base + violet/blue/cyan/warm low-opacity field | REQ-003, 007 |
-| Default dark | black base + vivid violet/blue + cyan/warm field | REQ-004, 007 |
+| Default light | muted `#f8fafc` base + lavender/cyan low-opacity field | REQ-003, 007 |
+| Default dark | `#05030a` base + purple-centered field + black-purple bottom fade | REQ-004, 007 |
 | Pointer active | pointer 주변에 subtle primary glow | REQ-010 |
 | CTA hover/focus | current button state 유지, background 영향 없음 | REQ-005, 006 |
 
@@ -207,7 +207,17 @@ Content
 | 4 | DashboardPreview | Product proof, but not the first visual anchor. |
 | 5 | Secondary CTA | Supporting action. |
 
-## 8. PRD Requirement Coverage
+## 8. Implementation Delta
+
+| Area | Final Screen Rule |
+|---|---|
+| Desktop dark | purple-centered moving field; bottom 35-40% fades to black-purple before next section |
+| Desktop light | muted lavender/cyan field; pastel spread is intentionally reduced |
+| Mobile | CTA and preview remain stacked without overlap; background intensity is lower |
+| Reduced motion | static field remains, `hero-bottom-fade` remains |
+| Reference mapping | field/hierarchy retained; reference controls and custom cursor excluded |
+
+## 9. PRD Requirement Coverage
 
 | REQ | Covered by |
 |---|---|

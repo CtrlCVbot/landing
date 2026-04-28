@@ -20,11 +20,11 @@
 |---|---|:---:|---|
 | `REQ-HR-001` | Hero background는 first viewport 전체를 덮는 full-bleed liquid field로 보인다. | Must | desktop screenshot에서 background가 장식 요소가 아니라 Hero의 주 visual signal로 보인다. |
 | `REQ-HR-002` | Background layer는 `canvas` 또는 canvas-like 구조를 사용할 수 있어야 한다. | Must | Canvas route 선택 시 DPR, resize, cleanup, visibility handling 기준이 구현된다. |
-| `REQ-HR-003` | Light mode palette는 현재 theme token에서 파생한다. | Must | white base와 violet/blue/cyan/warm accent가 token 또는 equivalent value로 연결된다. |
-| `REQ-HR-004` | Dark mode palette는 현재 theme token에서 파생한다. | Must | dark base와 vivid accent가 theme 전환에 따라 repaint된다. |
+| `REQ-HR-003` | Light mode palette는 현재 theme token에서 파생한다. | Must | `#f8fafc` base와 muted lavender/cyan field가 `--hero-field-*` token으로 연결되고 pastel 확산이 과하지 않다. |
+| `REQ-HR-004` | Dark mode palette는 현재 theme token에서 파생한다. | Must | `#05030a` base와 purple 중심 `aurora/tide` field가 theme 전환에 따라 repaint되고 하단은 black-purple fade로 닫힌다. |
 | `REQ-HR-005` | Headline, subtitle, CTA는 모든 theme에서 읽을 수 있어야 한다. | Must | contrast veil 또는 text treatment가 screenshot review를 통과한다. |
 | `REQ-HR-006` | Background layer는 CTA click과 focus를 가로막지 않는다. | Must | `pointer-events: none` 또는 동등한 처리가 유지된다. |
-| `REQ-HR-007` | Palette는 violet/blue 한 톤으로만 보이면 안 된다. | Must | cyan 또는 warm accent가 light/dark screenshot에서 식별된다. |
+| `REQ-HR-007` | Palette는 one-note로 보이면 안 된다. | Must | dark는 purple 중심 움직임을 유지하되 `signal`은 edge depth, `warm`은 purple glow로만 쓰이고, light는 muted lavender/cyan으로 차분하게 식별된다. |
 | `REQ-HR-008` | `hero-01` controls UI는 production DOM에 나타나지 않는다. | Must | color controls, adjuster, export UI, custom cursor가 없다. |
 | `REQ-HR-009` | Reference source를 무단 직접 복사하지 않는다. | Must | behavior와 visual intent를 current code style로 재구성한다. |
 | `REQ-HR-010` | Desktop pointer-reactive effect는 subtle해야 한다. | Should | pointer highlight가 CTA와 headline 집중을 방해하지 않고 reduced-motion에서 꺼진다. |

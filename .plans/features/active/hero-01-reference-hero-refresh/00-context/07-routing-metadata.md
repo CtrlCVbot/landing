@@ -19,7 +19,7 @@
   "wireframe_required": true,
   "bridge_required": true,
   "epic_binding": null,
-  "entryPoint": "dev-run",
+  "entryPoint": "plan-archive optional",
   "draft": "../../../../drafts/hero-01-reference-hero-refresh/01-draft.md",
   "prd": "../../../../drafts/hero-01-reference-hero-refresh/02-prd.md",
   "review": "../../../../drafts/hero-01-reference-hero-refresh/03-prd-review.md",
@@ -41,7 +41,7 @@
   ],
   "source_feature": "hero-liquid-gradient-background",
   "source_archive": "../../../../archive/hero-liquid-gradient-background/ARCHIVE-HLG.md",
-  "implementation_boundary": "Implement only after /dev-run. Keep current product copy, CTA paths, and DashboardPreview behavior. Reference controls, color adjuster, export UI, custom cursor, and footer attribution are excluded from production.",
+  "implementation_boundary": "Implementation completed. Keep current product copy, CTA paths, and DashboardPreview behavior. Reference controls, color adjuster, export UI, custom cursor, and footer attribution remain excluded from production.",
   "recommended_implementation_route": "Canvas 2D first-pass candidate with CSS fallback; WebGL/Three.js requires explicit dependency and bundle-size gate.",
   "copy_fidelity_scope": [
     "full-bleed liquid field",
@@ -66,9 +66,12 @@
   "prd_status": "draft-reviewed",
   "wireframe_status": "draft-reviewed",
   "bridge_status": "completed",
-  "review_status": "PASS with noted follow-up",
-  "next": "dev-run",
-  "next_command": "/dev-run .plans/features/active/hero-01-reference-hero-refresh",
-  "fallback_next": "revise-wireframe or plan-design if visual direction changes before implementation"
+  "dev_status": "completed",
+  "review_status": "PASS, user-approved",
+  "implementation_commit": "c06cd06",
+  "pushed_to": "origin/main",
+  "next": "plan-archive optional",
+  "next_command": "/plan-archive hero-01-reference-hero-refresh",
+  "fallback_next": "/plan-improve hero-01-reference-hero-refresh \"<요청명>\" if a new improvement request appears"
 }
 ```
