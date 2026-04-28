@@ -9,7 +9,14 @@ import {
   createPreviewMockData,
   selectRandomPreviewMockScenario,
 } from '@/lib/mock-data'
-import { PREVIEW_STEPS } from '@/lib/preview-steps'
+import type { AiCategoryId } from '@/lib/mock-data'
+import {
+  AI_APPLY_FOCUS_PAIRS,
+  PREVIEW_STEPS,
+  getAiApplyCardFocusMetadata,
+  getAiApplyFocusPairIndex,
+  getAiApplyResultFocusMetadata,
+} from '@/lib/preview-steps'
 import { useMediaQuery } from '@/hooks/use-media-query'
 import { useAutoPlay } from './use-auto-play'
 import { useDashV3 } from './use-dash-v3'
@@ -69,6 +76,20 @@ const AREA_TO_STEP: Readonly<Record<string, number>> = {
   'result-fare': 3,
 } as const
 
+const AI_APPLY_CARD_HOLD_MS = 900
+
+type AiApplyFocusMode = 'result' | 'card'
+
+interface AiApplyFocusState {
+  readonly categoryId: AiCategoryId
+  readonly mode: AiApplyFocusMode
+}
+
+const INITIAL_AI_APPLY_FOCUS_STATE: AiApplyFocusState = {
+  categoryId: 'departure',
+  mode: 'result',
+} as const
+
 export function shouldRotatePreviewScenario(
   previousStepIndex: number,
   currentStepIndex: number,
@@ -100,6 +121,9 @@ export function DashboardPreview({ className }: DashboardPreviewProps) {
   })
   const [mockScenario, setMockScenario] = useState(() =>
     selectRandomPreviewMockScenario(),
+  )
+  const [aiApplyFocusState, setAiApplyFocusState] = useState<AiApplyFocusState>(
+    INITIAL_AI_APPLY_FOCUS_STATE,
   )
   const previousStepRef = useRef(currentStep)
   const previewMockData = useMemo(
@@ -135,6 +159,46 @@ export function DashboardPreview({ className }: DashboardPreviewProps) {
   }, [interactive.mode, pause, resume])
 
   const step = PREVIEW_STEPS[currentStep]
+
+  useEffect(() => {
+    if (step.id !== 'AI_APPLY') {
+      setAiApplyFocusState(INITIAL_AI_APPLY_FOCUS_STATE)
+    }
+  }, [step.id])
+
+  useEffect(() => {
+    if (step.id !== 'AI_APPLY' || aiApplyFocusState.mode !== 'card') return
+
+    const currentPairIndex = getAiApplyFocusPairIndex(aiApplyFocusState.categoryId)
+    const nextPair = AI_APPLY_FOCUS_PAIRS[currentPairIndex + 1]
+    if (!nextPair) return
+
+    const timer = setTimeout(() => {
+      setAiApplyFocusState({
+        categoryId: nextPair.categoryId,
+        mode: 'result',
+      })
+    }, AI_APPLY_CARD_HOLD_MS)
+
+    return () => clearTimeout(timer)
+  }, [aiApplyFocusState.categoryId, aiApplyFocusState.mode, step.id])
+
+  const aiApplyFocus =
+    dashV3Enabled && step.id === 'AI_APPLY'
+      ? aiApplyFocusState.mode === 'card'
+        ? getAiApplyCardFocusMetadata(aiApplyFocusState.categoryId)
+        : getAiApplyResultFocusMetadata(aiApplyFocusState.categoryId)
+      : null
+  const previewFocus = aiApplyFocus ?? step.focus
+
+  const handleResultApply = (categoryId: AiCategoryId) => {
+    if (step.id !== 'AI_APPLY') return
+    setAiApplyFocusState({
+      categoryId,
+      mode: 'card',
+    })
+  }
+
   // REQ-DASH-023/024 (M1-04): Tablet scaleFactor 0.38 → 0.40 (가독성 개선)
   const scaleFactor = isTablet ? 0.4 : 0.45
 
@@ -190,7 +254,11 @@ export function DashboardPreview({ className }: DashboardPreviewProps) {
     <div className="relative">
       {/* T-DASH3-M1-04: Phase 3 Feature flag 분기. */}
       {dashV3Enabled ? (
-        <AiRegisterMain step={step} mockData={previewMockData} />
+        <AiRegisterMain
+          step={step}
+          mockData={previewMockData}
+          onResultApply={handleResultApply}
+        />
       ) : (
         <div className="flex h-full">
           <AiPanelPreview aiPanelState={step.aiPanelState} />
@@ -226,7 +294,7 @@ export function DashboardPreview({ className }: DashboardPreviewProps) {
       <div className="relative">
         <PreviewChrome
           scaleFactor={scaleFactor}
-          focus={step.focus}
+          focus={previewFocus}
           viewport={viewport}
           reducedMotion={prefersReducedMotion}
         >

@@ -15,8 +15,11 @@
  */
 import { describe, it, expect } from 'vitest'
 import {
+  AI_APPLY_FOCUS_PAIRS,
   PREVIEW_FOCUS_TARGET_IDS,
   PREVIEW_STEPS,
+  getAiApplyCardFocusMetadata,
+  getAiApplyResultFocusMetadata,
   getPreviewFocusMetadata,
   getStepVisibilityState,
   validatePreviewFocusTiming,
@@ -458,5 +461,63 @@ describe('PREVIEW_STEPS focus metadata foundation (TC-FZ-UNIT-01/03/04)', () => 
     expect(getPreviewFocusMetadata('AI_INPUT')?.targetId).toBe('ai-input-textarea')
     expect(getPreviewFocusMetadata('AI_APPLY')?.targetId).toBe('ai-result-group')
     expect(getPreviewFocusMetadata('INITIAL')?.viewport.desktop.scale).toBe(1)
+  })
+})
+
+describe('AI_APPLY click-to-card focus mapping (TC-FZ-UNIT-02)', () => {
+  it('maps extracted result categories to form cards in the agreed order', () => {
+    expect(AI_APPLY_FOCUS_PAIRS).toEqual([
+      {
+        categoryId: 'departure',
+        resultTargetId: 'ai-result-departure',
+        cardTargetId: 'form-pickup-location',
+        label: '상차지',
+      },
+      {
+        categoryId: 'destination',
+        resultTargetId: 'ai-result-destination',
+        cardTargetId: 'form-delivery-location',
+        label: '하차지',
+      },
+      {
+        categoryId: 'cargo',
+        resultTargetId: 'ai-result-cargo',
+        cardTargetId: 'form-cargo-info',
+        label: '화물 정보',
+      },
+      {
+        categoryId: 'fare',
+        resultTargetId: 'ai-result-fare',
+        cardTargetId: 'form-estimate-info',
+        label: '운임',
+      },
+    ])
+  })
+
+  it('returns result focus and card focus metadata for each category', () => {
+    expect(getAiApplyResultFocusMetadata('departure')?.targetId).toBe(
+      'ai-result-departure',
+    )
+    expect(getAiApplyCardFocusMetadata('departure')?.targetId).toBe(
+      'form-pickup-location',
+    )
+    expect(getAiApplyResultFocusMetadata('destination')?.targetId).toBe(
+      'ai-result-destination',
+    )
+    expect(getAiApplyCardFocusMetadata('destination')?.targetId).toBe(
+      'form-delivery-location',
+    )
+    expect(getAiApplyResultFocusMetadata('cargo')?.targetId).toBe(
+      'ai-result-cargo',
+    )
+    expect(getAiApplyCardFocusMetadata('cargo')?.targetId).toBe(
+      'form-cargo-info',
+    )
+    expect(getAiApplyResultFocusMetadata('fare')?.targetId).toBe(
+      'ai-result-fare',
+    )
+    expect(getAiApplyCardFocusMetadata('fare')?.targetId).toBe(
+      'form-estimate-info',
+    )
   })
 })

@@ -22,7 +22,7 @@
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
 
-import { fireEvent, render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen } from '@testing-library/react'
 import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest'
 
 import {
@@ -90,11 +90,32 @@ vi.mock('next/dynamic', () => {
 // T-DASH3-M1-09: AiRegisterMain 을 동기 stub 으로 치환하여 dynamic 로더의
 // import() Promise 가 즉시 resolved 되도록 한다. 실제 AiRegisterMain 컴포넌트는
 // 별도 단위 테스트에서 검증되므로, 여기서는 landmark aria-label 만 노출한다.
+type AiRegisterMainMockProps = {
+  readonly step: { readonly id: string }
+  readonly onResultApply?: (categoryId: string) => void
+}
+
 vi.mock('@/components/dashboard-preview/ai-register-main', () => ({
-  AiRegisterMain: () => (
+  AiRegisterMain: ({ step, onResultApply }: AiRegisterMainMockProps) => (
     <div className="flex h-full min-h-[480px]">
       <aside aria-label="AI 화물 등록 패널" data-testid="mock-ai-panel-container" />
       <div aria-label="주문 등록 폼" data-testid="mock-order-form-grid" />
+      {step.id === 'AI_APPLY' ? (
+        <div aria-label="AI 추출 결과 버튼">
+          <button type="button" onClick={() => onResultApply?.('departure')}>
+            상차지 추출정보
+          </button>
+          <button type="button" onClick={() => onResultApply?.('destination')}>
+            하차지 추출정보
+          </button>
+          <button type="button" onClick={() => onResultApply?.('cargo')}>
+            화물 정보 추출정보
+          </button>
+          <button type="button" onClick={() => onResultApply?.('fare')}>
+            운임 추출정보
+          </button>
+        </div>
+      ) : null}
     </div>
   ),
 }))
@@ -164,6 +185,7 @@ describe('DashboardPreview — Phase 3 Feature flag', () => {
   afterEach(() => {
     resetQuery()
     vi.unstubAllEnvs()
+    vi.useRealTimers()
   })
 
   describe('TC-DASH3-INT-FLAG: default ON (M5 closeout)', () => {
@@ -344,6 +366,76 @@ describe('DashboardPreview — Phase 3 Feature flag', () => {
       expect(focusViewport).toHaveAttribute('data-focus-reduced-motion', 'true')
       expect(focusViewport.style.transform).toBe(
         'translate3d(0%, 0%, 0) scale(1)',
+      )
+    })
+  })
+
+  describe('AI_APPLY click-to-card loop (TC-FZ-INT-01)', () => {
+    it('moves from result item to related card, then returns to the next result item', () => {
+      vi.useFakeTimers()
+      setDesktop()
+      render(<DashboardPreview />)
+
+      fireEvent.click(screen.getByRole('tab', { name: 'Step 4' }))
+      expect(screen.getByTestId('focus-viewport')).toHaveAttribute(
+        'data-focus-target',
+        'ai-result-departure',
+      )
+
+      fireEvent.click(screen.getByRole('button', { name: '상차지 추출정보' }))
+      expect(screen.getByTestId('focus-viewport')).toHaveAttribute(
+        'data-focus-target',
+        'form-pickup-location',
+      )
+
+      act(() => {
+        vi.advanceTimersByTime(901)
+      })
+      expect(screen.getByTestId('focus-viewport')).toHaveAttribute(
+        'data-focus-target',
+        'ai-result-destination',
+      )
+
+      fireEvent.click(screen.getByRole('button', { name: '하차지 추출정보' }))
+      expect(screen.getByTestId('focus-viewport')).toHaveAttribute(
+        'data-focus-target',
+        'form-delivery-location',
+      )
+
+      act(() => {
+        vi.advanceTimersByTime(901)
+      })
+      expect(screen.getByTestId('focus-viewport')).toHaveAttribute(
+        'data-focus-target',
+        'ai-result-cargo',
+      )
+
+      fireEvent.click(screen.getByRole('button', { name: '화물 정보 추출정보' }))
+      expect(screen.getByTestId('focus-viewport')).toHaveAttribute(
+        'data-focus-target',
+        'form-cargo-info',
+      )
+
+      act(() => {
+        vi.advanceTimersByTime(901)
+      })
+      expect(screen.getByTestId('focus-viewport')).toHaveAttribute(
+        'data-focus-target',
+        'ai-result-fare',
+      )
+
+      fireEvent.click(screen.getByRole('button', { name: '운임 추출정보' }))
+      expect(screen.getByTestId('focus-viewport')).toHaveAttribute(
+        'data-focus-target',
+        'form-estimate-info',
+      )
+
+      act(() => {
+        vi.advanceTimersByTime(901)
+      })
+      expect(screen.getByTestId('focus-viewport')).toHaveAttribute(
+        'data-focus-target',
+        'form-estimate-info',
       )
     })
   })

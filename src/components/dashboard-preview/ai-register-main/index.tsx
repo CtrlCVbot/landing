@@ -16,7 +16,7 @@
 
 'use client'
 
-import type { PreviewMockData } from '@/lib/mock-data'
+import type { AiCategoryId, PreviewMockData } from '@/lib/mock-data'
 import type { PreviewStep } from '@/lib/preview-steps'
 
 import { AiPanelContainer } from './ai-panel'
@@ -25,15 +25,21 @@ import { OrderFormContainer } from './order-form'
 export interface AiRegisterMainProps {
   readonly step: PreviewStep
   readonly mockData: PreviewMockData
+  readonly onResultApply?: (categoryId: AiCategoryId) => void
 }
 
-export function AiRegisterMain({ step, mockData }: AiRegisterMainProps) {
+export function AiRegisterMain({
+  step,
+  mockData,
+  onResultApply,
+}: AiRegisterMainProps) {
   return (
     <div className="flex h-full min-h-[480px]">
       <AiPanelContainer
         step={step}
         aiInput={mockData.aiInput}
         aiResult={mockData.aiResult}
+        onResultApply={onResultApply}
       />
       <OrderFormContainer step={step} formData={mockData.formData} />
     </div>

@@ -47,6 +47,14 @@ export const PREVIEW_FOCUS_TARGET_IDS = [
   'ai-input-textarea',
   'ai-extract-button',
   'ai-result-group',
+  'ai-result-departure',
+  'ai-result-destination',
+  'ai-result-cargo',
+  'ai-result-fare',
+  'form-pickup-location',
+  'form-delivery-location',
+  'form-cargo-info',
+  'form-estimate-info',
 ] as const
 
 export type PreviewFocusTargetId = typeof PREVIEW_FOCUS_TARGET_IDS[number]
@@ -85,6 +93,13 @@ export interface PreviewFocusTimingViolation {
 export interface PreviewFocusTimingValidationResult {
   readonly valid: boolean
   readonly violations: ReadonlyArray<PreviewFocusTimingViolation>
+}
+
+export interface AiApplyFocusPair {
+  readonly categoryId: AiCategoryId
+  readonly resultTargetId: PreviewFocusTargetId
+  readonly cardTargetId: PreviewFocusTargetId
+  readonly label: string
 }
 
 /** Phase 1 스펙 §7-2 — AI 상태 스냅샷 */
@@ -342,8 +357,112 @@ const PREVIEW_FOCUS_BY_STEP: Readonly<Record<StepId, PreviewFocusMetadata>> = {
   },
 } as const
 
+export const AI_APPLY_FOCUS_PAIRS: ReadonlyArray<AiApplyFocusPair> = [
+  {
+    categoryId: 'departure',
+    resultTargetId: 'ai-result-departure',
+    cardTargetId: 'form-pickup-location',
+    label: '상차지',
+  },
+  {
+    categoryId: 'destination',
+    resultTargetId: 'ai-result-destination',
+    cardTargetId: 'form-delivery-location',
+    label: '하차지',
+  },
+  {
+    categoryId: 'cargo',
+    resultTargetId: 'ai-result-cargo',
+    cardTargetId: 'form-cargo-info',
+    label: '화물 정보',
+  },
+  {
+    categoryId: 'fare',
+    resultTargetId: 'ai-result-fare',
+    cardTargetId: 'form-estimate-info',
+    label: '운임',
+  },
+] as const
+
+function buildAiApplyFocusMetadata(
+  targetId: PreviewFocusTargetId,
+  label: string,
+  viewport: PreviewFocusMetadata['viewport'],
+): PreviewFocusMetadata {
+  return {
+    stepId: 'AI_APPLY',
+    targetId,
+    label,
+    viewport,
+    duration: 800,
+    reducedMotionFallback: {
+      strategy: 'highlight-only',
+      targetId,
+    },
+    ariaHiddenLayer: true,
+  } as const
+}
+
+const AI_APPLY_RESULT_FOCUS_BY_CATEGORY: Readonly<
+  Record<AiCategoryId, PreviewFocusMetadata>
+> = {
+  departure: buildAiApplyFocusMetadata('ai-result-departure', '상차지 추출정보', {
+    desktop: { scale: 1.18, x: -16, y: -2 },
+    tablet: { scale: 1.12, x: -10, y: -2 },
+  }),
+  destination: buildAiApplyFocusMetadata('ai-result-destination', '하차지 추출정보', {
+    desktop: { scale: 1.18, x: -16, y: -8 },
+    tablet: { scale: 1.12, x: -10, y: -6 },
+  }),
+  cargo: buildAiApplyFocusMetadata('ai-result-cargo', '화물 정보 추출정보', {
+    desktop: { scale: 1.18, x: -16, y: -14 },
+    tablet: { scale: 1.12, x: -10, y: -10 },
+  }),
+  fare: buildAiApplyFocusMetadata('ai-result-fare', '운임 추출정보', {
+    desktop: { scale: 1.18, x: -16, y: -20 },
+    tablet: { scale: 1.12, x: -10, y: -14 },
+  }),
+} as const
+
+const AI_APPLY_CARD_FOCUS_BY_CATEGORY: Readonly<
+  Record<AiCategoryId, PreviewFocusMetadata>
+> = {
+  departure: buildAiApplyFocusMetadata('form-pickup-location', '상차지 입력 카드', {
+    desktop: { scale: 1.22, x: -38, y: -6 },
+    tablet: { scale: 1.14, x: -30, y: -4 },
+  }),
+  destination: buildAiApplyFocusMetadata('form-delivery-location', '하차지 입력 카드', {
+    desktop: { scale: 1.22, x: -38, y: -18 },
+    tablet: { scale: 1.14, x: -30, y: -14 },
+  }),
+  cargo: buildAiApplyFocusMetadata('form-cargo-info', '화물 정보 입력 카드', {
+    desktop: { scale: 1.2, x: -58, y: -18 },
+    tablet: { scale: 1.12, x: -45, y: -14 },
+  }),
+  fare: buildAiApplyFocusMetadata('form-estimate-info', '운임 입력 카드', {
+    desktop: { scale: 1.18, x: -74, y: -8 },
+    tablet: { scale: 1.1, x: -56, y: -6 },
+  }),
+} as const
+
 export function getPreviewFocusMetadata(stepId: StepId): PreviewFocusMetadata | undefined {
   return PREVIEW_FOCUS_BY_STEP[stepId]
+}
+
+export function getAiApplyResultFocusMetadata(
+  categoryId: AiCategoryId,
+): PreviewFocusMetadata | undefined {
+  return AI_APPLY_RESULT_FOCUS_BY_CATEGORY[categoryId]
+}
+
+export function getAiApplyCardFocusMetadata(
+  categoryId: AiCategoryId,
+): PreviewFocusMetadata | undefined {
+  return AI_APPLY_CARD_FOCUS_BY_CATEGORY[categoryId]
+}
+
+export function getAiApplyFocusPairIndex(categoryId: AiCategoryId): number {
+  return AI_APPLY_FOCUS_PAIRS.findIndex((pair) => pair.categoryId === categoryId)
 }
 
 export function validatePreviewFocusTiming(

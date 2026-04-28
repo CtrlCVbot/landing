@@ -57,6 +57,7 @@ export interface AiPanelContainerProps {
   readonly step: PreviewStep
   readonly aiInput: PreviewMockData['aiInput']
   readonly aiResult: PreviewMockData['aiResult']
+  readonly onResultApply?: (categoryId: AiCategoryId) => void
 }
 
 /**
@@ -97,6 +98,7 @@ export function AiPanelContainer({
   step,
   aiInput,
   aiResult,
+  onResultApply,
 }: AiPanelContainerProps) {
   // -------------------------------------------------------------------------
   // #1 fake-typing — AI_INPUT Step 에서 typingRhythm.active=true
@@ -192,6 +194,7 @@ export function AiPanelContainer({
               // M4-review#1 — rippleTargets SSOT 를 실제 소비. partialBeat.rippleTargets 에
               // 포함된 카테고리만 auto ripple 이 발동된다 (data-driven 판정).
               rippleTriggerAt={computeCategoryRippleTriggerAt(step, groupId)}
+              onApply={() => onResultApply?.(groupId)}
             />
           )}
         />
