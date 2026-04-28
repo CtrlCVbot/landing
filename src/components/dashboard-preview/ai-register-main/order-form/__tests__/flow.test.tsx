@@ -59,6 +59,9 @@ function findStep(id: StepId) {
   return step
 }
 
+const AI_APPLY_STEP = findStep('AI_APPLY')
+const AI_APPLY_TIMELINE = AI_APPLY_STEP.interactions.formRevealTimeline!
+
 beforeEach(() => {
   mockMatchMedia(false)
   vi.useFakeTimers()
@@ -300,7 +303,7 @@ describe('OrderForm 플로우 — AI_APPLY partialBeat (카테고리 순차 fill
       <OrderFormContainer step={step} formData={PREVIEW_MOCK_DATA.formData} />,
     )
     act(() => {
-      vi.advanceTimersByTime(650)
+      vi.advanceTimersByTime(AI_APPLY_TIMELINE.deliveryAt)
     })
     const delivery = container.querySelector(
       '[data-testid="location-form-delivery"]',
@@ -313,7 +316,7 @@ describe('OrderForm 플로우 — AI_APPLY partialBeat (카테고리 순차 fill
       <OrderFormContainer step={step} formData={PREVIEW_MOCK_DATA.formData} />,
     )
     act(() => {
-      vi.advanceTimersByTime(1300)
+      vi.advanceTimersByTime(AI_APPLY_TIMELINE.cargoAt)
     })
     const cargo = container.querySelector('[data-testid="cargo-info-form"]')!
     expect(cargo.querySelectorAll('[data-caret]').length).toBeGreaterThan(0)
@@ -334,7 +337,7 @@ describe('OrderForm 플로우 — AI_APPLY partialBeat (카테고리 순차 fill
       <OrderFormContainer step={step} formData={PREVIEW_MOCK_DATA.formData} />,
     )
     act(() => {
-      vi.advanceTimersByTime(650)
+      vi.advanceTimersByTime(AI_APPLY_TIMELINE.deliveryAt)
     })
     const deliveryDT = container.querySelector(
       '[data-testid="datetime-card-delivery"]',
@@ -366,7 +369,7 @@ describe('OrderForm 플로우 — AI_APPLY allBeat (전체 비트)', () => {
     // strokeTargets 는 8개 모두 포함하지만, animating = checked && isAnimTarget 이므로
     // 실제로 data-animating=true 인 것은 options.direct / options.forklift = true 2개.
     act(() => {
-      vi.advanceTimersByTime(1300)
+      vi.advanceTimersByTime(AI_APPLY_TIMELINE.optionsAt)
     })
     const direct = screen.getByTestId('transport-option-direct')
     const forklift = screen.getByTestId('transport-option-forklift')
@@ -414,7 +417,7 @@ describe('OrderForm 플로우 — AI_APPLY allBeat (전체 비트)', () => {
       <OrderFormContainer step={step} formData={PREVIEW_MOCK_DATA.formData} />,
     )
     act(() => {
-      vi.advanceTimersByTime(900)
+      vi.advanceTimersByTime(AI_APPLY_TIMELINE.estimateAt)
     })
     const distanceInfo = screen.getByTestId('estimate-distance-info')
     expect(distanceInfo).toHaveAttribute('data-visible', 'true')
@@ -430,7 +433,7 @@ describe('OrderForm 플로우 — AI_APPLY allBeat (전체 비트)', () => {
       <OrderFormContainer step={step} formData={PREVIEW_MOCK_DATA.formData} />,
     )
     act(() => {
-      vi.advanceTimersByTime(900)
+      vi.advanceTimersByTime(AI_APPLY_TIMELINE.estimateAt)
     })
     const toggle = screen.getByTestId('estimate-auto-dispatch-toggle')
     expect(toggle).toHaveAttribute('data-auto-dispatch', 'true')
@@ -486,7 +489,7 @@ describe('OrderForm 플로우 — Step 전환 (INITIAL → AI_APPLY 토글)', ()
       />,
     )
     act(() => {
-      vi.advanceTimersByTime(900)
+      vi.advanceTimersByTime(AI_APPLY_TIMELINE.estimateAt)
     })
     expect(screen.getByTestId('estimate-distance-info')).toHaveAttribute(
       'data-visible',

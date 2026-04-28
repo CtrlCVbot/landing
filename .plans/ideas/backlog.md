@@ -20,6 +20,7 @@
 | IDEA-20260424-002 | F4 레이아웃 정비 + Hit-Area 재정렬 | feature | archived | 2026-04-24 | `archive/f4-layout-hit-area-realignment/sources/ideas` | [링크](../archive/f4-layout-hit-area-realignment/sources/ideas/IDEA-20260424-002.md) | [EPIC-20260422-001](../epics/20-active/EPIC-20260422-001/00-epic-brief.md) |
 | IDEA-20260427-001 | Hero 섹션 interactive liquid gradient 배경 도입 | improvement | archived | 2026-04-27 | `archive/hero-liquid-gradient-background/sources/ideas` | [링크](../archive/hero-liquid-gradient-background/sources/ideas/IDEA-20260427-001.md) | - |
 | IDEA-20260427-002 | F3 옵션↔추가요금 파생 로직 | feature | screened | 2026-04-27 | `10-screening` | [링크](10-screening/IDEA-20260427-002.md) | [EPIC-20260422-001](../epics/20-active/EPIC-20260422-001/00-epic-brief.md) |
+| IDEA-20260427-003 | Dash Preview 단계별 포커스 줌 애니메이션 | improvement | archived | 2026-04-27 | `archive/dash-preview-focus-zoom-animation/sources/ideas` | [링크](../archive/dash-preview-focus-zoom-animation/sources/ideas/IDEA-20260427-003.md) | - |
 | IDEA-20260427-004 | hero-01 레퍼런스 기반 Hero 섹션 재개선 | improvement | archived | 2026-04-27 | `archive/hero-01-reference-hero-refresh/sources/ideas` | [링크](../archive/hero-01-reference-hero-refresh/sources/ideas/IDEA-20260427-004.md) | - |
 
 ---
@@ -57,6 +58,13 @@
 | 2026-04-27 | IDEA-20260427-001 상태 `screened → archived` — hero liquid gradient 구현, theme 대응, animation QA evidence 포함 archive bundle 생성 |
 | 2026-04-27 | IDEA-20260427-002 신규 등록: F3 옵션↔추가요금 파생 로직 — Epic EPIC-20260422-001 Phase C 착수 |
 | 2026-04-27 | IDEA-20260427-002 상태 `new → screened` — RICE-style weighted score 77.8, Go 제안, Lite lane, 사용자 승인 대기 |
+| 2026-04-27 | IDEA-20260427-003 신규 등록: Dash Preview 단계별 포커스 줌 애니메이션 — 기존 dash-preview 후속 improvement |
+| 2026-04-27 | IDEA-20260427-003 상태 `new → screened` — RICE-style weighted score 73.8, Go 제안, Lite lane, 사용자 승인 대기 |
+| 2026-04-27 | IDEA-20260427-003 사용자 Go 승인 — 상태 `screened → approved`, `20-approved` 이동 |
+| 2026-04-27 | IDEA-20260427-003 draft 생성 — `dash-preview-focus-zoom-animation`, 다음 단계 `/plan-prd` |
+| 2026-04-27 | IDEA-20260427-003 PRD 작성 및 PRD review 완료 — PASS with noted follow-up, Lite gate 확인 후 `/dev-feature` 직행 |
+| 2026-04-28 | IDEA-20260427-003 `/dev-feature` Phase A/B/C 완료 — active feature package 생성, 다음 단계 `/dev-run` |
+| 2026-04-28 | IDEA-20260427-003 dev 구현 검증 완료 및 `/plan-archive` 실행 -> `archive/dash-preview-focus-zoom-animation/ARCHIVE-FZ.md` |
 | 2026-04-27 | IDEA-20260427-004 신규 등록: `hero-01` 레퍼런스 기반 Hero 섹션 재개선 — `hero-liquid-gradient-background` 후속 visual copy fidelity improvement |
 | 2026-04-27 | IDEA-20260427-004 상태 `new → approved` — RICE-style weighted score 79.8, Go, Standard lane, 사용자 `go` 승인 반영 |
 | 2026-04-27 | IDEA-20260427-004 draft 생성 — `hero-01-reference-hero-refresh`, Scenario C, copy-dev hybrid, 다음 단계 `/plan-prd` |

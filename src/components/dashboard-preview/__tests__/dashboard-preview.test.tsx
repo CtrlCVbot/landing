@@ -22,7 +22,7 @@
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
 
-import { fireEvent, render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen } from '@testing-library/react'
 import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest'
 
 import {
@@ -30,6 +30,7 @@ import {
   shouldRotatePreviewScenario,
 } from '@/components/dashboard-preview/dashboard-preview'
 import { DESKTOP_HIT_AREAS } from '@/components/dashboard-preview/hit-areas'
+import { AI_APPLY_FOCUS_PHASE_HOLD_MS } from '@/lib/preview-steps'
 
 // ---------------------------------------------------------------------------
 // Mocks
@@ -90,11 +91,32 @@ vi.mock('next/dynamic', () => {
 // T-DASH3-M1-09: AiRegisterMain 을 동기 stub 으로 치환하여 dynamic 로더의
 // import() Promise 가 즉시 resolved 되도록 한다. 실제 AiRegisterMain 컴포넌트는
 // 별도 단위 테스트에서 검증되므로, 여기서는 landmark aria-label 만 노출한다.
+type AiRegisterMainMockProps = {
+  readonly step: { readonly id: string }
+  readonly onResultApply?: (categoryId: string) => void
+}
+
 vi.mock('@/components/dashboard-preview/ai-register-main', () => ({
-  AiRegisterMain: () => (
-    <div className="flex h-full min-h-[480px]">
+  AiRegisterMain: ({ step, onResultApply }: AiRegisterMainMockProps) => (
+    <div className="flex h-full min-h-[900px]">
       <aside aria-label="AI 화물 등록 패널" data-testid="mock-ai-panel-container" />
       <div aria-label="주문 등록 폼" data-testid="mock-order-form-grid" />
+      {step.id === 'AI_APPLY' ? (
+        <div aria-label="AI 추출 결과 버튼">
+          <button type="button" onClick={() => onResultApply?.('departure')}>
+            상차지 추출정보
+          </button>
+          <button type="button" onClick={() => onResultApply?.('destination')}>
+            하차지 추출정보
+          </button>
+          <button type="button" onClick={() => onResultApply?.('cargo')}>
+            화물 정보 추출정보
+          </button>
+          <button type="button" onClick={() => onResultApply?.('fare')}>
+            운임 추출정보
+          </button>
+        </div>
+      ) : null}
     </div>
   ),
 }))
@@ -164,6 +186,7 @@ describe('DashboardPreview — Phase 3 Feature flag', () => {
   afterEach(() => {
     resetQuery()
     vi.unstubAllEnvs()
+    vi.useRealTimers()
   })
 
   describe('TC-DASH3-INT-FLAG: default ON (M5 closeout)', () => {
@@ -281,6 +304,206 @@ describe('DashboardPreview — Phase 3 Feature flag', () => {
       render(<DashboardPreview />)
       const scaledInner = screen.getByTestId('scaled-content-inner')
       expect(scaledInner.style.transform).toBe('scale(0.4)')
+    })
+  })
+
+  describe('Dash preview focus viewport (TC-FZ-VIS-01/02/03/04)', () => {
+    it('desktop starts with INITIAL focus metadata in PreviewChrome', () => {
+      setDesktop()
+      render(<DashboardPreview />)
+
+      const focusViewport = screen.getByTestId('focus-viewport')
+      expect(focusViewport).toHaveAttribute('data-focus-step', 'INITIAL')
+      expect(focusViewport).toHaveAttribute(
+        'data-focus-target',
+        'ai-preview-frame',
+      )
+      expect(focusViewport).toHaveAttribute('data-focus-presentation', 'target-only')
+      expect(focusViewport.style.transform).toBe('none')
+    })
+
+    it('preview content fills the reduced fixed chrome frame', () => {
+      setDesktop()
+      render(<DashboardPreview />)
+
+      expect(screen.getByTestId('scaled-content')).toHaveAttribute(
+        'data-camera-frame',
+        'fixed-height-reduced',
+      )
+      expect(screen.getByTestId('scaled-content').style.height).toBe(
+        '374.4px',
+      )
+      expect(screen.getByTestId('preview-content')).toHaveClass('h-full')
+      expect(screen.getByTestId('mock-ai-panel-container').parentElement).toHaveClass(
+        'min-h-[900px]',
+      )
+    })
+
+    it('StepIndicator click moves focus metadata to the AI_INPUT target', () => {
+      setDesktop()
+      render(<DashboardPreview />)
+
+      fireEvent.click(screen.getByRole('tab', { name: 'Step 2' }))
+
+      const focusViewport = screen.getByTestId('focus-viewport')
+      expect(focusViewport).toHaveAttribute('data-focus-step', 'AI_INPUT')
+      expect(focusViewport).toHaveAttribute(
+        'data-focus-target',
+        'ai-input-textarea',
+      )
+      expect(focusViewport).toHaveAttribute('data-focus-presentation', 'target-only')
+      expect(focusViewport).toHaveAttribute('data-focus-anchor', 'left')
+      expect(focusViewport.style.transform).toBe('none')
+      expect(screen.getByTestId('focus-target-style')).toHaveTextContent(
+        'scale(1.1)',
+      )
+    })
+
+    it('tablet keeps base scaleFactor 0.40 and uses the tablet focus preset', () => {
+      setTablet()
+      render(<DashboardPreview />)
+
+      fireEvent.click(screen.getByRole('tab', { name: 'Step 3' }))
+
+      expect(screen.getByTestId('scaled-content-inner').style.transform).toBe(
+        'scale(0.4)',
+      )
+      expect(screen.getByTestId('focus-viewport').style.transform).toBe('none')
+      expect(screen.getByTestId('focus-target-style')).toHaveTextContent(
+        'scale(1.1)',
+      )
+    })
+
+    it('reduced motion disables large focus pan and zoom', () => {
+      mediaQueryResults = {
+        '(prefers-reduced-motion: reduce)': true,
+        '(max-width: 767px)': false,
+        '(min-width: 768px) and (max-width: 1023px)': false,
+      }
+
+      render(<DashboardPreview />)
+
+      const focusViewport = screen.getByTestId('focus-viewport')
+      expect(focusViewport).toHaveAttribute('data-focus-reduced-motion', 'true')
+      expect(focusViewport.style.transform).toBe('none')
+    })
+  })
+
+  describe('AI_APPLY click-to-card loop (TC-FZ-INT-01)', () => {
+    it('moves from result item to related card, then returns to the next result item', () => {
+      vi.useFakeTimers()
+      setDesktop()
+      render(<DashboardPreview />)
+
+      fireEvent.click(screen.getByRole('tab', { name: 'Step 4' }))
+      expect(screen.getByTestId('focus-viewport')).toHaveAttribute(
+        'data-focus-target',
+        'ai-result-departure',
+      )
+
+      fireEvent.click(screen.getByRole('button', { name: '상차지 추출정보' }))
+      expect(screen.getByTestId('focus-viewport')).toHaveAttribute(
+        'data-focus-target',
+        'form-pickup-location',
+      )
+
+      act(() => {
+        vi.advanceTimersByTime(AI_APPLY_FOCUS_PHASE_HOLD_MS + 1)
+      })
+      expect(screen.getByTestId('focus-viewport')).toHaveAttribute(
+        'data-focus-target',
+        'ai-result-destination',
+      )
+
+      fireEvent.click(screen.getByRole('button', { name: '하차지 추출정보' }))
+      expect(screen.getByTestId('focus-viewport')).toHaveAttribute(
+        'data-focus-target',
+        'form-delivery-location',
+      )
+
+      act(() => {
+        vi.advanceTimersByTime(AI_APPLY_FOCUS_PHASE_HOLD_MS + 1)
+      })
+      expect(screen.getByTestId('focus-viewport')).toHaveAttribute(
+        'data-focus-target',
+        'form-estimate-info',
+      )
+
+      act(() => {
+        vi.advanceTimersByTime(AI_APPLY_FOCUS_PHASE_HOLD_MS + 1)
+      })
+      expect(screen.getByTestId('focus-viewport')).toHaveAttribute(
+        'data-focus-target',
+        'ai-result-cargo',
+      )
+
+      fireEvent.click(screen.getByRole('button', { name: '화물 정보 추출정보' }))
+      expect(screen.getByTestId('focus-viewport')).toHaveAttribute(
+        'data-focus-target',
+        'form-cargo-info',
+      )
+
+      act(() => {
+        vi.advanceTimersByTime(AI_APPLY_FOCUS_PHASE_HOLD_MS + 1)
+      })
+      expect(screen.getByTestId('focus-viewport')).toHaveAttribute(
+        'data-focus-target',
+        'ai-result-fare',
+      )
+
+      fireEvent.click(screen.getByRole('button', { name: '운임 추출정보' }))
+      expect(screen.getByTestId('focus-viewport')).toHaveAttribute(
+        'data-focus-target',
+        'form-settlement',
+      )
+      expect(screen.getByTestId('focus-viewport')).toHaveAttribute(
+        'data-focus-anchor',
+        'right',
+      )
+      expect(screen.getByTestId('focus-target-style')).toHaveTextContent(
+        'transform-origin: top right',
+      )
+
+      act(() => {
+        vi.advanceTimersByTime(AI_APPLY_FOCUS_PHASE_HOLD_MS + 1)
+      })
+      expect(screen.getByTestId('focus-viewport')).toHaveAttribute(
+        'data-focus-target',
+        'form-settlement',
+      )
+    })
+
+    it('automatically plays the result-card camera path during AI_APPLY', () => {
+      vi.useFakeTimers()
+      setDesktop()
+      render(<DashboardPreview />)
+
+      fireEvent.click(screen.getByRole('tab', { name: 'Step 4' }))
+      expect(screen.getByTestId('focus-viewport')).toHaveAttribute(
+        'data-focus-target',
+        'ai-result-departure',
+      )
+
+      const expectedTargets = [
+        'form-pickup-location',
+        'ai-result-destination',
+        'form-delivery-location',
+        'form-estimate-info',
+        'ai-result-cargo',
+        'form-cargo-info',
+        'ai-result-fare',
+        'form-settlement',
+      ]
+
+      for (const target of expectedTargets) {
+        act(() => {
+          vi.advanceTimersByTime(AI_APPLY_FOCUS_PHASE_HOLD_MS + 1)
+        })
+        expect(screen.getByTestId('focus-viewport')).toHaveAttribute(
+          'data-focus-target',
+          target,
+        )
+      }
     })
   })
 

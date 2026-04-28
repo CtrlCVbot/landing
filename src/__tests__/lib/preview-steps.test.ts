@@ -14,7 +14,18 @@
  * Phase 1/2 backward compatibility는 legacy/preview-steps.test.ts 가 LEGACY=true 시 검증.
  */
 import { describe, it, expect } from 'vitest'
-import { PREVIEW_STEPS, getStepVisibilityState } from '@/lib/preview-steps'
+import {
+  AI_APPLY_FOCUS_PHASE_HOLD_MS,
+  AI_APPLY_FOCUS_PHASES,
+  AI_APPLY_FOCUS_PAIRS,
+  PREVIEW_FOCUS_TARGET_IDS,
+  PREVIEW_STEPS,
+  getAiApplyCardFocusMetadata,
+  getAiApplyResultFocusMetadata,
+  getPreviewFocusMetadata,
+  getStepVisibilityState,
+  validatePreviewFocusTiming,
+} from '@/lib/preview-steps'
 import type { PreviewStep, StepId } from '@/lib/preview-steps'
 import { PREVIEW_MOCK_DATA } from '@/lib/mock-data'
 
@@ -46,30 +57,30 @@ describe('PREVIEW_STEPS (Phase 3 4단계)', () => {
     it('INITIAL duration === 500ms', () => {
       const initial = PREVIEW_STEPS[0]
       expect(initial.id).toBe('INITIAL')
-      expect(initial.duration).toBe(800)
+      expect(initial.duration).toBe(1600)
     })
 
     it('AI_INPUT duration === 1500ms', () => {
       const aiInput = PREVIEW_STEPS[1]
       expect(aiInput.id).toBe('AI_INPUT')
-      expect(aiInput.duration).toBe(2200)
+      expect(aiInput.duration).toBe(4400)
     })
 
     it('AI_EXTRACT duration === 1000ms', () => {
       const aiExtract = PREVIEW_STEPS[2]
       expect(aiExtract.id).toBe('AI_EXTRACT')
-      expect(aiExtract.duration).toBe(1400)
+      expect(aiExtract.duration).toBe(2800)
     })
 
-    it('AI_APPLY duration === 2500ms', () => {
+    it('AI_APPLY duration matches the expanded unified focus sequence', () => {
       const aiApply = PREVIEW_STEPS[3]
       expect(aiApply.id).toBe('AI_APPLY')
-      expect(aiApply.duration).toBe(4200)
+      expect(aiApply.duration).toBe(20000)
     })
 
-    it('총 Step duration 합 === 5500ms (PRD §6-1)', () => {
+    it('총 Step duration 합은 확장된 AI_APPLY 시퀀스를 포함한다', () => {
       const total = PREVIEW_STEPS.reduce((sum, s) => sum + s.duration, 0)
-      expect(total).toBe(8600)
+      expect(total).toBe(28800)
     })
 
     it('각 Step 에 interactions 필드 존재', () => {
@@ -116,7 +127,7 @@ describe('PREVIEW_STEPS (Phase 3 4단계)', () => {
         'cargo',
         'fare',
       ])
-      expect(partial?.intervalMs).toBe(650)
+      expect(partial?.intervalMs).toBe(1300)
       expect(Array.isArray(partial?.pressTargets)).toBe(true)
       expect(Array.isArray(partial?.rippleTargets)).toBe(true)
       expect(Array.isArray(partial?.fillInFields)).toBe(true)
@@ -138,14 +149,14 @@ describe('PREVIEW_STEPS (Phase 3 4단계)', () => {
       expect(partial?.dropdownBeat?.targetId).toBe('vehicle-type')
       // cargo 카테고리는 index 2 × 300 = 600ms — dropdown 은 그 이후에 발동되어야 한다
       expect(typeof partial?.dropdownBeat?.triggerAt).toBe('number')
-      expect(partial?.dropdownBeat?.triggerAt).toBeGreaterThanOrEqual(1300)
+      expect(partial?.dropdownBeat?.triggerAt).toBeGreaterThanOrEqual(2600)
     })
 
     it('AI_APPLY.interactions.allBeat 구조 (durationMs 800, toggle stroke + number rolling)', () => {
       const aiApply = PREVIEW_STEPS[3]
       const all = aiApply.interactions.allBeat
       expect(all).toBeDefined()
-      expect(all?.durationMs).toBe(1200)
+      expect(all?.durationMs).toBe(2400)
       expect(Array.isArray(all?.toggleStrokeTargets)).toBe(true)
       // 8개 TransportOption 토글
       expect(all?.toggleStrokeTargets.length).toBe(8)
@@ -183,12 +194,12 @@ describe('PREVIEW_STEPS (Phase 3 4단계)', () => {
 
       expect(timeline).toEqual({
         pickupAt: 0,
-        deliveryAt: 650,
-        estimateAt: 900,
-        cargoAt: 1300,
-        optionsAt: 1300,
-        fareAt: 1950,
-        settlementAt: 2200,
+        deliveryAt: 1300,
+        estimateAt: 1800,
+        cargoAt: 2600,
+        optionsAt: 2600,
+        fareAt: 3900,
+        settlementAt: 4400,
       })
       expect(timeline!.deliveryAt).toBeLessThan(timeline!.estimateAt)
       expect(timeline!.estimateAt).toBeLessThan(timeline!.cargoAt)
@@ -366,5 +377,171 @@ describe('PREVIEW_STEPS (F2 visibility state)', () => {
     expect(aiApply!.formState.estimateAmount).toBe(
       PREVIEW_MOCK_DATA.formData.estimate.amount,
     )
+  })
+})
+
+describe('PREVIEW_STEPS focus metadata foundation (TC-FZ-UNIT-01/03/04)', () => {
+  it('TC-FZ-UNIT-01: every step has a primary focus target and reduced-motion fallback', () => {
+    const targetsByStep = PREVIEW_STEPS.map((step) => ({
+      id: step.id,
+      targetId: step.focus.targetId,
+      reducedMotionStrategy: step.focus.reducedMotionFallback.strategy,
+    }))
+
+    expect(targetsByStep).toEqual([
+      {
+        id: 'INITIAL',
+        targetId: 'ai-preview-frame',
+        reducedMotionStrategy: 'highlight-only',
+      },
+      {
+        id: 'AI_INPUT',
+        targetId: 'ai-input-textarea',
+        reducedMotionStrategy: 'highlight-only',
+      },
+      {
+        id: 'AI_EXTRACT',
+        targetId: 'ai-extract-button',
+        reducedMotionStrategy: 'highlight-only',
+      },
+      {
+        id: 'AI_APPLY',
+        targetId: 'ai-result-group',
+        reducedMotionStrategy: 'highlight-only',
+      },
+    ])
+
+    for (const step of PREVIEW_STEPS) {
+      expect(PREVIEW_FOCUS_TARGET_IDS).toContain(step.focus.targetId)
+      expect(step.focus.stepId).toBe(step.id)
+      expect(step.focus.ariaHiddenLayer).toBe(true)
+    }
+  })
+
+  it('TC-FZ-UNIT-03: desktop and tablet viewport presets are explicit and mobile-free', () => {
+    for (const step of PREVIEW_STEPS) {
+      expect(step.focus.viewport).toHaveProperty('desktop')
+      expect(step.focus.viewport).toHaveProperty('tablet')
+      expect(step.focus.viewport).not.toHaveProperty('mobile')
+      expect(step.focus.viewport.desktop).not.toBe(step.focus.viewport.tablet)
+      expect(step.focus.viewport.desktop.scale).toBeGreaterThanOrEqual(1)
+      expect(step.focus.viewport.tablet.scale).toBeGreaterThanOrEqual(1)
+      expect(typeof step.focus.viewport.desktop.x).toBe('number')
+      expect(typeof step.focus.viewport.tablet.y).toBe('number')
+    }
+  })
+
+  it('TC-FZ-UNIT-04: focus timing validation catches durations longer than the owning step', () => {
+    expect(validatePreviewFocusTiming(PREVIEW_STEPS)).toEqual({
+      valid: true,
+      violations: [],
+    })
+
+    const invalidSteps: readonly PreviewStep[] = [
+      {
+        ...PREVIEW_STEPS[0],
+        focus: {
+          ...PREVIEW_STEPS[0].focus,
+          duration: PREVIEW_STEPS[0].duration + 1,
+        },
+      },
+    ]
+
+    expect(validatePreviewFocusTiming(invalidSteps)).toEqual({
+      valid: false,
+      violations: [
+        {
+          stepId: 'INITIAL',
+          focusDuration: PREVIEW_STEPS[0].duration + 1,
+          stepDuration: PREVIEW_STEPS[0].duration,
+        },
+      ],
+    })
+  })
+
+  it('returns focus metadata by step id', () => {
+    expect(getPreviewFocusMetadata('AI_INPUT')?.targetId).toBe('ai-input-textarea')
+    expect(getPreviewFocusMetadata('AI_APPLY')?.targetId).toBe('ai-result-group')
+    expect(getPreviewFocusMetadata('INITIAL')?.viewport.desktop.scale).toBe(1)
+  })
+})
+
+describe('AI_APPLY click-to-card focus mapping (TC-FZ-UNIT-02)', () => {
+  it('maps extracted result categories to form cards in the agreed order', () => {
+    expect(AI_APPLY_FOCUS_PAIRS).toEqual([
+      {
+        categoryId: 'departure',
+        resultTargetId: 'ai-result-departure',
+        cardTargetId: 'form-pickup-location',
+        label: '상차지',
+      },
+      {
+        categoryId: 'destination',
+        resultTargetId: 'ai-result-destination',
+        cardTargetId: 'form-delivery-location',
+        label: '하차지',
+      },
+      {
+        categoryId: 'cargo',
+        resultTargetId: 'ai-result-cargo',
+        cardTargetId: 'form-cargo-info',
+        label: '화물 정보',
+      },
+      {
+        categoryId: 'fare',
+        resultTargetId: 'ai-result-fare',
+        cardTargetId: 'form-settlement',
+        label: '운임',
+      },
+    ])
+  })
+
+  it('returns result focus and card focus metadata for each category', () => {
+    expect(getAiApplyResultFocusMetadata('departure')?.targetId).toBe(
+      'ai-result-departure',
+    )
+    expect(getAiApplyCardFocusMetadata('departure')?.targetId).toBe(
+      'form-pickup-location',
+    )
+    expect(getAiApplyResultFocusMetadata('destination')?.targetId).toBe(
+      'ai-result-destination',
+    )
+    expect(getAiApplyCardFocusMetadata('destination')?.targetId).toBe(
+      'form-delivery-location',
+    )
+    expect(getAiApplyResultFocusMetadata('cargo')?.targetId).toBe(
+      'ai-result-cargo',
+    )
+    expect(getAiApplyCardFocusMetadata('cargo')?.targetId).toBe(
+      'form-cargo-info',
+    )
+    expect(getAiApplyResultFocusMetadata('fare')?.targetId).toBe(
+      'ai-result-fare',
+    )
+    expect(getAiApplyCardFocusMetadata('fare')?.targetId).toBe(
+      'form-settlement',
+    )
+  })
+
+  it('uses a slower AI_APPLY focus phase hold for readable result-card camera movement', () => {
+    expect(AI_APPLY_FOCUS_PHASE_HOLD_MS).toBe(2000)
+    for (const categoryId of ['departure', 'destination', 'cargo', 'fare'] as const) {
+      expect(getAiApplyResultFocusMetadata(categoryId)?.duration).toBe(1800)
+      expect(getAiApplyCardFocusMetadata(categoryId)?.duration).toBe(1800)
+    }
+  })
+
+  it('defines the unified AI_APPLY phase order without overlapping card targets', () => {
+    expect(AI_APPLY_FOCUS_PHASES.map((phase) => phase.targetId)).toEqual([
+      'ai-result-departure',
+      'form-pickup-location',
+      'ai-result-destination',
+      'form-delivery-location',
+      'form-estimate-info',
+      'ai-result-cargo',
+      'form-cargo-info',
+      'ai-result-fare',
+      'form-settlement',
+    ])
   })
 })

@@ -30,7 +30,11 @@
 import { useColumnPulse } from '@/components/dashboard-preview/interactions/use-column-pulse'
 import { useTriggerAt } from '@/components/dashboard-preview/interactions/use-trigger-at'
 import type { PreviewMockData } from '@/lib/mock-data'
-import type { PreviewStep } from '@/lib/preview-steps'
+import {
+  getAiApplyFocusPhaseIndexByTargetId,
+  type PreviewFocusTargetId,
+  type PreviewStep,
+} from '@/lib/preview-steps'
 import type { TransportOptionKey } from './transport-option-card'
 
 import { CargoInfoForm } from './cargo-info-form'
@@ -49,6 +53,7 @@ import { TransportOptionCard } from './transport-option-card'
 export interface OrderFormContainerProps {
   readonly step: PreviewStep
   readonly formData: PreviewMockData['formData']
+  readonly focusTargetId?: PreviewFocusTargetId
 }
 
 // ---------------------------------------------------------------------------
@@ -112,6 +117,8 @@ interface AllBeatFlags {
  *    자식(rerender) 가 아니므로 자식 훅이 active 변경에 반응하여 롤링을 시작한다.
  */
 function computeAllBeatFlags(step: PreviewStep): AllBeatFlags {
+  // allBeat only determines active stroke targets here; timeline offsets are
+  // applied later through formRevealTimeline-based triggerAt props.
   if (step.id !== 'AI_APPLY') {
     return { active: false, strokeTargets: [] }
   }
@@ -164,16 +171,16 @@ export function stripTransportOptionPrefix(
 /**
  * Column 별 pulse 시작 offset (AI_APPLY partialBeat/allBeat 정렬, ms).
  *  - col-1 (pickup/delivery) : partialBeat departure/destination 동시 시작
- *  - col-2 (vehicle/cargo)   : partialBeat cargo offset (2 × 300ms)
- *  - col-3 (options/estimate): partialBeat 종료 → allBeat 진입 (~1500ms)
+ *  - col-2 (vehicle/cargo)   : formRevealTimeline.cargoAt 기준
+ *  - col-3 (options/estimate): formRevealTimeline.fareAt 기준
  *
  * M4 review#2 — pulse duration / reduced-motion 처리는 `interactions/use-column-pulse.ts`
  * 공용 훅이 담당한다. 여기서는 offset 상수만 보관한다.
  */
-const COLUMN_PULSE_OFFSETS_MS = {
+const FALLBACK_COLUMN_PULSE_OFFSETS_MS = {
   col1: 0,
-  col2: 1300,
-  col3: 900,
+  col2: 2600,
+  col3: 3900,
 } as const
 
 /** Column pulse 활성 시 적용하는 ring + shadow 클래스 조합. */
@@ -195,9 +202,27 @@ function computeColumnPulseTargets(step: PreviewStep): ReadonlySet<string> {
 // Main component
 // ---------------------------------------------------------------------------
 
-export function OrderFormContainer({ step, formData }: OrderFormContainerProps) {
-  const partial = computePartialBeatFlags(step)
+export function OrderFormContainer({
+  step,
+  formData,
+  focusTargetId,
+}: OrderFormContainerProps) {
+  const partialBeatFlags = computePartialBeatFlags(step)
   const allBeat = computeAllBeatFlags(step)
+  const focusPhaseIndex = getAiApplyFocusPhaseIndexByTargetId(focusTargetId)
+  const useFocusDrivenReveal = step.id === 'AI_APPLY' && focusPhaseIndex >= 0
+  const hasReachedFocusTarget = (targetId: PreviewFocusTargetId): boolean => {
+    if (!useFocusDrivenReveal) return false
+    const targetPhaseIndex = getAiApplyFocusPhaseIndexByTargetId(targetId)
+    return targetPhaseIndex >= 0 && focusPhaseIndex >= targetPhaseIndex
+  }
+  const partial = useFocusDrivenReveal
+    ? {
+        pickup: focusTargetId === 'form-pickup-location',
+        delivery: focusTargetId === 'form-delivery-location',
+        cargo: focusTargetId === 'form-cargo-info',
+      }
+    : partialBeatFlags
 
   const {
     pickupFilled,
@@ -246,23 +271,46 @@ export function OrderFormContainer({ step, formData }: OrderFormContainerProps) 
     pickupTimelineTriggered
 
   const pickupRevealed =
-    pickupFilled && (!useStagedReveal || pickupTimelineReached)
+    pickupFilled &&
+    (useFocusDrivenReveal
+      ? hasReachedFocusTarget('form-pickup-location')
+      : !useStagedReveal || pickupTimelineReached)
   const deliveryRevealed =
-    deliveryFilled && (!useStagedReveal || deliveryTimelineReached)
+    deliveryFilled &&
+    (useFocusDrivenReveal
+      ? hasReachedFocusTarget('form-delivery-location')
+      : !useStagedReveal || deliveryTimelineReached)
   const pickupDateTimeRevealed =
-    pickupDateTimeFilled && (!useStagedReveal || pickupTimelineReached)
+    pickupDateTimeFilled &&
+    (useFocusDrivenReveal
+      ? hasReachedFocusTarget('form-pickup-location')
+      : !useStagedReveal || pickupTimelineReached)
   const deliveryDateTimeRevealed =
-    deliveryDateTimeFilled && (!useStagedReveal || deliveryTimelineReached)
+    deliveryDateTimeFilled &&
+    (useFocusDrivenReveal
+      ? hasReachedFocusTarget('form-delivery-location')
+      : !useStagedReveal || deliveryTimelineReached)
   const estimateVisibleNow =
-    estimateVisible && (!useStagedReveal || estimateTimelineReached)
+    estimateVisible &&
+    (useFocusDrivenReveal
+      ? hasReachedFocusTarget('form-estimate-info')
+      : !useStagedReveal || estimateTimelineReached)
   const cargoRevealed =
-    (vehicleFilled || cargoFilled) && (!useStagedReveal || cargoTimelineReached)
+    (vehicleFilled || cargoFilled) &&
+    (useFocusDrivenReveal
+      ? hasReachedFocusTarget('form-cargo-info')
+      : !useStagedReveal || cargoTimelineReached)
   const optionsRevealed =
     step.id === 'AI_APPLY'
-      ? !useStagedReveal || optionsTimelineReached
+      ? useFocusDrivenReveal
+        ? hasReachedFocusTarget('form-cargo-info')
+        : !useStagedReveal || optionsTimelineReached
       : step.formState.optionsActive.length > 0
   const settlementVisibleNow =
-    settlementVisible && (!useStagedReveal || settlementTimelineReached)
+    settlementVisible &&
+    (useFocusDrivenReveal
+      ? hasReachedFocusTarget('form-settlement')
+      : !useStagedReveal || settlementTimelineReached)
 
   const distanceVisible = estimateVisibleNow
   const optionStrokeTriggerAt = useStagedReveal
@@ -276,27 +324,52 @@ export function OrderFormContainer({ step, formData }: OrderFormContainerProps) 
     : 0
 
   // Stroke trigger: active 이면 mount 즉시 발동 (offset 0). 비활성 상태에선 null.
-  const strokeTriggerAt = allBeat.active ? optionStrokeTriggerAt : null
+  const estimateActive = useFocusDrivenReveal
+    ? focusTargetId === 'form-estimate-info'
+    : allBeat.active
+  const settlementActive = useFocusDrivenReveal
+    ? focusTargetId === 'form-settlement'
+    : allBeat.active
+
+  const strokeTriggerAt =
+    !useFocusDrivenReveal && allBeat.active ? optionStrokeTriggerAt : null
   const estimateRollingTrigger =
-    allBeat.active && estimateVisible ? estimateRollingTriggerAt : null
+    estimateActive && estimateVisible
+      ? useFocusDrivenReveal
+        ? 0
+        : estimateRollingTriggerAt
+      : null
   const settlementRollingTrigger =
-    allBeat.active && settlementVisible ? settlementRollingTriggerAt : null
+    settlementActive && settlementVisible
+      ? useFocusDrivenReveal
+        ? 0
+        : settlementRollingTriggerAt
+      : null
 
   // Column pulse (M4-03 + review#1) — AI_APPLY 에서 columnPulseTargets SSOT 를 소비.
   //   - targets: ReadonlySet<'col-1'|'col-2'|'col-3'> (AI_APPLY 외 Step 은 빈 Set)
-  //   - 각 col 은 presence 로 active 판정, offset 은 COLUMN_PULSE_OFFSETS_MS 상수 참조.
-  const pulseTargets = computeColumnPulseTargets(step)
+  //   - 각 col 은 presence 로 active 판정, offset 은 formRevealTimeline 우선으로 정렬.
+  const pulseTargets = useFocusDrivenReveal
+    ? new Set<string>()
+    : computeColumnPulseTargets(step)
+  const col1PulseOffset =
+    formRevealTimeline?.pickupAt ?? FALLBACK_COLUMN_PULSE_OFFSETS_MS.col1
+  const col2PulseOffset =
+    formRevealTimeline?.cargoAt ?? FALLBACK_COLUMN_PULSE_OFFSETS_MS.col2
+  const col3PulseOffset =
+    formRevealTimeline?.fareAt ?? FALLBACK_COLUMN_PULSE_OFFSETS_MS.col3
+
   const col1Pulse = useColumnPulse(
     pulseTargets.has('col-1'),
-    pulseTargets.has('col-1') ? COLUMN_PULSE_OFFSETS_MS.col1 : null,
+    pulseTargets.has('col-1') ? col1PulseOffset : null,
   )
   const col2Pulse = useColumnPulse(
     pulseTargets.has('col-2'),
-    pulseTargets.has('col-2') ? COLUMN_PULSE_OFFSETS_MS.col2 : null,
+    pulseTargets.has('col-2') ? col2PulseOffset : null,
   )
   const col3Pulse = useColumnPulse(
     pulseTargets.has('col-3'),
-    pulseTargets.has('col-3') ? COLUMN_PULSE_OFFSETS_MS.col3 : null,
+    pulseTargets.has('col-3') ? col3PulseOffset : null,
   )
 
   return (
@@ -413,13 +486,13 @@ export function OrderFormContainer({ step, formData }: OrderFormContainerProps) 
           duration={formData.estimate.duration}
           amount={formData.estimate.amount}
           autoDispatch={formData.estimate.autoDispatch}
-          active={allBeat.active}
+          active={estimateActive}
           visible={estimateVisibleNow}
           rollingTriggerAt={estimateRollingTrigger}
         />
         <SettlementSection
           settlement={formData.settlement}
-          active={allBeat.active}
+          active={settlementActive}
           visible={settlementVisibleNow}
           rollingTriggerAt={settlementRollingTrigger}
         />

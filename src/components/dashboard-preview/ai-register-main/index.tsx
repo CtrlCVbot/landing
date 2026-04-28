@@ -5,7 +5,7 @@
  *
  * 레이아웃 (REQ-DASH3-001, 050, 053)
  *  - 2-col flex: `AiPanel 380px 고정 + OrderForm flex-1`
- *  - `h-full min-h-[480px]` 로 외곽 chrome 과 공존.
+ *  - `h-full min-h-[900px]` 로 hit-area 원본 좌표계(1440 × 900)와 맞춘다.
  *
  * Step 4단계 (INITIAL → AI_INPUT → AI_EXTRACT → AI_APPLY) 의 자동 재생은
  * 상위 `dashboard-preview.tsx` (M1-04 에서 연결) 에서 전달한다.
@@ -16,8 +16,9 @@
 
 'use client'
 
-import type { PreviewMockData } from '@/lib/mock-data'
-import type { PreviewStep } from '@/lib/preview-steps'
+import type { AiCategoryId, PreviewMockData } from '@/lib/mock-data'
+import type { PreviewFocusTargetId, PreviewStep } from '@/lib/preview-steps'
+import { cn } from '@/lib/utils'
 
 import { AiPanelContainer } from './ai-panel'
 import { OrderFormContainer } from './order-form'
@@ -25,17 +26,42 @@ import { OrderFormContainer } from './order-form'
 export interface AiRegisterMainProps {
   readonly step: PreviewStep
   readonly mockData: PreviewMockData
+  readonly focusTargetId?: PreviewFocusTargetId
+  readonly onResultApply?: (categoryId: AiCategoryId) => void
 }
 
-export function AiRegisterMain({ step, mockData }: AiRegisterMainProps) {
+export function AiRegisterMain({
+  step,
+  mockData,
+  focusTargetId,
+  onResultApply,
+}: AiRegisterMainProps) {
+  const aiPanelExpanded =
+    focusTargetId?.startsWith('ai-input') === true ||
+    focusTargetId === 'ai-extract-button' ||
+    focusTargetId?.startsWith('ai-result') === true
+
   return (
-    <div className="flex h-full min-h-[480px]">
+    <div
+      data-focus-target={focusTargetId}
+      data-ai-panel-expanded={aiPanelExpanded ? 'true' : 'false'}
+      className={cn(
+        'flex h-full transition-[min-height] duration-700 ease-out',
+        aiPanelExpanded ? 'min-h-[1040px]' : 'min-h-[900px]',
+      )}
+    >
       <AiPanelContainer
         step={step}
         aiInput={mockData.aiInput}
         aiResult={mockData.aiResult}
+        focusTargetId={focusTargetId}
+        onResultApply={onResultApply}
       />
-      <OrderFormContainer step={step} formData={mockData.formData} />
+      <OrderFormContainer
+        step={step}
+        formData={mockData.formData}
+        focusTargetId={focusTargetId}
+      />
     </div>
   )
 }

@@ -9,7 +9,7 @@
  *  - REQ-DASH3-014: CompanyManagerSection INITIAL 부터 pre-filled 유지
  *  - REQ-DASH3-022: AI_APPLY fill-in 대상에서 CompanyManager 제외
  *  - REQ-DASH3-029: Column-wise Border Pulse (columnPulseTargets)
- *  - REQ-DASH-010 / REQ-DASH-011 (수정): 5단계 → 4단계, duration 500 / 1500 / 1000 / 2500
+ *  - REQ-DASH-010 / REQ-DASH-011 (수정): 5단계 → 4단계, duration 1600 / 4400 / 2800 / 14400
  *
  * SSOT
  *  - Phase 1 스펙 §7 — Step 상태 스냅샷 (4단계 한정)
@@ -17,11 +17,11 @@
  *  - Wireframe decision-log §4-3 — CompanyManager pre-filled
  *
  * 타이밍 (PRD §6-1)
- *   INITIAL   500ms  — 빈 폼 + caret 대기
- *   AI_INPUT  1500ms — #1 fake-typing
- *   AI_EXTRACT 1000ms — #3 button-press + spinner
- *   AI_APPLY  2500ms — partialBeat(1500: 4 × 300ms 간격) + allBeat(800ms 토글/정산)
- *   ────────── 5500ms + hold 500ms = 6000ms 루프
+ *   INITIAL   1600ms  — 빈 폼 + caret 대기
+ *   AI_INPUT  4400ms  — #1 fake-typing
+ *   AI_EXTRACT 2800ms — #3 button-press + spinner
+ *   AI_APPLY  14400ms — result/card focus phase 반복 + partialBeat/allBeat
+ *   ────────── 23200ms 루프
  *
  * Phase 1/2 backward compatibility
  *  - `PREVIEW_STEPS` 이름 유지
@@ -41,6 +41,100 @@ import type { AiCategoryId } from './mock-data'
 export type StepId = 'INITIAL' | 'AI_INPUT' | 'AI_EXTRACT' | 'AI_APPLY'
 
 export type AiButtonStatus = 'pending' | 'applied' | 'unavailable'
+
+export const PREVIEW_FOCUS_TARGET_IDS = [
+  'ai-preview-frame',
+  'ai-input-textarea',
+  'ai-extract-button',
+  'ai-result-group',
+  'ai-result-departure',
+  'ai-result-destination',
+  'ai-result-cargo',
+  'ai-result-fare',
+  'form-pickup-location',
+  'form-delivery-location',
+  'form-cargo-info',
+  'form-estimate-distance',
+  'form-estimate-info',
+  'form-settlement',
+] as const
+
+export type PreviewFocusTargetId = typeof PREVIEW_FOCUS_TARGET_IDS[number]
+
+export interface PreviewFocusViewportPreset {
+  /** CSS transform scale value. */
+  readonly scale: number
+  /** CSS translateX percentage for the focus wrapper. */
+  readonly x: number
+  /** CSS translateY percentage for the focus wrapper. */
+  readonly y: number
+}
+
+export interface PreviewFocusMetadata {
+  readonly stepId: StepId
+  readonly targetId: PreviewFocusTargetId
+  readonly label: string
+  readonly viewport: {
+    readonly desktop: PreviewFocusViewportPreset
+    readonly tablet: PreviewFocusViewportPreset
+  }
+  readonly duration: number
+  readonly reducedMotionFallback: {
+    readonly strategy: 'highlight-only'
+    readonly targetId: PreviewFocusTargetId
+  }
+  readonly ariaHiddenLayer: true
+}
+
+export interface PreviewFocusTimingViolation {
+  readonly stepId: StepId
+  readonly focusDuration: number
+  readonly stepDuration: number
+}
+
+export interface PreviewFocusTimingValidationResult {
+  readonly valid: boolean
+  readonly violations: ReadonlyArray<PreviewFocusTimingViolation>
+}
+
+export interface AiApplyFocusPair {
+  readonly categoryId: AiCategoryId
+  readonly resultTargetId: PreviewFocusTargetId
+  readonly cardTargetId: PreviewFocusTargetId
+  readonly label: string
+}
+
+export type AiApplyFocusMode = 'result' | 'card' | 'auto-card'
+
+export type AiApplyFillTarget =
+  | 'pickup'
+  | 'delivery'
+  | 'estimate'
+  | 'cargo'
+  | 'settlement'
+
+export type AiApplyFocusPhaseId =
+  | 'departure-result'
+  | 'departure-card'
+  | 'destination-result'
+  | 'destination-card'
+  | 'estimate-card'
+  | 'cargo-result'
+  | 'cargo-card'
+  | 'fare-result'
+  | 'settlement-card'
+
+export interface AiApplyFocusPhase {
+  readonly id: AiApplyFocusPhaseId
+  readonly mode: AiApplyFocusMode
+  readonly categoryId?: AiCategoryId
+  readonly targetId: PreviewFocusTargetId
+  readonly fillTarget: AiApplyFillTarget | null
+  readonly label: string
+  readonly focus: PreviewFocusMetadata
+}
+
+export const AI_APPLY_FOCUS_PHASE_HOLD_MS = 2000
 
 /** Phase 1 스펙 §7-2 — AI 상태 스냅샷 */
 export interface AiStateSnapshot {
@@ -100,8 +194,8 @@ export interface AiApplyPartialBeat {
   }>
   /**
    * #7 dropdown 펼침 연출 (REQ-DASH3-027).
-   * CargoInfoForm 내 `vehicle-type` / `weight` select 중 하나를 600ms 간 펼쳐 하이라이트.
-   * cargo 카테고리 offset(600ms) 이후에 발동되어야 자연스럽다.
+   * CargoInfoForm 내 `vehicle-type` / `weight` select 중 하나를 펼쳐 하이라이트.
+   * cargo 카테고리 offset 이후에 발동되어야 자연스럽다.
    *
    * M3-review#1 — 원래 CargoInfoForm 이 prop 을 받도록 M3-06 에서 선언되었으나,
    * OrderFormContainer 에서 주입이 누락되어 연출이 실질 비활성이던 것을 이 필드로 실활성한다.
@@ -203,6 +297,8 @@ export interface PreviewStep {
   readonly label: string
   /** Step 지속시간 (ms). PRD §6-1 타이밍 고정. */
   readonly duration: number
+  /** Focus viewport metadata for dash-preview-focus-zoom-animation. */
+  readonly focus: PreviewFocusMetadata
   /** Phase 3 AI 상태 스냅샷 */
   readonly aiState: AiStateSnapshot
   /** Phase 3 Form 상태 스냅샷 (legacy alias 포함) */
@@ -217,13 +313,19 @@ export interface PreviewStep {
 // Constants — durations (PRD §6-1)
 // =============================================================================
 
-const DURATION_INITIAL = 800
-const DURATION_AI_INPUT = 2200
-const DURATION_AI_EXTRACT = 1400
-const DURATION_AI_APPLY = 4200
+const DURATION_INITIAL = 1600
+const DURATION_AI_INPUT = 4400
+const DURATION_AI_EXTRACT = 2800
+const DURATION_AI_APPLY = 20000
 
-const PARTIAL_INTERVAL_MS = 650
-const ALL_BEAT_MS = 1200
+const PARTIAL_INTERVAL_MS = 1300
+const ALL_BEAT_MS = 2400
+
+const FOCUS_DURATION_INITIAL = 600
+const FOCUS_DURATION_AI_INPUT = 1800
+const FOCUS_DURATION_AI_EXTRACT = 1400
+const FOCUS_DURATION_AI_APPLY = 1800
+const FOCUS_DURATION_AI_APPLY_SUBPHASE = 1800
 
 const CATEGORY_ORDER: ReadonlyArray<AiCategoryId> = [
   'departure',
@@ -231,6 +333,307 @@ const CATEGORY_ORDER: ReadonlyArray<AiCategoryId> = [
   'cargo',
   'fare',
 ] as const
+
+const PREVIEW_FOCUS_BY_STEP: Readonly<Record<StepId, PreviewFocusMetadata>> = {
+  INITIAL: {
+    stepId: 'INITIAL',
+    targetId: 'ai-preview-frame',
+    label: '전체 미리보기',
+    viewport: {
+      desktop: { scale: 1, x: 0, y: 0 },
+      tablet: { scale: 1, x: 0, y: 0 },
+    },
+    duration: FOCUS_DURATION_INITIAL,
+    reducedMotionFallback: {
+      strategy: 'highlight-only',
+      targetId: 'ai-preview-frame',
+    },
+    ariaHiddenLayer: true,
+  },
+  AI_INPUT: {
+    stepId: 'AI_INPUT',
+    targetId: 'ai-input-textarea',
+    label: '카톡 텍스트 입력창',
+    viewport: {
+      desktop: { scale: 1.22, x: 14, y: 8 },
+      tablet: { scale: 1.16, x: 10, y: 6 },
+    },
+    duration: FOCUS_DURATION_AI_INPUT,
+    reducedMotionFallback: {
+      strategy: 'highlight-only',
+      targetId: 'ai-input-textarea',
+    },
+    ariaHiddenLayer: true,
+  },
+  AI_EXTRACT: {
+    stepId: 'AI_EXTRACT',
+    targetId: 'ai-extract-button',
+    label: '추출하기 버튼',
+    viewport: {
+      desktop: { scale: 1.18, x: 14, y: 16 },
+      tablet: { scale: 1.12, x: 10, y: 12 },
+    },
+    duration: FOCUS_DURATION_AI_EXTRACT,
+    reducedMotionFallback: {
+      strategy: 'highlight-only',
+      targetId: 'ai-extract-button',
+    },
+    ariaHiddenLayer: true,
+  },
+  AI_APPLY: {
+    stepId: 'AI_APPLY',
+    targetId: 'ai-result-group',
+    label: '추출 결과 그룹',
+    viewport: {
+      desktop: { scale: 1.16, x: 12, y: 4 },
+      tablet: { scale: 1.1, x: 8, y: 4 },
+    },
+    duration: FOCUS_DURATION_AI_APPLY,
+    reducedMotionFallback: {
+      strategy: 'highlight-only',
+      targetId: 'ai-result-group',
+    },
+    ariaHiddenLayer: true,
+  },
+} as const
+
+export const AI_APPLY_FOCUS_PAIRS: ReadonlyArray<AiApplyFocusPair> = [
+  {
+    categoryId: 'departure',
+    resultTargetId: 'ai-result-departure',
+    cardTargetId: 'form-pickup-location',
+    label: '상차지',
+  },
+  {
+    categoryId: 'destination',
+    resultTargetId: 'ai-result-destination',
+    cardTargetId: 'form-delivery-location',
+    label: '하차지',
+  },
+  {
+    categoryId: 'cargo',
+    resultTargetId: 'ai-result-cargo',
+    cardTargetId: 'form-cargo-info',
+    label: '화물 정보',
+  },
+  {
+    categoryId: 'fare',
+    resultTargetId: 'ai-result-fare',
+    cardTargetId: 'form-settlement',
+    label: '운임',
+  },
+] as const
+
+function buildAiApplyFocusMetadata(
+  targetId: PreviewFocusTargetId,
+  label: string,
+  viewport: PreviewFocusMetadata['viewport'],
+): PreviewFocusMetadata {
+  return {
+    stepId: 'AI_APPLY',
+    targetId,
+    label,
+    viewport,
+    duration: FOCUS_DURATION_AI_APPLY_SUBPHASE,
+    reducedMotionFallback: {
+      strategy: 'highlight-only',
+      targetId,
+    },
+    ariaHiddenLayer: true,
+  } as const
+}
+
+const AI_APPLY_RESULT_FOCUS_BY_CATEGORY: Readonly<
+  Record<AiCategoryId, PreviewFocusMetadata>
+> = {
+  departure: buildAiApplyFocusMetadata('ai-result-departure', '상차지 추출정보', {
+    desktop: { scale: 1.18, x: 14, y: -2 },
+    tablet: { scale: 1.12, x: 10, y: -2 },
+  }),
+  destination: buildAiApplyFocusMetadata('ai-result-destination', '하차지 추출정보', {
+    desktop: { scale: 1.18, x: 14, y: -8 },
+    tablet: { scale: 1.12, x: 10, y: -6 },
+  }),
+  cargo: buildAiApplyFocusMetadata('ai-result-cargo', '화물 정보 추출정보', {
+    desktop: { scale: 1.18, x: 14, y: -14 },
+    tablet: { scale: 1.12, x: 10, y: -10 },
+  }),
+  fare: buildAiApplyFocusMetadata('ai-result-fare', '운임 추출정보', {
+    desktop: { scale: 1.18, x: 14, y: -20 },
+    tablet: { scale: 1.12, x: 10, y: -14 },
+  }),
+} as const
+
+const AI_APPLY_CARD_FOCUS_BY_CATEGORY: Readonly<
+  Record<AiCategoryId, PreviewFocusMetadata>
+> = {
+  departure: buildAiApplyFocusMetadata('form-pickup-location', '상차지 입력 카드', {
+    desktop: { scale: 1.22, x: -38, y: -6 },
+    tablet: { scale: 1.14, x: -30, y: -4 },
+  }),
+  destination: buildAiApplyFocusMetadata('form-delivery-location', '하차지 입력 카드', {
+    desktop: { scale: 1.22, x: -38, y: -18 },
+    tablet: { scale: 1.14, x: -30, y: -14 },
+  }),
+  cargo: buildAiApplyFocusMetadata('form-cargo-info', '화물 정보 입력 카드', {
+    desktop: { scale: 1.2, x: -58, y: -18 },
+    tablet: { scale: 1.12, x: -45, y: -14 },
+  }),
+  fare: buildAiApplyFocusMetadata('form-settlement', '정산 정보 카드', {
+    desktop: { scale: 1.16, x: -74, y: -18 },
+    tablet: { scale: 1.1, x: -56, y: -6 },
+  }),
+} as const
+
+const AI_APPLY_ESTIMATE_FOCUS = buildAiApplyFocusMetadata(
+  'form-estimate-info',
+  '예상 운임/거리 카드',
+  {
+    desktop: { scale: 1.16, x: -74, y: -8 },
+    tablet: { scale: 1.1, x: -56, y: -6 },
+  },
+)
+
+export const AI_APPLY_FOCUS_PHASES: ReadonlyArray<AiApplyFocusPhase> = [
+  {
+    id: 'departure-result',
+    mode: 'result',
+    categoryId: 'departure',
+    targetId: 'ai-result-departure',
+    fillTarget: null,
+    label: '상차지 추출정보',
+    focus: AI_APPLY_RESULT_FOCUS_BY_CATEGORY.departure,
+  },
+  {
+    id: 'departure-card',
+    mode: 'card',
+    categoryId: 'departure',
+    targetId: 'form-pickup-location',
+    fillTarget: 'pickup',
+    label: '상차지 입력 카드',
+    focus: AI_APPLY_CARD_FOCUS_BY_CATEGORY.departure,
+  },
+  {
+    id: 'destination-result',
+    mode: 'result',
+    categoryId: 'destination',
+    targetId: 'ai-result-destination',
+    fillTarget: null,
+    label: '하차지 추출정보',
+    focus: AI_APPLY_RESULT_FOCUS_BY_CATEGORY.destination,
+  },
+  {
+    id: 'destination-card',
+    mode: 'card',
+    categoryId: 'destination',
+    targetId: 'form-delivery-location',
+    fillTarget: 'delivery',
+    label: '하차지 입력 카드',
+    focus: AI_APPLY_CARD_FOCUS_BY_CATEGORY.destination,
+  },
+  {
+    id: 'estimate-card',
+    mode: 'auto-card',
+    targetId: 'form-estimate-info',
+    fillTarget: 'estimate',
+    label: '예상 운임/거리 카드',
+    focus: AI_APPLY_ESTIMATE_FOCUS,
+  },
+  {
+    id: 'cargo-result',
+    mode: 'result',
+    categoryId: 'cargo',
+    targetId: 'ai-result-cargo',
+    fillTarget: null,
+    label: '화물 정보 추출정보',
+    focus: AI_APPLY_RESULT_FOCUS_BY_CATEGORY.cargo,
+  },
+  {
+    id: 'cargo-card',
+    mode: 'card',
+    categoryId: 'cargo',
+    targetId: 'form-cargo-info',
+    fillTarget: 'cargo',
+    label: '화물 정보 입력 카드',
+    focus: AI_APPLY_CARD_FOCUS_BY_CATEGORY.cargo,
+  },
+  {
+    id: 'fare-result',
+    mode: 'result',
+    categoryId: 'fare',
+    targetId: 'ai-result-fare',
+    fillTarget: null,
+    label: '운임 정보',
+    focus: AI_APPLY_RESULT_FOCUS_BY_CATEGORY.fare,
+  },
+  {
+    id: 'settlement-card',
+    mode: 'card',
+    categoryId: 'fare',
+    targetId: 'form-settlement',
+    fillTarget: 'settlement',
+    label: '정산 정보 카드',
+    focus: AI_APPLY_CARD_FOCUS_BY_CATEGORY.fare,
+  },
+] as const
+
+export function getPreviewFocusMetadata(stepId: StepId): PreviewFocusMetadata | undefined {
+  return PREVIEW_FOCUS_BY_STEP[stepId]
+}
+
+export function getAiApplyResultFocusMetadata(
+  categoryId: AiCategoryId,
+): PreviewFocusMetadata | undefined {
+  return AI_APPLY_RESULT_FOCUS_BY_CATEGORY[categoryId]
+}
+
+export function getAiApplyCardFocusMetadata(
+  categoryId: AiCategoryId,
+): PreviewFocusMetadata | undefined {
+  return AI_APPLY_CARD_FOCUS_BY_CATEGORY[categoryId]
+}
+
+export function getAiApplyFocusPairIndex(categoryId: AiCategoryId): number {
+  return AI_APPLY_FOCUS_PAIRS.findIndex((pair) => pair.categoryId === categoryId)
+}
+
+export function getAiApplyFocusPhaseIndex(
+  phaseId: AiApplyFocusPhaseId,
+): number {
+  return AI_APPLY_FOCUS_PHASES.findIndex((phase) => phase.id === phaseId)
+}
+
+export function getAiApplyFocusPhaseIndexByTargetId(
+  targetId: PreviewFocusTargetId | null | undefined,
+): number {
+  if (!targetId) return -1
+  return AI_APPLY_FOCUS_PHASES.findIndex((phase) => phase.targetId === targetId)
+}
+
+export function getAiApplyCardPhaseIndexForCategory(
+  categoryId: AiCategoryId,
+): number {
+  return AI_APPLY_FOCUS_PHASES.findIndex(
+    (phase) => phase.categoryId === categoryId && phase.mode !== 'result',
+  )
+}
+
+export function validatePreviewFocusTiming(
+  steps: ReadonlyArray<Pick<PreviewStep, 'id' | 'duration' | 'focus'>>,
+): PreviewFocusTimingValidationResult {
+  const violations = steps
+    .filter((step) => step.focus.duration > step.duration)
+    .map((step) => ({
+      stepId: step.id,
+      focusDuration: step.focus.duration,
+      stepDuration: step.duration,
+    }))
+
+  return {
+    valid: violations.length === 0,
+    violations,
+  } as const
+}
 
 // =============================================================================
 // Helpers — build legacy aliases from Phase 3 snapshots
@@ -352,7 +755,7 @@ export function getStepVisibilityState(step: Pick<PreviewStep, 'formState'>): St
 /**
  * AI_APPLY partialBeat 필드 적용 스크립트.
  * REQ-DASH3-022 — companyManager 는 제외한다 (이미 INITIAL 부터 pre-filled).
- * REQ-DASH3-041 — 카테고리 순서 departure → destination → cargo → fare, 300ms 간격.
+ * REQ-DASH3-041 — 카테고리 순서 departure → destination → cargo → fare, PARTIAL_INTERVAL_MS 간격.
  */
 const PARTIAL_FILL_IN_FIELDS: ReadonlyArray<{
   readonly fieldId: string
@@ -370,7 +773,7 @@ const PARTIAL_FILL_IN_FIELDS: ReadonlyArray<{
     value: `${PREVIEW_MOCK_DATA.formData.pickup.date} ${PREVIEW_MOCK_DATA.formData.pickup.time}`,
     delay: 0,
   },
-  // destination (index 1 × 300 = 300ms)
+  // destination (index 1 × PARTIAL_INTERVAL_MS)
   {
     fieldId: 'delivery-address',
     value: PREVIEW_MOCK_DATA.formData.delivery.roadAddress,
@@ -381,7 +784,7 @@ const PARTIAL_FILL_IN_FIELDS: ReadonlyArray<{
     value: `${PREVIEW_MOCK_DATA.formData.delivery.date} ${PREVIEW_MOCK_DATA.formData.delivery.time}`,
     delay: PARTIAL_INTERVAL_MS,
   },
-  // cargo (index 2 × 300 = 600ms)
+  // cargo (index 2 × PARTIAL_INTERVAL_MS)
   {
     fieldId: 'vehicle-type',
     value: PREVIEW_MOCK_DATA.formData.vehicle.type,
@@ -397,7 +800,7 @@ const PARTIAL_FILL_IN_FIELDS: ReadonlyArray<{
     value: PREVIEW_MOCK_DATA.formData.cargo.name,
     delay: PARTIAL_INTERVAL_MS * 2,
   },
-  // fare (index 3 × 300 = 900ms) — fill-in 은 number-rolling 으로 대체 (allBeat 진입 직전)
+  // fare (index 3 × PARTIAL_INTERVAL_MS) — fill-in 은 number-rolling 으로 대체
 ] as const
 
 /** partialBeat 중 각 카테고리 버튼 press 타깃 (안 B) */
@@ -455,11 +858,11 @@ const COLUMN_PULSE_TARGETS: ReadonlyArray<string> = [
 const FORM_REVEAL_TIMELINE: FormRevealTimeline = {
   pickupAt: 0,
   deliveryAt: PARTIAL_INTERVAL_MS,
-  estimateAt: 900,
+  estimateAt: 1800,
   cargoAt: PARTIAL_INTERVAL_MS * 2,
   optionsAt: PARTIAL_INTERVAL_MS * 2,
   fareAt: PARTIAL_INTERVAL_MS * 3,
-  settlementAt: 2200,
+  settlementAt: 4400,
 } as const
 
 // =============================================================================
@@ -485,6 +888,7 @@ const INITIAL_STEP: PreviewStep = (() => {
     id: 'INITIAL',
     label: '초기 화면',
     duration: DURATION_INITIAL,
+    focus: PREVIEW_FOCUS_BY_STEP.INITIAL,
     aiState,
     formState,
     interactions,
@@ -517,6 +921,7 @@ const AI_INPUT_STEP: PreviewStep = (() => {
     id: 'AI_INPUT',
     label: '메시지 입력',
     duration: DURATION_AI_INPUT,
+    focus: PREVIEW_FOCUS_BY_STEP.AI_INPUT,
     aiState,
     formState,
     interactions,
@@ -547,6 +952,7 @@ const AI_EXTRACT_STEP: PreviewStep = (() => {
     id: 'AI_EXTRACT',
     label: 'AI 분석',
     duration: DURATION_AI_EXTRACT,
+    focus: PREVIEW_FOCUS_BY_STEP.AI_EXTRACT,
     aiState,
     formState,
     interactions,
@@ -588,7 +994,7 @@ const AI_APPLY_STEP: PreviewStep = (() => {
       rippleTargets: PARTIAL_RIPPLE_TARGETS,
       fillInFields: PARTIAL_FILL_IN_FIELDS,
       // M3-review#1 — #7 dropdown 연출 (REQ-DASH3-027) 실활성.
-      // cargo 카테고리 offset(PARTIAL_INTERVAL_MS * 2 = 600ms) 이후 발동.
+      // cargo 카테고리 offset(PARTIAL_INTERVAL_MS * 2) 이후 발동.
       dropdownBeat: {
         targetId: 'vehicle-type',
         triggerAt: PARTIAL_INTERVAL_MS * 2,
@@ -609,6 +1015,7 @@ const AI_APPLY_STEP: PreviewStep = (() => {
     id: 'AI_APPLY',
     label: '폼 자동 입력',
     duration: DURATION_AI_APPLY,
+    focus: PREVIEW_FOCUS_BY_STEP.AI_APPLY,
     aiState,
     formState,
     interactions,

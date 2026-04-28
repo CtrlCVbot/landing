@@ -35,7 +35,7 @@ describe('AiRegisterMain shell', () => {
       expect(orderForm).toBeInTheDocument()
     })
 
-    it('outer container uses flex + min-h-[480px]', () => {
+    it('outer container uses flex + min-h-[900px]', () => {
       const { container } = render(
         <AiRegisterMain step={INITIAL_STEP} mockData={PREVIEW_MOCK_DATA} />,
       )
@@ -44,7 +44,7 @@ describe('AiRegisterMain shell', () => {
       expect(outer).not.toBeNull()
       expect(outer).toHaveClass('flex')
       expect(outer).toHaveClass('h-full')
-      expect(outer).toHaveClass('min-h-[480px]')
+      expect(outer).toHaveClass('min-h-[900px]')
     })
 
     it('AiPanel has w-[380px] width class (380px fixed)', () => {
@@ -52,6 +52,24 @@ describe('AiRegisterMain shell', () => {
 
       const aiPanel = screen.getByLabelText('AI 화물 등록 패널')
       expect(aiPanel).toHaveClass('w-[380px]')
+    })
+
+    it('expands AiPanel and shell height when an AI panel target is focused', () => {
+      const { container } = render(
+        <AiRegisterMain
+          step={INITIAL_STEP}
+          mockData={PREVIEW_MOCK_DATA}
+          focusTargetId="ai-input-textarea"
+        />,
+      )
+
+      const outer = container.firstElementChild as HTMLElement | null
+      const aiPanel = screen.getByLabelText('AI 화물 등록 패널')
+
+      expect(outer).toHaveAttribute('data-ai-panel-expanded', 'true')
+      expect(outer).toHaveClass('min-h-[1040px]')
+      expect(aiPanel).toHaveClass('w-[440px]')
+      expect(aiPanel).toHaveAttribute('data-focus-expanded', 'true')
     })
 
     it('OrderForm flex-1 stretches to remaining space', () => {

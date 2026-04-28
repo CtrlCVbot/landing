@@ -40,6 +40,7 @@ const INITIAL_STEP = PREVIEW_STEPS[0]!
 const AI_INPUT_STEP = PREVIEW_STEPS[1]!
 const AI_EXTRACT_STEP = PREVIEW_STEPS[2]!
 const AI_APPLY_STEP = PREVIEW_STEPS[3]!
+const AI_APPLY_TIMELINE = AI_APPLY_STEP.interactions.formRevealTimeline!
 
 const HIDDEN_FORM_STEPS = [
   ['INITIAL', INITIAL_STEP],
@@ -139,7 +140,7 @@ describe('OrderFormContainer F2 appliedFrame source', () => {
       )
 
       act(() => {
-        vi.advanceTimersByTime(900)
+        vi.advanceTimersByTime(AI_APPLY_TIMELINE.estimateAt)
       })
       act(() => {
         vi.advanceTimersByTime(1000)
@@ -176,7 +177,7 @@ describe('OrderFormContainer pre-apply reveal state', () => {
       render(<OrderFormContainer step={AI_APPLY_STEP} formData={formData} />)
 
       act(() => {
-        vi.advanceTimersByTime(900)
+        vi.advanceTimersByTime(AI_APPLY_TIMELINE.settlementAt)
       })
       act(() => {
         vi.advanceTimersByTime(1000)
@@ -261,7 +262,7 @@ describe('OrderFormContainer AI_APPLY staged reveal timeline', () => {
     render(<OrderFormContainer step={AI_APPLY_STEP} formData={formData} />)
 
     act(() => {
-      vi.advanceTimersByTime(899)
+      vi.advanceTimersByTime(AI_APPLY_TIMELINE.estimateAt - 1)
     })
     expect(screen.getByTestId('estimate-info-card')).toHaveAttribute(
       'data-visible',
@@ -301,7 +302,7 @@ describe('OrderFormContainer AI_APPLY staged reveal timeline', () => {
     render(<OrderFormContainer step={AI_APPLY_STEP} formData={formData} />)
 
     act(() => {
-      vi.advanceTimersByTime(1299)
+      vi.advanceTimersByTime(AI_APPLY_TIMELINE.cargoAt - 1)
     })
     expect(screen.getByTestId('cargo-info-form')).toHaveAttribute(
       'data-revealed',
@@ -340,7 +341,7 @@ describe('OrderFormContainer AI_APPLY staged reveal timeline', () => {
     render(<OrderFormContainer step={AI_APPLY_STEP} formData={formData} />)
 
     act(() => {
-      vi.advanceTimersByTime(2199)
+      vi.advanceTimersByTime(AI_APPLY_TIMELINE.settlementAt - 1)
     })
     expect(screen.getByTestId('settlement-section')).toHaveAttribute(
       'data-visible',
@@ -360,6 +361,131 @@ describe('OrderFormContainer AI_APPLY staged reveal timeline', () => {
     )
     expect(screen.getByTestId('settlement-total-profit')).toHaveTextContent(
       formData.settlement.totals.profit.toLocaleString(),
+    )
+  })
+})
+
+describe('OrderFormContainer focus-driven unified AI_APPLY reveal', () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  it('keeps form cards hidden during the first result cue and disables column pulse', () => {
+    render(
+      <OrderFormContainer
+        step={AI_APPLY_STEP}
+        formData={PREVIEW_MOCK_DATA.formData}
+        focusTargetId="ai-result-departure"
+      />,
+    )
+
+    expect(screen.getByTestId('location-form-pickup')).toHaveAttribute(
+      'data-revealed',
+      'false',
+    )
+    expect(screen.getByTestId('location-form-delivery')).toHaveAttribute(
+      'data-revealed',
+      'false',
+    )
+    expect(screen.getByTestId('col-1')).toHaveAttribute('data-pulse-active', 'false')
+    expect(screen.getByTestId('col-2')).toHaveAttribute('data-pulse-active', 'false')
+    expect(screen.getByTestId('col-3')).toHaveAttribute('data-pulse-active', 'false')
+  })
+
+  it('reveals and fills only the pickup card on pickup focus', () => {
+    render(
+      <OrderFormContainer
+        step={AI_APPLY_STEP}
+        formData={PREVIEW_MOCK_DATA.formData}
+        focusTargetId="form-pickup-location"
+      />,
+    )
+
+    const pickup = screen.getByTestId('location-form-pickup')
+    const delivery = screen.getByTestId('location-form-delivery')
+
+    expect(pickup).toHaveAttribute('data-revealed', 'true')
+    expect(delivery).toHaveAttribute('data-revealed', 'false')
+    expect(screen.getByTestId('estimate-info-card')).toHaveAttribute(
+      'data-visible',
+      'false',
+    )
+    expect(pickup.querySelector('[data-caret]')).not.toBeNull()
+    expect(delivery.querySelector('[data-caret]')).toBeNull()
+  })
+
+  it('shows the estimate card after delivery and keeps cargo/settlement pending', () => {
+    render(
+      <OrderFormContainer
+        step={AI_APPLY_STEP}
+        formData={PREVIEW_MOCK_DATA.formData}
+        focusTargetId="form-estimate-info"
+      />,
+    )
+
+    expect(screen.getByTestId('location-form-pickup')).toHaveAttribute(
+      'data-revealed',
+      'true',
+    )
+    expect(screen.getByTestId('location-form-delivery')).toHaveAttribute(
+      'data-revealed',
+      'true',
+    )
+    expect(screen.getByTestId('estimate-info-card')).toHaveAttribute(
+      'data-visible',
+      'true',
+    )
+    expect(screen.getByTestId('estimate-info-card')).toHaveAttribute(
+      'data-active',
+      'true',
+    )
+    expect(screen.getByTestId('cargo-info-form')).toHaveAttribute(
+      'data-revealed',
+      'false',
+    )
+    expect(screen.getByTestId('settlement-section')).toHaveAttribute(
+      'data-visible',
+      'false',
+    )
+  })
+
+  it('reveals settlement only on the final settlement focus, not on estimate focus', () => {
+    const { rerender } = render(
+      <OrderFormContainer
+        step={AI_APPLY_STEP}
+        formData={PREVIEW_MOCK_DATA.formData}
+        focusTargetId="form-estimate-info"
+      />,
+    )
+
+    expect(screen.getByTestId('settlement-section')).toHaveAttribute(
+      'data-visible',
+      'false',
+    )
+
+    rerender(
+      <OrderFormContainer
+        step={AI_APPLY_STEP}
+        formData={PREVIEW_MOCK_DATA.formData}
+        focusTargetId="form-settlement"
+      />,
+    )
+
+    expect(screen.getByTestId('settlement-section')).toHaveAttribute(
+      'data-visible',
+      'true',
+    )
+    expect(screen.getByTestId('settlement-section')).toHaveAttribute(
+      'data-active',
+      'true',
+    )
+    expect(screen.getByTestId('estimate-info-card')).toHaveAttribute(
+      'data-active',
+      'false',
     )
   })
 })
@@ -747,7 +873,7 @@ describe('OrderFormContainer AI_APPLY 2단 구조 (M3-01 / M3-11)', () => {
       const distanceInfo = screen.getByTestId('estimate-distance-info')
       expect(distanceInfo).toHaveAttribute('data-visible', 'false')
       act(() => {
-        vi.advanceTimersByTime(900)
+        vi.advanceTimersByTime(AI_APPLY_TIMELINE.estimateAt)
       })
       expect(distanceInfo).toHaveAttribute('data-visible', 'true')
       expect(distanceInfo).not.toHaveTextContent('측정 전')
@@ -822,7 +948,7 @@ describe('OrderFormContainer AI_APPLY 2단 구조 (M3-01 / M3-11)', () => {
         <OrderFormContainer step={AI_APPLY_STEP} formData={PREVIEW_MOCK_DATA.formData} />,
       )
       act(() => {
-        vi.advanceTimersByTime(1300)
+        vi.advanceTimersByTime(AI_APPLY_TIMELINE.optionsAt)
       })
       const direct = screen.getByTestId('transport-option-direct')
       const polyline = direct.querySelector('polyline')
@@ -837,7 +963,7 @@ describe('OrderFormContainer AI_APPLY 2단 구조 (M3-01 / M3-11)', () => {
         <OrderFormContainer step={AI_APPLY_STEP} formData={PREVIEW_MOCK_DATA.formData} />,
       )
       act(() => {
-        vi.advanceTimersByTime(1300)
+        vi.advanceTimersByTime(AI_APPLY_TIMELINE.optionsAt)
       })
       const forklift = screen.getByTestId('transport-option-forklift')
       const polyline = forklift.querySelector('polyline')
@@ -940,7 +1066,7 @@ describe('OrderFormContainer CargoInfoForm dropdownBeat 주입 (M3-review#1)', (
       <OrderFormContainer step={AI_APPLY_STEP} formData={PREVIEW_MOCK_DATA.formData} />,
     )
     act(() => {
-      vi.advanceTimersByTime(1300)
+      vi.advanceTimersByTime(AI_APPLY_TIMELINE.cargoAt)
     })
     expect(screen.getByTestId('cargo-vehicle-type-trigger')).toHaveAttribute(
       'data-expanded',
@@ -953,7 +1079,7 @@ describe('OrderFormContainer CargoInfoForm dropdownBeat 주입 (M3-review#1)', (
       <OrderFormContainer step={AI_APPLY_STEP} formData={PREVIEW_MOCK_DATA.formData} />,
     )
     act(() => {
-      vi.advanceTimersByTime(1300)
+      vi.advanceTimersByTime(AI_APPLY_TIMELINE.cargoAt)
     })
     expect(screen.getByTestId('cargo-weight-trigger')).toHaveAttribute(
       'data-expanded',
@@ -1017,7 +1143,7 @@ describe('OrderFormContainer — M4-03 #10 Column-wise Border Pulse', () => {
       <OrderFormContainer step={AI_APPLY_STEP} formData={PREVIEW_MOCK_DATA.formData} />,
     )
     act(() => {
-      vi.advanceTimersByTime(1300)
+      vi.advanceTimersByTime(AI_APPLY_TIMELINE.cargoAt)
     })
     expect(screen.getByTestId('col-2')).toHaveAttribute('data-pulse-active', 'true')
   })
@@ -1027,7 +1153,7 @@ describe('OrderFormContainer — M4-03 #10 Column-wise Border Pulse', () => {
       <OrderFormContainer step={AI_APPLY_STEP} formData={PREVIEW_MOCK_DATA.formData} />,
     )
     act(() => {
-      vi.advanceTimersByTime(900)
+      vi.advanceTimersByTime(AI_APPLY_TIMELINE.fareAt)
     })
     expect(screen.getByTestId('col-3')).toHaveAttribute('data-pulse-active', 'true')
   })

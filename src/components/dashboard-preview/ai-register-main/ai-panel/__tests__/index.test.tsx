@@ -36,6 +36,8 @@ import { PREVIEW_STEPS } from '@/lib/preview-steps'
 
 const INITIAL_STEP = PREVIEW_STEPS[0]!
 const AI_APPLY_STEP = PREVIEW_STEPS[3]!
+const AI_APPLY_PARTIAL_INTERVAL_MS =
+  AI_APPLY_STEP.interactions.partialBeat!.intervalMs
 
 // ---------------------------------------------------------------------------
 // M1-03 — shell 레이아웃
@@ -371,7 +373,7 @@ describe('AiPanelContainer partialBeat 카테고리 순차 press (M3-11)', () =>
 
     // 299ms: 아직 press 전
     act(() => {
-      vi.advanceTimersByTime(649)
+      vi.advanceTimersByTime(AI_APPLY_PARTIAL_INTERVAL_MS - 1)
     })
     expect(btn).toHaveAttribute('data-pressed', 'false')
 
@@ -395,7 +397,7 @@ describe('AiPanelContainer partialBeat 카테고리 순차 press (M3-11)', () =>
     expect(btn).toHaveAttribute('data-pressed', 'false')
 
     act(() => {
-      vi.advanceTimersByTime(1299)
+      vi.advanceTimersByTime(AI_APPLY_PARTIAL_INTERVAL_MS * 2 - 1)
     })
     expect(btn).toHaveAttribute('data-pressed', 'false')
 
@@ -418,7 +420,7 @@ describe('AiPanelContainer partialBeat 카테고리 순차 press (M3-11)', () =>
     expect(btn).toHaveAttribute('data-pressed', 'false')
 
     act(() => {
-      vi.advanceTimersByTime(1949)
+      vi.advanceTimersByTime(AI_APPLY_PARTIAL_INTERVAL_MS * 3 - 1)
     })
     expect(btn).toHaveAttribute('data-pressed', 'false')
 
@@ -552,7 +554,7 @@ describe('AiPanelContainer #2 focus-walk 적용 (M4-01)', () => {
     )
 
     act(() => {
-      vi.advanceTimersByTime(650)
+      vi.advanceTimersByTime(AI_APPLY_PARTIAL_INTERVAL_MS)
     })
 
     const departureGroup = screen.getByRole('group', {

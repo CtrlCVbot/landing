@@ -9,7 +9,13 @@ import {
   createPreviewMockData,
   selectRandomPreviewMockScenario,
 } from '@/lib/mock-data'
-import { PREVIEW_STEPS } from '@/lib/preview-steps'
+import type { AiCategoryId } from '@/lib/mock-data'
+import {
+  AI_APPLY_FOCUS_PHASE_HOLD_MS,
+  AI_APPLY_FOCUS_PHASES,
+  PREVIEW_STEPS,
+  getAiApplyCardPhaseIndexForCategory,
+} from '@/lib/preview-steps'
 import { useMediaQuery } from '@/hooks/use-media-query'
 import { useAutoPlay } from './use-auto-play'
 import { useDashV3 } from './use-dash-v3'
@@ -69,6 +75,8 @@ const AREA_TO_STEP: Readonly<Record<string, number>> = {
   'result-fare': 3,
 } as const
 
+const INITIAL_AI_APPLY_FOCUS_PHASE_INDEX = 0
+
 export function shouldRotatePreviewScenario(
   previousStepIndex: number,
   currentStepIndex: number,
@@ -100,6 +108,9 @@ export function DashboardPreview({ className }: DashboardPreviewProps) {
   })
   const [mockScenario, setMockScenario] = useState(() =>
     selectRandomPreviewMockScenario(),
+  )
+  const [aiApplyFocusPhaseIndex, setAiApplyFocusPhaseIndex] = useState(
+    INITIAL_AI_APPLY_FOCUS_PHASE_INDEX,
   )
   const previousStepRef = useRef(currentStep)
   const previewMockData = useMemo(
@@ -135,6 +146,43 @@ export function DashboardPreview({ className }: DashboardPreviewProps) {
   }, [interactive.mode, pause, resume])
 
   const step = PREVIEW_STEPS[currentStep]
+
+  useEffect(() => {
+    if (step.id !== 'AI_APPLY') {
+      setAiApplyFocusPhaseIndex(INITIAL_AI_APPLY_FOCUS_PHASE_INDEX)
+    }
+  }, [step.id])
+
+  useEffect(() => {
+    if (!dashV3Enabled || step.id !== 'AI_APPLY') return
+
+    const hasNextFocus = AI_APPLY_FOCUS_PHASES[aiApplyFocusPhaseIndex + 1] !== undefined
+    if (!hasNextFocus) return
+
+    const timer = setTimeout(() => {
+      setAiApplyFocusPhaseIndex((current) =>
+        Math.min(current + 1, AI_APPLY_FOCUS_PHASES.length - 1),
+      )
+    }, AI_APPLY_FOCUS_PHASE_HOLD_MS)
+
+    return () => clearTimeout(timer)
+  }, [aiApplyFocusPhaseIndex, dashV3Enabled, step.id])
+
+  const aiApplyFocusPhase =
+    dashV3Enabled && step.id === 'AI_APPLY'
+      ? AI_APPLY_FOCUS_PHASES[aiApplyFocusPhaseIndex]
+      : undefined
+  const aiApplyFocus = aiApplyFocusPhase?.focus ?? null
+  const previewFocus = aiApplyFocus ?? step.focus
+
+  const handleResultApply = (categoryId: AiCategoryId) => {
+    if (step.id !== 'AI_APPLY') return
+    const nextPhaseIndex = getAiApplyCardPhaseIndexForCategory(categoryId)
+    if (nextPhaseIndex >= 0) {
+      setAiApplyFocusPhaseIndex(nextPhaseIndex)
+    }
+  }
+
   // REQ-DASH-023/024 (M1-04): Tablet scaleFactor 0.38 → 0.40 (가독성 개선)
   const scaleFactor = isTablet ? 0.4 : 0.45
 
@@ -187,10 +235,15 @@ export function DashboardPreview({ className }: DashboardPreviewProps) {
   }
 
   const previewContent = (
-    <div className="relative">
+    <div data-testid="preview-content" className="relative h-full">
       {/* T-DASH3-M1-04: Phase 3 Feature flag 분기. */}
       {dashV3Enabled ? (
-        <AiRegisterMain step={step} mockData={previewMockData} />
+        <AiRegisterMain
+          step={step}
+          mockData={previewMockData}
+          focusTargetId={previewFocus.targetId}
+          onResultApply={handleResultApply}
+        />
       ) : (
         <div className="flex h-full">
           <AiPanelPreview aiPanelState={step.aiPanelState} />
@@ -224,7 +277,14 @@ export function DashboardPreview({ className }: DashboardPreviewProps) {
       aria-label="AI 화물 등록 워크플로우 데모 미리보기"
     >
       <div className="relative">
-        <PreviewChrome scaleFactor={scaleFactor}>{previewContent}</PreviewChrome>
+        <PreviewChrome
+          scaleFactor={scaleFactor}
+          focus={previewFocus}
+          viewport={viewport}
+          reducedMotion={prefersReducedMotion}
+        >
+          {previewContent}
+        </PreviewChrome>
       </div>
       <StepIndicator
         totalSteps={PREVIEW_STEPS.length}

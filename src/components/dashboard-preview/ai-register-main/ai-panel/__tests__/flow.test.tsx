@@ -19,7 +19,7 @@
  *  - OrderForm fill-in 동기화(M3 범위)는 여기서 다루지 않는다.
  */
 
-import { render, screen, act } from '@testing-library/react'
+import { render, screen, act, fireEvent } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { AiPanelContainer } from '@/components/dashboard-preview/ai-register-main/ai-panel'
@@ -335,6 +335,30 @@ describe('AI Panel 플로우 — TC-DASH3-INT-FLOW-AIPANEL', () => {
       expect(
         screen.getByTestId('ai-button-item-btn-fare-amount'),
       ).toHaveAttribute('data-group-id', 'fare')
+    })
+
+    it('카테고리 버튼 클릭 시 해당 추출정보 category id 를 상위로 전달', () => {
+      const onResultApply = vi.fn()
+      render(
+        <AiPanelContainer
+          step={step}
+          aiInput={PREVIEW_MOCK_DATA.aiInput}
+          aiResult={PREVIEW_MOCK_DATA.aiResult}
+          onResultApply={onResultApply}
+        />,
+      )
+
+      fireEvent.click(screen.getByTestId('ai-button-item-btn-departure-address1'))
+      expect(onResultApply).toHaveBeenCalledWith('departure')
+
+      fireEvent.click(screen.getByTestId('ai-button-item-btn-destination-address1'))
+      expect(onResultApply).toHaveBeenCalledWith('destination')
+
+      fireEvent.click(screen.getByTestId('ai-button-item-btn-cargo-vehicleType'))
+      expect(onResultApply).toHaveBeenCalledWith('cargo')
+
+      fireEvent.click(screen.getByTestId('ai-button-item-btn-fare-amount'))
+      expect(onResultApply).toHaveBeenCalledWith('fare')
     })
   })
 
