@@ -42,6 +42,51 @@ export type StepId = 'INITIAL' | 'AI_INPUT' | 'AI_EXTRACT' | 'AI_APPLY'
 
 export type AiButtonStatus = 'pending' | 'applied' | 'unavailable'
 
+export const PREVIEW_FOCUS_TARGET_IDS = [
+  'ai-preview-frame',
+  'ai-input-textarea',
+  'ai-extract-button',
+  'ai-result-group',
+] as const
+
+export type PreviewFocusTargetId = typeof PREVIEW_FOCUS_TARGET_IDS[number]
+
+export interface PreviewFocusViewportPreset {
+  /** CSS transform scale value. */
+  readonly scale: number
+  /** CSS translateX percentage for the focus wrapper. */
+  readonly x: number
+  /** CSS translateY percentage for the focus wrapper. */
+  readonly y: number
+}
+
+export interface PreviewFocusMetadata {
+  readonly stepId: StepId
+  readonly targetId: PreviewFocusTargetId
+  readonly label: string
+  readonly viewport: {
+    readonly desktop: PreviewFocusViewportPreset
+    readonly tablet: PreviewFocusViewportPreset
+  }
+  readonly duration: number
+  readonly reducedMotionFallback: {
+    readonly strategy: 'highlight-only'
+    readonly targetId: PreviewFocusTargetId
+  }
+  readonly ariaHiddenLayer: true
+}
+
+export interface PreviewFocusTimingViolation {
+  readonly stepId: StepId
+  readonly focusDuration: number
+  readonly stepDuration: number
+}
+
+export interface PreviewFocusTimingValidationResult {
+  readonly valid: boolean
+  readonly violations: ReadonlyArray<PreviewFocusTimingViolation>
+}
+
 /** Phase 1 스펙 §7-2 — AI 상태 스냅샷 */
 export interface AiStateSnapshot {
   readonly activeTab: 'text' | 'image'
@@ -203,6 +248,8 @@ export interface PreviewStep {
   readonly label: string
   /** Step 지속시간 (ms). PRD §6-1 타이밍 고정. */
   readonly duration: number
+  /** Focus viewport metadata for dash-preview-focus-zoom-animation. */
+  readonly focus: PreviewFocusMetadata
   /** Phase 3 AI 상태 스냅샷 */
   readonly aiState: AiStateSnapshot
   /** Phase 3 Form 상태 스냅샷 (legacy alias 포함) */
@@ -231,6 +278,90 @@ const CATEGORY_ORDER: ReadonlyArray<AiCategoryId> = [
   'cargo',
   'fare',
 ] as const
+
+const PREVIEW_FOCUS_BY_STEP: Readonly<Record<StepId, PreviewFocusMetadata>> = {
+  INITIAL: {
+    stepId: 'INITIAL',
+    targetId: 'ai-preview-frame',
+    label: '전체 미리보기',
+    viewport: {
+      desktop: { scale: 1, x: 0, y: 0 },
+      tablet: { scale: 1, x: 0, y: 0 },
+    },
+    duration: 300,
+    reducedMotionFallback: {
+      strategy: 'highlight-only',
+      targetId: 'ai-preview-frame',
+    },
+    ariaHiddenLayer: true,
+  },
+  AI_INPUT: {
+    stepId: 'AI_INPUT',
+    targetId: 'ai-input-textarea',
+    label: '카톡 텍스트 입력창',
+    viewport: {
+      desktop: { scale: 1.22, x: -16, y: 8 },
+      tablet: { scale: 1.16, x: -12, y: 6 },
+    },
+    duration: 900,
+    reducedMotionFallback: {
+      strategy: 'highlight-only',
+      targetId: 'ai-input-textarea',
+    },
+    ariaHiddenLayer: true,
+  },
+  AI_EXTRACT: {
+    stepId: 'AI_EXTRACT',
+    targetId: 'ai-extract-button',
+    label: '추출하기 버튼',
+    viewport: {
+      desktop: { scale: 1.18, x: -15, y: 16 },
+      tablet: { scale: 1.12, x: -10, y: 12 },
+    },
+    duration: 700,
+    reducedMotionFallback: {
+      strategy: 'highlight-only',
+      targetId: 'ai-extract-button',
+    },
+    ariaHiddenLayer: true,
+  },
+  AI_APPLY: {
+    stepId: 'AI_APPLY',
+    targetId: 'ai-result-group',
+    label: '추출 결과 그룹',
+    viewport: {
+      desktop: { scale: 1.16, x: -16, y: 4 },
+      tablet: { scale: 1.1, x: -11, y: 4 },
+    },
+    duration: 900,
+    reducedMotionFallback: {
+      strategy: 'highlight-only',
+      targetId: 'ai-result-group',
+    },
+    ariaHiddenLayer: true,
+  },
+} as const
+
+export function getPreviewFocusMetadata(stepId: StepId): PreviewFocusMetadata | undefined {
+  return PREVIEW_FOCUS_BY_STEP[stepId]
+}
+
+export function validatePreviewFocusTiming(
+  steps: ReadonlyArray<Pick<PreviewStep, 'id' | 'duration' | 'focus'>>,
+): PreviewFocusTimingValidationResult {
+  const violations = steps
+    .filter((step) => step.focus.duration > step.duration)
+    .map((step) => ({
+      stepId: step.id,
+      focusDuration: step.focus.duration,
+      stepDuration: step.duration,
+    }))
+
+  return {
+    valid: violations.length === 0,
+    violations,
+  } as const
+}
 
 // =============================================================================
 // Helpers — build legacy aliases from Phase 3 snapshots
@@ -485,6 +616,7 @@ const INITIAL_STEP: PreviewStep = (() => {
     id: 'INITIAL',
     label: '초기 화면',
     duration: DURATION_INITIAL,
+    focus: PREVIEW_FOCUS_BY_STEP.INITIAL,
     aiState,
     formState,
     interactions,
@@ -517,6 +649,7 @@ const AI_INPUT_STEP: PreviewStep = (() => {
     id: 'AI_INPUT',
     label: '메시지 입력',
     duration: DURATION_AI_INPUT,
+    focus: PREVIEW_FOCUS_BY_STEP.AI_INPUT,
     aiState,
     formState,
     interactions,
@@ -547,6 +680,7 @@ const AI_EXTRACT_STEP: PreviewStep = (() => {
     id: 'AI_EXTRACT',
     label: 'AI 분석',
     duration: DURATION_AI_EXTRACT,
+    focus: PREVIEW_FOCUS_BY_STEP.AI_EXTRACT,
     aiState,
     formState,
     interactions,
@@ -609,6 +743,7 @@ const AI_APPLY_STEP: PreviewStep = (() => {
     id: 'AI_APPLY',
     label: '폼 자동 입력',
     duration: DURATION_AI_APPLY,
+    focus: PREVIEW_FOCUS_BY_STEP.AI_APPLY,
     aiState,
     formState,
     interactions,

@@ -14,7 +14,13 @@
  * Phase 1/2 backward compatibility는 legacy/preview-steps.test.ts 가 LEGACY=true 시 검증.
  */
 import { describe, it, expect } from 'vitest'
-import { PREVIEW_STEPS, getStepVisibilityState } from '@/lib/preview-steps'
+import {
+  PREVIEW_FOCUS_TARGET_IDS,
+  PREVIEW_STEPS,
+  getPreviewFocusMetadata,
+  getStepVisibilityState,
+  validatePreviewFocusTiming,
+} from '@/lib/preview-steps'
 import type { PreviewStep, StepId } from '@/lib/preview-steps'
 import { PREVIEW_MOCK_DATA } from '@/lib/mock-data'
 
@@ -366,5 +372,91 @@ describe('PREVIEW_STEPS (F2 visibility state)', () => {
     expect(aiApply!.formState.estimateAmount).toBe(
       PREVIEW_MOCK_DATA.formData.estimate.amount,
     )
+  })
+})
+
+describe('PREVIEW_STEPS focus metadata foundation (TC-FZ-UNIT-01/03/04)', () => {
+  it('TC-FZ-UNIT-01: every step has a primary focus target and reduced-motion fallback', () => {
+    const targetsByStep = PREVIEW_STEPS.map((step) => ({
+      id: step.id,
+      targetId: step.focus.targetId,
+      reducedMotionStrategy: step.focus.reducedMotionFallback.strategy,
+    }))
+
+    expect(targetsByStep).toEqual([
+      {
+        id: 'INITIAL',
+        targetId: 'ai-preview-frame',
+        reducedMotionStrategy: 'highlight-only',
+      },
+      {
+        id: 'AI_INPUT',
+        targetId: 'ai-input-textarea',
+        reducedMotionStrategy: 'highlight-only',
+      },
+      {
+        id: 'AI_EXTRACT',
+        targetId: 'ai-extract-button',
+        reducedMotionStrategy: 'highlight-only',
+      },
+      {
+        id: 'AI_APPLY',
+        targetId: 'ai-result-group',
+        reducedMotionStrategy: 'highlight-only',
+      },
+    ])
+
+    for (const step of PREVIEW_STEPS) {
+      expect(PREVIEW_FOCUS_TARGET_IDS).toContain(step.focus.targetId)
+      expect(step.focus.stepId).toBe(step.id)
+      expect(step.focus.ariaHiddenLayer).toBe(true)
+    }
+  })
+
+  it('TC-FZ-UNIT-03: desktop and tablet viewport presets are explicit and mobile-free', () => {
+    for (const step of PREVIEW_STEPS) {
+      expect(step.focus.viewport).toHaveProperty('desktop')
+      expect(step.focus.viewport).toHaveProperty('tablet')
+      expect(step.focus.viewport).not.toHaveProperty('mobile')
+      expect(step.focus.viewport.desktop).not.toBe(step.focus.viewport.tablet)
+      expect(step.focus.viewport.desktop.scale).toBeGreaterThanOrEqual(1)
+      expect(step.focus.viewport.tablet.scale).toBeGreaterThanOrEqual(1)
+      expect(typeof step.focus.viewport.desktop.x).toBe('number')
+      expect(typeof step.focus.viewport.tablet.y).toBe('number')
+    }
+  })
+
+  it('TC-FZ-UNIT-04: focus timing validation catches durations longer than the owning step', () => {
+    expect(validatePreviewFocusTiming(PREVIEW_STEPS)).toEqual({
+      valid: true,
+      violations: [],
+    })
+
+    const invalidSteps: readonly PreviewStep[] = [
+      {
+        ...PREVIEW_STEPS[0],
+        focus: {
+          ...PREVIEW_STEPS[0].focus,
+          duration: PREVIEW_STEPS[0].duration + 1,
+        },
+      },
+    ]
+
+    expect(validatePreviewFocusTiming(invalidSteps)).toEqual({
+      valid: false,
+      violations: [
+        {
+          stepId: 'INITIAL',
+          focusDuration: PREVIEW_STEPS[0].duration + 1,
+          stepDuration: PREVIEW_STEPS[0].duration,
+        },
+      ],
+    })
+  })
+
+  it('returns focus metadata by step id', () => {
+    expect(getPreviewFocusMetadata('AI_INPUT')?.targetId).toBe('ai-input-textarea')
+    expect(getPreviewFocusMetadata('AI_APPLY')?.targetId).toBe('ai-result-group')
+    expect(getPreviewFocusMetadata('INITIAL')?.viewport.desktop.scale).toBe(1)
   })
 })
