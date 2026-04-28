@@ -49,3 +49,9 @@ AGENTS.md
 
 # output
 /output/*
+
+# %SystemDrive%
+/%SystemDrive%/*
+
+# docs
+/docs/reports/*
