@@ -331,7 +331,7 @@ describe('DashboardPreview — Phase 3 Feature flag', () => {
         'fixed-height-reduced',
       )
       expect(screen.getByTestId('scaled-content').style.height).toBe(
-        '390.15px',
+        '374.4px',
       )
       expect(screen.getByTestId('preview-content')).toHaveClass('h-full')
       expect(screen.getByTestId('mock-ai-panel-container').parentElement).toHaveClass(

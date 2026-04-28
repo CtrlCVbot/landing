@@ -2,7 +2,7 @@
 
 > **Feature**: Dash Preview Focus Zoom Animation
 > **Scope**: Lite
-> **Status**: Phase C package complete, ready for `/dev-run` planning review
+> **Status**: Dev implementation verified, ready for `/plan-archive`
 > **Created**: 2026-04-27
 > **Plan Bridge**: skipped (`Lite` feature, `/plan-bridge` is Standard-only)
 
@@ -30,6 +30,13 @@
 | 08 | `../02-package/08-dev-tasks.md` | 완료 | M1~M5 implementation tasks |
 | 09 | `../02-package/09-test-cases.md` | 완료 | Unit, integration, a11y, visual, release tests |
 | 10 | `../02-package/10-release-checklist.md` | 완료 | Release-ready evidence checklist |
+
+## 1-2. Dev Notes
+
+| # | 파일 | 상태 | 설명 |
+|---|---|---|---|
+| 01 | `../03-dev-notes/01-dev-verification-report.md` | 완료 | Dev verification evidence and side-effect review |
+| 02 | `../03-dev-notes/dev-output-summary.md` | 완료 | Implementation output summary and archive handoff |
 
 ---
 
@@ -71,8 +78,8 @@
 
 ## 5. Next Step
 
-Phase C 산출물은 완료됐다. 다음 단계는 문서 review 후 구현 실행이다.
+Dev implementation and verification evidence are complete. Next gate is archive packaging.
 
 ```bash
-/dev-run .plans/features/active/dash-preview-focus-zoom-animation
+/plan-archive dash-preview-focus-zoom-animation
 ```

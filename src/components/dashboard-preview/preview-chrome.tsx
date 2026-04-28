@@ -9,7 +9,7 @@ const CHROME_DOT_COLORS = ['bg-red-500', 'bg-yellow-500', 'bg-green-500'] as con
 const DEFAULT_SCALE_FACTOR = 0.45
 const PREVIOUS_MAX_CONTENT_HEIGHT_PX = 1040
 const FIXED_CONTENT_HEIGHT_PX = Math.round(
-  PREVIOUS_MAX_CONTENT_HEIGHT_PX * (5 / 6),
+  PREVIOUS_MAX_CONTENT_HEIGHT_PX * (4 / 5),
 )
 const FOCUS_TARGET_ALIASES: Partial<
   Record<PreviewFocusMetadata['targetId'], readonly string[]>

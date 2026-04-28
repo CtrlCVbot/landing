@@ -53,7 +53,7 @@
 
 - `AI_APPLY` focus path가 `ai-result-departure -> form-pickup-location -> ai-result-destination -> form-delivery-location -> form-estimate-info -> ai-result-cargo -> form-cargo-info -> ai-result-fare -> form-settlement` 순서로 자동 진행된다.
 - `AI_APPLY_FOCUS_PHASE_HOLD_MS = 2000`으로 result/card 사이 전환을 느리게 유지하고, subphase scale duration은 `1800ms`로 둔다.
-- `ScaledContent`에 `data-camera-frame="fixed-height-reduced"`와 content height `867px` 기준 frame height를 적용해 focus target과 무관하게 frame 높이를 고정했다.
+- `ScaledContent`에 `data-camera-frame="fixed-height-reduced"`와 content height `832px` 기준 frame height를 적용해 focus target과 무관하게 frame 높이를 고정했다.
 - 내부 전체 content는 base scale만 유지하고 `FocusViewport` transform은 `none`으로 고정했다.
 - `preview-content`와 `AiRegisterMain` shell도 `h-full` / `min-h-[900px]` 기준으로 맞춰 frame 내부 빈 공간과 하단 잘림을 줄였다.
 - focus zoom은 `[data-hit-area-id="..."]` target selector에만 `scale(...)`을 적용해 글자 깨짐과 전체 화면 이동감을 줄였다.
@@ -67,7 +67,7 @@
 | 항목 | 상태 | 근거 |
 | --- | --- | --- |
 | AI panel expansion | [x] | `focusTargetId`가 AI panel target이면 shell `min-h-[1040px]`, panel `w-[440px]`로 확장 |
-| Fixed reduced preview height | [x] | 이전 최대 content height `1040px`에서 `1/6` 축소한 `867px` 고정 height 적용 |
+| Fixed reduced preview height | [x] | 이전 최대 content height `1040px`에 `4/5` 비율을 적용한 `832px` 고정 height 적용 |
 | Estimate auto phase | [x] | 하차지 카드 후 `form-estimate-info` 자동 focus |
 | Settlement final phase | [x] | 운임 정보 클릭 후 `form-settlement` focus/fill |
 | Unnecessary highlight cleanup | [x] | focus-driven `AI_APPLY`에서 column pulse와 full-frame highlight 비활성화 |
@@ -173,6 +173,6 @@ Build warning 기록:
 ### Height Adjustment Update - 2026-04-28
 
 - `PreviewChrome` frame height is fixed again with `data-camera-frame="fixed-height-reduced"`.
-- The internal content height is `867px`, which is a `1/6` reduction from the previous maximum `1040px` height.
-- The visible outer frame height is `390.15px` on desktop scale `0.45` and `346.8px` on tablet scale `0.40`.
+- The internal content height is `832px`, which applies the confirmed `4/5` ratio to the previous maximum `1040px` height.
+- The visible outer frame height is `374.4px` on desktop scale `0.45` and `332.8px` on tablet scale `0.40`.
 - Mobile remains unchanged because it still renders through `MobileCardView`.

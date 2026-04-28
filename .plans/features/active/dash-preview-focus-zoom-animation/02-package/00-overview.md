@@ -5,7 +5,7 @@
 > **PRD Freeze**: `../00-context/01-prd-freeze.md`
 > **Architecture Binding**: `../00-context/06-architecture-binding.md`
 > **Routing**: `../00-context/07-routing-metadata.md`
-> **Status**: Phase C package complete, ready for implementation planning review
+> **Status**: Dev implementation verified, ready for archive
 > **Created**: 2026-04-27
 
 ---
@@ -167,6 +167,8 @@ Phase B에서 아래 4가지만 확인하면 된다.
 | `08-dev-tasks.md` | 완료 | implementation task package |
 | `09-test-cases.md` | 완료 | automated and visual test cases |
 | `10-release-checklist.md` | 완료 | release evidence checklist |
+| `../03-dev-notes/01-dev-verification-report.md` | 완료 | dev verification evidence and side-effect review |
+| `../03-dev-notes/dev-output-summary.md` | 완료 | implementation summary and archive handoff |
 
 API/DB 변경이 없으므로 `04-api-spec.md`, `05-db-migration-spec.md`는 생성하지 않는다. 별도 runtime error surface가 없어 `07-error-handling.md`도 생략하고, transform/overlay/mobile/reduced-motion 리스크는 domain logic과 release checklist에서 관리한다.
 
@@ -174,8 +176,8 @@ API/DB 변경이 없으므로 `04-api-spec.md`, `05-db-migration-spec.md`는 생
 
 ## 9. Next Step
 
-문서 review 후 다음 단계로 구현 실행을 시작한다.
+Dev implementation and verification are complete. Next gate is archive packaging.
 
 ```bash
-/dev-run .plans/features/active/dash-preview-focus-zoom-animation
+/plan-archive dash-preview-focus-zoom-animation
 ```

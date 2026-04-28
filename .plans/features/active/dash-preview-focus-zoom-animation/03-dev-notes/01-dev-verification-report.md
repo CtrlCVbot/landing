@@ -15,7 +15,7 @@
 | Feature behavior | PASS | `AI_APPLY` result-to-card 흐름, target-only focus, fixed reduced frame 테스트 통과 |
 | Type safety | PASS | `npm run typecheck` exit 0 |
 | Build | PASS | `npm run build` exit 0 |
-| Browser DOM | PASS | initial, Step 2, Step 4 모두 `fixed-height-reduced` + `390.15px` frame 확인 |
+| Browser DOM | PASS | initial, Step 2, Step 4 모두 `fixed-height-reduced` + `374.4px` frame 확인 |
 | Release readiness | PASS with warnings | 기존 lint/workspace root warning은 남았으나 build 실패는 아님 |
 
 최종 판정은 `PASS with known warnings`이다.
@@ -29,10 +29,10 @@
 | 1 | `npm run typecheck` | PASS | `tsc --noEmit` exit 0 |
 | 2 | `git diff --check` | PASS | whitespace error 없음, CRLF warning only |
 | 3 | `Invoke-WebRequest http://127.0.0.1:3102/?dashV3=1` | PASS | dev server 200 응답 |
-| 4 | `npm run test -- dashboard-preview` | FAIL then PASS | 최초 3 failures 발견 후 `4 / 5` 비율 오류를 `5 / 6`으로 수정, 재실행 시 36 files / 559 tests passed |
+| 4 | `npm run test -- dashboard-preview` | FAIL then PASS | 최초 검증에서 `4 / 5` 비율을 오류로 잘못 판단했으나, 사용자 확인 후 `4 / 5`를 의도값으로 복원하고 재검증 |
 | 5 | `npm run test -- src/components/dashboard-preview/__tests__/preview-chrome.test.tsx src/components/dashboard-preview/__tests__/dashboard-preview.test.tsx` | PASS | 2 files / 43 tests passed |
 | 6 | `npm run build` | PASS | production build 성공, 기존 lint/workspace warnings만 출력 |
-| 7 | Playwright DOM check | PASS | `inlineHeight: 390.15px`, `innerHeight: 867px`, frame state 고정 확인 |
+| 7 | Playwright DOM check | PASS | `inlineHeight: 374.4px`, `innerHeight: 832px`, frame state 고정 확인 |
 
 ---
 
@@ -40,13 +40,13 @@
 
 | 발견 항목 | Severity | Confidence | Action | 결과 |
 | --- | --- | --- | --- | --- |
-| `PreviewChrome` fixed height 축소 비율이 `4 / 5`로 적용됨 | high | confirmed | auto-fixed | 요청 기준인 `1/6` 축소에 맞춰 `5 / 6`으로 수정 |
+| `PreviewChrome` fixed height 축소 비율을 `5 / 6`으로 잘못 보정함 | high | confirmed | auto-fixed | 사용자 확인 기준인 `4 / 5`로 복원 |
 
 세부 증상:
 
-- 실패 전 desktop frame height: `374.4px`
-- 실패 전 tablet frame height: `332.8px`
-- 기대값: desktop `390.15px`, tablet `346.8px`, inner `867px`
+- 확정 desktop frame height: `374.4px`
+- 확정 tablet frame height: `332.8px`
+- 확정 inner height: `832px`
 
 수정 파일:
 
@@ -61,31 +61,31 @@
   {
     "label": "initial",
     "cameraFrame": "fixed-height-reduced",
-    "inlineHeight": "390.15px",
-    "computedHeight": "390.141px",
-    "rectHeight": 390.14,
-    "innerHeight": "867px"
+    "inlineHeight": "374.4px",
+    "computedHeight": "374.391px",
+    "rectHeight": 374.39,
+    "innerHeight": "832px"
   },
   {
     "label": "step2",
     "cameraFrame": "fixed-height-reduced",
-    "inlineHeight": "390.15px",
-    "computedHeight": "390.141px",
-    "rectHeight": 390.14,
-    "innerHeight": "867px"
+    "inlineHeight": "374.4px",
+    "computedHeight": "374.391px",
+    "rectHeight": 374.39,
+    "innerHeight": "832px"
   },
   {
     "label": "step4",
     "cameraFrame": "fixed-height-reduced",
-    "inlineHeight": "390.15px",
-    "computedHeight": "390.141px",
-    "rectHeight": 390.14,
-    "innerHeight": "867px"
+    "inlineHeight": "374.4px",
+    "computedHeight": "374.391px",
+    "rectHeight": 374.39,
+    "innerHeight": "832px"
   }
 ]
 ```
 
-`computedHeight`와 `rectHeight`의 `390.14px` 값은 브라우저 subpixel rounding 결과이며, inline style 기준값은 `390.15px`로 유지된다.
+`computedHeight`와 `rectHeight`의 `374.39px` 값은 브라우저 subpixel rounding 결과이며, inline style 기준값은 `374.4px`로 유지된다.
 
 ---
 
@@ -114,8 +114,8 @@
 
 ## 7. Next Gate
 
-권장 다음 단계:
+Recommended next gate:
 
-1. 이번 verification fix와 report를 커밋에 반영한다.
-2. 이후 `03-dev-notes/dev-output-summary.md`를 추가해 dev-run 산출물 요약을 만들 수 있다.
-3. 사용자 확인 후 merge/push 또는 `/plan-archive` 준비로 이동한다.
+1. Commit the `4/5` fixed-height restoration and dev output summary.
+2. Run `/plan-archive dash-preview-focus-zoom-animation`.
+3. Verify the archive bundle, moved source files, backlog row, and screening matrix row in the archive commit.

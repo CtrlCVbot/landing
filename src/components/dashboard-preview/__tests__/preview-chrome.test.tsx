@@ -60,12 +60,12 @@ describe('PreviewChrome focus viewport (TC-FZ-VIS-01/02/03/04)', () => {
       'data-camera-frame',
       'fixed-height-reduced',
     )
-    expect(scaledContent.style.height).toBe('390.15px')
+    expect(scaledContent.style.height).toBe('374.4px')
     expect(screen.getByTestId('scaled-content-inner').style.transform).toBe(
       'scale(0.45)',
     )
     expect(screen.getByTestId('scaled-content-inner').style.height).toBe(
-      '867px',
+      '832px',
     )
     expect(screen.getByTestId('focus-viewport').style.transform).toBe(
       'none',
@@ -88,7 +88,7 @@ describe('PreviewChrome focus viewport (TC-FZ-VIS-01/02/03/04)', () => {
       'data-camera-frame',
       'fixed-height-reduced',
     )
-    expect(screen.getByTestId('scaled-content').style.height).toBe('346.8px')
+    expect(screen.getByTestId('scaled-content').style.height).toBe('332.8px')
     expect(focusViewport).toHaveAttribute(
       'data-focus-target',
       'ai-extract-button',
