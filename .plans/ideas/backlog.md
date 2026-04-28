@@ -19,7 +19,7 @@
 | IDEA-20260424-001 | F2 Mock 스키마 재설계 | feature | archived | 2026-04-24 | `archive/f2-mock-schema-redesign/sources/ideas` | [링크](../archive/f2-mock-schema-redesign/sources/ideas/IDEA-20260424-001.md) | [EPIC-20260422-001](../epics/20-active/EPIC-20260422-001/00-epic-brief.md) |
 | IDEA-20260424-002 | F4 레이아웃 정비 + Hit-Area 재정렬 | feature | archived | 2026-04-24 | `archive/f4-layout-hit-area-realignment/sources/ideas` | [링크](../archive/f4-layout-hit-area-realignment/sources/ideas/IDEA-20260424-002.md) | [EPIC-20260422-001](../epics/20-active/EPIC-20260422-001/00-epic-brief.md) |
 | IDEA-20260427-001 | Hero 섹션 interactive liquid gradient 배경 도입 | improvement | archived | 2026-04-27 | `archive/hero-liquid-gradient-background/sources/ideas` | [링크](../archive/hero-liquid-gradient-background/sources/ideas/IDEA-20260427-001.md) | - |
-| IDEA-20260427-003 | Dash Preview 단계별 포커스 줌 애니메이션 | improvement | approved | 2026-04-27 | `20-approved` | [링크](20-approved/IDEA-20260427-003.md) | - |
+| IDEA-20260427-003 | Dash Preview 단계별 포커스 줌 애니메이션 | improvement | archived | 2026-04-27 | `archive/dash-preview-focus-zoom-animation/sources/ideas` | [링크](../archive/dash-preview-focus-zoom-animation/sources/ideas/IDEA-20260427-003.md) | - |
 
 ---
 
@@ -60,3 +60,4 @@
 | 2026-04-27 | IDEA-20260427-003 draft 생성 — `dash-preview-focus-zoom-animation`, 다음 단계 `/plan-prd` |
 | 2026-04-27 | IDEA-20260427-003 PRD 작성 및 PRD review 완료 — PASS with noted follow-up, Lite gate 확인 후 `/dev-feature` 직행 |
 | 2026-04-28 | IDEA-20260427-003 `/dev-feature` Phase A/B/C 완료 — active feature package 생성, 다음 단계 `/dev-run` |
+| 2026-04-28 | IDEA-20260427-003 dev 구현 검증 완료 및 `/plan-archive` 실행 -> `archive/dash-preview-focus-zoom-animation/ARCHIVE-FZ.md` |
