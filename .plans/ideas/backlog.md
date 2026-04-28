@@ -78,3 +78,4 @@
 | 2026-04-28 | IDEA-20260428-001 상태 `new → screened` — RICE-style weighted score 76.35, Go 제안, Lite lane, 사용자 승인 대기 |
 | 2026-04-28 | IDEA-20260428-001 사용자 Go 승인 — 상태 `screened → approved`, `20-approved` 이동 |
 | 2026-04-28 | IDEA-20260428-001 draft 생성 — `f1-optic-brand-cta`, Lite lane, 다음 단계 scope 확인 후 `/plan-bridge` 또는 dev handoff |
+| 2026-04-28 | IDEA-20260428-001 Bridge 완료 — active feature context 생성, 다음 단계 `/dev-feature` |

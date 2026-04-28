@@ -4,7 +4,7 @@
 > **IDEA**: [IDEA-20260428-001](../../ideas/20-approved/IDEA-20260428-001.md)
 > **Epic**: [EPIC-20260428-001](../../epics/10-planning/EPIC-20260428-001/00-epic-brief.md) (Phase A, F1)
 > **작성일**: 2026-04-28
-> **상태**: scope-reviewed
+> **상태**: bridged
 > **Lane**: Lite
 
 ---
@@ -95,7 +95,7 @@
 
 ## 8. 다음 단계
 
-1. Scope review가 통과되었으므로 `/plan-bridge f1-optic-brand-cta` 또는 Lite dev handoff로 진행한다.
+1. Bridge context가 생성되었으므로 `/dev-feature .plans/features/active/f1-optic-brand-cta/`로 진행한다.
 2. 구현 전 `https://mm-broker-test.vercel.app/` 공개 가능성을 최종 확인한다.
 3. 구현 단계에서 테스트와 responsive 확인 evidence를 남긴다.
 
@@ -105,3 +105,4 @@
 |---|---|
 | 2026-04-28 | 초안 — F1 approved IDEA 기반 Lite Draft 생성 |
 | 2026-04-28 | Scope review 통과 — PRD/Wireframe/Stitch 생략 가능, 다음 단계 `/plan-bridge` |
+| 2026-04-28 | Bridge context 생성 — 다음 단계 `/dev-feature` |
