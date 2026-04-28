@@ -15,6 +15,7 @@
  */
 import { describe, it, expect } from 'vitest'
 import {
+  AI_APPLY_FOCUS_PHASE_HOLD_MS,
   AI_APPLY_FOCUS_PAIRS,
   PREVIEW_FOCUS_TARGET_IDS,
   PREVIEW_STEPS,
@@ -55,30 +56,30 @@ describe('PREVIEW_STEPS (Phase 3 4단계)', () => {
     it('INITIAL duration === 500ms', () => {
       const initial = PREVIEW_STEPS[0]
       expect(initial.id).toBe('INITIAL')
-      expect(initial.duration).toBe(800)
+      expect(initial.duration).toBe(1600)
     })
 
     it('AI_INPUT duration === 1500ms', () => {
       const aiInput = PREVIEW_STEPS[1]
       expect(aiInput.id).toBe('AI_INPUT')
-      expect(aiInput.duration).toBe(2200)
+      expect(aiInput.duration).toBe(4400)
     })
 
     it('AI_EXTRACT duration === 1000ms', () => {
       const aiExtract = PREVIEW_STEPS[2]
       expect(aiExtract.id).toBe('AI_EXTRACT')
-      expect(aiExtract.duration).toBe(1400)
+      expect(aiExtract.duration).toBe(2800)
     })
 
     it('AI_APPLY duration === 2500ms', () => {
       const aiApply = PREVIEW_STEPS[3]
       expect(aiApply.id).toBe('AI_APPLY')
-      expect(aiApply.duration).toBe(4200)
+      expect(aiApply.duration).toBe(14400)
     })
 
     it('총 Step duration 합 === 5500ms (PRD §6-1)', () => {
       const total = PREVIEW_STEPS.reduce((sum, s) => sum + s.duration, 0)
-      expect(total).toBe(8600)
+      expect(total).toBe(23200)
     })
 
     it('각 Step 에 interactions 필드 존재', () => {
@@ -125,7 +126,7 @@ describe('PREVIEW_STEPS (Phase 3 4단계)', () => {
         'cargo',
         'fare',
       ])
-      expect(partial?.intervalMs).toBe(650)
+      expect(partial?.intervalMs).toBe(1300)
       expect(Array.isArray(partial?.pressTargets)).toBe(true)
       expect(Array.isArray(partial?.rippleTargets)).toBe(true)
       expect(Array.isArray(partial?.fillInFields)).toBe(true)
@@ -147,14 +148,14 @@ describe('PREVIEW_STEPS (Phase 3 4단계)', () => {
       expect(partial?.dropdownBeat?.targetId).toBe('vehicle-type')
       // cargo 카테고리는 index 2 × 300 = 600ms — dropdown 은 그 이후에 발동되어야 한다
       expect(typeof partial?.dropdownBeat?.triggerAt).toBe('number')
-      expect(partial?.dropdownBeat?.triggerAt).toBeGreaterThanOrEqual(1300)
+      expect(partial?.dropdownBeat?.triggerAt).toBeGreaterThanOrEqual(2600)
     })
 
     it('AI_APPLY.interactions.allBeat 구조 (durationMs 800, toggle stroke + number rolling)', () => {
       const aiApply = PREVIEW_STEPS[3]
       const all = aiApply.interactions.allBeat
       expect(all).toBeDefined()
-      expect(all?.durationMs).toBe(1200)
+      expect(all?.durationMs).toBe(2400)
       expect(Array.isArray(all?.toggleStrokeTargets)).toBe(true)
       // 8개 TransportOption 토글
       expect(all?.toggleStrokeTargets.length).toBe(8)
@@ -192,12 +193,12 @@ describe('PREVIEW_STEPS (Phase 3 4단계)', () => {
 
       expect(timeline).toEqual({
         pickupAt: 0,
-        deliveryAt: 650,
-        estimateAt: 900,
-        cargoAt: 1300,
-        optionsAt: 1300,
-        fareAt: 1950,
-        settlementAt: 2200,
+        deliveryAt: 1300,
+        estimateAt: 1800,
+        cargoAt: 2600,
+        optionsAt: 2600,
+        fareAt: 3900,
+        settlementAt: 4400,
       })
       expect(timeline!.deliveryAt).toBeLessThan(timeline!.estimateAt)
       expect(timeline!.estimateAt).toBeLessThan(timeline!.cargoAt)
@@ -519,5 +520,13 @@ describe('AI_APPLY click-to-card focus mapping (TC-FZ-UNIT-02)', () => {
     expect(getAiApplyCardFocusMetadata('fare')?.targetId).toBe(
       'form-estimate-info',
     )
+  })
+
+  it('uses a slower AI_APPLY focus phase hold for readable result-card camera movement', () => {
+    expect(AI_APPLY_FOCUS_PHASE_HOLD_MS).toBe(1800)
+    for (const categoryId of ['departure', 'destination', 'cargo', 'fare'] as const) {
+      expect(getAiApplyResultFocusMetadata(categoryId)?.duration).toBe(1600)
+      expect(getAiApplyCardFocusMetadata(categoryId)?.duration).toBe(1600)
+    }
   })
 })

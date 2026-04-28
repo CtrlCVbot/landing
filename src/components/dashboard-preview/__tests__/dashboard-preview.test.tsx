@@ -30,6 +30,7 @@ import {
   shouldRotatePreviewScenario,
 } from '@/components/dashboard-preview/dashboard-preview'
 import { DESKTOP_HIT_AREAS } from '@/components/dashboard-preview/hit-areas'
+import { AI_APPLY_FOCUS_PHASE_HOLD_MS } from '@/lib/preview-steps'
 
 // ---------------------------------------------------------------------------
 // Mocks
@@ -389,7 +390,7 @@ describe('DashboardPreview — Phase 3 Feature flag', () => {
       )
 
       act(() => {
-        vi.advanceTimersByTime(901)
+        vi.advanceTimersByTime(AI_APPLY_FOCUS_PHASE_HOLD_MS + 1)
       })
       expect(screen.getByTestId('focus-viewport')).toHaveAttribute(
         'data-focus-target',
@@ -403,7 +404,7 @@ describe('DashboardPreview — Phase 3 Feature flag', () => {
       )
 
       act(() => {
-        vi.advanceTimersByTime(901)
+        vi.advanceTimersByTime(AI_APPLY_FOCUS_PHASE_HOLD_MS + 1)
       })
       expect(screen.getByTestId('focus-viewport')).toHaveAttribute(
         'data-focus-target',
@@ -417,7 +418,7 @@ describe('DashboardPreview — Phase 3 Feature flag', () => {
       )
 
       act(() => {
-        vi.advanceTimersByTime(901)
+        vi.advanceTimersByTime(AI_APPLY_FOCUS_PHASE_HOLD_MS + 1)
       })
       expect(screen.getByTestId('focus-viewport')).toHaveAttribute(
         'data-focus-target',
@@ -431,12 +432,44 @@ describe('DashboardPreview — Phase 3 Feature flag', () => {
       )
 
       act(() => {
-        vi.advanceTimersByTime(901)
+        vi.advanceTimersByTime(AI_APPLY_FOCUS_PHASE_HOLD_MS + 1)
       })
       expect(screen.getByTestId('focus-viewport')).toHaveAttribute(
         'data-focus-target',
         'form-estimate-info',
       )
+    })
+
+    it('automatically plays the result-card camera path during AI_APPLY', () => {
+      vi.useFakeTimers()
+      setDesktop()
+      render(<DashboardPreview />)
+
+      fireEvent.click(screen.getByRole('tab', { name: 'Step 4' }))
+      expect(screen.getByTestId('focus-viewport')).toHaveAttribute(
+        'data-focus-target',
+        'ai-result-departure',
+      )
+
+      const expectedTargets = [
+        'form-pickup-location',
+        'ai-result-destination',
+        'form-delivery-location',
+        'ai-result-cargo',
+        'form-cargo-info',
+        'ai-result-fare',
+        'form-estimate-info',
+      ]
+
+      for (const target of expectedTargets) {
+        act(() => {
+          vi.advanceTimersByTime(AI_APPLY_FOCUS_PHASE_HOLD_MS + 1)
+        })
+        expect(screen.getByTestId('focus-viewport')).toHaveAttribute(
+          'data-focus-target',
+          target,
+        )
+      }
     })
   })
 

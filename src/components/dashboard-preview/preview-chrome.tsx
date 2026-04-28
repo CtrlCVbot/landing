@@ -1,15 +1,16 @@
 'use client'
 
-import { useRef, useState, useEffect } from 'react'
+import type { ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 import type { PreviewFocusMetadata } from '@/lib/preview-steps'
 
 const CHROME_DOT_COLORS = ['bg-red-500', 'bg-yellow-500', 'bg-green-500'] as const
 
 const DEFAULT_SCALE_FACTOR = 0.45
+const CAMERA_FRAME_ASPECT_RATIO = '16 / 9'
 
 interface PreviewChromeProps {
-  readonly children: React.ReactNode
+  readonly children: ReactNode
   readonly scaleFactor?: number
   readonly focus?: PreviewFocusMetadata
   readonly viewport?: keyof PreviewFocusMetadata['viewport']
@@ -42,46 +43,26 @@ function ScaledContent({
   viewport,
   reducedMotion,
 }: {
-  readonly children: React.ReactNode
+  readonly children: ReactNode
   readonly scaleFactor: number
   readonly focus?: PreviewFocusMetadata
   readonly viewport: keyof PreviewFocusMetadata['viewport']
   readonly reducedMotion: boolean
 }) {
-  const innerRef = useRef<HTMLDivElement>(null)
-  const [scaledHeight, setScaledHeight] = useState<number | undefined>(
-    undefined,
-  )
-
-  useEffect(() => {
-    if (!innerRef.current) return
-
-    const updateHeight = () => {
-      if (innerRef.current) {
-        setScaledHeight(innerRef.current.scrollHeight * scaleFactor)
-      }
-    }
-
-    updateHeight()
-
-    const observer = new ResizeObserver(updateHeight)
-    observer.observe(innerRef.current)
-    return () => observer.disconnect()
-  }, [scaleFactor])
-
   return (
     <div
       data-testid="scaled-content"
+      data-camera-frame="fixed"
       className="overflow-hidden"
-      style={scaledHeight ? { height: `${scaledHeight}px` } : undefined}
+      style={{ aspectRatio: CAMERA_FRAME_ASPECT_RATIO }}
     >
       <div
-        ref={innerRef}
         data-testid="scaled-content-inner"
         style={{
           transform: `scale(${scaleFactor})`,
           transformOrigin: 'top left',
           width: `${100 / scaleFactor}%`,
+          minHeight: '100%',
         }}
       >
         {focus ? (
@@ -106,7 +87,7 @@ function FocusViewport({
   viewport,
   reducedMotion,
 }: {
-  readonly children: React.ReactNode
+  readonly children: ReactNode
   readonly focus: PreviewFocusMetadata
   readonly viewport: keyof PreviewFocusMetadata['viewport']
   readonly reducedMotion: boolean

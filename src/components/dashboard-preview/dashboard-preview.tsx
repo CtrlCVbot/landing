@@ -11,6 +11,7 @@ import {
 } from '@/lib/mock-data'
 import type { AiCategoryId } from '@/lib/mock-data'
 import {
+  AI_APPLY_FOCUS_PHASE_HOLD_MS,
   AI_APPLY_FOCUS_PAIRS,
   PREVIEW_STEPS,
   getAiApplyCardFocusMetadata,
@@ -75,8 +76,6 @@ const AREA_TO_STEP: Readonly<Record<string, number>> = {
   'result-cargo': 3,
   'result-fare': 3,
 } as const
-
-const AI_APPLY_CARD_HOLD_MS = 900
 
 type AiApplyFocusMode = 'result' | 'card'
 
@@ -167,21 +166,40 @@ export function DashboardPreview({ className }: DashboardPreviewProps) {
   }, [step.id])
 
   useEffect(() => {
-    if (step.id !== 'AI_APPLY' || aiApplyFocusState.mode !== 'card') return
+    if (!dashV3Enabled || step.id !== 'AI_APPLY') return
 
     const currentPairIndex = getAiApplyFocusPairIndex(aiApplyFocusState.categoryId)
-    const nextPair = AI_APPLY_FOCUS_PAIRS[currentPairIndex + 1]
-    if (!nextPair) return
+    if (currentPairIndex < 0) return
+
+    const hasNextFocus =
+      aiApplyFocusState.mode === 'result' ||
+      AI_APPLY_FOCUS_PAIRS[currentPairIndex + 1] !== undefined
+    if (!hasNextFocus) return
 
     const timer = setTimeout(() => {
-      setAiApplyFocusState({
-        categoryId: nextPair.categoryId,
-        mode: 'result',
+      setAiApplyFocusState((current) => {
+        const pairIndex = getAiApplyFocusPairIndex(current.categoryId)
+        if (pairIndex < 0) return current
+
+        if (current.mode === 'result') {
+          return {
+            categoryId: current.categoryId,
+            mode: 'card',
+          }
+        }
+
+        const nextPair = AI_APPLY_FOCUS_PAIRS[pairIndex + 1]
+        if (!nextPair) return current
+
+        return {
+          categoryId: nextPair.categoryId,
+          mode: 'result',
+        }
       })
-    }, AI_APPLY_CARD_HOLD_MS)
+    }, AI_APPLY_FOCUS_PHASE_HOLD_MS)
 
     return () => clearTimeout(timer)
-  }, [aiApplyFocusState.categoryId, aiApplyFocusState.mode, step.id])
+  }, [aiApplyFocusState.categoryId, aiApplyFocusState.mode, dashV3Enabled, step.id])
 
   const aiApplyFocus =
     dashV3Enabled && step.id === 'AI_APPLY'

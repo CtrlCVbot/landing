@@ -29,8 +29,30 @@ describe('PreviewChrome focus viewport (TC-FZ-VIS-01/02/03/04)', () => {
     expect(focusViewport.style.transform).toBe(
       'translate3d(14%, 8%, 0) scale(1.22)',
     )
-    expect(focusViewport.style.transitionDuration).toBe('900ms')
+    expect(focusViewport.style.transitionDuration).toBe('1800ms')
     expect(focusViewport).toContainElement(screen.getByTestId('child-element'))
+  })
+
+  it('keeps the outer preview frame fixed while the inner camera moves', () => {
+    render(
+      <PreviewChrome
+        scaleFactor={0.45}
+        focus={PREVIEW_STEPS[1].focus}
+        viewport="desktop"
+      >
+        <div data-testid="child-element">content</div>
+      </PreviewChrome>,
+    )
+
+    const scaledContent = screen.getByTestId('scaled-content')
+    expect(scaledContent).toHaveAttribute('data-camera-frame', 'fixed')
+    expect(scaledContent.style.aspectRatio).toBe('16 / 9')
+    expect(screen.getByTestId('scaled-content-inner').style.transform).toBe(
+      'scale(0.45)',
+    )
+    expect(screen.getByTestId('focus-viewport').style.transform).toBe(
+      'translate3d(14%, 8%, 0) scale(1.22)',
+    )
   })
 
   it('uses tablet preset independently from desktop preset', () => {

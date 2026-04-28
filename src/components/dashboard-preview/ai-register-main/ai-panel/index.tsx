@@ -48,10 +48,10 @@ import { AiWarningBadges } from './ai-warning-badges'
 
 /**
  * M4 review#3 — #2 focus-walk 전진 간격 (ms).
- * AI_APPLY partialBeat.intervalMs(300) 보다 약간 넉넉하게 설정하여 press 비트와
- * 겹치지 않도록 조율한다 (REQ-DASH3-021).
+ * AI_APPLY partialBeat.intervalMs와 같은 tempo로 결과 그룹 focus를 전진시킨다
+ * (REQ-DASH3-021).
  */
-const FOCUS_WALK_INTERVAL_MS = 650
+const FOCUS_WALK_INTERVAL_MS = 1300
 
 export interface AiPanelContainerProps {
   readonly step: PreviewStep
@@ -106,6 +106,7 @@ export function AiPanelContainer({
   const typingActive = step.interactions.typingRhythm?.active === true
   const { displayedText, progress } = useFakeTyping(aiInput.textValue, {
     active: typingActive,
+    totalDurationMs: 3000,
   })
 
   // -------------------------------------------------------------------------
@@ -115,8 +116,7 @@ export function AiPanelContainer({
   //  - AI_APPLY   : focusWalk=['ai-result-departure', ...] → AiResultButtons 그룹 순차.
   //  - INITIAL    : focusWalk=[]                          → 전부 비활성.
   //
-  // 간격은 AI_APPLY 의 partialBeat.intervalMs(300ms) 보다 약간 넉넉한 400ms 로 고정하여
-  // focus-walk 가 press 비트와 겹치지 않게 조율한다.
+  // 간격은 AI_APPLY partialBeat tempo와 맞춰 결과 그룹 focus가 같은 박자로 이동하게 한다.
   // -------------------------------------------------------------------------
   const focusWalkTargets = step.interactions.focusWalk ?? []
   const { currentTargetId: focusedTargetId } = useFocusWalk(focusWalkTargets, {

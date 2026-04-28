@@ -9,7 +9,7 @@
  *  - REQ-DASH3-014: CompanyManagerSection INITIAL 부터 pre-filled 유지
  *  - REQ-DASH3-022: AI_APPLY fill-in 대상에서 CompanyManager 제외
  *  - REQ-DASH3-029: Column-wise Border Pulse (columnPulseTargets)
- *  - REQ-DASH-010 / REQ-DASH-011 (수정): 5단계 → 4단계, duration 500 / 1500 / 1000 / 2500
+ *  - REQ-DASH-010 / REQ-DASH-011 (수정): 5단계 → 4단계, duration 1600 / 4400 / 2800 / 14400
  *
  * SSOT
  *  - Phase 1 스펙 §7 — Step 상태 스냅샷 (4단계 한정)
@@ -17,11 +17,11 @@
  *  - Wireframe decision-log §4-3 — CompanyManager pre-filled
  *
  * 타이밍 (PRD §6-1)
- *   INITIAL   500ms  — 빈 폼 + caret 대기
- *   AI_INPUT  1500ms — #1 fake-typing
- *   AI_EXTRACT 1000ms — #3 button-press + spinner
- *   AI_APPLY  2500ms — partialBeat(1500: 4 × 300ms 간격) + allBeat(800ms 토글/정산)
- *   ────────── 5500ms + hold 500ms = 6000ms 루프
+ *   INITIAL   1600ms  — 빈 폼 + caret 대기
+ *   AI_INPUT  4400ms  — #1 fake-typing
+ *   AI_EXTRACT 2800ms — #3 button-press + spinner
+ *   AI_APPLY  14400ms — result/card focus phase 반복 + partialBeat/allBeat
+ *   ────────── 23200ms 루프
  *
  * Phase 1/2 backward compatibility
  *  - `PREVIEW_STEPS` 이름 유지
@@ -102,6 +102,8 @@ export interface AiApplyFocusPair {
   readonly label: string
 }
 
+export const AI_APPLY_FOCUS_PHASE_HOLD_MS = 1800
+
 /** Phase 1 스펙 §7-2 — AI 상태 스냅샷 */
 export interface AiStateSnapshot {
   readonly activeTab: 'text' | 'image'
@@ -160,8 +162,8 @@ export interface AiApplyPartialBeat {
   }>
   /**
    * #7 dropdown 펼침 연출 (REQ-DASH3-027).
-   * CargoInfoForm 내 `vehicle-type` / `weight` select 중 하나를 600ms 간 펼쳐 하이라이트.
-   * cargo 카테고리 offset(600ms) 이후에 발동되어야 자연스럽다.
+   * CargoInfoForm 내 `vehicle-type` / `weight` select 중 하나를 펼쳐 하이라이트.
+   * cargo 카테고리 offset 이후에 발동되어야 자연스럽다.
    *
    * M3-review#1 — 원래 CargoInfoForm 이 prop 을 받도록 M3-06 에서 선언되었으나,
    * OrderFormContainer 에서 주입이 누락되어 연출이 실질 비활성이던 것을 이 필드로 실활성한다.
@@ -279,13 +281,19 @@ export interface PreviewStep {
 // Constants — durations (PRD §6-1)
 // =============================================================================
 
-const DURATION_INITIAL = 800
-const DURATION_AI_INPUT = 2200
-const DURATION_AI_EXTRACT = 1400
-const DURATION_AI_APPLY = 4200
+const DURATION_INITIAL = 1600
+const DURATION_AI_INPUT = 4400
+const DURATION_AI_EXTRACT = 2800
+const DURATION_AI_APPLY = 14400
 
-const PARTIAL_INTERVAL_MS = 650
-const ALL_BEAT_MS = 1200
+const PARTIAL_INTERVAL_MS = 1300
+const ALL_BEAT_MS = 2400
+
+const FOCUS_DURATION_INITIAL = 600
+const FOCUS_DURATION_AI_INPUT = 1800
+const FOCUS_DURATION_AI_EXTRACT = 1400
+const FOCUS_DURATION_AI_APPLY = 1800
+const FOCUS_DURATION_AI_APPLY_SUBPHASE = 1600
 
 const CATEGORY_ORDER: ReadonlyArray<AiCategoryId> = [
   'departure',
@@ -303,7 +311,7 @@ const PREVIEW_FOCUS_BY_STEP: Readonly<Record<StepId, PreviewFocusMetadata>> = {
       desktop: { scale: 1, x: 0, y: 0 },
       tablet: { scale: 1, x: 0, y: 0 },
     },
-    duration: 300,
+    duration: FOCUS_DURATION_INITIAL,
     reducedMotionFallback: {
       strategy: 'highlight-only',
       targetId: 'ai-preview-frame',
@@ -318,7 +326,7 @@ const PREVIEW_FOCUS_BY_STEP: Readonly<Record<StepId, PreviewFocusMetadata>> = {
       desktop: { scale: 1.22, x: 14, y: 8 },
       tablet: { scale: 1.16, x: 10, y: 6 },
     },
-    duration: 900,
+    duration: FOCUS_DURATION_AI_INPUT,
     reducedMotionFallback: {
       strategy: 'highlight-only',
       targetId: 'ai-input-textarea',
@@ -333,7 +341,7 @@ const PREVIEW_FOCUS_BY_STEP: Readonly<Record<StepId, PreviewFocusMetadata>> = {
       desktop: { scale: 1.18, x: 14, y: 16 },
       tablet: { scale: 1.12, x: 10, y: 12 },
     },
-    duration: 700,
+    duration: FOCUS_DURATION_AI_EXTRACT,
     reducedMotionFallback: {
       strategy: 'highlight-only',
       targetId: 'ai-extract-button',
@@ -348,7 +356,7 @@ const PREVIEW_FOCUS_BY_STEP: Readonly<Record<StepId, PreviewFocusMetadata>> = {
       desktop: { scale: 1.16, x: 12, y: 4 },
       tablet: { scale: 1.1, x: 8, y: 4 },
     },
-    duration: 900,
+    duration: FOCUS_DURATION_AI_APPLY,
     reducedMotionFallback: {
       strategy: 'highlight-only',
       targetId: 'ai-result-group',
@@ -394,7 +402,7 @@ function buildAiApplyFocusMetadata(
     targetId,
     label,
     viewport,
-    duration: 800,
+    duration: FOCUS_DURATION_AI_APPLY_SUBPHASE,
     reducedMotionFallback: {
       strategy: 'highlight-only',
       targetId,
@@ -602,7 +610,7 @@ export function getStepVisibilityState(step: Pick<PreviewStep, 'formState'>): St
 /**
  * AI_APPLY partialBeat 필드 적용 스크립트.
  * REQ-DASH3-022 — companyManager 는 제외한다 (이미 INITIAL 부터 pre-filled).
- * REQ-DASH3-041 — 카테고리 순서 departure → destination → cargo → fare, 300ms 간격.
+ * REQ-DASH3-041 — 카테고리 순서 departure → destination → cargo → fare, PARTIAL_INTERVAL_MS 간격.
  */
 const PARTIAL_FILL_IN_FIELDS: ReadonlyArray<{
   readonly fieldId: string
@@ -620,7 +628,7 @@ const PARTIAL_FILL_IN_FIELDS: ReadonlyArray<{
     value: `${PREVIEW_MOCK_DATA.formData.pickup.date} ${PREVIEW_MOCK_DATA.formData.pickup.time}`,
     delay: 0,
   },
-  // destination (index 1 × 300 = 300ms)
+  // destination (index 1 × PARTIAL_INTERVAL_MS)
   {
     fieldId: 'delivery-address',
     value: PREVIEW_MOCK_DATA.formData.delivery.roadAddress,
@@ -631,7 +639,7 @@ const PARTIAL_FILL_IN_FIELDS: ReadonlyArray<{
     value: `${PREVIEW_MOCK_DATA.formData.delivery.date} ${PREVIEW_MOCK_DATA.formData.delivery.time}`,
     delay: PARTIAL_INTERVAL_MS,
   },
-  // cargo (index 2 × 300 = 600ms)
+  // cargo (index 2 × PARTIAL_INTERVAL_MS)
   {
     fieldId: 'vehicle-type',
     value: PREVIEW_MOCK_DATA.formData.vehicle.type,
@@ -647,7 +655,7 @@ const PARTIAL_FILL_IN_FIELDS: ReadonlyArray<{
     value: PREVIEW_MOCK_DATA.formData.cargo.name,
     delay: PARTIAL_INTERVAL_MS * 2,
   },
-  // fare (index 3 × 300 = 900ms) — fill-in 은 number-rolling 으로 대체 (allBeat 진입 직전)
+  // fare (index 3 × PARTIAL_INTERVAL_MS) — fill-in 은 number-rolling 으로 대체
 ] as const
 
 /** partialBeat 중 각 카테고리 버튼 press 타깃 (안 B) */
@@ -705,11 +713,11 @@ const COLUMN_PULSE_TARGETS: ReadonlyArray<string> = [
 const FORM_REVEAL_TIMELINE: FormRevealTimeline = {
   pickupAt: 0,
   deliveryAt: PARTIAL_INTERVAL_MS,
-  estimateAt: 900,
+  estimateAt: 1800,
   cargoAt: PARTIAL_INTERVAL_MS * 2,
   optionsAt: PARTIAL_INTERVAL_MS * 2,
   fareAt: PARTIAL_INTERVAL_MS * 3,
-  settlementAt: 2200,
+  settlementAt: 4400,
 } as const
 
 // =============================================================================
@@ -841,7 +849,7 @@ const AI_APPLY_STEP: PreviewStep = (() => {
       rippleTargets: PARTIAL_RIPPLE_TARGETS,
       fillInFields: PARTIAL_FILL_IN_FIELDS,
       // M3-review#1 — #7 dropdown 연출 (REQ-DASH3-027) 실활성.
-      // cargo 카테고리 offset(PARTIAL_INTERVAL_MS * 2 = 600ms) 이후 발동.
+      // cargo 카테고리 offset(PARTIAL_INTERVAL_MS * 2) 이후 발동.
       dropdownBeat: {
         targetId: 'vehicle-type',
         triggerAt: PARTIAL_INTERVAL_MS * 2,
