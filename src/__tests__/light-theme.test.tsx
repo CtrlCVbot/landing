@@ -278,6 +278,79 @@ describe('Hero liquid gradient theme token alignment (T-HLG-TOKEN-02)', () => {
 })
 
 // ============================================================================
+// T-HR-M2 — hero-01 reference field theme token alignment
+// ============================================================================
+
+describe('Hero hero-01 field theme token alignment (T-HR-M2)', () => {
+  const HERO_FIELD_TOKENS = [
+    'base',
+    'aurora-rgb',
+    'tide-rgb',
+    'signal-rgb',
+    'warm-rgb',
+    'glass-rgb',
+    'edge-veil',
+    'contrast-veil',
+    'bottom-fade',
+    'canvas-opacity',
+  ] as const
+
+  it.each(HERO_FIELD_TOKENS)(
+    ':root 에 --hero-field-%s token이 정의된다',
+    (token) => {
+      const rootMatch = CSS.match(/:root\s*\{([\s\S]*?)\r?\n\}/)
+      expect(rootMatch).not.toBeNull()
+      expect(rootMatch![1]).toMatch(
+        new RegExp(`--hero-field-${token.replace(/-/g, '\\-')}\\s*:`),
+      )
+    },
+  )
+
+  it.each(HERO_FIELD_TOKENS)(
+    '[data-theme="dark"] 에 --hero-field-%s token이 정의된다',
+    (token) => {
+      const darkMatch = CSS.match(/\[data-theme="dark"\]\s*\{([\s\S]*?)\r?\n\}/)
+      expect(darkMatch).not.toBeNull()
+      expect(darkMatch![1]).toMatch(
+        new RegExp(`--hero-field-${token.replace(/-/g, '\\-')}\\s*:`),
+      )
+    },
+  )
+
+  it('hero field palette는 cyan과 warm accent를 포함한다', () => {
+    const rootMatch = CSS.match(/:root\s*\{([\s\S]*?)\r?\n\}/)
+    const darkMatch = CSS.match(/\[data-theme="dark"\]\s*\{([\s\S]*?)\r?\n\}/)
+    expect(rootMatch).not.toBeNull()
+    expect(darkMatch).not.toBeNull()
+    expect(rootMatch![1]).toMatch(/--hero-field-signal-rgb:\s*14\s+165\s+233/)
+    expect(rootMatch![1]).toMatch(/--hero-field-warm-rgb:\s*168\s+85\s+247/)
+    expect(darkMatch![1]).toMatch(/--hero-field-signal-rgb:\s*30\s+64\s+175/)
+    expect(darkMatch![1]).toMatch(/--hero-field-warm-rgb:\s*168\s+85\s+247/)
+  })
+
+  it('dark hero field palette는 purple 중심이고 cyan/warm은 보조값이다', () => {
+    const darkMatch = CSS.match(/\[data-theme="dark"\]\s*\{([\s\S]*?)\r?\n\}/)
+    expect(darkMatch).not.toBeNull()
+    const darkBody = darkMatch![1]
+
+    expect(darkBody).toMatch(/--hero-field-base:\s*#05030a/)
+    expect(darkBody).toMatch(/--hero-field-aurora-rgb:\s*126\s+34\s+206/)
+    expect(darkBody).toMatch(/--hero-field-tide-rgb:\s*88\s+80\s+236/)
+    expect(darkBody).toMatch(/--hero-field-signal-rgb:\s*30\s+64\s+175/)
+    expect(darkBody).toMatch(/--hero-field-warm-rgb:\s*168\s+85\s+247/)
+    expect(darkBody).toMatch(/--hero-field-bottom-fade:\s*rgba\(5,\s*3,\s*10,\s*0\.96\)/)
+  })
+
+  it('hero field CSS fallback와 reduced-motion static state가 정의된다', () => {
+    expect(CSS).toMatch(/\.hero-liquid-gradient-background__canvas/)
+    expect(CSS).toMatch(/\.hero-liquid-gradient-background__fallback/)
+    expect(CSS).toMatch(/\.hero-content-veil/)
+    expect(CSS).toMatch(/\.hero-bottom-fade/)
+    expect(CSS).toMatch(/@media\s*\(prefers-reduced-motion:\s*reduce\)[\s\S]*\.hero-liquid-gradient-background__fallback[\s\S]*animation:\s*none\s*!important/)
+  })
+})
+
+// ============================================================================
 // T-THEME-02 — layout.tsx ThemeProvider 주입 + next-themes dependency
 // ============================================================================
 

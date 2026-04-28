@@ -30,6 +30,11 @@
   --color-hero-gradient-primary: var(--hero-gradient-primary);
   --color-hero-gradient-secondary: var(--hero-gradient-secondary);
   --color-hero-gradient-highlight: var(--hero-gradient-highlight);
+  --color-hero-field-base: var(--hero-field-base);
+  --color-hero-field-aurora: rgb(var(--hero-field-aurora-rgb));
+  --color-hero-field-tide: rgb(var(--hero-field-tide-rgb));
+  --color-hero-field-signal: rgb(var(--hero-field-signal-rgb));
+  --color-hero-field-warm: rgb(var(--hero-field-warm-rgb));
   --color-accent: var(--landing-accent);
   --color-accent-foreground: var(--landing-accent-foreground);
   --radius-lg: 0.5rem;
@@ -91,6 +96,16 @@
   --hero-gradient-surface: color-mix(in oklab, var(--landing-background) 72%, transparent);
   --hero-gradient-opacity: 0.72;
   --hero-gradient-blur: 48px;
+  --hero-field-base: #f8fafc;
+  --hero-field-aurora-rgb: 139 92 246;
+  --hero-field-tide-rgb: 99 102 241;
+  --hero-field-signal-rgb: 14 165 233;
+  --hero-field-warm-rgb: 168 85 247;
+  --hero-field-glass-rgb: 226 232 240;
+  --hero-field-edge-veil: rgba(248, 250, 252, 0.68);
+  --hero-field-contrast-veil: rgba(255, 255, 255, 0.66);
+  --hero-field-bottom-fade: rgba(248, 250, 252, 0.94);
+  --hero-field-canvas-opacity: 0.72;
 }
 
 /* ----------------------------------------------------------------------------
@@ -119,54 +134,92 @@
   --hero-gradient-surface: color-mix(in oklab, var(--landing-background) 24%, transparent);
   --hero-gradient-opacity: 0.86;
   --hero-gradient-blur: 60px;
+  --hero-field-base: #05030a;
+  --hero-field-aurora-rgb: 126 34 206;
+  --hero-field-tide-rgb: 88 80 236;
+  --hero-field-signal-rgb: 30 64 175;
+  --hero-field-warm-rgb: 168 85 247;
+  --hero-field-glass-rgb: 10 8 24;
+  --hero-field-edge-veil: rgba(3, 2, 8, 0.72);
+  --hero-field-contrast-veil: rgba(0, 0, 0, 0.48);
+  --hero-field-bottom-fade: rgba(5, 3, 10, 0.96);
+  --hero-field-canvas-opacity: 0.86;
 }
 
 @layer components {
   .hero-liquid-gradient-background {
-    opacity: var(--hero-gradient-opacity);
-    filter: blur(var(--hero-gradient-blur));
+    background:
+      linear-gradient(135deg, var(--hero-field-base) 0%, rgb(var(--hero-field-glass-rgb) / 0.36) 48%, var(--hero-field-base) 100%);
     transform: translateZ(0);
   }
 
-  .hero-liquid-gradient-background__field {
+  .hero-liquid-gradient-background__canvas {
     position: absolute;
     inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: var(--hero-field-canvas-opacity);
+  }
+
+  .hero-liquid-gradient-background__fallback,
+  .hero-liquid-gradient-background__field {
+    position: absolute;
+    inset: -9%;
     background:
-      radial-gradient(circle at 16% 24%, var(--hero-gradient-primary) 0, transparent 32%),
-      radial-gradient(circle at 80% 18%, var(--hero-gradient-secondary) 0, transparent 30%),
-      radial-gradient(circle at 52% 76%, var(--hero-gradient-highlight) 0, transparent 36%),
-      linear-gradient(135deg, transparent 0%, var(--hero-gradient-surface) 52%, transparent 100%);
-    animation: hero-liquid-gradient-drift 9s ease-in-out infinite alternate;
-    transform: scale(1.14) translate3d(0, 0, 0);
+      radial-gradient(circle at 18% 24%, rgb(var(--hero-field-warm-rgb) / 0.16) 0, transparent 30%),
+      radial-gradient(circle at 78% 18%, rgb(var(--hero-field-signal-rgb) / 0.18) 0, transparent 34%),
+      radial-gradient(circle at 44% 48%, rgb(var(--hero-field-aurora-rgb) / 0.56) 0, transparent 40%),
+      radial-gradient(circle at 68% 64%, rgb(var(--hero-field-tide-rgb) / 0.48) 0, transparent 37%),
+      linear-gradient(180deg, transparent 0%, var(--hero-field-bottom-fade) 92%),
+      linear-gradient(135deg, rgb(var(--hero-field-glass-rgb) / 0.36), transparent 56%);
+    animation: hero-liquid-gradient-drift 11s ease-in-out infinite alternate;
+    filter: blur(var(--hero-gradient-blur)) saturate(132%);
+    transform: scale(1.08) translate3d(0, 0, 0);
     will-change: transform;
+  }
+
+  .hero-content-veil {
+    background: radial-gradient(ellipse at center, var(--hero-field-contrast-veil) 0%, transparent 68%);
+    filter: blur(22px);
+  }
+
+  .hero-bottom-fade {
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      var(--hero-field-bottom-fade) 100%
+    );
   }
 
   @keyframes hero-liquid-gradient-drift {
     0% {
-      transform: scale(1.14) translate3d(-5%, -3%, 0) rotate(-2deg);
+      transform: scale(1.08) translate3d(-4%, -3%, 0) rotate(-2deg);
     }
 
     50% {
-      transform: scale(1.24) translate3d(4%, 3%, 0) rotate(4deg);
+      transform: scale(1.18) translate3d(3%, 3%, 0) rotate(3deg);
     }
 
     100% {
-      transform: scale(1.18) translate3d(3%, -5%, 0) rotate(-3deg);
+      transform: scale(1.12) translate3d(2%, -4%, 0) rotate(-3deg);
     }
   }
 
   @media (max-width: 640px) {
     .hero-liquid-gradient-background {
       --hero-gradient-blur: 38px;
-      opacity: calc(var(--hero-gradient-opacity) * 0.72);
+      --hero-field-canvas-opacity: 0.66;
     }
 
+    .hero-liquid-gradient-background__fallback,
     .hero-liquid-gradient-background__field {
-      transform: scale(0.92) translate3d(0, 0, 0);
+      inset: -4%;
+      transform: scale(0.96) translate3d(0, 0, 0);
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .hero-liquid-gradient-background__fallback,
     .hero-liquid-gradient-background__field {
       animation: none !important;
       transform: none !important;

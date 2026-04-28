@@ -18,7 +18,7 @@
  */
 
 import { render, screen } from '@testing-library/react'
-import { describe, it, expect, vi } from 'vitest'
+import { afterAll, beforeAll, describe, it, expect, vi } from 'vitest'
 
 import { Hero } from '@/components/sections/hero'
 
@@ -63,6 +63,18 @@ vi.mock('@/components/dashboard-preview/dashboard-preview', () => ({
     <div data-testid="dashboard-preview">DashboardPreview</div>
   ),
 }))
+
+let getContextSpy: { mockRestore: () => void }
+
+beforeAll(() => {
+  getContextSpy = vi
+    .spyOn(HTMLCanvasElement.prototype, 'getContext')
+    .mockImplementation(() => null) as unknown as { mockRestore: () => void }
+})
+
+afterAll(() => {
+  getContextSpy.mockRestore()
+})
 
 // ---------------------------------------------------------------------------
 // Tests
@@ -148,9 +160,55 @@ describe('Hero — liquid gradient background (T-HLG-TEST-01)', () => {
     expect(previewOuter?.className).toContain('z-10')
   })
 
-  it('기존 GradientBlob fallback을 보존한다', () => {
+  it('Canvas 2D field와 CSS fallback layer를 함께 렌더링한다', () => {
     render(<Hero />)
 
-    expect(screen.getAllByTestId('gradient-blob')).toHaveLength(2)
+    const background = screen.getByTestId('hero-liquid-gradient-background')
+    const canvas = screen.getByTestId('hero-liquid-gradient-canvas')
+    const fallback = screen.getByTestId('hero-liquid-gradient-fallback')
+
+    expect(background).toHaveAttribute(
+      'data-implementation-route',
+      'canvas-2d-css-fallback',
+    )
+    expect(canvas.tagName).toBe('CANVAS')
+    expect(canvas).toHaveAttribute('aria-hidden', 'true')
+    expect(fallback.className).toContain(
+      'hero-liquid-gradient-background__fallback',
+    )
+  })
+
+  it('Hero content contrast veil을 별도 card 없이 렌더링한다', () => {
+    render(<Hero />)
+
+    const veil = screen.getByTestId('hero-content-veil')
+    expect(veil).toHaveAttribute('aria-hidden', 'true')
+    expect(veil.className).toContain('hero-content-veil')
+    expect(veil.className).toContain('pointer-events-none')
+    expect(veil.className).not.toContain('rounded')
+  })
+
+  it('Hero 하단 transition fade를 decorative layer로 렌더링한다', () => {
+    render(<Hero />)
+
+    const fade = screen.getByTestId('hero-bottom-fade')
+    expect(fade).toHaveAttribute('aria-hidden', 'true')
+    expect(fade.className).toContain('hero-bottom-fade')
+    expect(fade.className).toContain('pointer-events-none')
+  })
+
+  it('reference controls와 custom cursor를 production DOM에 노출하지 않는다', () => {
+    render(<Hero />)
+
+    expect(screen.queryByText(/Color Adjuster/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/Export Palette/i)).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /Scheme/i })).not.toBeInTheDocument()
+    expect(document.querySelector('.custom-cursor')).toBeNull()
+  })
+
+  it('Hero에서는 old standalone GradientBlob fallback을 제거한다', () => {
+    render(<Hero />)
+
+    expect(screen.queryAllByTestId('gradient-blob')).toHaveLength(0)
   })
 })
