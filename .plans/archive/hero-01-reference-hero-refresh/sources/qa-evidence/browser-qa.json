@@ -1,0 +1,383 @@
+{
+  "baseUrl": "http://localhost:3103/",
+  "generatedAt": "2026-04-28T00:29:26.229Z",
+  "failureCount": 0,
+  "results": [
+    {
+      "name": "desktop-dark",
+      "url": "http://localhost:3103/",
+      "theme": "dark",
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "scrollWidth": 1440,
+      "overflowX": 0,
+      "heroHeight": 1100,
+      "hasFade": true,
+      "fadeAriaHidden": "true",
+      "fadePointerEvents": "none",
+      "fadeBackground": "linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(5, 3, 10, 0.96) 100%)",
+      "ctaPreviewOverlap": false,
+      "vars": {
+        "base": "#05030a",
+        "aurora": "126 34 206",
+        "tide": "88 80 236",
+        "signal": "30 64 175",
+        "warm": "168 85 247",
+        "bottomFade": "rgba(5, 3, 10, .96)"
+      },
+      "canvasStats": {
+        "readable": true,
+        "width": 1440,
+        "height": 1100,
+        "unique": 5,
+        "brightness": [
+          75,
+          143,
+          21,
+          96,
+          60
+        ],
+        "samples": [
+          [
+            71,
+            22,
+            133,
+            255
+          ],
+          [
+            139,
+            36,
+            255,
+            255
+          ],
+          [
+            16,
+            10,
+            38,
+            255
+          ],
+          [
+            75,
+            41,
+            172,
+            255
+          ],
+          [
+            41,
+            34,
+            106,
+            255
+          ]
+        ]
+      },
+      "console": [
+        "warning: Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently"
+      ],
+      "reducedMotion": false,
+      "failures": []
+    },
+    {
+      "name": "desktop-light",
+      "url": "http://localhost:3103/",
+      "theme": "light",
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "scrollWidth": 1440,
+      "overflowX": 0,
+      "heroHeight": 1100,
+      "hasFade": true,
+      "fadeAriaHidden": "true",
+      "fadePointerEvents": "none",
+      "fadeBackground": "linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(248, 250, 252, 0.94) 100%)",
+      "ctaPreviewOverlap": false,
+      "vars": {
+        "base": "#f8fafc",
+        "aurora": "139 92 246",
+        "tide": "99 102 241",
+        "signal": "14 165 233",
+        "warm": "168 85 247",
+        "bottomFade": "rgba(248, 250, 252, .94)"
+      },
+      "canvasStats": {
+        "readable": true,
+        "width": 1440,
+        "height": 1100,
+        "unique": 5,
+        "brightness": [
+          207,
+          166,
+          185,
+          172,
+          108
+        ],
+        "samples": [
+          [
+            210,
+            191,
+            220,
+            255
+          ],
+          [
+            144,
+            99,
+            255,
+            255
+          ],
+          [
+            179,
+            183,
+            194,
+            255
+          ],
+          [
+            144,
+            155,
+            218,
+            255
+          ],
+          [
+            87,
+            85,
+            153,
+            255
+          ]
+        ]
+      },
+      "console": [
+        "warning: Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently"
+      ],
+      "reducedMotion": false,
+      "failures": []
+    },
+    {
+      "name": "mobile-dark",
+      "url": "http://localhost:3103/",
+      "theme": "dark",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "scrollWidth": 390,
+      "overflowX": 0,
+      "heroHeight": 844,
+      "hasFade": true,
+      "fadeAriaHidden": "true",
+      "fadePointerEvents": "none",
+      "fadeBackground": "linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(5, 3, 10, 0.96) 100%)",
+      "ctaPreviewOverlap": false,
+      "vars": {
+        "base": "#05030a",
+        "aurora": "126 34 206",
+        "tide": "88 80 236",
+        "signal": "30 64 175",
+        "warm": "168 85 247",
+        "bottomFade": "rgba(5, 3, 10, .96)"
+      },
+      "canvasStats": {
+        "readable": true,
+        "width": 390,
+        "height": 844,
+        "unique": 5,
+        "brightness": [
+          45,
+          177,
+          18,
+          82,
+          74
+        ],
+        "samples": [
+          [
+            45,
+            13,
+            76,
+            255
+          ],
+          [
+            212,
+            65,
+            255,
+            255
+          ],
+          [
+            15,
+            9,
+            31,
+            255
+          ],
+          [
+            85,
+            20,
+            142,
+            255
+          ],
+          [
+            60,
+            36,
+            127,
+            255
+          ]
+        ]
+      },
+      "console": [
+        "warning: Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently"
+      ],
+      "reducedMotion": false,
+      "failures": []
+    },
+    {
+      "name": "mobile-light",
+      "url": "http://localhost:3103/",
+      "theme": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "scrollWidth": 390,
+      "overflowX": 0,
+      "heroHeight": 844,
+      "hasFade": true,
+      "fadeAriaHidden": "true",
+      "fadePointerEvents": "none",
+      "fadeBackground": "linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(248, 250, 252, 0.94) 100%)",
+      "ctaPreviewOverlap": false,
+      "vars": {
+        "base": "#f8fafc",
+        "aurora": "139 92 246",
+        "tide": "99 102 241",
+        "signal": "14 165 233",
+        "warm": "168 85 247",
+        "bottomFade": "rgba(248, 250, 252, .94)"
+      },
+      "canvasStats": {
+        "readable": true,
+        "width": 390,
+        "height": 844,
+        "unique": 5,
+        "brightness": [
+          153,
+          213,
+          183,
+          125,
+          107
+        ],
+        "samples": [
+          [
+            145,
+            129,
+            186,
+            255
+          ],
+          [
+            231,
+            152,
+            255,
+            255
+          ],
+          [
+            179,
+            176,
+            193,
+            255
+          ],
+          [
+            109,
+            78,
+            189,
+            255
+          ],
+          [
+            88,
+            76,
+            157,
+            255
+          ]
+        ]
+      },
+      "console": [
+        "warning: Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently"
+      ],
+      "reducedMotion": false,
+      "failures": []
+    },
+    {
+      "name": "desktop-reduced-motion",
+      "url": "http://localhost:3103/",
+      "theme": "dark",
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "scrollWidth": 1440,
+      "overflowX": 0,
+      "heroHeight": 1100,
+      "hasFade": true,
+      "fadeAriaHidden": "true",
+      "fadePointerEvents": "none",
+      "fadeBackground": "linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(5, 3, 10, 0.96) 100%)",
+      "ctaPreviewOverlap": false,
+      "vars": {
+        "base": "#05030a",
+        "aurora": "126 34 206",
+        "tide": "88 80 236",
+        "signal": "30 64 175",
+        "warm": "168 85 247",
+        "bottomFade": "rgba(5, 3, 10, .96)"
+      },
+      "canvasStats": {
+        "readable": true,
+        "width": 1440,
+        "height": 1100,
+        "unique": 5,
+        "brightness": [
+          36,
+          23,
+          23,
+          67,
+          21
+        ],
+        "samples": [
+          [
+            24,
+            16,
+            68,
+            255
+          ],
+          [
+            19,
+            9,
+            40,
+            255
+          ],
+          [
+            20,
+            8,
+            42,
+            255
+          ],
+          [
+            52,
+            30,
+            120,
+            255
+          ],
+          [
+            14,
+            12,
+            36,
+            255
+          ]
+        ]
+      },
+      "console": [
+        "warning: You have Reduced Motion enabled on your device. Animations may not appear as expected.",
+        "warning: Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently"
+      ],
+      "reducedMotion": true,
+      "failures": []
+    }
+  ]
+}

@@ -20,7 +20,7 @@
 | IDEA-20260424-002 | F4 레이아웃 정비 + Hit-Area 재정렬 | feature | archived | 2026-04-24 | `archive/f4-layout-hit-area-realignment/sources/ideas` | [링크](../archive/f4-layout-hit-area-realignment/sources/ideas/IDEA-20260424-002.md) | [EPIC-20260422-001](../epics/20-active/EPIC-20260422-001/00-epic-brief.md) |
 | IDEA-20260427-001 | Hero 섹션 interactive liquid gradient 배경 도입 | improvement | archived | 2026-04-27 | `archive/hero-liquid-gradient-background/sources/ideas` | [링크](../archive/hero-liquid-gradient-background/sources/ideas/IDEA-20260427-001.md) | - |
 | IDEA-20260427-002 | F3 옵션↔추가요금 파생 로직 | feature | screened | 2026-04-27 | `10-screening` | [링크](10-screening/IDEA-20260427-002.md) | [EPIC-20260422-001](../epics/20-active/EPIC-20260422-001/00-epic-brief.md) |
-| IDEA-20260427-004 | hero-01 레퍼런스 기반 Hero 섹션 재개선 | improvement | approved | 2026-04-27 | `20-approved` | [링크](20-approved/IDEA-20260427-004.md) | - |
+| IDEA-20260427-004 | hero-01 레퍼런스 기반 Hero 섹션 재개선 | improvement | archived | 2026-04-27 | `archive/hero-01-reference-hero-refresh/sources/ideas` | [링크](../archive/hero-01-reference-hero-refresh/sources/ideas/IDEA-20260427-004.md) | - |
 
 ---
 
@@ -63,3 +63,4 @@
 | 2026-04-28 | IDEA-20260427-004 PRD 작성 및 PRD review 완료 — PASS with noted follow-up, 다음 단계 `/plan-wireframe` |
 | 2026-04-28 | IDEA-20260427-004 wireframe 작성 및 review 완료 — Desktop/Tablet/Mobile/Reduced motion, 다음 단계 `/plan-bridge` |
 | 2026-04-28 | IDEA-20260427-004 `/plan-bridge` 완료 — active feature context/package 생성, 다음 단계 `/dev-run` |
+| 2026-04-28 | IDEA-20260427-004 상태 `approved → archived` — Hero 색감 개선 구현, 사용자 승인, `c06cd06`/`24afa8a` push, P8 archive bundle 생성 |
