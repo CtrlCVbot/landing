@@ -2,6 +2,7 @@
 
 import { useRef, useState, useEffect } from 'react'
 import { cn } from '@/lib/utils'
+import type { PreviewFocusMetadata } from '@/lib/preview-steps'
 
 const CHROME_DOT_COLORS = ['bg-red-500', 'bg-yellow-500', 'bg-green-500'] as const
 
@@ -10,6 +11,9 @@ const DEFAULT_SCALE_FACTOR = 0.45
 interface PreviewChromeProps {
   readonly children: React.ReactNode
   readonly scaleFactor?: number
+  readonly focus?: PreviewFocusMetadata
+  readonly viewport?: keyof PreviewFocusMetadata['viewport']
+  readonly reducedMotion?: boolean
   readonly className?: string
 }
 
@@ -34,9 +38,15 @@ function ChromeHeader() {
 function ScaledContent({
   children,
   scaleFactor,
+  focus,
+  viewport,
+  reducedMotion,
 }: {
   readonly children: React.ReactNode
   readonly scaleFactor: number
+  readonly focus?: PreviewFocusMetadata
+  readonly viewport: keyof PreviewFocusMetadata['viewport']
+  readonly reducedMotion: boolean
 }) {
   const innerRef = useRef<HTMLDivElement>(null)
   const [scaledHeight, setScaledHeight] = useState<number | undefined>(
@@ -74,8 +84,61 @@ function ScaledContent({
           width: `${100 / scaleFactor}%`,
         }}
       >
-        {children}
+        {focus ? (
+          <FocusViewport
+            focus={focus}
+            viewport={viewport}
+            reducedMotion={reducedMotion}
+          >
+            {children}
+          </FocusViewport>
+        ) : (
+          children
+        )}
       </div>
+    </div>
+  )
+}
+
+function FocusViewport({
+  children,
+  focus,
+  viewport,
+  reducedMotion,
+}: {
+  readonly children: React.ReactNode
+  readonly focus: PreviewFocusMetadata
+  readonly viewport: keyof PreviewFocusMetadata['viewport']
+  readonly reducedMotion: boolean
+}) {
+  const preset = focus.viewport[viewport]
+  const transform = reducedMotion
+    ? 'translate3d(0%, 0%, 0) scale(1)'
+    : `translate3d(${preset.x}%, ${preset.y}%, 0) scale(${preset.scale})`
+
+  return (
+    <div
+      data-testid="focus-viewport"
+      data-focus-step={focus.stepId}
+      data-focus-target={focus.targetId}
+      data-focus-reduced-motion={reducedMotion ? 'true' : 'false'}
+      className="relative"
+      style={{
+        transform,
+        transformOrigin: 'top left',
+        transitionDuration: reducedMotion ? '0ms' : `${focus.duration}ms`,
+        transitionProperty: 'transform',
+        transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)',
+        willChange: reducedMotion ? 'auto' : 'transform',
+      }}
+    >
+      {children}
+      <div
+        data-testid="focus-highlight-layer"
+        data-focus-target={focus.targetId}
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-2 rounded-xl ring-2 ring-primary/35 ring-offset-0"
+      />
     </div>
   )
 }
@@ -83,6 +146,9 @@ function ScaledContent({
 export function PreviewChrome({
   children,
   scaleFactor = DEFAULT_SCALE_FACTOR,
+  focus,
+  viewport = 'desktop',
+  reducedMotion = false,
   className,
 }: PreviewChromeProps) {
   return (
@@ -94,7 +160,14 @@ export function PreviewChrome({
       )}
     >
       <ChromeHeader />
-      <ScaledContent scaleFactor={scaleFactor}>{children}</ScaledContent>
+      <ScaledContent
+        scaleFactor={scaleFactor}
+        focus={focus}
+        viewport={viewport}
+        reducedMotion={reducedMotion}
+      >
+        {children}
+      </ScaledContent>
     </div>
   )
 }

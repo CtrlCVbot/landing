@@ -224,7 +224,14 @@ export function DashboardPreview({ className }: DashboardPreviewProps) {
       aria-label="AI 화물 등록 워크플로우 데모 미리보기"
     >
       <div className="relative">
-        <PreviewChrome scaleFactor={scaleFactor}>{previewContent}</PreviewChrome>
+        <PreviewChrome
+          scaleFactor={scaleFactor}
+          focus={step.focus}
+          viewport={viewport}
+          reducedMotion={prefersReducedMotion}
+        >
+          {previewContent}
+        </PreviewChrome>
       </div>
       <StepIndicator
         totalSteps={PREVIEW_STEPS.length}

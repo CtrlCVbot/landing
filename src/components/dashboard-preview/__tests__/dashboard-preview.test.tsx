@@ -284,6 +284,70 @@ describe('DashboardPreview — Phase 3 Feature flag', () => {
     })
   })
 
+  describe('Dash preview focus viewport (TC-FZ-VIS-01/02/03/04)', () => {
+    it('desktop starts with INITIAL focus metadata in PreviewChrome', () => {
+      setDesktop()
+      render(<DashboardPreview />)
+
+      const focusViewport = screen.getByTestId('focus-viewport')
+      expect(focusViewport).toHaveAttribute('data-focus-step', 'INITIAL')
+      expect(focusViewport).toHaveAttribute(
+        'data-focus-target',
+        'ai-preview-frame',
+      )
+      expect(focusViewport.style.transform).toBe(
+        'translate3d(0%, 0%, 0) scale(1)',
+      )
+    })
+
+    it('StepIndicator click moves focus metadata to the AI_INPUT target', () => {
+      setDesktop()
+      render(<DashboardPreview />)
+
+      fireEvent.click(screen.getByRole('tab', { name: 'Step 2' }))
+
+      const focusViewport = screen.getByTestId('focus-viewport')
+      expect(focusViewport).toHaveAttribute('data-focus-step', 'AI_INPUT')
+      expect(focusViewport).toHaveAttribute(
+        'data-focus-target',
+        'ai-input-textarea',
+      )
+      expect(focusViewport.style.transform).toBe(
+        'translate3d(-16%, 8%, 0) scale(1.22)',
+      )
+    })
+
+    it('tablet keeps base scaleFactor 0.40 and uses the tablet focus preset', () => {
+      setTablet()
+      render(<DashboardPreview />)
+
+      fireEvent.click(screen.getByRole('tab', { name: 'Step 3' }))
+
+      expect(screen.getByTestId('scaled-content-inner').style.transform).toBe(
+        'scale(0.4)',
+      )
+      expect(screen.getByTestId('focus-viewport').style.transform).toBe(
+        'translate3d(-10%, 12%, 0) scale(1.12)',
+      )
+    })
+
+    it('reduced motion disables large focus pan and zoom', () => {
+      mediaQueryResults = {
+        '(prefers-reduced-motion: reduce)': true,
+        '(max-width: 767px)': false,
+        '(min-width: 768px) and (max-width: 1023px)': false,
+      }
+
+      render(<DashboardPreview />)
+
+      const focusViewport = screen.getByTestId('focus-viewport')
+      expect(focusViewport).toHaveAttribute('data-focus-reduced-motion', 'true')
+      expect(focusViewport.style.transform).toBe(
+        'translate3d(0%, 0%, 0) scale(1)',
+      )
+    })
+  })
+
   describe('F4 overlay anchor', () => {
     it('interactive overlay is anchored inside scaled content and uses unscaled bounds', () => {
       setDesktop()
