@@ -51,8 +51,18 @@
 | tablet 768px header CTA | [x] | `output/playwright/f1-brand-tablet-768.png` |
 | mobile 375px menu CTA | [x] | `output/playwright/f1-brand-mobile-375.png` |
 
-## 6. Dev Notes
+## 6. Dev Verify
+
+| 항목 | 상태 | Evidence |
+|---|:---:|---|
+| fresh `/dev-verify` 실행 | [x] | `03-dev-notes/dev-verification-report.md` |
+| desktop/tablet/mobile browser QA 재확인 | [x] | `output/playwright/f1-brand-dev-verify-summary.json` |
+| service URL 200 응답 재확인 | [x] | `https://mm-broker-test.vercel.app/` |
+| archive gate 준비 | [x] | `/plan-archive f1-optic-brand-cta` |
+
+## 7. Dev Notes
 
 - [x] 서비스 URL 공개 가능성 확인 결과 기록
 - [x] TASK별 결과가 `08-dev-tasks.md`에 갱신됨
 - [x] 구현 요약이 `03-dev-notes/dev-output-summary.md`에 기록됨
+- [x] `/dev-verify` fresh verification report가 `03-dev-notes/dev-verification-report.md`에 기록됨

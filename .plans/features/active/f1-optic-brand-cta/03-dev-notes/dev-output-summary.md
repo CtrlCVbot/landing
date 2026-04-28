@@ -1,6 +1,6 @@
 # Dev Output Summary - F1 브랜드, 로고, CTA 최소 반영
 
-> `/dev-run .plans/features/active/f1-optic-brand-cta/` 결과 요약.
+> `/dev-run` 구현 결과와 `/dev-verify` fresh verification 요약.
 
 ---
 
@@ -35,6 +35,7 @@
 | `pnpm build` | pass | production build 성공 |
 | Forbidden diff check | pass | dashboard-preview, mock-data, preview-steps, globals.css, package files 변경 없음 |
 | Service URL | pass | `https://mm-broker-test.vercel.app/` 응답 확인 |
+| `/dev-verify` | pass | fresh verification report 생성 |
 
 ## 4. Browser QA
 
@@ -44,11 +45,12 @@
 | 768px tablet | pass | `output/playwright/f1-brand-tablet-768.png` |
 | 375px mobile menu | pass | `output/playwright/f1-brand-mobile-375.png` |
 
-`output/playwright/f1-brand-qa-summary.json`에 CTA bounding box, external link attributes, menu close 결과를 기록했다.
+`output/playwright/f1-brand-qa-summary.json`과 `output/playwright/f1-brand-dev-verify-summary.json`에 CTA bounding box, external link attributes, menu close 결과를 기록했다.
 
 ## 5. 남은 항목
 
 | 항목 | 상태 | 메모 |
 |---|---|---|
 | 로고 asset 최종 승인 | deferred | F5 release gate |
-| `/dev-verify` | pending | 다음 단계에서 fresh verification 권장 |
+| `/dev-verify` | done | [dev-verification-report](./dev-verification-report.md) |
+| `/plan-archive` | next | F1 산출물 archive bundle 생성 |

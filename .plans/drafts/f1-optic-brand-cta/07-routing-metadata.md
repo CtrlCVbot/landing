@@ -17,7 +17,8 @@
 | Bridge | `done` |
 | Dev feature | `done` |
 | Dev run | `done` |
-| Recommended next | `/dev-verify .plans/features/active/f1-optic-brand-cta/` |
+| Dev verify | `done` |
+| Recommended next | `/plan-archive f1-optic-brand-cta` |
 
 ## 근거
 
@@ -28,5 +29,5 @@
 
 ## 다음 게이트
 
-1. `/dev-verify .plans/features/active/f1-optic-brand-cta/`
-2. 검증 통과 후 `/plan-archive f1-optic-brand-cta`
+1. `/plan-archive f1-optic-brand-cta`
+2. F2 IDEA 등록 전 F1의 브랜드/CTA 상수를 기준점으로 참조

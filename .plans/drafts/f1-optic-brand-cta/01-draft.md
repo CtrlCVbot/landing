@@ -4,7 +4,7 @@
 > **IDEA**: [IDEA-20260428-001](../../ideas/20-approved/IDEA-20260428-001.md)
 > **Epic**: [EPIC-20260428-001](../../epics/10-planning/EPIC-20260428-001/00-epic-brief.md) (Phase A, F1)
 > **작성일**: 2026-04-28
-> **상태**: implemented
+> **상태**: verified
 > **Lane**: Lite
 
 ---
@@ -95,8 +95,8 @@
 
 ## 8. 다음 단계
 
-1. 구현이 완료되었으므로 `/dev-verify .plans/features/active/f1-optic-brand-cta/`로 fresh verification을 진행한다.
-2. 검증 통과 후 `/plan-archive f1-optic-brand-cta`로 산출물을 정리한다.
+1. `/dev-verify .plans/features/active/f1-optic-brand-cta/`가 통과했으므로 `/plan-archive f1-optic-brand-cta`로 산출물을 정리한다.
+2. F2 IDEA 등록 전 F1의 브랜드/CTA 상수와 release checklist를 기준점으로 참조한다.
 
 ## 9. 변경 이력
 
@@ -107,3 +107,4 @@
 | 2026-04-28 | Bridge context 생성 — 다음 단계 `/dev-feature` |
 | 2026-04-28 | Feature Package 생성 — 다음 단계 `/dev-run` |
 | 2026-04-28 | `/dev-run` 구현 완료 — 다음 단계 `/dev-verify` |
+| 2026-04-28 | `/dev-verify` 통과 — 다음 단계 `/plan-archive` |

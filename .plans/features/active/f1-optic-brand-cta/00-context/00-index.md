@@ -40,7 +40,9 @@
 | Hybrid | `false` |
 | Bridge status | `done` |
 | Dev feature status | `done` |
-| Recommended next | `/dev-run .plans/features/active/f1-optic-brand-cta/` |
+| Dev run status | `done` |
+| Dev verify status | `done` |
+| Recommended next | `/plan-archive f1-optic-brand-cta` |
 
 ## Package 문서
 
@@ -59,11 +61,12 @@
 | 파일 | 역할 |
 |---|---|
 | [dev-output-summary.md](../03-dev-notes/dev-output-summary.md) | `/dev-run` 구현 결과와 검증 요약 |
+| [dev-verification-report.md](../03-dev-notes/dev-verification-report.md) | `/dev-verify` fresh verification report |
 
 ## 유지해야 할 확인 항목
 
 | 항목 | Severity | Action |
 |---|---|---|
-| 서비스 URL 공개 가능성 | medium | `needs-verification` |
+| 서비스 URL 공개 가능성 | medium | `verified` |
 | 로고 자산 최종 승인 | medium | `queued` |
-| 모바일 CTA 배치 | low | `queued` |
+| 모바일 CTA 배치 | low | `verified` |
