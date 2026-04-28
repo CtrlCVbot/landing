@@ -9,3 +9,5 @@
 | 2026-04-28 | `OPTIC 바로가기`는 실제 서비스 이동 CTA로 정의한다 | `04-copy-and-cta-guide.md` | `서비스 테스트` 같은 내부 검증 문구를 쓰지 않음 |
 | 2026-04-28 | 매출 정산 번들을 MVP 중심으로 둔다 | `03-animation-section-manual.md`, `05-final-recommendation-and-review.md` | 매입 정산 상세 플로우는 확장 Feature 후보로 보류 |
 | 2026-04-28 | 로고 권리/상표 검토는 구현 전 또는 release 전 게이트로 분리한다 | `05-final-recommendation-and-review.md`, `06-logo-asset-application-guide.md` | F1에서는 임시 자산 또는 기존 컴포넌트 개선으로 시작 가능 |
+| 2026-04-28 | Epic을 `planning`으로 전환한다 | F1 approved IDEA가 생겨 `draft → planning` 게이트를 충족했다 | F1 Draft와 후속 Feature IDEA 등록을 병행할 수 있다 |
+| 2026-04-28 | F1은 Lite Draft 후 PRD를 생략할 수 있다 | Screening `Lite`, 외부 API/DB/인증/도메인 변경 없음 | Draft scope 승인 후 `/plan-bridge` 또는 Lite dev handoff로 진행 |

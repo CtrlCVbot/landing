@@ -1,7 +1,7 @@
 # Epic: OPTIC 랜딩 브랜드 전환과 업무 매뉴얼형 스크롤 개선
 
 > **ID**: EPIC-20260428-001
-> **상태**: draft
+> **상태**: planning
 > **기간**: 2026-04-28 ~ 2026-05-10 (예상)
 > **책임자**: landing 프론트엔드 팀
 > **예상 RICE (가중합)**: 자식 Feature 등록 후 산정
@@ -94,9 +94,9 @@
 
 ## 7. 자식 IDEA 링크
 
-아직 자식 IDEA는 생성하지 않았다. 이 Epic은 `draft` 상태이며, `planning`으로 올리려면 아래 Feature 중 최소 1개를 `/plan-idea --epic=EPIC-20260428-001`로 등록해야 한다.
+F1 자식 IDEA가 사용자 Go 승인을 받아 `20-approved` 상태가 되었고, Epic은 `planning` 상태로 전환되었다.
 
-- F1 — 브랜드, 로고, CTA 최소 반영
+- [IDEA-20260428-001](../../../ideas/20-approved/IDEA-20260428-001.md) — F1 브랜드, 로고, CTA 최소 반영 (`approved`, [Draft](../../../drafts/f1-optic-brand-cta/01-draft.md))
 - F2 — 카피와 제품 라인업 정리
 - F3 — 업무 매뉴얼형 스크롤 섹션 MVP
 - F4 — 업무 흐름 애니메이션과 상태 표현
@@ -109,3 +109,7 @@
 | 날짜 | 내용 |
 |---|---|
 | 2026-04-28 | 초안 — `final-prompt-package` 8개 문서를 분석해 Epic draft로 정리 |
+| 2026-04-28 | F1 자식 IDEA `IDEA-20260428-001` 등록 |
+| 2026-04-28 | F1 자식 IDEA screening 완료 — Go 제안, Lite lane, 사용자 승인 대기 |
+| 2026-04-28 | F1 자식 IDEA 사용자 Go 승인 — `20-approved` 이동 |
+| 2026-04-28 | Epic 상태 전이 `draft → planning` 및 F1 Draft 생성 |

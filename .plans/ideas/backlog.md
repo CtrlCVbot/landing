@@ -9,6 +9,7 @@
 | 2026-04-23 | 002 |
 | 2026-04-24 | 002 |
 | 2026-04-27 | 004 |
+| 2026-04-28 | 001 |
 
 ## IDEA 목록
 
@@ -22,6 +23,7 @@
 | IDEA-20260427-002 | F3 옵션↔추가요금 파생 로직 | feature | screened | 2026-04-27 | `10-screening` | [링크](10-screening/IDEA-20260427-002.md) | [EPIC-20260422-001](../epics/20-active/EPIC-20260422-001/00-epic-brief.md) |
 | IDEA-20260427-003 | Dash Preview 단계별 포커스 줌 애니메이션 | improvement | archived | 2026-04-27 | `archive/dash-preview-focus-zoom-animation/sources/ideas` | [링크](../archive/dash-preview-focus-zoom-animation/sources/ideas/IDEA-20260427-003.md) | - |
 | IDEA-20260427-004 | hero-01 레퍼런스 기반 Hero 섹션 재개선 | improvement | archived | 2026-04-27 | `archive/hero-01-reference-hero-refresh/sources/ideas` | [링크](../archive/hero-01-reference-hero-refresh/sources/ideas/IDEA-20260427-004.md) | - |
+| IDEA-20260428-001 | F1 브랜드, 로고, CTA 최소 반영 | improvement | approved | 2026-04-28 | `20-approved` | [링크](20-approved/IDEA-20260428-001.md) | [EPIC-20260428-001](../epics/10-planning/EPIC-20260428-001/00-epic-brief.md) |
 
 ---
 
@@ -72,3 +74,7 @@
 | 2026-04-28 | IDEA-20260427-004 wireframe 작성 및 review 완료 — Desktop/Tablet/Mobile/Reduced motion, 다음 단계 `/plan-bridge` |
 | 2026-04-28 | IDEA-20260427-004 `/plan-bridge` 완료 — active feature context/package 생성, 다음 단계 `/dev-run` |
 | 2026-04-28 | IDEA-20260427-004 상태 `approved → archived` — Hero 색감 개선 구현, 사용자 승인, `c06cd06`/`24afa8a` push, P8 archive bundle 생성 |
+| 2026-04-28 | IDEA-20260428-001 신규 등록: EPIC-20260428-001 F1 브랜드, 로고, CTA 최소 반영 — 다음 단계 `/plan-screen` |
+| 2026-04-28 | IDEA-20260428-001 상태 `new → screened` — RICE-style weighted score 76.35, Go 제안, Lite lane, 사용자 승인 대기 |
+| 2026-04-28 | IDEA-20260428-001 사용자 Go 승인 — 상태 `screened → approved`, `20-approved` 이동 |
+| 2026-04-28 | IDEA-20260428-001 draft 생성 — `f1-optic-brand-cta`, Lite lane, 다음 단계 scope 확인 후 `/plan-bridge` 또는 dev handoff |

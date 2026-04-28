@@ -1,7 +1,7 @@
 # Children Features — EPIC-20260428-001
 
 > `OPTIC 랜딩 브랜드 전환과 업무 매뉴얼형 스크롤 개선`의 자식 Feature 실행 지도.
-> 현재 상태는 `draft`이며, 자식 IDEA 파일은 아직 생성하지 않았다.
+> 현재 상태는 `planning`이며, F1 Draft 생성을 완료했다.
 
 ---
 
@@ -9,11 +9,12 @@
 
 ### F1 — 브랜드, 로고, CTA 최소 반영
 
-- **IDEA**: pending
+- **IDEA**: [IDEA-20260428-001](../../../ideas/20-approved/IDEA-20260428-001.md)
 - **Lane**: Lite (헤더/footer/상수 중심의 국소 변경)
 - **RICE 예상**: TBD
 - **범위**: `src/lib/constants.ts`, `src/components/sections/header.tsx`, `src/components/sections/footer.tsx`, `src/components/icons/optic-logo.tsx`
-- **상태**: pending IDEA
+- **상태**: draft, scope 확인 대기
+- **Draft**: [f1-optic-brand-cta](../../../drafts/f1-optic-brand-cta/01-draft.md)
 - **완료 기준**:
   - 고객 화면 주 브랜드는 `OPTIC`으로 보인다.
   - `OPTICS`는 footer/About의 `Powered by OPTICS` 정도로 제한된다.
@@ -134,7 +135,7 @@
 
 | Feature | 상태 | TASK 진행 | 테스트 | 번들 영향 | 리뷰 |
 |---|:---:|:---:|:---:|:---:|:---:|
-| F1 | pending | — | — | — | — |
+| F1 | draft | P3 완료 | 계획됨 | 낮음 | scope 확인 대기 |
 | F2 | pending | — | — | — | — |
 | F3 | pending | — | — | — | — |
 | F4 | pending | — | — | — | — |
@@ -161,3 +162,7 @@
 | 날짜 | 내용 |
 |---|---|
 | 2026-04-28 | 초안 — `final-prompt-package` 기반 5개 자식 Feature와 Phase 실행 순서 정리 |
+| 2026-04-28 | F1 자식 IDEA `IDEA-20260428-001` 등록 및 screening 대기 상태 반영 |
+| 2026-04-28 | F1 screening 완료 — Go 제안, Lite lane, 사용자 승인 대기 |
+| 2026-04-28 | F1 사용자 Go 승인 — `20-approved` 이동 |
+| 2026-04-28 | Epic `planning` 전환 및 F1 Draft `f1-optic-brand-cta` 생성 |
