@@ -13,6 +13,7 @@
 | PRD required | `false` |
 | Wireframe required | `false` |
 | Stitch required | `false` |
+| Draft scope | `approved` |
 | Recommended next | `/plan-bridge f1-optic-brand-cta` 또는 Lite dev handoff |
 
 ## 근거
@@ -25,5 +26,4 @@
 ## 다음 게이트
 
 1. 서비스 URL 공개 가능성 확인
-2. Draft scope 확인
-3. Lite dev handoff 또는 `/plan-bridge`
+2. Lite dev handoff 또는 `/plan-bridge`
