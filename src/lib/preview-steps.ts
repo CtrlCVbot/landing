@@ -54,7 +54,9 @@ export const PREVIEW_FOCUS_TARGET_IDS = [
   'form-pickup-location',
   'form-delivery-location',
   'form-cargo-info',
+  'form-estimate-distance',
   'form-estimate-info',
+  'form-settlement',
 ] as const
 
 export type PreviewFocusTargetId = typeof PREVIEW_FOCUS_TARGET_IDS[number]
@@ -102,7 +104,37 @@ export interface AiApplyFocusPair {
   readonly label: string
 }
 
-export const AI_APPLY_FOCUS_PHASE_HOLD_MS = 1800
+export type AiApplyFocusMode = 'result' | 'card' | 'auto-card'
+
+export type AiApplyFillTarget =
+  | 'pickup'
+  | 'delivery'
+  | 'estimate'
+  | 'cargo'
+  | 'settlement'
+
+export type AiApplyFocusPhaseId =
+  | 'departure-result'
+  | 'departure-card'
+  | 'destination-result'
+  | 'destination-card'
+  | 'estimate-card'
+  | 'cargo-result'
+  | 'cargo-card'
+  | 'fare-result'
+  | 'settlement-card'
+
+export interface AiApplyFocusPhase {
+  readonly id: AiApplyFocusPhaseId
+  readonly mode: AiApplyFocusMode
+  readonly categoryId?: AiCategoryId
+  readonly targetId: PreviewFocusTargetId
+  readonly fillTarget: AiApplyFillTarget | null
+  readonly label: string
+  readonly focus: PreviewFocusMetadata
+}
+
+export const AI_APPLY_FOCUS_PHASE_HOLD_MS = 2000
 
 /** Phase 1 스펙 §7-2 — AI 상태 스냅샷 */
 export interface AiStateSnapshot {
@@ -284,7 +316,7 @@ export interface PreviewStep {
 const DURATION_INITIAL = 1600
 const DURATION_AI_INPUT = 4400
 const DURATION_AI_EXTRACT = 2800
-const DURATION_AI_APPLY = 14400
+const DURATION_AI_APPLY = 20000
 
 const PARTIAL_INTERVAL_MS = 1300
 const ALL_BEAT_MS = 2400
@@ -293,7 +325,7 @@ const FOCUS_DURATION_INITIAL = 600
 const FOCUS_DURATION_AI_INPUT = 1800
 const FOCUS_DURATION_AI_EXTRACT = 1400
 const FOCUS_DURATION_AI_APPLY = 1800
-const FOCUS_DURATION_AI_APPLY_SUBPHASE = 1600
+const FOCUS_DURATION_AI_APPLY_SUBPHASE = 1800
 
 const CATEGORY_ORDER: ReadonlyArray<AiCategoryId> = [
   'departure',
@@ -387,7 +419,7 @@ export const AI_APPLY_FOCUS_PAIRS: ReadonlyArray<AiApplyFocusPair> = [
   {
     categoryId: 'fare',
     resultTargetId: 'ai-result-fare',
-    cardTargetId: 'form-estimate-info',
+    cardTargetId: 'form-settlement',
     label: '운임',
   },
 ] as const
@@ -447,11 +479,103 @@ const AI_APPLY_CARD_FOCUS_BY_CATEGORY: Readonly<
     desktop: { scale: 1.2, x: -58, y: -18 },
     tablet: { scale: 1.12, x: -45, y: -14 },
   }),
-  fare: buildAiApplyFocusMetadata('form-estimate-info', '운임 입력 카드', {
-    desktop: { scale: 1.18, x: -74, y: -8 },
+  fare: buildAiApplyFocusMetadata('form-settlement', '정산 정보 카드', {
+    desktop: { scale: 1.16, x: -74, y: -18 },
     tablet: { scale: 1.1, x: -56, y: -6 },
   }),
 } as const
+
+const AI_APPLY_ESTIMATE_FOCUS = buildAiApplyFocusMetadata(
+  'form-estimate-info',
+  '예상 운임/거리 카드',
+  {
+    desktop: { scale: 1.16, x: -74, y: -8 },
+    tablet: { scale: 1.1, x: -56, y: -6 },
+  },
+)
+
+export const AI_APPLY_FOCUS_PHASES: ReadonlyArray<AiApplyFocusPhase> = [
+  {
+    id: 'departure-result',
+    mode: 'result',
+    categoryId: 'departure',
+    targetId: 'ai-result-departure',
+    fillTarget: null,
+    label: '상차지 추출정보',
+    focus: AI_APPLY_RESULT_FOCUS_BY_CATEGORY.departure,
+  },
+  {
+    id: 'departure-card',
+    mode: 'card',
+    categoryId: 'departure',
+    targetId: 'form-pickup-location',
+    fillTarget: 'pickup',
+    label: '상차지 입력 카드',
+    focus: AI_APPLY_CARD_FOCUS_BY_CATEGORY.departure,
+  },
+  {
+    id: 'destination-result',
+    mode: 'result',
+    categoryId: 'destination',
+    targetId: 'ai-result-destination',
+    fillTarget: null,
+    label: '하차지 추출정보',
+    focus: AI_APPLY_RESULT_FOCUS_BY_CATEGORY.destination,
+  },
+  {
+    id: 'destination-card',
+    mode: 'card',
+    categoryId: 'destination',
+    targetId: 'form-delivery-location',
+    fillTarget: 'delivery',
+    label: '하차지 입력 카드',
+    focus: AI_APPLY_CARD_FOCUS_BY_CATEGORY.destination,
+  },
+  {
+    id: 'estimate-card',
+    mode: 'auto-card',
+    targetId: 'form-estimate-info',
+    fillTarget: 'estimate',
+    label: '예상 운임/거리 카드',
+    focus: AI_APPLY_ESTIMATE_FOCUS,
+  },
+  {
+    id: 'cargo-result',
+    mode: 'result',
+    categoryId: 'cargo',
+    targetId: 'ai-result-cargo',
+    fillTarget: null,
+    label: '화물 정보 추출정보',
+    focus: AI_APPLY_RESULT_FOCUS_BY_CATEGORY.cargo,
+  },
+  {
+    id: 'cargo-card',
+    mode: 'card',
+    categoryId: 'cargo',
+    targetId: 'form-cargo-info',
+    fillTarget: 'cargo',
+    label: '화물 정보 입력 카드',
+    focus: AI_APPLY_CARD_FOCUS_BY_CATEGORY.cargo,
+  },
+  {
+    id: 'fare-result',
+    mode: 'result',
+    categoryId: 'fare',
+    targetId: 'ai-result-fare',
+    fillTarget: null,
+    label: '운임 정보',
+    focus: AI_APPLY_RESULT_FOCUS_BY_CATEGORY.fare,
+  },
+  {
+    id: 'settlement-card',
+    mode: 'card',
+    categoryId: 'fare',
+    targetId: 'form-settlement',
+    fillTarget: 'settlement',
+    label: '정산 정보 카드',
+    focus: AI_APPLY_CARD_FOCUS_BY_CATEGORY.fare,
+  },
+] as const
 
 export function getPreviewFocusMetadata(stepId: StepId): PreviewFocusMetadata | undefined {
   return PREVIEW_FOCUS_BY_STEP[stepId]
@@ -471,6 +595,27 @@ export function getAiApplyCardFocusMetadata(
 
 export function getAiApplyFocusPairIndex(categoryId: AiCategoryId): number {
   return AI_APPLY_FOCUS_PAIRS.findIndex((pair) => pair.categoryId === categoryId)
+}
+
+export function getAiApplyFocusPhaseIndex(
+  phaseId: AiApplyFocusPhaseId,
+): number {
+  return AI_APPLY_FOCUS_PHASES.findIndex((phase) => phase.id === phaseId)
+}
+
+export function getAiApplyFocusPhaseIndexByTargetId(
+  targetId: PreviewFocusTargetId | null | undefined,
+): number {
+  if (!targetId) return -1
+  return AI_APPLY_FOCUS_PHASES.findIndex((phase) => phase.targetId === targetId)
+}
+
+export function getAiApplyCardPhaseIndexForCategory(
+  categoryId: AiCategoryId,
+): number {
+  return AI_APPLY_FOCUS_PHASES.findIndex(
+    (phase) => phase.categoryId === categoryId && phase.mode !== 'result',
+  )
 }
 
 export function validatePreviewFocusTiming(

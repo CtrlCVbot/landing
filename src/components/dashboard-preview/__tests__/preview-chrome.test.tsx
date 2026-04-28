@@ -2,10 +2,13 @@ import { render, screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
 
 import { PreviewChrome } from '@/components/dashboard-preview/preview-chrome'
-import { PREVIEW_STEPS } from '@/lib/preview-steps'
+import {
+  PREVIEW_STEPS,
+  getAiApplyCardFocusMetadata,
+} from '@/lib/preview-steps'
 
 describe('PreviewChrome focus viewport (TC-FZ-VIS-01/02/03/04)', () => {
-  it('composes base scale and desktop focus transform without changing scaled content', () => {
+  it('keeps base scale stable and applies target-only focus styling', () => {
     render(
       <PreviewChrome
         scaleFactor={0.45}
@@ -26,14 +29,22 @@ describe('PreviewChrome focus viewport (TC-FZ-VIS-01/02/03/04)', () => {
       'data-focus-target',
       'ai-input-textarea',
     )
-    expect(focusViewport.style.transform).toBe(
-      'translate3d(14%, 8%, 0) scale(1.22)',
+    expect(focusViewport).toHaveAttribute('data-focus-presentation', 'target-only')
+    expect(focusViewport.style.transform).toBe('none')
+    expect(focusViewport.style.transitionDuration).toBe('0ms')
+    expect(screen.getByTestId('focus-target-style')).toHaveTextContent(
+      '[data-hit-area-id="ai-input"]',
     )
-    expect(focusViewport.style.transitionDuration).toBe('1800ms')
+    expect(screen.getByTestId('focus-target-style')).toHaveTextContent(
+      'scale(1.1)',
+    )
+    expect(screen.getByTestId('focus-target-style')).toHaveTextContent(
+      'transform-origin: top left',
+    )
     expect(focusViewport).toContainElement(screen.getByTestId('child-element'))
   })
 
-  it('keeps the outer preview frame fixed while the inner camera moves', () => {
+  it('keeps the outer preview frame height fixed at the reduced size', () => {
     render(
       <PreviewChrome
         scaleFactor={0.45}
@@ -45,13 +56,19 @@ describe('PreviewChrome focus viewport (TC-FZ-VIS-01/02/03/04)', () => {
     )
 
     const scaledContent = screen.getByTestId('scaled-content')
-    expect(scaledContent).toHaveAttribute('data-camera-frame', 'fixed')
-    expect(scaledContent.style.aspectRatio).toBe('16 / 9')
+    expect(scaledContent).toHaveAttribute(
+      'data-camera-frame',
+      'fixed-height-reduced',
+    )
+    expect(scaledContent.style.height).toBe('390.15px')
     expect(screen.getByTestId('scaled-content-inner').style.transform).toBe(
       'scale(0.45)',
     )
+    expect(screen.getByTestId('scaled-content-inner').style.height).toBe(
+      '867px',
+    )
     expect(screen.getByTestId('focus-viewport').style.transform).toBe(
-      'translate3d(14%, 8%, 0) scale(1.22)',
+      'none',
     )
   })
 
@@ -67,12 +84,18 @@ describe('PreviewChrome focus viewport (TC-FZ-VIS-01/02/03/04)', () => {
     )
 
     const focusViewport = screen.getByTestId('focus-viewport')
+    expect(screen.getByTestId('scaled-content')).toHaveAttribute(
+      'data-camera-frame',
+      'fixed-height-reduced',
+    )
+    expect(screen.getByTestId('scaled-content').style.height).toBe('346.8px')
     expect(focusViewport).toHaveAttribute(
       'data-focus-target',
       'ai-extract-button',
     )
-    expect(focusViewport.style.transform).toBe(
-      'translate3d(10%, 12%, 0) scale(1.12)',
+    expect(focusViewport.style.transform).toBe('none')
+    expect(screen.getByTestId('focus-target-style')).toHaveTextContent(
+      'scale(1.1)',
     )
   })
 
@@ -88,20 +111,88 @@ describe('PreviewChrome focus viewport (TC-FZ-VIS-01/02/03/04)', () => {
     )
 
     const focusViewport = screen.getByTestId('focus-viewport')
-    expect(focusViewport.style.transform).toBe('translate3d(0%, 0%, 0) scale(1)')
+    expect(focusViewport.style.transform).toBe('none')
     expect(focusViewport.style.transitionDuration).toBe('0ms')
     expect(focusViewport).toHaveAttribute('data-focus-reduced-motion', 'true')
+    expect(screen.getByTestId('focus-target-style')).toHaveTextContent(
+      'scale(1)',
+    )
   })
 
-  it('renders a decorative focus highlight layer outside the accessibility tree', () => {
+  it('anchors the final settlement card to the right edge so it expands leftward', () => {
+    const focus = getAiApplyCardFocusMetadata('fare')
+    expect(focus).toBeDefined()
+
     render(
-      <PreviewChrome focus={PREVIEW_STEPS[1].focus} viewport="desktop">
+      <PreviewChrome
+        scaleFactor={0.45}
+        focus={focus}
+        viewport="desktop"
+      >
+        <div data-testid="child-element">content</div>
+      </PreviewChrome>,
+    )
+
+    expect(screen.getByTestId('focus-viewport')).toHaveAttribute(
+      'data-focus-anchor',
+      'right',
+    )
+    expect(screen.getByTestId('focus-target-style')).toHaveTextContent(
+      '[data-hit-area-id="form-settlement"]',
+    )
+    expect(screen.getByTestId('focus-target-style')).toHaveTextContent(
+      'transform-origin: top right',
+    )
+    expect(screen.getByTestId('focus-target-style')).toHaveTextContent(
+      'scale(1.08)',
+    )
+  })
+
+  it('uses the same right-edge anchor for settlement focus targets', () => {
+    const focus = {
+      ...PREVIEW_STEPS[3].focus,
+      targetId: 'form-settlement',
+      label: '정산 정보',
+    } as const
+
+    render(
+      <PreviewChrome
+        scaleFactor={0.45}
+        focus={focus}
+        viewport="desktop"
+      >
+        <div data-testid="child-element">content</div>
+      </PreviewChrome>,
+    )
+
+    expect(screen.getByTestId('focus-viewport')).toHaveAttribute(
+      'data-focus-anchor',
+      'right',
+    )
+    expect(screen.getByTestId('focus-target-style')).toHaveTextContent(
+      '[data-hit-area-id="form-settlement"]',
+    )
+    expect(screen.getByTestId('focus-target-style')).toHaveTextContent(
+      'transform-origin: top right',
+    )
+  })
+
+  it('renders a decorative focus highlight layer only for the overview frame', () => {
+    const { rerender } = render(
+      <PreviewChrome focus={PREVIEW_STEPS[0].focus} viewport="desktop">
         content
       </PreviewChrome>,
     )
 
     const layer = screen.getByTestId('focus-highlight-layer')
     expect(layer).toHaveAttribute('aria-hidden', 'true')
-    expect(layer).toHaveAttribute('data-focus-target', 'ai-input-textarea')
+    expect(layer).toHaveAttribute('data-focus-target', 'ai-preview-frame')
+
+    rerender(
+      <PreviewChrome focus={PREVIEW_STEPS[1].focus} viewport="desktop">
+        content
+      </PreviewChrome>,
+    )
+    expect(screen.queryByTestId('focus-highlight-layer')).not.toBeInTheDocument()
   })
 })

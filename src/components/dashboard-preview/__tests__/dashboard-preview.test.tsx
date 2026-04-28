@@ -98,7 +98,7 @@ type AiRegisterMainMockProps = {
 
 vi.mock('@/components/dashboard-preview/ai-register-main', () => ({
   AiRegisterMain: ({ step, onResultApply }: AiRegisterMainMockProps) => (
-    <div className="flex h-full min-h-[480px]">
+    <div className="flex h-full min-h-[900px]">
       <aside aria-label="AI 화물 등록 패널" data-testid="mock-ai-panel-container" />
       <div aria-label="주문 등록 폼" data-testid="mock-order-form-grid" />
       {step.id === 'AI_APPLY' ? (
@@ -318,8 +318,24 @@ describe('DashboardPreview — Phase 3 Feature flag', () => {
         'data-focus-target',
         'ai-preview-frame',
       )
-      expect(focusViewport.style.transform).toBe(
-        'translate3d(0%, 0%, 0) scale(1)',
+      expect(focusViewport).toHaveAttribute('data-focus-presentation', 'target-only')
+      expect(focusViewport.style.transform).toBe('none')
+    })
+
+    it('preview content fills the reduced fixed chrome frame', () => {
+      setDesktop()
+      render(<DashboardPreview />)
+
+      expect(screen.getByTestId('scaled-content')).toHaveAttribute(
+        'data-camera-frame',
+        'fixed-height-reduced',
+      )
+      expect(screen.getByTestId('scaled-content').style.height).toBe(
+        '390.15px',
+      )
+      expect(screen.getByTestId('preview-content')).toHaveClass('h-full')
+      expect(screen.getByTestId('mock-ai-panel-container').parentElement).toHaveClass(
+        'min-h-[900px]',
       )
     })
 
@@ -335,8 +351,11 @@ describe('DashboardPreview — Phase 3 Feature flag', () => {
         'data-focus-target',
         'ai-input-textarea',
       )
-      expect(focusViewport.style.transform).toBe(
-        'translate3d(14%, 8%, 0) scale(1.22)',
+      expect(focusViewport).toHaveAttribute('data-focus-presentation', 'target-only')
+      expect(focusViewport).toHaveAttribute('data-focus-anchor', 'left')
+      expect(focusViewport.style.transform).toBe('none')
+      expect(screen.getByTestId('focus-target-style')).toHaveTextContent(
+        'scale(1.1)',
       )
     })
 
@@ -349,8 +368,9 @@ describe('DashboardPreview — Phase 3 Feature flag', () => {
       expect(screen.getByTestId('scaled-content-inner').style.transform).toBe(
         'scale(0.4)',
       )
-      expect(screen.getByTestId('focus-viewport').style.transform).toBe(
-        'translate3d(10%, 12%, 0) scale(1.12)',
+      expect(screen.getByTestId('focus-viewport').style.transform).toBe('none')
+      expect(screen.getByTestId('focus-target-style')).toHaveTextContent(
+        'scale(1.1)',
       )
     })
 
@@ -365,9 +385,7 @@ describe('DashboardPreview — Phase 3 Feature flag', () => {
 
       const focusViewport = screen.getByTestId('focus-viewport')
       expect(focusViewport).toHaveAttribute('data-focus-reduced-motion', 'true')
-      expect(focusViewport.style.transform).toBe(
-        'translate3d(0%, 0%, 0) scale(1)',
-      )
+      expect(focusViewport.style.transform).toBe('none')
     })
   })
 
@@ -408,6 +426,14 @@ describe('DashboardPreview — Phase 3 Feature flag', () => {
       })
       expect(screen.getByTestId('focus-viewport')).toHaveAttribute(
         'data-focus-target',
+        'form-estimate-info',
+      )
+
+      act(() => {
+        vi.advanceTimersByTime(AI_APPLY_FOCUS_PHASE_HOLD_MS + 1)
+      })
+      expect(screen.getByTestId('focus-viewport')).toHaveAttribute(
+        'data-focus-target',
         'ai-result-cargo',
       )
 
@@ -428,7 +454,14 @@ describe('DashboardPreview — Phase 3 Feature flag', () => {
       fireEvent.click(screen.getByRole('button', { name: '운임 추출정보' }))
       expect(screen.getByTestId('focus-viewport')).toHaveAttribute(
         'data-focus-target',
-        'form-estimate-info',
+        'form-settlement',
+      )
+      expect(screen.getByTestId('focus-viewport')).toHaveAttribute(
+        'data-focus-anchor',
+        'right',
+      )
+      expect(screen.getByTestId('focus-target-style')).toHaveTextContent(
+        'transform-origin: top right',
       )
 
       act(() => {
@@ -436,7 +469,7 @@ describe('DashboardPreview — Phase 3 Feature flag', () => {
       })
       expect(screen.getByTestId('focus-viewport')).toHaveAttribute(
         'data-focus-target',
-        'form-estimate-info',
+        'form-settlement',
       )
     })
 
@@ -455,10 +488,11 @@ describe('DashboardPreview — Phase 3 Feature flag', () => {
         'form-pickup-location',
         'ai-result-destination',
         'form-delivery-location',
+        'form-estimate-info',
         'ai-result-cargo',
         'form-cargo-info',
         'ai-result-fare',
-        'form-estimate-info',
+        'form-settlement',
       ]
 
       for (const target of expectedTargets) {

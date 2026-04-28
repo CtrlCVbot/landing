@@ -42,6 +42,31 @@ flowchart TD
 
 ---
 
+### 2.1 Current Unified AI_APPLY Flow
+
+```mermaid
+flowchart TD
+  R1["상차지 추출정보 cue"] --> C1["상차지 입력 카드 focus/fill"]
+  C1 --> R2["하차지 추출정보 cue"]
+  R2 --> C2["하차지 입력 카드 focus/fill"]
+  C2 --> E1["예상 운임/거리 카드 auto focus"]
+  E1 --> R3["화물 정보 추출정보 cue"]
+  R3 --> C3["화물 정보 입력 카드 focus/fill"]
+  C3 --> R4["운임 정보 cue"]
+  R4 --> S1["정산 정보 카드 focus/fill"]
+  S1 --> A["전체 preview 또는 next loop"]
+```
+
+Phase ownership:
+
+| Phase type | Owner | Rule |
+|---|---|---|
+| result cue | AI panel result item | press/ripple runs only for the focused result item |
+| card focus | target form card | only the focused card scales and fills |
+| estimate auto phase | `form-estimate-info` | runs after delivery card, before cargo result |
+| settlement phase | `form-settlement` | replaces the old fare-card target |
+| column pulse | none in unified phase | disabled to avoid overlapping highlights |
+
 ## 3. Timing Policy
 
 | 구간 | 기준 | 정책 |

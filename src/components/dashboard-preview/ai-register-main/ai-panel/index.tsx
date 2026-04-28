@@ -37,7 +37,8 @@
 import { useFakeTyping } from '@/components/dashboard-preview/interactions/use-fake-typing'
 import { useFocusWalk } from '@/components/dashboard-preview/interactions/use-focus-walk'
 import type { AiCategoryId, PreviewMockData } from '@/lib/mock-data'
-import type { PreviewStep } from '@/lib/preview-steps'
+import type { PreviewFocusTargetId, PreviewStep } from '@/lib/preview-steps'
+import { cn } from '@/lib/utils'
 
 import { AiButtonItem } from './ai-button-item'
 import { AiExtractButton } from './ai-extract-button'
@@ -57,6 +58,7 @@ export interface AiPanelContainerProps {
   readonly step: PreviewStep
   readonly aiInput: PreviewMockData['aiInput']
   readonly aiResult: PreviewMockData['aiResult']
+  readonly focusTargetId?: PreviewFocusTargetId
   readonly onResultApply?: (categoryId: AiCategoryId) => void
 }
 
@@ -98,6 +100,7 @@ export function AiPanelContainer({
   step,
   aiInput,
   aiResult,
+  focusTargetId,
   onResultApply,
 }: AiPanelContainerProps) {
   // -------------------------------------------------------------------------
@@ -119,10 +122,13 @@ export function AiPanelContainer({
   // 간격은 AI_APPLY partialBeat tempo와 맞춰 결과 그룹 focus가 같은 박자로 이동하게 한다.
   // -------------------------------------------------------------------------
   const focusWalkTargets = step.interactions.focusWalk ?? []
-  const { currentTargetId: focusedTargetId } = useFocusWalk(focusWalkTargets, {
+  const { currentTargetId: walkedTargetId } = useFocusWalk(focusWalkTargets, {
     intervalMs: FOCUS_WALK_INTERVAL_MS,
-    active: focusWalkTargets.length > 0,
+    active: focusTargetId === undefined && focusWalkTargets.length > 0,
   })
+  const externallyFocusedTargetId =
+    focusTargetId?.startsWith('ai-') === true ? focusTargetId : null
+  const focusedTargetId = externallyFocusedTargetId ?? walkedTargetId
 
   // -------------------------------------------------------------------------
   // #3 button-press — AI_EXTRACT Step 에서 즉시 자동 press
@@ -141,11 +147,40 @@ export function AiPanelContainer({
   // -------------------------------------------------------------------------
   const extractState = step.aiState.extractState
   const activeTab = step.aiState.activeTab
+  const panelExpanded =
+    focusedTargetId?.startsWith('ai-input') === true ||
+    focusedTargetId === 'ai-extract-button' ||
+    focusedTargetId?.startsWith('ai-result') === true
+
+  const getFocusDrivenTriggerAt = (groupId: AiCategoryId): number | null => {
+    if (step.id !== 'AI_APPLY' || focusTargetId === undefined) return null
+    return focusTargetId === `ai-result-${groupId}` ? 0 : null
+  }
+
+  const getPressTriggerAt = (groupId: AiCategoryId): number | null => {
+    if (step.id === 'AI_APPLY' && focusTargetId !== undefined) {
+      return getFocusDrivenTriggerAt(groupId)
+    }
+    return computeCategoryPressTriggerAt(step, groupId)
+  }
+
+  const getRippleTriggerAt = (groupId: AiCategoryId): number | null => {
+    if (step.id === 'AI_APPLY' && focusTargetId !== undefined) {
+      return getFocusDrivenTriggerAt(groupId)
+    }
+    return computeCategoryRippleTriggerAt(step, groupId)
+  }
 
   return (
     <aside
       aria-label="AI 화물 등록 패널"
-      className="w-[380px] flex-shrink-0 border-r border-border bg-card/50 flex flex-col overflow-hidden"
+      data-focus-expanded={panelExpanded ? 'true' : 'false'}
+      className={cn(
+        'flex-shrink-0 border-r border-border bg-card/50 flex flex-col transition-[width,min-height] duration-700 ease-out',
+        panelExpanded
+          ? 'w-[440px] min-h-[1040px] overflow-visible'
+          : 'w-[380px] overflow-hidden',
+      )}
     >
       {/* 헤더 — 제목 + Step label */}
       <div className="p-4 border-b border-border flex items-center justify-between">
@@ -159,7 +194,7 @@ export function AiPanelContainer({
       </div>
 
       {/* 본문 — 자식 6 컴포넌트 세로 스택 */}
-      <div className="flex-1 overflow-y-auto">
+      <div className={cn('flex-1', panelExpanded ? 'overflow-visible' : 'overflow-y-auto')}>
         <div className="p-4 space-y-4">
           <AiTabBar activeTab={activeTab} />
           <AiInputArea
@@ -189,11 +224,11 @@ export function AiPanelContainer({
               // M3-11 — AI_APPLY partialBeat 카테고리 순차 press.
               // categoryIndex × intervalMs 만큼 offset 을 두고 자동 press 발동.
               // AI_EXTRACT Step 등 AI_APPLY 가 아닌 Step 에서는 null (press 비활성).
-              pressTriggerAt={computeCategoryPressTriggerAt(step, groupId)}
+              pressTriggerAt={getPressTriggerAt(groupId)}
               // M4-02 — ripple 을 press 와 동일 offset 으로 자동 발동.
               // M4-review#1 — rippleTargets SSOT 를 실제 소비. partialBeat.rippleTargets 에
               // 포함된 카테고리만 auto ripple 이 발동된다 (data-driven 판정).
-              rippleTriggerAt={computeCategoryRippleTriggerAt(step, groupId)}
+              rippleTriggerAt={getRippleTriggerAt(groupId)}
               onApply={() => onResultApply?.(groupId)}
             />
           )}

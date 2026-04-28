@@ -95,6 +95,24 @@ interface FocusPreset {
 
 ---
 
+### 5.1 Current Implementation Update
+
+2026-04-28 implementation uses the following `AI_APPLY` phase order. This supersedes the older 4-row summary above where the final fare card still pointed at a generic fare target.
+
+| Phase | Focus target | Fill target | Notes |
+|---|---|---|---|
+| `departure-result` | `ai-result-departure` | none | 상차지 추출정보 cue |
+| `departure-card` | `form-pickup-location` | pickup card only | 상차지 카드만 scale/fill |
+| `destination-result` | `ai-result-destination` | none | 하차지 추출정보 cue |
+| `destination-card` | `form-delivery-location` | delivery card only | 하차지 카드만 scale/fill |
+| `estimate-card` | `form-estimate-info` | estimate card only | 하차지 이후 자동 예상 운임/거리 focus |
+| `cargo-result` | `ai-result-cargo` | none | 화물 정보 추출정보 cue |
+| `cargo-card` | `form-cargo-info` | cargo card only | 화물 카드만 scale/fill |
+| `fare-result` | `ai-result-fare` | none | 운임 정보 cue |
+| `settlement-card` | `form-settlement` | settlement card only | 운임 클릭 후 정산 정보 focus/fill |
+
+`AI_APPLY` 중 column-level pulse와 전체 preview highlight는 사용하지 않는다. 현재 phase의 단일 target card outline/scale과 local fill cue만 사용한다.
+
 ## 6. Reduced Motion UI
 
 | 일반 motion | reduced motion 대체 |

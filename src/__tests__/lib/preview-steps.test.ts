@@ -16,6 +16,7 @@
 import { describe, it, expect } from 'vitest'
 import {
   AI_APPLY_FOCUS_PHASE_HOLD_MS,
+  AI_APPLY_FOCUS_PHASES,
   AI_APPLY_FOCUS_PAIRS,
   PREVIEW_FOCUS_TARGET_IDS,
   PREVIEW_STEPS,
@@ -71,15 +72,15 @@ describe('PREVIEW_STEPS (Phase 3 4단계)', () => {
       expect(aiExtract.duration).toBe(2800)
     })
 
-    it('AI_APPLY duration === 2500ms', () => {
+    it('AI_APPLY duration matches the expanded unified focus sequence', () => {
       const aiApply = PREVIEW_STEPS[3]
       expect(aiApply.id).toBe('AI_APPLY')
-      expect(aiApply.duration).toBe(14400)
+      expect(aiApply.duration).toBe(20000)
     })
 
-    it('총 Step duration 합 === 5500ms (PRD §6-1)', () => {
+    it('총 Step duration 합은 확장된 AI_APPLY 시퀀스를 포함한다', () => {
       const total = PREVIEW_STEPS.reduce((sum, s) => sum + s.duration, 0)
-      expect(total).toBe(23200)
+      expect(total).toBe(28800)
     })
 
     it('각 Step 에 interactions 필드 존재', () => {
@@ -489,7 +490,7 @@ describe('AI_APPLY click-to-card focus mapping (TC-FZ-UNIT-02)', () => {
       {
         categoryId: 'fare',
         resultTargetId: 'ai-result-fare',
-        cardTargetId: 'form-estimate-info',
+        cardTargetId: 'form-settlement',
         label: '운임',
       },
     ])
@@ -518,15 +519,29 @@ describe('AI_APPLY click-to-card focus mapping (TC-FZ-UNIT-02)', () => {
       'ai-result-fare',
     )
     expect(getAiApplyCardFocusMetadata('fare')?.targetId).toBe(
-      'form-estimate-info',
+      'form-settlement',
     )
   })
 
   it('uses a slower AI_APPLY focus phase hold for readable result-card camera movement', () => {
-    expect(AI_APPLY_FOCUS_PHASE_HOLD_MS).toBe(1800)
+    expect(AI_APPLY_FOCUS_PHASE_HOLD_MS).toBe(2000)
     for (const categoryId of ['departure', 'destination', 'cargo', 'fare'] as const) {
-      expect(getAiApplyResultFocusMetadata(categoryId)?.duration).toBe(1600)
-      expect(getAiApplyCardFocusMetadata(categoryId)?.duration).toBe(1600)
+      expect(getAiApplyResultFocusMetadata(categoryId)?.duration).toBe(1800)
+      expect(getAiApplyCardFocusMetadata(categoryId)?.duration).toBe(1800)
     }
+  })
+
+  it('defines the unified AI_APPLY phase order without overlapping card targets', () => {
+    expect(AI_APPLY_FOCUS_PHASES.map((phase) => phase.targetId)).toEqual([
+      'ai-result-departure',
+      'form-pickup-location',
+      'ai-result-destination',
+      'form-delivery-location',
+      'form-estimate-info',
+      'ai-result-cargo',
+      'form-cargo-info',
+      'ai-result-fare',
+      'form-settlement',
+    ])
   })
 })

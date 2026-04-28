@@ -32,6 +32,8 @@
 | `TC-FZ-INT-02` | mobile preservation | mobile viewport에서 `MobileCardView`가 렌더링되고 focus viewport가 적용되지 않는다. | `REQ-FZ-009` |
 | `TC-FZ-INT-03` | step control regression | `StepIndicator` 클릭 후 해당 step focus state로 이동한다. | `REQ-FZ-011` |
 | `TC-FZ-INT-04` | interactive overlay regression | interactive mode에서 overlay area execute와 tooltip이 유지된다. | `REQ-FZ-012` |
+| `TC-FZ-INT-05` | unified AI_APPLY phase order | departure result → pickup card → destination result → delivery card → estimate card → cargo result → cargo card → fare result → settlement card 순서가 유지된다. | `REQ-FZ-005`, `REQ-FZ-006` |
+| `TC-FZ-INT-06` | card-only fill/highlight | focus-driven `AI_APPLY`에서 현재 카드만 revealed/active 되고 column pulse는 꺼진다. | `REQ-FZ-013`, `REQ-FZ-015` |
 
 ---
 
