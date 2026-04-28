@@ -9,3 +9,4 @@
 | IDEA-20260424-001 | F2 Mock 스키마 재설계 | Go | 77.65 | Standard | archived | [archive](../archive/f2-mock-schema-redesign/ARCHIVE-F2.md) | EPIC-20260422-001 |
 | IDEA-20260424-002 | F4 레이아웃 정비 + Hit-Area 재정렬 | Go | 72.8 | Standard | archived | [archive](../archive/f4-layout-hit-area-realignment/ARCHIVE-F4.md) | EPIC-20260422-001 |
 | IDEA-20260427-001 | Hero 섹션 interactive liquid gradient 배경 도입 | Go (override) | 59.1 | Lite | archived | [archive](../archive/hero-liquid-gradient-background/ARCHIVE-HLG.md) | - |
+| IDEA-20260427-003 | Dash Preview 단계별 포커스 줌 애니메이션 | Go | 73.8 | Lite | approved | [screening](20-approved/SCREENING-20260427-003.md) | - |
