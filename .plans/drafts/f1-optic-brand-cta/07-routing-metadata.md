@@ -15,7 +15,8 @@
 | Stitch required | `false` |
 | Draft scope | `approved` |
 | Bridge | `done` |
-| Recommended next | `/dev-feature .plans/features/active/f1-optic-brand-cta/` |
+| Dev feature | `done` |
+| Recommended next | `/dev-run .plans/features/active/f1-optic-brand-cta/` |
 
 ## 근거
 
@@ -27,4 +28,4 @@
 ## 다음 게이트
 
 1. 서비스 URL 공개 가능성 확인
-2. `/dev-feature .plans/features/active/f1-optic-brand-cta/`
+2. `/dev-run .plans/features/active/f1-optic-brand-cta/`

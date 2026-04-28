@@ -79,3 +79,4 @@
 | 2026-04-28 | IDEA-20260428-001 사용자 Go 승인 — 상태 `screened → approved`, `20-approved` 이동 |
 | 2026-04-28 | IDEA-20260428-001 draft 생성 — `f1-optic-brand-cta`, Lite lane, 다음 단계 scope 확인 후 `/plan-bridge` 또는 dev handoff |
 | 2026-04-28 | IDEA-20260428-001 Bridge 완료 — active feature context 생성, 다음 단계 `/dev-feature` |
+| 2026-04-28 | IDEA-20260428-001 `/dev-feature` 완료 — Feature Package 생성, 다음 단계 `/dev-run` |
