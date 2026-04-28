@@ -315,8 +315,8 @@ const PREVIEW_FOCUS_BY_STEP: Readonly<Record<StepId, PreviewFocusMetadata>> = {
     targetId: 'ai-input-textarea',
     label: '카톡 텍스트 입력창',
     viewport: {
-      desktop: { scale: 1.22, x: -16, y: 8 },
-      tablet: { scale: 1.16, x: -12, y: 6 },
+      desktop: { scale: 1.22, x: 14, y: 8 },
+      tablet: { scale: 1.16, x: 10, y: 6 },
     },
     duration: 900,
     reducedMotionFallback: {
@@ -330,8 +330,8 @@ const PREVIEW_FOCUS_BY_STEP: Readonly<Record<StepId, PreviewFocusMetadata>> = {
     targetId: 'ai-extract-button',
     label: '추출하기 버튼',
     viewport: {
-      desktop: { scale: 1.18, x: -15, y: 16 },
-      tablet: { scale: 1.12, x: -10, y: 12 },
+      desktop: { scale: 1.18, x: 14, y: 16 },
+      tablet: { scale: 1.12, x: 10, y: 12 },
     },
     duration: 700,
     reducedMotionFallback: {
@@ -345,8 +345,8 @@ const PREVIEW_FOCUS_BY_STEP: Readonly<Record<StepId, PreviewFocusMetadata>> = {
     targetId: 'ai-result-group',
     label: '추출 결과 그룹',
     viewport: {
-      desktop: { scale: 1.16, x: -16, y: 4 },
-      tablet: { scale: 1.1, x: -11, y: 4 },
+      desktop: { scale: 1.16, x: 12, y: 4 },
+      tablet: { scale: 1.1, x: 8, y: 4 },
     },
     duration: 900,
     reducedMotionFallback: {
@@ -407,20 +407,20 @@ const AI_APPLY_RESULT_FOCUS_BY_CATEGORY: Readonly<
   Record<AiCategoryId, PreviewFocusMetadata>
 > = {
   departure: buildAiApplyFocusMetadata('ai-result-departure', '상차지 추출정보', {
-    desktop: { scale: 1.18, x: -16, y: -2 },
-    tablet: { scale: 1.12, x: -10, y: -2 },
+    desktop: { scale: 1.18, x: 14, y: -2 },
+    tablet: { scale: 1.12, x: 10, y: -2 },
   }),
   destination: buildAiApplyFocusMetadata('ai-result-destination', '하차지 추출정보', {
-    desktop: { scale: 1.18, x: -16, y: -8 },
-    tablet: { scale: 1.12, x: -10, y: -6 },
+    desktop: { scale: 1.18, x: 14, y: -8 },
+    tablet: { scale: 1.12, x: 10, y: -6 },
   }),
   cargo: buildAiApplyFocusMetadata('ai-result-cargo', '화물 정보 추출정보', {
-    desktop: { scale: 1.18, x: -16, y: -14 },
-    tablet: { scale: 1.12, x: -10, y: -10 },
+    desktop: { scale: 1.18, x: 14, y: -14 },
+    tablet: { scale: 1.12, x: 10, y: -10 },
   }),
   fare: buildAiApplyFocusMetadata('ai-result-fare', '운임 추출정보', {
-    desktop: { scale: 1.18, x: -16, y: -20 },
-    tablet: { scale: 1.12, x: -10, y: -14 },
+    desktop: { scale: 1.18, x: 14, y: -20 },
+    tablet: { scale: 1.12, x: 10, y: -14 },
   }),
 } as const
 

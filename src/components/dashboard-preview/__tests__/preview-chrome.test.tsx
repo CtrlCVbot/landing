@@ -27,7 +27,7 @@ describe('PreviewChrome focus viewport (TC-FZ-VIS-01/02/03/04)', () => {
       'ai-input-textarea',
     )
     expect(focusViewport.style.transform).toBe(
-      'translate3d(-16%, 8%, 0) scale(1.22)',
+      'translate3d(14%, 8%, 0) scale(1.22)',
     )
     expect(focusViewport.style.transitionDuration).toBe('900ms')
     expect(focusViewport).toContainElement(screen.getByTestId('child-element'))
@@ -50,7 +50,7 @@ describe('PreviewChrome focus viewport (TC-FZ-VIS-01/02/03/04)', () => {
       'ai-extract-button',
     )
     expect(focusViewport.style.transform).toBe(
-      'translate3d(-10%, 12%, 0) scale(1.12)',
+      'translate3d(10%, 12%, 0) scale(1.12)',
     )
   })
 

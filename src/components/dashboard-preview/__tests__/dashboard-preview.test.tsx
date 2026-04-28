@@ -335,7 +335,7 @@ describe('DashboardPreview — Phase 3 Feature flag', () => {
         'ai-input-textarea',
       )
       expect(focusViewport.style.transform).toBe(
-        'translate3d(-16%, 8%, 0) scale(1.22)',
+        'translate3d(14%, 8%, 0) scale(1.22)',
       )
     })
 
@@ -349,7 +349,7 @@ describe('DashboardPreview — Phase 3 Feature flag', () => {
         'scale(0.4)',
       )
       expect(screen.getByTestId('focus-viewport').style.transform).toBe(
-        'translate3d(-10%, 12%, 0) scale(1.12)',
+        'translate3d(10%, 12%, 0) scale(1.12)',
       )
     })
 
