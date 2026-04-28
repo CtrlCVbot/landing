@@ -45,12 +45,13 @@
 
 ### F3 — 옵션↔추가요금 파생 로직
 
-- **IDEA**: 미등록
+- **IDEA**: [IDEA-20260427-002](../../../ideas/10-screening/IDEA-20260427-002.md)
 - **Lane**: Lite (파일 1~2 건 중심, 스펙만 확정되면 구현 단순)
 - **RICE 예상**: 스크리닝 시 확정 — 체크 시 즉각 피드백이라는 UX 효과 큼 (Impact 중상), 매핑 스펙 부재 리스크 (Confidence 중간)
 - **범위**: `src/lib/mock-data.ts` 에 `OPTION_FEE_MAP` 상수 추가 (예: `direct → { type: '직송', amount: 50000 }` 등, 스펙은 `/plan-draft` 확정). `settlement-section.tsx` 또는 `order-form/index.tsx` 에서 `options` 변화 시 `additionalFees` 파생. 기존 고정 `{ id: 'fee-toll', ... }` 은 기본값으로 유지 또는 제거 결정.
+- **Screening**: [SCREENING-20260427-002](../../../ideas/10-screening/SCREENING-20260427-002.md) — Go, 77.8, Lite
 - **포함 이슈**: [2-5]
-- **상태**: pending
+- **상태**: screened (Go 제안, 사용자 승인 대기)
 
 ### F4 — 레이아웃 정비 + Hit-Area 재정렬
 
@@ -415,6 +416,141 @@ Phase B 는 Phase A 의 `/plan-idea → /plan-screen → /plan-draft → /plan-p
 
 ---
 
+### Phase C / F3 착수 전 체크
+
+Phase C 는 단일 Feature **F3 — 옵션↔추가요금 파생 로직**만 진행한다. 목표는 F2 에서 정착된 `formData.options` 를 정산 정보의 `additionalFees` 로 안전하게 연결하고, 모든 demo-safe scenario 에서 옵션 표시와 정산 금액이 서로 어긋나지 않게 만드는 것이다.
+
+- [x] F2/F4 구현·검증·아카이브 완료
+- [x] F2 `PREVIEW_MOCK_SCENARIOS` 와 `formData.options` 구조 정착
+- [x] F3 IDEA ID 발급 — [IDEA-20260427-002](../../../ideas/10-screening/IDEA-20260427-002.md)
+- [x] F3 screening 완료 — [SCREENING-20260427-002](../../../ideas/10-screening/SCREENING-20260427-002.md), Go 제안, Lite lane
+- [ ] `OPTION_FEE_MAP` 매핑 스펙 확정
+- [ ] 추가요금 합산 공식 확정 (`청구 운임 = 기본 운임 + 추가요금` 기준 여부)
+- [ ] `mismatch-risk` fixture 에서도 옵션↔정산 불일치 검증 케이스 유지 여부 결정
+
+### Phase C / F3 실행 로드맵 (8단계)
+
+Phase C 는 `/plan-idea → /plan-screen → /plan-draft → /plan-bridge → /dev-feature → /dev-run → /dev-verify → /plan-archive` 순서로 진행한다. F3 는 Lite 후보지만, 정산 금액에 닿는 변경이므로 테스트와 검증 게이트는 Standard 수준으로 유지한다.
+
+### Step 1. F3 IDEA 등록
+
+```bash
+/plan-idea "F3 옵션↔추가요금 파생 로직 — OPTION_FEE_MAP + settlement 파생" --epic=EPIC-20260422-001
+```
+
+- 목적: F3 를 Epic 자식 Feature 로 공식 등록하고 IDEA ID 를 발급한다.
+- 핵심 문제: 현재 추가요금은 옵션 선택과 독립된 고정 데이터처럼 보일 수 있어, AI 적용 결과와 정산 표시 사이에 drift 가 생길 수 있다.
+- Pending question: 옵션별 요금 매핑, 합산 공식, fixture-only 시나리오 처리 방식을 명시한다.
+
+### Step 2. Screening
+
+```bash
+/plan-screen .plans/ideas/00-inbox/{F3-idea}.md --framework rice
+```
+
+- 예상 Lane: Lite
+- 상향 조건: 추가요금이 운임 합계, 수익 계산, scenario schema 변경까지 확장되면 Standard 로 상향한다.
+- 승인 기준: F2/F4 이후 마지막 Phase 로서 Epic 완료에 필요한 필수 보정인지 확인한다.
+
+### Step 3. Draft 작성 + 매핑 스펙 확정
+
+```bash
+/plan-draft .plans/ideas/20-approved/{F3-idea}.md --slug=f3-option-fee-derivation
+```
+
+- `OPTION_FEE_MAP` 의 key 는 `formData.options` 의 option id 와 1:1 로 맞춘다.
+- 각 항목은 최소 `optionId`, `feeId`, `label`, `amount`, `appliesTo` 를 가진다.
+- `additionalFees` 는 scenario 에 직접 고정하기보다 선택된 option 에서 파생하는 방향을 기본안으로 둔다.
+- Draft 에서 결정할 예시:
+  - `direct` → `직송 추가`, `50,000원`
+  - `manual` → `수작업`, `30,000원`
+  - `cold` / `refrigerated` → `냉장/냉동`, 금액 미정
+  - `night` → `야간 상하차`, 금액 미정
+
+### Step 4. Draft Review + 승인 게이트
+
+```bash
+/plan-review .plans/drafts/f3-option-fee-derivation/01-draft.md --type=draft
+```
+
+- 검토 기준: 옵션 ID, 추가요금 ID, 금액, 정산 표시 위치가 모두 추적 가능해야 한다.
+- Lite 로 진행하더라도 acceptance criteria, test cases, 결정 로그는 누락하지 않는다.
+- 금액 정책이 불명확하면 구현으로 넘어가지 않고 Draft 에 pending decision 으로 고정한다.
+
+### Step 5. Bridge + Feature Package 생성
+
+```bash
+/plan-bridge f3-option-fee-derivation
+/dev-feature .plans/features/active/f3-option-fee-derivation/
+```
+
+- 산출: `00-context`, `02-package`, `03-dev-notes`
+- TASK 분할 권장:
+  - T-F3-01: `OPTION_FEE_MAP` 및 파생 helper 추가
+  - T-F3-02: `order-form` 또는 `SettlementSection` 의 additionalFees source 전환
+  - T-F3-03: scenario 옵션과 정산 금액 정합성 테스트
+  - T-F3-04: preview manual verification + archive notes
+
+### Step 6. 구현
+
+```bash
+/dev-run .plans/features/active/f3-option-fee-derivation/
+```
+
+- 구현 방향:
+  - `src/lib/mock-data.ts` 에 옵션별 추가요금 매핑과 helper 를 둔다.
+  - `formData.options` 에서 checked option 을 계산해 `additionalFees` 를 만든다.
+  - `SettlementSection` 은 고정 mock 값보다 파생 결과를 우선 사용한다.
+  - 기존 demo-safe random scenario 3개 이상에서 옵션과 추가요금이 함께 바뀌는지 검증한다.
+- 범위 제한:
+  - 공개 scenario selector UI 는 만들지 않는다.
+  - F2 의 staged reveal timeline 은 유지한다.
+  - F4 의 DOMRect 기반 hit-area 로직은 변경하지 않는다.
+
+### Step 7. 검증
+
+```bash
+/dev-verify .plans/features/active/f3-option-fee-derivation/
+```
+
+- 필수 자동 검증:
+  - `pnpm test`
+  - `pnpm typecheck`
+  - `pnpm lint`
+  - `pnpm build`
+- 필수 테스트 관점:
+  - 옵션 unchecked 상태에서는 추가요금이 표시되지 않는다.
+  - 옵션 checked 상태에서는 `OPTION_FEE_MAP` 기준 추가요금이 표시된다.
+  - 운임/정산 합계가 기본 운임과 추가요금 합산 규칙을 따른다.
+  - `mismatch-risk` 는 random preview pool 에 들어가지 않는다.
+- 수동 확인:
+  - `http://localhost:3000/` 에서 3회 이상 preview loop 를 확인한다.
+  - scenario 별 옵션 checked 값과 정산 추가요금 표시가 일치하는지 기록한다.
+
+### Step 8. Archive + Epic 완료 준비
+
+```bash
+/plan-archive f3-option-fee-derivation
+/plan-epic advance EPIC-20260422-001 --to=completed
+/plan-epic archive EPIC-20260422-001
+```
+
+- F3 archive 완료 후 모든 자식 Feature 는 archived 상태가 된다.
+- Epic 은 `active → completed → archived` 순서로 전이한다.
+- archive 전에 `backlog.md`, `screening-matrix.md`, `archive/index.md`, `epics/index.md` 의 F3 상태와 링크를 동기화한다.
+
+### Phase C 종료 조건 (M-Epic-3, 2026-05-20 예정)
+
+- [ ] F3 IDEA → screening → draft → review → bridge → implementation → verify → archive 완료
+- [ ] `OPTION_FEE_MAP` 과 option id 매핑이 decision log 에 기록됨
+- [ ] `additionalFees` 가 selected option 에서 파생되고 고정 mock drift 가 제거됨
+- [ ] demo-safe scenario 3개 이상에서 옵션 checked 값과 정산 추가요금이 일치함
+- [ ] fresh `pnpm test` + 필요한 `typecheck` / `lint` / `build` 통과 증거 확보
+- [ ] Epic 자식 Feature F1~F5 가 모두 archived 상태
+- [ ] Epic `completed → archived` 전이 준비 완료
+
+---
+
 ### Phase 전환 규칙
 
 Phase A 완료 후 **세션 종료** (context 50% 규칙 + 사용자 결정). Phase B 는 **위 착수 전 체크를 마친 뒤** 별도 세션에서 착수한다:
@@ -482,3 +618,6 @@ Epic 상태는 **`active` 유지** (Phase B/C 완료까지). 모든 자식 Featu
 | 2026-04-27 | F4 archive 실행 — `ARCHIVE-F4.md` 생성, IDEA/screening/draft/feature package sources 이동, archive index/backlog/screening matrix 갱신. |
 | 2026-04-27 | F2 구현/검증 완료 — frame split, demo-safe random scenario rotation, pre-apply full placeholder, `AI_APPLY` staged reveal timeline, animation slowdown 반영. `pnpm test` 45 files / 1039 tests, `typecheck`, `lint`, `build` PASS. |
 | 2026-04-27 | F2 archive 실행 — `ARCHIVE-F2.md` 생성, IDEA/screening/draft/feature package sources 이동, archive index/backlog/screening matrix 갱신. Phase B 종료 조건 충족, Phase C F3 착수 준비. |
+| 2026-04-27 | Phase C / F3 실행 로드맵 추가 — F3 IDEA 등록부터 `/plan-archive`, Epic completed/archive 전이까지 8단계 진행 순서와 종료 조건을 정의. |
+| 2026-04-27 | F3 `/plan-idea` 실행 — IDEA-20260427-002 등록, Phase C 착수 전 체크의 IDEA ID 발급 항목 완료 처리. |
+| 2026-04-27 | F3 `/plan-screen` 실행 — SCREENING-20260427-002 작성, Go 77.8점, Lite lane, 사용자 승인 대기 상태로 전환. |
