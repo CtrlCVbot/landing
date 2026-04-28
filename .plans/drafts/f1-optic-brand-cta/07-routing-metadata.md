@@ -16,7 +16,8 @@
 | Draft scope | `approved` |
 | Bridge | `done` |
 | Dev feature | `done` |
-| Recommended next | `/dev-run .plans/features/active/f1-optic-brand-cta/` |
+| Dev run | `done` |
+| Recommended next | `/dev-verify .plans/features/active/f1-optic-brand-cta/` |
 
 ## 근거
 
@@ -27,5 +28,5 @@
 
 ## 다음 게이트
 
-1. 서비스 URL 공개 가능성 확인
-2. `/dev-run .plans/features/active/f1-optic-brand-cta/`
+1. `/dev-verify .plans/features/active/f1-optic-brand-cta/`
+2. 검증 통과 후 `/plan-archive f1-optic-brand-cta`

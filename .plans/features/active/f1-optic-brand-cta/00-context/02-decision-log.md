@@ -41,12 +41,12 @@
 
 | 항목 | 값 |
 |---|---|
-| 상태 | pending verification |
+| 상태 | verified |
 | 날짜 | 2026-04-28 |
 | 근거 | Scope Review 조건부 확인 사항 |
 
-`https://mm-broker-test.vercel.app/`는 고객 노출 전에 공개 가능성을 확인해야 한다.
-불가하면 구현 전에 상수 값을 비활성 또는 대체 URL로 조정한다.
+`https://mm-broker-test.vercel.app/`는 2026-04-28 `/dev-run` 중 실제 페이지 응답을 확인했다.
+CTA는 이 URL을 그대로 사용한다.
 
 ## D-BRAND-005 - DashboardPreview와 Hero는 수정하지 않음
 
@@ -58,3 +58,14 @@
 
 현재 F1은 브랜드/CTA 최소 반영 작업이다.
 Hero 구조, DashboardPreview 동작, workflow 섹션은 각각 별도 Feature 범위로 유지한다.
+
+## D-BRAND-006 - 모바일 menu CTA는 세로 action group으로 배치
+
+| 항목 | 값 |
+|---|---|
+| 상태 | accepted |
+| 날짜 | 2026-04-28 |
+| 근거 | 375px browser QA |
+
+mobile menu에서 `OPTIC 바로가기`와 `도입 문의하기`를 같은 폭의 세로 action group으로 배치한다.
+375px viewport에서 두 CTA의 bounding box가 겹치지 않음을 확인했다.

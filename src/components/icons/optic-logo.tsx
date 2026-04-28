@@ -1,3 +1,5 @@
+import { BRAND } from '@/lib/constants'
+
 interface OpticLogoProps {
   readonly className?: string
   readonly width?: number
@@ -13,20 +15,20 @@ export function OpticLogo({ className, width = 120, height = 32 }: OpticLogoProp
       height={height}
       className={className}
       role="img"
-      aria-label="OPTIC logo"
+      aria-label={BRAND.logoLabel}
     >
       <text
         x="50%"
         y="50%"
         dominantBaseline="central"
         textAnchor="middle"
-        fill="white"
+        fill="currentColor"
         fontWeight="bold"
         fontSize="24"
         letterSpacing="4"
         fontFamily="system-ui, -apple-system, sans-serif"
       >
-        OPTIC
+        {BRAND.primary}
       </text>
     </svg>
   )

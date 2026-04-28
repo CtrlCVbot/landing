@@ -1,3 +1,24 @@
+export const BRAND = {
+  primary: 'OPTIC',
+  auxiliary: 'OPTICS',
+  poweredByLabel: 'Powered by OPTICS',
+  logoLabel: 'OPTIC logo',
+  copyrightLabel: '© 2026 OPTIC. All rights reserved.',
+} as const
+
+export const CTA_LINKS = {
+  service: {
+    label: 'OPTIC 바로가기',
+    href: 'https://mm-broker-test.vercel.app/',
+    target: '_blank',
+    rel: 'noopener noreferrer',
+  },
+  contact: {
+    label: '도입 문의하기',
+    href: '#contact',
+  },
+} as const
+
 export const NAV_LINKS = [
   { label: '기능', href: '#features' },
   { label: '제품', href: '#products' },

@@ -4,7 +4,7 @@
 > **IDEA**: [IDEA-20260428-001](../../ideas/20-approved/IDEA-20260428-001.md)
 > **Epic**: [EPIC-20260428-001](../../epics/10-planning/EPIC-20260428-001/00-epic-brief.md) (Phase A, F1)
 > **작성일**: 2026-04-28
-> **상태**: feature-package-ready
+> **상태**: implemented
 > **Lane**: Lite
 
 ---
@@ -95,9 +95,8 @@
 
 ## 8. 다음 단계
 
-1. Feature Package가 생성되었으므로 `/dev-run .plans/features/active/f1-optic-brand-cta/`로 진행한다.
-2. 구현 전 `https://mm-broker-test.vercel.app/` 공개 가능성을 최종 확인한다.
-3. 구현 단계에서 테스트와 responsive 확인 evidence를 남긴다.
+1. 구현이 완료되었으므로 `/dev-verify .plans/features/active/f1-optic-brand-cta/`로 fresh verification을 진행한다.
+2. 검증 통과 후 `/plan-archive f1-optic-brand-cta`로 산출물을 정리한다.
 
 ## 9. 변경 이력
 
@@ -107,3 +106,4 @@
 | 2026-04-28 | Scope review 통과 — PRD/Wireframe/Stitch 생략 가능, 다음 단계 `/plan-bridge` |
 | 2026-04-28 | Bridge context 생성 — 다음 단계 `/dev-feature` |
 | 2026-04-28 | Feature Package 생성 — 다음 단계 `/dev-run` |
+| 2026-04-28 | `/dev-run` 구현 완료 — 다음 단계 `/dev-verify` |

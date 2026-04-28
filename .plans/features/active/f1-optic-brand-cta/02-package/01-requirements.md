@@ -31,9 +31,9 @@
 
 | 항목 | Severity | Action | 구현 전 처리 |
 |---|---|---|---|
-| 서비스 URL 공개 가능성 | medium | needs-verification | URL 노출 승인 또는 대체 URL 결정 |
+| 서비스 URL 공개 가능성 | medium | verified | 2026-04-28 실제 페이지 응답 확인 |
 | 로고 asset 최종 승인 | medium | queued | F1에서는 임시 로고 유지, F5에서 처리 |
-| 모바일 CTA 배치 | low | queued | 구현 후 375px 기준 확인 |
+| 모바일 CTA 배치 | low | verified | 375px browser QA에서 겹침 없음 |
 
 ## 4. Out of Scope
 

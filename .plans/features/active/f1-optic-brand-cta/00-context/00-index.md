@@ -54,6 +54,12 @@
 | [09-test-cases.md](../02-package/09-test-cases.md) | 테스트 케이스 |
 | [10-release-checklist.md](../02-package/10-release-checklist.md) | release gate |
 
+## Dev Notes
+
+| 파일 | 역할 |
+|---|---|
+| [dev-output-summary.md](../03-dev-notes/dev-output-summary.md) | `/dev-run` 구현 결과와 검증 요약 |
+
 ## 유지해야 할 확인 항목
 
 | 항목 | Severity | Action |

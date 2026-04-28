@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Menu, X } from 'lucide-react'
-import { NAV_LINKS } from '@/lib/constants'
+import { ExternalLink, Menu, X } from 'lucide-react'
+import { BRAND, CTA_LINKS, NAV_LINKS } from '@/lib/constants'
 import { useScrollSpy } from '@/hooks/use-scroll-spy'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { cn } from '@/lib/utils'
@@ -38,7 +38,7 @@ export function Header() {
     >
       <div className="max-w-7xl mx-auto px-5 md:px-10 lg:px-20 h-full flex items-center justify-between">
         <a href="#" className="text-xl font-bold text-foreground">
-          OPTIC
+          {BRAND.primary}
         </a>
 
         <nav className="hidden md:flex items-center gap-8">
@@ -64,10 +64,19 @@ export function Header() {
         <div className="hidden md:flex items-center gap-3">
           <ThemeToggle />
           <a
-            href="#contact"
+            href={CTA_LINKS.service.href}
+            target={CTA_LINKS.service.target}
+            rel={CTA_LINKS.service.rel}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-border px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-accent/10"
+          >
+            {CTA_LINKS.service.label}
+            <ExternalLink className="h-4 w-4" aria-hidden="true" />
+          </a>
+          <a
+            href={CTA_LINKS.contact.href}
             className="text-sm font-semibold text-white bg-gradient-to-r from-purple-600 to-blue-600 px-5 py-2 rounded-lg"
           >
-            도입 문의하기
+            {CTA_LINKS.contact.label}
           </a>
         </div>
 
@@ -85,7 +94,7 @@ export function Header() {
       </div>
 
       {isMobileOpen && (
-        <div className="fixed inset-0 z-50 bg-background/95 flex flex-col items-center justify-center gap-8">
+        <div className="fixed inset-0 z-50 bg-background/95 flex flex-col items-center justify-center gap-8 px-6">
           <button
             type="button"
             className="absolute top-5 right-5 text-foreground"
@@ -106,13 +115,25 @@ export function Header() {
             </a>
           ))}
 
-          <a
-            href="#contact"
-            className="text-lg font-semibold text-white bg-gradient-to-r from-purple-600 to-blue-600 px-8 py-3 rounded-xl"
-            onClick={closeMobile}
-          >
-            도입 문의하기
-          </a>
+          <div className="flex w-full max-w-xs flex-col gap-3">
+            <a
+              href={CTA_LINKS.service.href}
+              target={CTA_LINKS.service.target}
+              rel={CTA_LINKS.service.rel}
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-border px-6 py-3 text-base font-semibold text-foreground transition-colors hover:bg-accent/10"
+              onClick={closeMobile}
+            >
+              {CTA_LINKS.service.label}
+              <ExternalLink className="h-4 w-4" aria-hidden="true" />
+            </a>
+            <a
+              href={CTA_LINKS.contact.href}
+              className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-3 text-base font-semibold text-white"
+              onClick={closeMobile}
+            >
+              {CTA_LINKS.contact.label}
+            </a>
+          </div>
         </div>
       )}
     </header>

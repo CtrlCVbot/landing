@@ -1,6 +1,6 @@
 'use client'
 
-import { FOOTER_LINKS } from '@/lib/constants'
+import { BRAND, FOOTER_LINKS } from '@/lib/constants'
 
 export function Footer() {
   return (
@@ -8,7 +8,9 @@ export function Footer() {
       <div className="max-w-7xl mx-auto px-5 md:px-10 lg:px-20 py-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div>
-            <span className="text-xl font-bold text-foreground">OPTIC</span>
+            <span className="text-xl font-bold text-foreground">
+              {BRAND.primary}
+            </span>
           </div>
 
           {FOOTER_LINKS.map((group) => (
@@ -33,9 +35,11 @@ export function Footer() {
         </div>
 
         <div className="border-t border-border mt-8 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <span className="text-sm text-muted-foreground">Powered by OPTICS</span>
           <span className="text-sm text-muted-foreground">
-            &copy; 2026 OPTIC. All rights reserved.
+            {BRAND.poweredByLabel}
+          </span>
+          <span className="text-sm text-muted-foreground">
+            {BRAND.copyrightLabel}
           </span>
         </div>
       </div>
