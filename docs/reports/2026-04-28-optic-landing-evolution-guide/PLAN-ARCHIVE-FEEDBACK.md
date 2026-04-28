@@ -210,7 +210,7 @@ package mode에서 `GUIDE-{title}.md` 템플릿을 제공한다.
 | 결과물 | 경로 |
 | --- | --- |
 | Root archive registry | `.plans/archive/index.md` |
-| Package index | `.plans/archive/2026-04-28-optic-landing-evolution-guide/INDEX.md` |
-| Final guide | `.plans/archive/2026-04-28-optic-landing-evolution-guide/GUIDE-landing-evolution.md` |
-| Consolidation plan | `.plans/archive/2026-04-28-optic-landing-evolution-guide/00-consolidation-plan.md` |
-| Internal source bundles | `.plans/archive/2026-04-28-optic-landing-evolution-guide/internal-bundles/` |
+| Package index | `docs/reports/2026-04-28-optic-landing-evolution-guide/INDEX.md` |
+| Final guide | `docs/reports/2026-04-28-optic-landing-evolution-guide/GUIDE-landing-evolution.md` |
+| Consolidation plan | `docs/reports/2026-04-28-optic-landing-evolution-guide/00-consolidation-plan.md` |
+| Internal source bundles | `docs/reports/2026-04-28-optic-landing-evolution-guide/internal-bundles/` |

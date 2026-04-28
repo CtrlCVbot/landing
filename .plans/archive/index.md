@@ -7,7 +7,7 @@
 
 | Package | Status | Purpose | Package Index | Main Guide | Internal Bundles |
 | --- | --- | --- | --- | --- | --- |
-| `2026-04-28-optic-landing-evolution-guide` | active | OPTIC landing planning/development evolution guide | [INDEX](2026-04-28-optic-landing-evolution-guide/INDEX.md) | [GUIDE](2026-04-28-optic-landing-evolution-guide/GUIDE-landing-evolution.md) | [internal-bundles](2026-04-28-optic-landing-evolution-guide/internal-bundles/) |
+| `2026-04-28-optic-landing-evolution-guide` | active | OPTIC landing planning/development evolution guide | [INDEX](../../docs/reports/2026-04-28-optic-landing-evolution-guide/INDEX.md) | [GUIDE](../../docs/reports/2026-04-28-optic-landing-evolution-guide/GUIDE-landing-evolution.md) | [internal-bundles](../../docs/reports/2026-04-28-optic-landing-evolution-guide/internal-bundles/) |
 
 ## Archive Management Rules
 
@@ -23,6 +23,8 @@
 ```text
 .plans/archive/
   index.md
+
+docs/reports/
   2026-04-28-optic-landing-evolution-guide/
     INDEX.md
     GUIDE-landing-evolution.md
@@ -35,7 +37,7 @@
 
 ## Add New Archive Package
 
-1. Create `.plans/archive/YYYY-MM-DD-title/`.
+1. Create `docs/reports/YYYY-MM-DD-title/` for report-style archive packages.
 2. Put `INDEX.md`, the final guide, supporting plan docs, and `internal-bundles/` inside that package folder.
 3. Add one row to `Active Archive Packages`.
 4. Keep package-specific source maps inside the package `INDEX.md`.

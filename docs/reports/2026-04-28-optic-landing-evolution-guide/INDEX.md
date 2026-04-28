@@ -12,7 +12,7 @@
 | `claude-kit` 피드백 | `plan-archive` 패키지 모드 개선 피드백 | [PLAN-ARCHIVE-FEEDBACK.md](PLAN-ARCHIVE-FEEDBACK.md) |
 | 최종 프롬프트 패키지 | OPTIC/OPTICS 브랜드 v1.0과 로고 자산 가이드를 반영한 랜딩 개선 계획 | [improvements/final-prompt-package/](improvements/final-prompt-package/) |
 | 내부 번들 | 이전 기획/개발 산출물을 보존한 원본 아카이브 번들 | [internal-bundles/](internal-bundles/) |
-| 루트 아카이브 인덱스 | 전체 아카이브 패키지를 모아 보는 전역 목록 | [../index.md](../index.md) |
+| 루트 아카이브 인덱스 | 전체 아카이브 패키지를 모아 보는 전역 목록 | [../../../.plans/archive/index.md](../../../.plans/archive/index.md) |
 
 ## 읽는 순서
 
@@ -56,6 +56,6 @@
 | 주제 | 규칙 |
 | --- | --- |
 | 패키지 내부 링크 | 이 파일의 링크는 이 패키지 폴더 기준 상대 경로를 유지합니다. |
-| 루트 인덱스 | 루트 `../index.md`에는 모든 내부 번들이 아니라 아카이브 패키지만 나열합니다. |
+| 루트 인덱스 | 루트 `../../../.plans/archive/index.md`에는 모든 내부 번들이 아니라 아카이브 패키지만 나열합니다. |
 | 원본 보존 | 과거 원본 번들 문서는 경로 표준화만을 이유로 다시 쓰지 않습니다. |
 | 새 번들 추가 | 새 번들은 `internal-bundles/YYYY-MM-DD-NNN-slug/` 아래에 추가하고, 내부 번들 지도에 한 줄을 추가합니다. |
