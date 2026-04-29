@@ -36,7 +36,7 @@
   "wireframe_status": "draft-reviewed",
   "stitch_status": "skipped",
   "bridge_status": "completed-after-wireframe-refresh",
-  "dev_feature_status": "pending",
+  "dev_feature_status": "completed",
   "dev_run_status": "pending",
   "dev_verify_status": "pending",
   "archive_status": "pending",
@@ -59,8 +59,9 @@
       "OPTIC Billing"
     ]
   },
-  "next": "dev-feature",
-  "next_command": "/dev-feature .plans/features/active/f2-optic-copy-product-lineup/",
+  "feature_package": "../02-package/00-overview.md",
+  "next": "dev-run",
+  "next_command": "/dev-run .plans/features/active/f2-optic-copy-product-lineup/",
   "fallback_next": "/plan-review .plans/features/active/f2-optic-copy-product-lineup/00-context --type=bridge"
 }
 ```
@@ -71,5 +72,5 @@
 
 - P5는 사용자 피드백에 따라 진행했다. 제품 라인업 표시 구조를 wireframe으로 고정한다.
 - P6 Stitch는 생략한다. F2는 visual design handoff가 아니라 dev feature package로 직행한다.
-- `/dev-feature`는 이 context를 입력으로 `02-package`를 생성한다.
-- `/dev-run`은 `/dev-feature` 이후 진행한다.
+- `/dev-feature`는 완료되어 `02-package`를 생성했다.
+- `/dev-run`은 이 package를 SSOT로 사용해 TDD 구현을 진행한다.

@@ -3,7 +3,7 @@
 > **Feature**: F2 카피와 제품 라인업 정리
 > **Epic**: [EPIC-20260428-001](../../../../epics/10-planning/EPIC-20260428-001/00-epic-brief.md) Phase B, F2
 > **Scope**: Standard, dev, copy/data 정리
-> **Status**: bridged
+> **Status**: feature-package-ready
 > **Created**: 2026-04-29
 > **Plan Bridge**: completed
 
@@ -20,6 +20,22 @@
 | 06 | [06-architecture-binding.md](./06-architecture-binding.md) | current | 구조 SSOT 기반 허용 경로와 검증 경계 |
 | 07 | [07-routing-metadata.md](./07-routing-metadata.md) | current | P1-P7 routing metadata와 다음 단계 |
 | 08 | [08-epic-binding.md](./08-epic-binding.md) | current | Epic, IDEA, PRD 연결과 의존성 |
+
+---
+
+## 1-1. Feature Package
+
+| # | 파일 | 상태 | 설명 |
+|---|---|---|---|
+| 00 | [00-overview.md](../02-package/00-overview.md) | ready | 구조 계약과 경로 계약 |
+| 01 | [01-requirements.md](../02-package/01-requirements.md) | ready | 구현 요구사항 SSOT |
+| 02 | [02-ui-spec.md](../02-package/02-ui-spec.md) | ready | 섹션별 UI/copy 기준 |
+| 03 | [03-flow.md](../02-package/03-flow.md) | ready | landing scroll 및 업무 메시지 흐름 |
+| 06 | [06-domain-logic.md](../02-package/06-domain-logic.md) | ready | copy data와 product 상태 규칙 |
+| 07 | [07-error-handling.md](../02-package/07-error-handling.md) | ready | 정적 카피 feature 방어 기준 |
+| 08 | [08-dev-tasks.md](../02-package/08-dev-tasks.md) | ready | `/dev-run` TASK SSOT |
+| 09 | [09-test-cases.md](../02-package/09-test-cases.md) | ready | 테스트 케이스 |
+| 10 | [10-release-checklist.md](../02-package/10-release-checklist.md) | ready | release checklist |
 
 ---
 
@@ -68,14 +84,15 @@ F2는 F1에서 고정한 `OPTIC` 브랜드와 CTA 기준을 본문 섹션으로 
 | P5 Wireframe | done | 제품 라인업 표시 구조 고정 |
 | P6 Stitch | skipped | visual design handoff 대상이 아니므로 생략 |
 | P7 Bridge | done | wireframe-aware context package |
-| Dev Feature | pending | 다음 단계 |
+| Dev Feature | done | 02-package 생성 |
+| Dev Run | pending | 다음 단계 |
 
 ---
 
 ## 5. Next Step
 
 ```bash
-/dev-feature .plans/features/active/f2-optic-copy-product-lineup/
+/dev-run .plans/features/active/f2-optic-copy-product-lineup/
 ```
 
-`/dev-feature`에서는 이 context를 바탕으로 `02-package` 요구사항, UI spec, dev tasks, test cases를 생성한다. 구현은 그 다음 `/dev-run`에서 수행한다.
+`/dev-run`에서는 `02-package`의 요구사항, UI spec, dev tasks, test cases를 SSOT로 사용해 TDD 구현을 수행한다.

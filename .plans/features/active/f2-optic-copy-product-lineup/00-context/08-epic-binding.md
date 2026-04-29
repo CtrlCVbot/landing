@@ -59,4 +59,5 @@ F2는 구현 대상 제품을 `주선사용 운송 운영 콘솔` + `OPTIC Broke
 - [x] Allowed target paths 정의
 - [x] 제품 라인업 표시 계약 정의
 - [x] F3 handoff 기준 유지
-- [x] 다음 단계 `/dev-feature` 경로 명시
+- [x] Feature Package `02-package` 생성
+- [x] 다음 단계 `/dev-run` 경로 명시

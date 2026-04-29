@@ -28,13 +28,14 @@
 - **Lane**: Standard (여러 섹션 카피와 상수 정리)
 - **RICE 예상**: 78.0
 - **범위**: `src/lib/constants.ts`, `src/components/sections/features.tsx`, `problems.tsx`, `products.tsx`, `integrations.tsx`
-- **상태**: bridged, Dev feature 대기
+- **상태**: feature-package-ready, Dev run 대기
 - **Screening**: [SCREENING-20260429-001](../../../ideas/20-approved/SCREENING-20260429-001.md)
 - **Draft**: [f2-optic-copy-product-lineup](../../../drafts/f2-optic-copy-product-lineup/01-draft.md)
 - **PRD**: [f2-optic-copy-product-lineup-prd](../../../prd/10-approved/f2-optic-copy-product-lineup-prd.md)
 - **PRD Review**: [03-prd-review](../../../drafts/f2-optic-copy-product-lineup/03-prd-review.md)
 - **Wireframe**: [screens](../../../wireframes/f2-optic-copy-product-lineup/screens.md), [review](../../../wireframes/f2-optic-copy-product-lineup/04-wireframe-review.md)
 - **Bridge**: [00-index](../../../features/active/f2-optic-copy-product-lineup/00-context/00-index.md)
+- **Feature Package**: [00-overview](../../../features/active/f2-optic-copy-product-lineup/02-package/00-overview.md), [08-dev-tasks](../../../features/active/f2-optic-copy-product-lineup/02-package/08-dev-tasks.md)
 - **완료 기준**:
   - `Optic Cargo`, `서비스 테스트`, 과도한 `Cargo` 중심 표현이 제거된다.
   - 제품 라인업은 `주선사용 운송 운영 콘솔`, `화주용 운송 요청 포털` 두 가지가 현재 구현 대상으로 먼저 보이고, `OPTIC Broker`, `OPTIC Shipper`는 보조 라벨로 병기된다. `OPTIC Carrier`, `OPTIC Ops`, `OPTIC Billing`은 구현 예정으로 분리된다.
@@ -144,7 +145,7 @@
 | Feature | 상태 | TASK 진행 | 테스트 | 번들 영향 | 리뷰 |
 |---|:---:|:---:|:---:|:---:|:---:|
 | F1 | archived | dev-run 완료 | 통과 | 낮음 | 완료 |
-| F2 | bridged | Wireframe + Bridge 완료 | — | 중간 | Dev feature 대기 |
+| F2 | feature-package-ready | dev-feature 완료 | — | 중간 | Dev run 대기 |
 | F3 | pending | — | — | — | — |
 | F4 | pending | — | — | — | — |
 | F5 | pending | — | — | — | — |
@@ -191,3 +192,4 @@
 | 2026-04-29 | F2 Bridge context 생성 — 다음 단계 `/dev-feature` |
 | 2026-04-29 | F2 wireframe 작성 및 review 완료 — 제품 라인업 2개 구현 대상 + 3개 구현 예정 구조 고정, Bridge context 갱신 |
 | 2026-04-29 | F2 사용자 피드백 반영 — Features에 배차 단계의 화물맨 연동 기준 추가 |
+| 2026-04-29 | F2 Feature Package 생성 — 다음 단계 `/dev-run` |

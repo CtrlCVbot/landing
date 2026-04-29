@@ -95,3 +95,4 @@
 | 2026-04-29 | IDEA-20260429-001 Bridge context 생성 — 다음 단계 `/dev-feature` |
 | 2026-04-29 | IDEA-20260429-001 wireframe 작성 및 review 완료 — 제품 라인업 2개 구현 대상 + 3개 구현 예정 구조 고정, Bridge context 갱신 |
 | 2026-04-29 | IDEA-20260429-001 사용자 피드백 반영 — Features에 배차 단계의 화물맨 연동 기준 추가 |
+| 2026-04-29 | IDEA-20260429-001 `/dev-feature` 완료 — `02-package` 요구사항, UI spec, TASK, 테스트 케이스 생성 |
