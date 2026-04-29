@@ -10,7 +10,7 @@
 | 2026-04-24 | 002 |
 | 2026-04-27 | 004 |
 | 2026-04-28 | 001 |
-| 2026-04-29 | 001 |
+| 2026-04-29 | 002 |
 
 ## IDEA 목록
 
@@ -26,6 +26,7 @@
 | IDEA-20260427-004 | hero-01 레퍼런스 기반 Hero 섹션 재개선 | improvement | archived | 2026-04-27 | `archive/hero-01-reference-hero-refresh/sources/ideas` | [링크](../archive/hero-01-reference-hero-refresh/sources/ideas/IDEA-20260427-004.md) | - |
 | IDEA-20260428-001 | F1 브랜드, 로고, CTA 최소 반영 | improvement | archived | 2026-04-28 | `archive/f1-optic-brand-cta/sources/ideas` | [링크](../archive/f1-optic-brand-cta/sources/ideas/IDEA-20260428-001.md) | [EPIC-20260428-001](../epics/10-planning/EPIC-20260428-001/00-epic-brief.md) |
 | IDEA-20260429-001 | F2 카피와 제품 라인업 정리 | improvement | archived | 2026-04-29 | `archive/f2-optic-copy-product-lineup/sources/ideas` | [링크](../archive/f2-optic-copy-product-lineup/sources/ideas/IDEA-20260429-001.md) | [EPIC-20260428-001](../epics/10-planning/EPIC-20260428-001/00-epic-brief.md) |
+| IDEA-20260429-002 | F3 업무 매뉴얼형 스크롤 섹션 MVP | feature | approved | 2026-04-29 | `20-approved` | [링크](20-approved/IDEA-20260429-002.md) | [EPIC-20260428-001](../epics/10-planning/EPIC-20260428-001/00-epic-brief.md) |
 
 ---
 
@@ -96,3 +97,7 @@
 | 2026-04-29 | IDEA-20260429-001 wireframe 작성 및 review 완료 — 제품 라인업 2개 구현 대상 + 3개 구현 예정 구조 고정, Bridge context 갱신 |
 | 2026-04-29 | IDEA-20260429-001 사용자 피드백 반영 — Features에 배차 단계의 화물맨 연동 기준 추가 |
 | 2026-04-29 | IDEA-20260429-001 `/dev-feature` 완료 — `02-package` 요구사항, UI spec, TASK, 테스트 케이스 생성 |
+| 2026-04-29 | IDEA-20260429-002 신규 등록: EPIC-20260428-001 F3 업무 매뉴얼형 스크롤 섹션 MVP — 화주/주선사별 커스텀 가능한 업무 흐름 섹션 |
+| 2026-04-29 | IDEA-20260429-002 screening 완료 — RICE-style weighted score 81.6, Go 제안, Standard lane |
+| 2026-04-29 | IDEA-20260429-002 사용자 진행 요청 반영 — 상태 `approved`, `20-approved` 생성 |
+| 2026-04-29 | IDEA-20260429-002 draft 생성 — `f3-workflow-manual-section`, 다음 단계 `/plan-prd` |
