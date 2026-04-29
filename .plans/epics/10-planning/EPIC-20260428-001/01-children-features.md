@@ -24,12 +24,12 @@
 
 ### F2 — 카피와 제품 라인업 정리
 
-- **IDEA**: [IDEA-20260429-001](../../../ideas/10-screening/IDEA-20260429-001.md)
+- **IDEA**: [IDEA-20260429-001](../../../ideas/20-approved/IDEA-20260429-001.md)
 - **Lane**: Standard (여러 섹션 카피와 상수 정리)
 - **RICE 예상**: 78.0
 - **범위**: `src/lib/constants.ts`, `src/components/sections/features.tsx`, `problems.tsx`, `products.tsx`, `integrations.tsx`
-- **상태**: screened, 사용자 승인 대기
-- **Screening**: [SCREENING-20260429-001](../../../ideas/10-screening/SCREENING-20260429-001.md)
+- **상태**: approved, draft 대기
+- **Screening**: [SCREENING-20260429-001](../../../ideas/20-approved/SCREENING-20260429-001.md)
 - **완료 기준**:
   - `Optic Cargo`, `서비스 테스트`, 과도한 `Cargo` 중심 표현이 제거된다.
   - 제품 라인업은 `OPTIC Broker`, `OPTIC Shipper`, `OPTIC Carrier`, `OPTIC Ops`, `OPTIC Billing` 기준으로 정렬된다.
@@ -138,7 +138,7 @@
 | Feature | 상태 | TASK 진행 | 테스트 | 번들 영향 | 리뷰 |
 |---|:---:|:---:|:---:|:---:|:---:|
 | F1 | archived | dev-run 완료 | 통과 | 낮음 | 완료 |
-| F2 | screened | — | — | — | Go 제안 |
+| F2 | approved | — | — | — | draft 대기 |
 | F3 | pending | — | — | — | — |
 | F4 | pending | — | — | — | — |
 | F5 | pending | — | — | — | — |
@@ -176,3 +176,4 @@
 | 2026-04-29 | F1 archive 완료 — `ARCHIVE-F1.md` 생성 및 sources 이동 |
 | 2026-04-29 | F2 자식 IDEA `IDEA-20260429-001` 등록 — 다음 단계 `/plan-screen` |
 | 2026-04-29 | F2 screening 완료 — RICE 78.0, Go 제안, Standard lane, 사용자 승인 대기 |
+| 2026-04-29 | F2 사용자 Go 승인 — `20-approved` 이동, 다음 단계 `/plan-draft` |
