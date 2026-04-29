@@ -3,7 +3,7 @@
 > **Feature**: F2 카피와 제품 라인업 정리
 > **Epic**: [EPIC-20260428-001](../../../../epics/10-planning/EPIC-20260428-001/00-epic-brief.md) Phase B, F2
 > **Scope**: Standard, dev, copy/data 정리
-> **Status**: dev-run-completed
+> **Status**: archived
 > **Created**: 2026-04-29
 > **Plan Bridge**: completed
 
@@ -87,14 +87,10 @@ F2는 F1에서 고정한 `OPTIC` 브랜드와 CTA 기준을 본문 섹션으로 
 | Dev Feature | done | 02-package 생성 |
 | Dev Run | done | 구현 및 검증 완료 |
 | Dev Verify | done | pass with warnings |
-| Archive | pending | 다음 단계 |
+| Archive | done | archive bundle created |
 
 ---
 
 ## 5. Next Step
 
-```bash
-/plan-archive f2-optic-copy-product-lineup
-```
-
-`/plan-archive`에서는 구현/검증 완료 산출물을 아카이브로 이동하고 인덱스를 갱신한다.
+Archived at `.plans/archive/f2-optic-copy-product-lineup/ARCHIVE-F2.md`.

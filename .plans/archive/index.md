@@ -13,6 +13,7 @@
 
 | Slug | Status | Purpose | Bundle | Sources |
 | --- | --- | --- | --- | --- |
+| `f2-optic-copy-product-lineup` | archived | OPTIC 카피와 제품 라인업 정리 | [ARCHIVE-F2](./f2-optic-copy-product-lineup/ARCHIVE-F2.md) | [sources](./f2-optic-copy-product-lineup/sources/) |
 | `f1-optic-brand-cta` | archived | OPTIC 브랜드, 로고, CTA 최소 반영 | [ARCHIVE-F1](./f1-optic-brand-cta/ARCHIVE-F1.md) | [sources](./f1-optic-brand-cta/sources/) |
 
 ## Archive Management Rules

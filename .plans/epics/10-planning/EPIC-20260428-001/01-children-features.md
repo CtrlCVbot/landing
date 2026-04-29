@@ -24,18 +24,20 @@
 
 ### F2 — 카피와 제품 라인업 정리
 
-- **IDEA**: [IDEA-20260429-001](../../../ideas/20-approved/IDEA-20260429-001.md)
+- **IDEA**: [IDEA-20260429-001](../../../archive/f2-optic-copy-product-lineup/sources/ideas/IDEA-20260429-001.md)
 - **Lane**: Standard (여러 섹션 카피와 상수 정리)
 - **RICE 예상**: 78.0
 - **범위**: `src/lib/constants.ts`, `src/components/sections/features.tsx`, `problems.tsx`, `products.tsx`, `integrations.tsx`
-- **상태**: feature-package-ready, Dev run 대기
-- **Screening**: [SCREENING-20260429-001](../../../ideas/20-approved/SCREENING-20260429-001.md)
-- **Draft**: [f2-optic-copy-product-lineup](../../../drafts/f2-optic-copy-product-lineup/01-draft.md)
-- **PRD**: [f2-optic-copy-product-lineup-prd](../../../prd/10-approved/f2-optic-copy-product-lineup-prd.md)
-- **PRD Review**: [03-prd-review](../../../drafts/f2-optic-copy-product-lineup/03-prd-review.md)
-- **Wireframe**: [screens](../../../wireframes/f2-optic-copy-product-lineup/screens.md), [review](../../../wireframes/f2-optic-copy-product-lineup/04-wireframe-review.md)
-- **Bridge**: [00-index](../../../features/active/f2-optic-copy-product-lineup/00-context/00-index.md)
-- **Feature Package**: [00-overview](../../../features/active/f2-optic-copy-product-lineup/02-package/00-overview.md), [08-dev-tasks](../../../features/active/f2-optic-copy-product-lineup/02-package/08-dev-tasks.md)
+- **상태**: archived
+- **Archive**: [ARCHIVE-F2](../../../archive/f2-optic-copy-product-lineup/ARCHIVE-F2.md)
+- **Sources**: [sources](../../../archive/f2-optic-copy-product-lineup/sources/)
+- **Screening**: [SCREENING-20260429-001](../../../archive/f2-optic-copy-product-lineup/sources/ideas/SCREENING-20260429-001.md)
+- **Draft**: [f2-optic-copy-product-lineup](../../../archive/f2-optic-copy-product-lineup/sources/drafts/01-draft.md)
+- **PRD**: [f2-optic-copy-product-lineup-prd](../../../archive/f2-optic-copy-product-lineup/sources/prd/f2-optic-copy-product-lineup-prd.md)
+- **PRD Review**: [03-prd-review](../../../archive/f2-optic-copy-product-lineup/sources/drafts/03-prd-review.md)
+- **Wireframe**: [screens](../../../archive/f2-optic-copy-product-lineup/sources/wireframes/screens.md), [review](../../../archive/f2-optic-copy-product-lineup/sources/wireframes/04-wireframe-review.md)
+- **Bridge**: [00-index](../../../archive/f2-optic-copy-product-lineup/sources/feature-package/00-context/00-index.md)
+- **Feature Package**: [00-overview](../../../archive/f2-optic-copy-product-lineup/sources/feature-package/02-package/00-overview.md), [08-dev-tasks](../../../archive/f2-optic-copy-product-lineup/sources/feature-package/02-package/08-dev-tasks.md)
 - **완료 기준**:
   - `Optic Cargo`, `서비스 테스트`, 과도한 `Cargo` 중심 표현이 제거된다.
   - 제품 라인업은 `주선사용 운송 운영 콘솔`, `화주용 운송 요청 포털` 두 가지가 현재 구현 대상으로 먼저 보이고, `OPTIC Broker`, `OPTIC Shipper`는 보조 라벨로 병기된다. `OPTIC Carrier`, `OPTIC Ops`, `OPTIC Billing`은 구현 예정으로 분리된다.
