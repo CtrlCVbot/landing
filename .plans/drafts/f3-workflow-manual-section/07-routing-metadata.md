@@ -27,7 +27,7 @@
     "wireframe": "approved",
     "wireframe_review": "approved",
     "bridge": "completed",
-    "dev_feature": "pending",
+    "dev_feature": "completed",
     "archive": "pending"
   },
   "source_documents": {
@@ -42,14 +42,17 @@
     "bridge_context": "../../features/active/f3-workflow-manual-section/00-context/00-index.md",
     "architecture_binding": "../../features/active/f3-workflow-manual-section/00-context/06-architecture-binding.md",
     "epic_binding": "../../features/active/f3-workflow-manual-section/00-context/08-epic-binding.md",
+    "feature_package": "../../features/active/f3-workflow-manual-section/02-package/00-overview.md",
+    "dev_tasks": "../../features/active/f3-workflow-manual-section/02-package/08-dev-tasks.md",
+    "test_cases": "../../features/active/f3-workflow-manual-section/02-package/09-test-cases.md",
     "epic": "../../epics/10-planning/EPIC-20260428-001/00-epic-brief.md",
     "children_features": "../../epics/10-planning/EPIC-20260428-001/01-children-features.md",
     "roadmap": "../../epics/10-planning/EPIC-20260428-001/02-roadmap.md",
     "f1_archive": "../../archive/f1-optic-brand-cta/ARCHIVE-F1.md",
     "f2_archive": "../../archive/f2-optic-copy-product-lineup/ARCHIVE-F2.md"
   },
-  "next": "dev-feature",
-  "next_command": "/dev-feature .plans/features/active/f3-workflow-manual-section/"
+  "next": "dev-run",
+  "next_command": "/dev-run .plans/features/active/f3-workflow-manual-section/"
 }
 ```
 
@@ -60,4 +63,4 @@
 - F4의 애니메이션과 상태 mock은 F3 구조 확정 이후 진행한다.
 - PRD review 결과 Approve로 판정되어 다음 단계는 Wireframe이다.
 - Wireframe review 결과 Approve로 판정되어 다음 단계는 Bridge다.
-- Bridge context 생성이 완료되어 다음 단계는 `/dev-feature`다.
+- Bridge context 생성 이후 Feature Package 생성이 완료되어 다음 단계는 `/dev-run`이다.

@@ -3,9 +3,10 @@
 > **Feature**: F3 업무 매뉴얼형 스크롤 섹션 MVP
 > **Epic**: [EPIC-20260428-001](../../../../epics/10-planning/EPIC-20260428-001/00-epic-brief.md) Phase C, F3
 > **Scope**: Standard, dev, 신규 landing section
-> **Status**: bridged
+> **Status**: feature-package-ready
 > **Created**: 2026-04-29
 > **Plan Bridge**: completed
+> **Dev Feature**: completed
 
 ---
 
@@ -20,6 +21,22 @@
 | 06 | [06-architecture-binding.md](./06-architecture-binding.md) | current | 구조 SSOT 기반 허용 경로와 검증 경계 |
 | 07 | [07-routing-metadata.md](./07-routing-metadata.md) | current | P1-P7 routing metadata와 다음 단계 |
 | 08 | [08-epic-binding.md](./08-epic-binding.md) | current | Epic, IDEA, PRD, Wireframe 연결과 의존성 |
+
+---
+
+## 1-1. Feature Package Files
+
+| # | 파일 | 상태 | 설명 |
+|---|---|---|---|
+| 00 | [00-overview.md](../02-package/00-overview.md) | current | 구조 계약, 허용 경로, 추적성 요약 |
+| 01 | [01-requirements.md](../02-package/01-requirements.md) | SSOT | 구현 요구사항 |
+| 02 | [02-ui-spec.md](../02-package/02-ui-spec.md) | current | 섹션 UI, layout, accessibility 기준 |
+| 03 | [03-flow.md](../02-package/03-flow.md) | current | scroll flow, data flow, F4 handoff |
+| 06 | [06-domain-logic.md](../02-package/06-domain-logic.md) | current | workflow data model과 invariant |
+| 07 | [07-error-handling.md](../02-package/07-error-handling.md) | current | static section failure mode |
+| 08 | [08-dev-tasks.md](../02-package/08-dev-tasks.md) | SSOT | `/dev-run` TASK |
+| 09 | [09-test-cases.md](../02-package/09-test-cases.md) | SSOT | 테스트 케이스 |
+| 10 | [10-release-checklist.md](../02-package/10-release-checklist.md) | current | release readiness checklist |
 
 ---
 
@@ -69,10 +86,11 @@ F3는 OPTIC 랜딩에 업무 매뉴얼형 스크롤 섹션을 추가하는 Featu
 | P5 Wireframe | done | desktop/mobile/landing flow 구조 고정 |
 | P6 Stitch | skipped | visual design handoff 대상이 아니므로 생략 |
 | P7 Bridge | done | context package |
-| Dev Feature | pending | 다음 단계 |
+| Dev Feature | done | feature package |
+| Dev Run | pending | 다음 단계 |
 
 ---
 
 ## 5. Next Step
 
-`/dev-feature .plans/features/active/f3-workflow-manual-section/`
+`/dev-run .plans/features/active/f3-workflow-manual-section/`

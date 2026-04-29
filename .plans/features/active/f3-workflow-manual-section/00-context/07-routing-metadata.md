@@ -37,7 +37,7 @@
   "wireframe_review_status": "Approve",
   "stitch_status": "skipped",
   "bridge_status": "completed",
-  "dev_feature_status": "pending",
+  "dev_feature_status": "completed",
   "dev_run_status": "pending",
   "dev_verify_status": "pending",
   "archive_status": "pending",
@@ -51,9 +51,9 @@
   ],
   "recommended_placement": "after-products",
   "feature_package": "../02-package/00-overview.md",
-  "next": "dev-feature",
-  "next_command": "/dev-feature .plans/features/active/f3-workflow-manual-section/",
-  "fallback_next": "/plan-review .plans/features/active/f3-workflow-manual-section/00-context --type=bridge"
+  "next": "dev-run",
+  "next_command": "/dev-run .plans/features/active/f3-workflow-manual-section/",
+  "fallback_next": "/dev-feature .plans/features/active/f3-workflow-manual-section/"
 }
 ```
 
@@ -63,4 +63,5 @@
 
 - P6 Stitch는 생략한다. F3는 visual design handoff가 아니라 dev feature package로 직행한다.
 - P7 Bridge는 approved PRD, PRD review, wireframe, wireframe review를 dev handoff context로 동결한다.
-- `/dev-feature`는 이 `00-context`를 입력으로 `02-package` 요구사항, UI spec, TASK, test case를 생성한다.
+- `/dev-feature`는 이 `00-context`를 입력으로 `02-package` 요구사항, UI spec, TASK, test case 생성을 완료했다.
+- 다음 단계는 `/dev-run`이며, `02-package/08-dev-tasks.md`와 `02-package/09-test-cases.md`를 SSOT로 사용한다.

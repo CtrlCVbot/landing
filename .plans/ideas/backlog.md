@@ -105,3 +105,4 @@
 | 2026-04-29 | IDEA-20260429-002 PRD review 완료 — Approve, 다음 단계 `/plan-wireframe` |
 | 2026-04-29 | IDEA-20260429-002 wireframe 작성 및 review 완료 — Products 직후 배치 추천, 다음 단계 `/plan-bridge` |
 | 2026-04-29 | IDEA-20260429-002 Bridge context 생성 — 다음 단계 `/dev-feature` |
+| 2026-04-29 | IDEA-20260429-002 `/dev-feature` 완료 — `02-package` 요구사항, UI spec, TASK, 테스트 케이스 생성 |

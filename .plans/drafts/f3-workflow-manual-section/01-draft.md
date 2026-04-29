@@ -115,8 +115,8 @@
 
 ## 9. 다음 단계
 
-1. Bridge context를 확인한다: [00-index.md](../../features/active/f3-workflow-manual-section/00-context/00-index.md)
-2. `/dev-feature .plans/features/active/f3-workflow-manual-section/`로 개발 패키지를 생성한다.
+1. Feature Package를 확인한다: [00-overview.md](../../features/active/f3-workflow-manual-section/02-package/00-overview.md)
+2. `/dev-run .plans/features/active/f3-workflow-manual-section/`로 구현을 진행한다.
 
 ## 10. 변경 이력
 
@@ -127,3 +127,4 @@
 | 2026-04-29 | PRD review 통과 — Approve, 다음 단계 `/plan-wireframe` |
 | 2026-04-29 | Wireframe 작성 및 review 완료 — 당시 다음 단계 `/plan-bridge` |
 | 2026-04-29 | Bridge context 생성 — 다음 단계 `/dev-feature` |
+| 2026-04-29 | Feature Package 생성 — 다음 단계 `/dev-run` |

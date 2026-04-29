@@ -6,7 +6,7 @@
 > **작성일**: 2026-04-29
 > **판정**: Approve
 > **상태**: PASS
-> **다음 단계**: `/dev-feature .plans/features/active/f3-workflow-manual-section/`
+> **다음 단계**: `/dev-run .plans/features/active/f3-workflow-manual-section/`
 
 ---
 
@@ -57,9 +57,9 @@
 
 **Approve**.
 
-Wireframe은 F3의 핵심인 업무 매뉴얼형 6단계 흐름, 화주/주선사별 커스텀 가능성, 배차 단계의 화물맨 연동, 정산 자동화/세금계산서 관리 분리 기준을 충분히 고정한다. Wireframe review 당시 다음 단계는 PRD와 Wireframe을 개발 handoff로 묶는 `/plan-bridge`였고, 현재 Bridge context 생성이 완료되어 후속 단계는 `/dev-feature .plans/features/active/f3-workflow-manual-section/`다.
+Wireframe은 F3의 핵심인 업무 매뉴얼형 6단계 흐름, 화주/주선사별 커스텀 가능성, 배차 단계의 화물맨 연동, 정산 자동화/세금계산서 관리 분리 기준을 충분히 고정한다. Wireframe review 당시 다음 단계는 PRD와 Wireframe을 개발 handoff로 묶는 `/plan-bridge`였고, 현재 Feature Package 생성이 완료되어 후속 단계는 `/dev-run .plans/features/active/f3-workflow-manual-section/`다.
 
 ## 5. Next Steps
 
-1. Bridge context를 확인한다: [00-index.md](../../features/active/f3-workflow-manual-section/00-context/00-index.md)
-2. `/dev-feature .plans/features/active/f3-workflow-manual-section/`로 개발 패키지를 생성한다.
+1. Feature Package를 확인한다: [00-overview.md](../../features/active/f3-workflow-manual-section/02-package/00-overview.md)
+2. `/dev-run .plans/features/active/f3-workflow-manual-section/`로 구현을 진행한다.

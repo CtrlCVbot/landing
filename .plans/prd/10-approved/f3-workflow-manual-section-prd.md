@@ -9,6 +9,7 @@
 > **Wireframe**: [screens.md](../../wireframes/f3-workflow-manual-section/screens.md)
 > **Wireframe Review**: [04-wireframe-review.md](../../wireframes/f3-workflow-manual-section/04-wireframe-review.md)
 > **Bridge Context**: [00-index.md](../../features/active/f3-workflow-manual-section/00-context/00-index.md)
+> **Feature Package**: [00-overview.md](../../features/active/f3-workflow-manual-section/02-package/00-overview.md)
 > **Routing metadata**: [07-routing-metadata.md](../../drafts/f3-workflow-manual-section/07-routing-metadata.md)
 > **작성일**: 2026-04-29
 > **상태**: approved
@@ -158,5 +159,5 @@ F3는 OPTIC 랜딩에 업무 매뉴얼형 스크롤 섹션을 추가하는 Featu
 
 ## 12. 다음 단계
 
-1. Bridge context를 확인한다: [00-index.md](../../features/active/f3-workflow-manual-section/00-context/00-index.md)
-2. `/dev-feature .plans/features/active/f3-workflow-manual-section/`로 개발 패키지를 생성한다.
+1. Feature Package를 확인한다: [00-overview.md](../../features/active/f3-workflow-manual-section/02-package/00-overview.md)
+2. `/dev-run .plans/features/active/f3-workflow-manual-section/`로 구현을 진행한다.

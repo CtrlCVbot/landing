@@ -61,3 +61,4 @@
 | 2026-04-29 | F3 PRD review 완료 - Approve, 다음 단계 `/plan-wireframe` |
 | 2026-04-29 | F3 wireframe review 완료 - Approve, 다음 단계 `/plan-bridge` |
 | 2026-04-29 | F3 Bridge context 완료 - 다음 단계 `/dev-feature` |
+| 2026-04-29 | F3 Feature Package 완료 - 다음 단계 `/dev-run` |
