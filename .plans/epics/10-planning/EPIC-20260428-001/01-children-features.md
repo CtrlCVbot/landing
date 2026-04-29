@@ -35,7 +35,7 @@
 - **PRD Review**: [03-prd-review](../../../drafts/f2-optic-copy-product-lineup/03-prd-review.md)
 - **완료 기준**:
   - `Optic Cargo`, `서비스 테스트`, 과도한 `Cargo` 중심 표현이 제거된다.
-  - 제품 라인업은 `OPTIC Broker`, `OPTIC Shipper` 두 가지가 현재 구현 대상으로 정렬되고, `OPTIC Carrier`, `OPTIC Ops`, `OPTIC Billing`은 구현 예정으로 분리된다.
+  - 제품 라인업은 `주선사용 운송 운영 콘솔`, `화주용 운송 요청 포털` 두 가지가 현재 구현 대상으로 먼저 보이고, `OPTIC Broker`, `OPTIC Shipper`는 보조 라벨로 병기된다. `OPTIC Carrier`, `OPTIC Ops`, `OPTIC Billing`은 구현 예정으로 분리된다.
   - `화물맨` 외 외부 브랜드명은 일반 기능명으로 바뀐다.
 
 ### F3 — 업무 매뉴얼형 스크롤 섹션 MVP
@@ -184,3 +184,4 @@
 | 2026-04-29 | F2 PRD 10개 섹션 작성 — 다음 단계 `/plan-review` |
 | 2026-04-29 | 사용자 피드백 반영 — F2 제품 라인업 구현 대상은 Broker/Shipper 2개로 제한, Carrier/Ops/Billing은 구현 예정으로 분리 |
 | 2026-04-29 | F2 PRD review 통과 — 다음 단계 `/plan-bridge` |
+| 2026-04-29 | 사용자 피드백 반영 — 제품 라인업은 한글 역할명 우선, 영문 제품명 보조 라벨로 정리 |
