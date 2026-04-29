@@ -115,8 +115,8 @@
 
 ## 9. 다음 단계
 
-1. PRD review 결과를 확인한다: [03-prd-review.md](03-prd-review.md)
-2. `/plan-wireframe .plans/prd/10-approved/f3-workflow-manual-section-prd.md`로 desktop/mobile 구조를 설계한다.
+1. Bridge context를 확인한다: [00-index.md](../../features/active/f3-workflow-manual-section/00-context/00-index.md)
+2. `/dev-feature .plans/features/active/f3-workflow-manual-section/`로 개발 패키지를 생성한다.
 
 ## 10. 변경 이력
 
@@ -125,3 +125,5 @@
 | 2026-04-29 | 초안 — F3 approved IDEA 기반 Standard Draft 생성 |
 | 2026-04-29 | PRD 10개 섹션 작성 — 다음 단계 `/plan-review` |
 | 2026-04-29 | PRD review 통과 — Approve, 다음 단계 `/plan-wireframe` |
+| 2026-04-29 | Wireframe 작성 및 review 완료 — 당시 다음 단계 `/plan-bridge` |
+| 2026-04-29 | Bridge context 생성 — 다음 단계 `/dev-feature` |

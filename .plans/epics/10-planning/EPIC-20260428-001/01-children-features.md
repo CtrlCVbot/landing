@@ -50,11 +50,13 @@
 - **Lane**: Standard (신규 섹션과 데이터 구조 추가)
 - **RICE 예상**: 81.6
 - **범위**: `src/components/sections/workflow-manual.tsx`, `src/lib/landing-workflow.ts` 또는 `src/lib/constants.ts`, `src/app/page.tsx`
-- **상태**: prd-reviewed
+- **상태**: bridged
 - **Screening**: [SCREENING-20260429-002](../../../ideas/20-approved/SCREENING-20260429-002.md)
 - **Draft**: [f3-workflow-manual-section](../../../drafts/f3-workflow-manual-section/01-draft.md)
 - **PRD**: [f3-workflow-manual-section-prd](../../../prd/10-approved/f3-workflow-manual-section-prd.md)
 - **PRD Review**: [03-prd-review](../../../drafts/f3-workflow-manual-section/03-prd-review.md)
+- **Wireframe**: [screens](../../../wireframes/f3-workflow-manual-section/screens.md), [review](../../../wireframes/f3-workflow-manual-section/04-wireframe-review.md)
+- **Bridge**: [00-index](../../../features/active/f3-workflow-manual-section/00-context/00-index.md)
 - **완료 기준**:
   - hero 이후 `AI 오더 등록 → 상하차지 관리 → 배차/운송 상태 → 화물맨 연동 → 정산 자동화 → 세금계산서 관리` 흐름이 이어진다.
   - 섹션당 한 업무만 설명하고, 기존 features/integrations와 중복 설명을 줄인다.
@@ -152,11 +154,11 @@
 |---|:---:|:---:|:---:|:---:|:---:|
 | F1 | archived | dev-run 완료 | 통과 | 낮음 | 완료 |
 | F2 | archived | dev-run/dev-verify 완료 | 통과 | 중간 | 완료 |
-| F3 | prd-reviewed | P1~P4 review 완료 | — | 중간 | Wireframe 대기 |
+| F3 | bridged | P1~P7 완료 | — | 중간 | Dev feature 대기 |
 | F4 | pending | — | — | — | — |
 | F5 | pending | — | — | — | — |
 
-상태 값: `pending` / `inbox` / `screening` / `approved` / `draft` / `prd-draft` / `prd-reviewed` / `scope-reviewed` / `bridged` / `feature-package-ready` / `implemented` / `verified` / `active` / `archived`.
+상태 값: `pending` / `inbox` / `screening` / `approved` / `draft` / `prd-draft` / `prd-reviewed` / `wireframe-reviewed` / `scope-reviewed` / `bridged` / `feature-package-ready` / `implemented` / `verified` / `active` / `archived`.
 
 ---
 
@@ -205,3 +207,5 @@
 | 2026-04-29 | F3 Draft `f3-workflow-manual-section` 생성 — 다음 단계 `/plan-prd` |
 | 2026-04-29 | F3 PRD 10개 섹션 작성 — 다음 단계 `/plan-review` |
 | 2026-04-29 | F3 PRD review 통과 — 다음 단계 `/plan-wireframe` |
+| 2026-04-29 | F3 wireframe 작성 및 review 통과 — 다음 단계 `/plan-bridge` |
+| 2026-04-29 | F3 Bridge context 생성 — 다음 단계 `/dev-feature` |

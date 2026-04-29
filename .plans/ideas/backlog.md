@@ -103,3 +103,5 @@
 | 2026-04-29 | IDEA-20260429-002 draft 생성 — `f3-workflow-manual-section`, 다음 단계 `/plan-prd` |
 | 2026-04-29 | IDEA-20260429-002 PRD 10개 섹션 작성 — 다음 단계 `/plan-review` |
 | 2026-04-29 | IDEA-20260429-002 PRD review 완료 — Approve, 다음 단계 `/plan-wireframe` |
+| 2026-04-29 | IDEA-20260429-002 wireframe 작성 및 review 완료 — Products 직후 배치 추천, 다음 단계 `/plan-bridge` |
+| 2026-04-29 | IDEA-20260429-002 Bridge context 생성 — 다음 단계 `/dev-feature` |

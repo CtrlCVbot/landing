@@ -6,6 +6,9 @@
 > **Screening**: [SCREENING-20260429-002](../../ideas/20-approved/SCREENING-20260429-002.md)
 > **Draft**: [01-draft.md](../../drafts/f3-workflow-manual-section/01-draft.md)
 > **PRD Review**: [03-prd-review.md](../../drafts/f3-workflow-manual-section/03-prd-review.md)
+> **Wireframe**: [screens.md](../../wireframes/f3-workflow-manual-section/screens.md)
+> **Wireframe Review**: [04-wireframe-review.md](../../wireframes/f3-workflow-manual-section/04-wireframe-review.md)
+> **Bridge Context**: [00-index.md](../../features/active/f3-workflow-manual-section/00-context/00-index.md)
 > **Routing metadata**: [07-routing-metadata.md](../../drafts/f3-workflow-manual-section/07-routing-metadata.md)
 > **작성일**: 2026-04-29
 > **상태**: approved
@@ -155,5 +158,5 @@ F3는 OPTIC 랜딩에 업무 매뉴얼형 스크롤 섹션을 추가하는 Featu
 
 ## 12. 다음 단계
 
-1. PRD review 결과를 확인한다: [03-prd-review.md](../../drafts/f3-workflow-manual-section/03-prd-review.md)
-2. `/plan-wireframe .plans/prd/10-approved/f3-workflow-manual-section-prd.md`로 desktop/mobile 구조를 설계한다.
+1. Bridge context를 확인한다: [00-index.md](../../features/active/f3-workflow-manual-section/00-context/00-index.md)
+2. `/dev-feature .plans/features/active/f3-workflow-manual-section/`로 개발 패키지를 생성한다.
