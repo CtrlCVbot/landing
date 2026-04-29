@@ -10,6 +10,7 @@
 | 2026-04-24 | 002 |
 | 2026-04-27 | 004 |
 | 2026-04-28 | 001 |
+| 2026-04-29 | 001 |
 
 ## IDEA 목록
 
@@ -24,6 +25,7 @@
 | IDEA-20260427-003 | Dash Preview 단계별 포커스 줌 애니메이션 | improvement | archived | 2026-04-27 | `archive/dash-preview-focus-zoom-animation/sources/ideas` | [링크](../archive/dash-preview-focus-zoom-animation/sources/ideas/IDEA-20260427-003.md) | - |
 | IDEA-20260427-004 | hero-01 레퍼런스 기반 Hero 섹션 재개선 | improvement | archived | 2026-04-27 | `archive/hero-01-reference-hero-refresh/sources/ideas` | [링크](../archive/hero-01-reference-hero-refresh/sources/ideas/IDEA-20260427-004.md) | - |
 | IDEA-20260428-001 | F1 브랜드, 로고, CTA 최소 반영 | improvement | archived | 2026-04-28 | `archive/f1-optic-brand-cta/sources/ideas` | [링크](../archive/f1-optic-brand-cta/sources/ideas/IDEA-20260428-001.md) | [EPIC-20260428-001](../epics/10-planning/EPIC-20260428-001/00-epic-brief.md) |
+| IDEA-20260429-001 | F2 카피와 제품 라인업 정리 | improvement | inbox | 2026-04-29 | `00-inbox` | [링크](00-inbox/IDEA-20260429-001.md) | [EPIC-20260428-001](../epics/10-planning/EPIC-20260428-001/00-epic-brief.md) |
 
 ---
 
@@ -83,3 +85,4 @@
 | 2026-04-28 | IDEA-20260428-001 `/dev-run` 완료 — 브랜드/CTA 구현, 다음 단계 `/dev-verify` |
 | 2026-04-28 | IDEA-20260428-001 `/dev-verify` 통과 — fresh verification report 생성, 다음 단계 `/plan-archive` |
 | 2026-04-29 | IDEA-20260428-001 상태 `approved → archived` — `ARCHIVE-F1.md` 생성 및 sources 이동 |
+| 2026-04-29 | IDEA-20260429-001 신규 등록: EPIC-20260428-001 F2 카피와 제품 라인업 정리 — 다음 단계 `/plan-screen` |

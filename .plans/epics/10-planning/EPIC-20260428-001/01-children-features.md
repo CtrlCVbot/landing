@@ -24,11 +24,11 @@
 
 ### F2 — 카피와 제품 라인업 정리
 
-- **IDEA**: pending
+- **IDEA**: [IDEA-20260429-001](../../../ideas/00-inbox/IDEA-20260429-001.md)
 - **Lane**: Standard (여러 섹션 카피와 상수 정리)
 - **RICE 예상**: TBD
 - **범위**: `src/lib/constants.ts`, `src/components/sections/features.tsx`, `problems.tsx`, `products.tsx`, `integrations.tsx`
-- **상태**: pending IDEA
+- **상태**: inbox, screening 대기
 - **완료 기준**:
   - `Optic Cargo`, `서비스 테스트`, 과도한 `Cargo` 중심 표현이 제거된다.
   - 제품 라인업은 `OPTIC Broker`, `OPTIC Shipper`, `OPTIC Carrier`, `OPTIC Ops`, `OPTIC Billing` 기준으로 정렬된다.
@@ -137,12 +137,12 @@
 | Feature | 상태 | TASK 진행 | 테스트 | 번들 영향 | 리뷰 |
 |---|:---:|:---:|:---:|:---:|:---:|
 | F1 | archived | dev-run 완료 | 통과 | 낮음 | 완료 |
-| F2 | pending | — | — | — | — |
+| F2 | inbox | — | — | — | screening 대기 |
 | F3 | pending | — | — | — | — |
 | F4 | pending | — | — | — | — |
 | F5 | pending | — | — | — | — |
 
-상태 값: `pending` / `screening` / `approved` / `draft` / `scope-reviewed` / `bridged` / `feature-package-ready` / `implemented` / `verified` / `active` / `archived`.
+상태 값: `pending` / `inbox` / `screening` / `approved` / `draft` / `scope-reviewed` / `bridged` / `feature-package-ready` / `implemented` / `verified` / `active` / `archived`.
 
 ---
 
@@ -173,3 +173,4 @@
 | 2026-04-28 | F1 구현 완료 — 다음 단계 `/dev-verify` |
 | 2026-04-28 | F1 `/dev-verify` 통과 — 다음 단계 `/plan-archive` |
 | 2026-04-29 | F1 archive 완료 — `ARCHIVE-F1.md` 생성 및 sources 이동 |
+| 2026-04-29 | F2 자식 IDEA `IDEA-20260429-001` 등록 — 다음 단계 `/plan-screen` |
