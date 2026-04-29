@@ -59,7 +59,7 @@ type ProductLineupItem = {
 | 제품 제목 | `주선사용 운송 운영 콘솔`, `화주용 운송 요청 포털` | `OPTIC Broker` 단독 제목 |
 | 보조 라벨 | `OPTIC Broker`, `OPTIC Shipper` | 제품 의미를 설명 없이 영문명만 노출 |
 | 구현 예정 | `구현 예정`, `로드맵` | 활성 탭, 주요 CTA |
-| 외부 브랜드명 | `화물맨` | `Google Gemini AI`, `카카오 맵`, `팝빌` 전면 노출 |
+| 외부 브랜드명 | `화물맨`은 배차 단계 연동으로 설명 | `Google Gemini AI`, `카카오 맵`, `팝빌` 전면 노출 |
 
 ---
 
@@ -69,7 +69,7 @@ type ProductLineupItem = {
 |---|---|
 | `REQ-F2-007` | ImplementedProductCard의 한글 제목 + 보조 라벨 |
 | `REQ-F2-008` | UpcomingProductList |
-| `REQ-F2-009` | ProductFeatureList와 Features copy 기준 |
+| `REQ-F2-009` | ProductFeatureList와 Features copy 기준, 배차 단계의 화물맨 연동 |
 | `REQ-F2-010` | Problems copy-only preservation |
 | `REQ-F2-011` | Integrations copy-only preservation |
 | `REQ-F2-014` | mobile stack, no overflow, focus state |

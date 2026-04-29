@@ -51,7 +51,7 @@ F1 이후 header/footer/CTA의 브랜드 기준은 정리됐지만, 본문에는
 ## 4. User Stories
 
 1. **As a** 랜딩 방문자, **I want** `주선사용`과 `화주용` 서비스 구분을 먼저 이해하기를, **so that** `OPTIC Broker/Shipper`라는 영문 제품명을 몰라도 내 업무에 맞는 제품을 빠르게 찾을 수 있다.
-2. **As a** 주선사 운영자, **I want** 오더, 운송, 연동, 정산, 세금계산서 흐름이 같은 언어로 설명되기를, **so that** 단순 기능 목록이 아니라 실제 운영 흐름으로 이해할 수 있다.
+2. **As a** 주선사 운영자, **I want** 오더, 배차 단계의 화물맨 연동, 정산, 세금계산서 흐름이 같은 언어로 설명되기를, **so that** 단순 기능 목록이 아니라 실제 운영 흐름으로 이해할 수 있다.
 3. **As a** 화주 또는 의사결정자, **I want** OPTIC이 우리 조직의 운송 요청 방식과 정산 기준에 맞춰질 수 있음을 알기를, **so that** 범용 SaaS가 아니라 도입 가능한 운영 플랫폼으로 판단할 수 있다.
 4. **As a** 정산/회계 담당자, **I want** 정산과 세금계산서 설명이 외부 서비스명보다 업무 결과 중심으로 보이기를, **so that** 후속 업무 누락을 줄이는 가치를 이해할 수 있다.
 5. **As a** F3 구현자, **I want** 기존 섹션 카피와 업무 매뉴얼형 섹션의 역할이 구분되기를, **so that** 신규 섹션에서 같은 내용을 반복하지 않는다.
@@ -68,7 +68,7 @@ F1 이후 header/footer/CTA의 브랜드 기준은 정리됐지만, 본문에는
 | REQ-f2-optic-copy-product-lineup-006 | 화주/주선사별 커스텀 가능성을 핵심 메시지로 반영한다. | Must | 주요 섹션 중 최소 2곳 이상에서 회사별 운영 방식, 요청 양식, 정산 기준을 맞출 수 있다는 메시지가 보인다. |
 | REQ-f2-optic-copy-product-lineup-007 | 현재 구현 제품 라인업은 한글 역할명 우선으로 표시한다. | Must | `주선사용 운송 운영 콘솔` 아래 `OPTIC Broker`, `화주용 운송 요청 포털` 아래 `OPTIC Shipper`가 보이며, `OPTIC Operations`는 활성 제품명으로 남지 않는다. |
 | REQ-f2-optic-copy-product-lineup-008 | 나머지 제품은 구현 예정으로 분리한다. | Must | `OPTIC Carrier`, `OPTIC Ops`, `OPTIC Billing`은 활성 제품처럼 보이지 않고, 로드맵 또는 구현 예정 상태로만 언급된다. |
-| REQ-f2-optic-copy-product-lineup-009 | 기능 섹션은 기능명보다 업무 결과를 먼저 말한다. | Should | `주문 관리` 중심 표현은 `AI 오더 등록`, 반복 입력 감소, 정산/증빙 연결 문맥으로 정리된다. |
+| REQ-f2-optic-copy-product-lineup-009 | 기능 섹션은 기능명보다 업무 결과를 먼저 말한다. | Should | `주문 관리` 중심 표현은 `AI 오더 등록`, 배차 단계의 `화물맨 연동`, 정산 자동화, 세금계산서 관리 문맥으로 정리된다. |
 | REQ-f2-optic-copy-product-lineup-010 | 문제/해결 섹션은 수작업 감소와 누락 방지를 먼저 말한다. | Should | 외부 브랜드명 나열보다 중복 입력, 전송 누락, 정산 누락 방지 가치가 먼저 보인다. |
 | REQ-f2-optic-copy-product-lineup-011 | 연동 섹션은 `화물맨`만 고유 외부 플랫폼명으로 유지한다. | Must | `Google Gemini AI`, `카카오 맵`, `팝빌`, `로지스엠` 같은 노출은 일반 기능명 또는 `화물맨` 예외 기준으로 정리된다. |
 | REQ-f2-optic-copy-product-lineup-012 | Hero는 구조 변경 없이 카피 스캔 대상에 포함한다. | Should | `데모 보기`가 남는 경우 의도된 예외인지 PRD review에서 확인하고, 기본안은 `OPTIC 바로가기` 또는 문의 CTA와 역할을 맞춘다. |
@@ -82,13 +82,15 @@ F1 이후 header/footer/CTA의 브랜드 기준은 정리됐지만, 본문에는
 - 제품 라인업은 현재 구현 대상과 구현 예정 대상을 혼동 없이 구분해야 한다. 활성 제품 카피는 `주선사용 운송 운영 콘솔`과 `화주용 운송 요청 포털`을 먼저 보여주고, `OPTIC Broker/Shipper`는 보조 라벨로 학습되게 한다.
 - 제품 카드에서 영문 제품명만 단독 제목으로 쓰지 않는다. 방문자가 역할을 즉시 인지할 수 있도록 제목, 보조 라벨, 설명 순서를 유지한다.
 - 커스텀 가능성은 실제 설정 UI가 있는 것처럼 과장하지 않는다. “운영 방식, 요청 양식, 정산 기준에 맞춰 조율”처럼 카피 기준으로 표현한다.
-- 연동 섹션은 브랜드 로고/이름 나열보다 “한 번 입력한 정보를 어디로 이어 보내고, 무엇을 줄이는가”를 먼저 보여준다.
+- Features 섹션에서 `화물맨 연동`은 배차 단계의 기능으로 설명한다. 독립 제품이나 정산 기능처럼 보이지 않아야 한다.
+- 연동 섹션은 브랜드 로고/이름 나열보다 “한 번 입력한 운송 정보를 배차 단계에서 어디로 이어 보내고, 무엇을 줄이는가”를 먼저 보여준다.
 - 긴 한글 문구는 카드와 버튼 안에서 줄바꿈되어야 하며, 375px 모바일 폭에서도 텍스트가 겹치지 않아야 한다.
 - F3 매뉴얼형 섹션은 F2 본문 섹션을 반복하지 않고, 실제 업무 단계의 연결감만 이어받아야 한다.
 
 ## 7. Technical Considerations
 
 - 주요 예상 파일은 `src/lib/constants.ts`, `src/components/sections/features.tsx`, `src/components/sections/problems.tsx`, `src/components/sections/products.tsx`, `src/components/sections/integrations.tsx`, `src/components/sections/hero.tsx`다.
+- Features 섹션에서는 `화물맨 연동`을 배차 단계 기능으로 추가한다. Integrations 섹션은 같은 내용을 provider 나열이 아니라 배차 정보 전송/중복 등록 감소 문맥으로 보조한다.
 - 현재 `src/lib/constants.ts`에는 `OPTIC Operations`, `Google Gemini AI`, `카카오 맵`, `팝빌`, `로지스엠/화물맨`, `주문 관리`, `AI 주문 추출` 등이 있어 F2 스캔 기준으로 삼는다. 특히 제품 라인업 구현 범위는 `OPTIC Broker`와 `OPTIC Shipper` 두 가지로 제한하고, 표시 데이터는 한글 역할명과 영문 보조 라벨을 함께 가질 수 있어야 한다.
 - F2는 copy/data 정리 중심이다. API 호출, DB schema, 인증, tenant admin, 설정 저장 구조는 변경하지 않는다.
 - 외부 브랜드명 제거는 고객-facing 카피 기준이다. 내부 구현 key인 `gemini`, `kakao`, `popbill`, `logishm`은 코드 식별자라서 변경 필요 여부를 구현 단계에서 별도 판단한다.
@@ -132,3 +134,4 @@ F1 이후 header/footer/CTA의 브랜드 기준은 정리됐지만, 본문에는
 | SM-f2-copy-product-lineup-006 | F3 handoff 기준 | 매뉴얼형 단계 흐름 6단계가 후속 문서에 남음 | PRD/Bridge review |
 | SM-f2-copy-product-lineup-007 | UI 텍스트 안정성 | desktop/mobile에서 버튼과 카드 텍스트 겹침 없음 | browser spot check |
 | SM-f2-copy-product-lineup-008 | 테스트 안정성 | 관련 테스트와 type/lint 검증 통과 | `pnpm test`, `pnpm typecheck`, `pnpm lint` |
+| SM-f2-copy-product-lineup-009 | 화물맨 배차 단계 반영 | Features 섹션에서 `화물맨 연동`이 배차 단계 기능으로 보임 | 카피 스캔 + 섹션 렌더 확인 |

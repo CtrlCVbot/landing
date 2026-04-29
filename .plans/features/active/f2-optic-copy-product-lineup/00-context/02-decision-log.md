@@ -16,6 +16,7 @@
 | `D-F2-006` | `화물맨`만 외부 플랫폼 고유명으로 유지 | 사용자에게 실제 연동 맥락이 중요함 | AI/지도/세금계산서는 일반 기능명으로 낮춤 |
 | `D-F2-007` | Wireframe은 작성, Stitch는 생략 | 제품 라인업 표시 구조가 구현에 직접 영향을 주므로 P5 wireframe을 추가했고, visual design handoff는 아니므로 Stitch는 생략 | 다음 단계는 `/dev-feature` |
 | `D-F2-008` | F3 신규 업무 섹션은 별도 Feature | F2와 F3 설명 중복 방지 | F2는 카피 기준과 handoff만 남김 |
+| `D-F2-009` | `화물맨 연동`은 Features의 배차 단계 기능으로 추가 | 사용자 피드백에 따라 화물맨은 배차 흐름의 핵심 연동으로 설명해야 함 | features copy와 integrations copy의 역할을 분리 |
 
 ---
 
