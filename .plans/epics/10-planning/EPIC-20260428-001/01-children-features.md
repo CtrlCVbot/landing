@@ -28,11 +28,12 @@
 - **Lane**: Standard (여러 섹션 카피와 상수 정리)
 - **RICE 예상**: 78.0
 - **범위**: `src/lib/constants.ts`, `src/components/sections/features.tsx`, `problems.tsx`, `products.tsx`, `integrations.tsx`
-- **상태**: prd-reviewed, Bridge 대기
+- **상태**: bridged, Dev feature 대기
 - **Screening**: [SCREENING-20260429-001](../../../ideas/20-approved/SCREENING-20260429-001.md)
 - **Draft**: [f2-optic-copy-product-lineup](../../../drafts/f2-optic-copy-product-lineup/01-draft.md)
 - **PRD**: [f2-optic-copy-product-lineup-prd](../../../prd/10-approved/f2-optic-copy-product-lineup-prd.md)
 - **PRD Review**: [03-prd-review](../../../drafts/f2-optic-copy-product-lineup/03-prd-review.md)
+- **Bridge**: [00-index](../../../features/active/f2-optic-copy-product-lineup/00-context/00-index.md)
 - **완료 기준**:
   - `Optic Cargo`, `서비스 테스트`, 과도한 `Cargo` 중심 표현이 제거된다.
   - 제품 라인업은 `주선사용 운송 운영 콘솔`, `화주용 운송 요청 포털` 두 가지가 현재 구현 대상으로 먼저 보이고, `OPTIC Broker`, `OPTIC Shipper`는 보조 라벨로 병기된다. `OPTIC Carrier`, `OPTIC Ops`, `OPTIC Billing`은 구현 예정으로 분리된다.
@@ -141,7 +142,7 @@
 | Feature | 상태 | TASK 진행 | 테스트 | 번들 영향 | 리뷰 |
 |---|:---:|:---:|:---:|:---:|:---:|
 | F1 | archived | dev-run 완료 | 통과 | 낮음 | 완료 |
-| F2 | prd-reviewed | PRD review 완료 | — | 중간 | Bridge 대기 |
+| F2 | bridged | Bridge 완료 | — | 중간 | Dev feature 대기 |
 | F3 | pending | — | — | — | — |
 | F4 | pending | — | — | — | — |
 | F5 | pending | — | — | — | — |
@@ -185,3 +186,4 @@
 | 2026-04-29 | 사용자 피드백 반영 — F2 제품 라인업 구현 대상은 Broker/Shipper 2개로 제한, Carrier/Ops/Billing은 구현 예정으로 분리 |
 | 2026-04-29 | F2 PRD review 통과 — 다음 단계 `/plan-bridge` |
 | 2026-04-29 | 사용자 피드백 반영 — 제품 라인업은 한글 역할명 우선, 영문 제품명 보조 라벨로 정리 |
+| 2026-04-29 | F2 Bridge context 생성 — 다음 단계 `/dev-feature` |

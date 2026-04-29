@@ -175,9 +175,9 @@ F2에서 실제 신규 섹션을 구현하지는 않지만, 기존 섹션 카피
 
 ## 11. 다음 단계
 
-1. 승인된 PRD를 확인한다: [f2-optic-copy-product-lineup-prd.md](../../prd/10-approved/f2-optic-copy-product-lineup-prd.md)
-2. PRD review를 확인한다: [03-prd-review.md](./03-prd-review.md)
-3. `/plan-bridge f2-optic-copy-product-lineup`로 개발 핸드오프 문서를 만든다.
+1. Bridge context를 확인한다: [00-index.md](../../features/active/f2-optic-copy-product-lineup/00-context/00-index.md)
+2. Architecture binding을 확인한다: [06-architecture-binding.md](../../features/active/f2-optic-copy-product-lineup/00-context/06-architecture-binding.md)
+3. `/dev-feature .plans/features/active/f2-optic-copy-product-lineup/`로 개발 패키지를 만든다.
 
 ## 12. 변경 이력
 
@@ -190,3 +190,4 @@ F2에서 실제 신규 섹션을 구현하지는 않지만, 기존 섹션 카피
 | 2026-04-29 | 사용자 피드백 반영 — 제품 라인업 구현 대상은 Broker/Shipper 2개로 제한, 나머지는 구현 예정으로 분리 |
 | 2026-04-29 | PRD review 통과 — 다음 단계 `/plan-bridge` |
 | 2026-04-29 | 사용자 피드백 반영 — 제품 라인업은 한글 역할명 우선, 영문 제품명 보조 라벨로 정리 |
+| 2026-04-29 | Bridge context 생성 — 다음 단계 `/dev-feature` |
