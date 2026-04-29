@@ -88,3 +88,4 @@
 | 2026-04-29 | IDEA-20260429-001 신규 등록: EPIC-20260428-001 F2 카피와 제품 라인업 정리 — 다음 단계 `/plan-screen` |
 | 2026-04-29 | IDEA-20260429-001 상태 `inbox → screened` — RICE-style weighted score 78.0, Go 제안, Standard lane, 사용자 승인 대기 |
 | 2026-04-29 | IDEA-20260429-001 사용자 Go 승인 — 상태 `screened → approved`, `20-approved` 이동 |
+| 2026-04-29 | IDEA-20260429-001 draft 생성 — `f2-optic-copy-product-lineup`, Standard lane, 다음 단계 `/plan-prd` |
