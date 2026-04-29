@@ -175,8 +175,8 @@ F2에서 실제 신규 섹션을 구현하지는 않지만, 기존 섹션 카피
 
 ## 11. 다음 단계
 
-1. Bridge context를 확인한다: [00-index.md](../../features/active/f2-optic-copy-product-lineup/00-context/00-index.md)
-2. Architecture binding을 확인한다: [06-architecture-binding.md](../../features/active/f2-optic-copy-product-lineup/00-context/06-architecture-binding.md)
+1. Wireframe을 확인한다: [screens.md](../../wireframes/f2-optic-copy-product-lineup/screens.md)
+2. Bridge context를 확인한다: [00-index.md](../../features/active/f2-optic-copy-product-lineup/00-context/00-index.md)
 3. `/dev-feature .plans/features/active/f2-optic-copy-product-lineup/`로 개발 패키지를 만든다.
 
 ## 12. 변경 이력
@@ -191,3 +191,4 @@ F2에서 실제 신규 섹션을 구현하지는 않지만, 기존 섹션 카피
 | 2026-04-29 | PRD review 통과 — 다음 단계 `/plan-bridge` |
 | 2026-04-29 | 사용자 피드백 반영 — 제품 라인업은 한글 역할명 우선, 영문 제품명 보조 라벨로 정리 |
 | 2026-04-29 | Bridge context 생성 — 다음 단계 `/dev-feature` |
+| 2026-04-29 | 사용자 피드백 반영 — 제품 라인업 wireframe 작성 및 Bridge context 갱신 |

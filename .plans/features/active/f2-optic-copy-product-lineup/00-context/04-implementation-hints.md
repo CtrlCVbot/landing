@@ -1,6 +1,7 @@
 # Implementation Hints: f2-optic-copy-product-lineup
 
 > `/dev-feature`와 `/dev-run`에서 유지할 구현 힌트다. 실제 TASK SSOT는 `/dev-feature`가 생성할 `02-package` 문서다.
+> 제품 라인업 구조는 [wireframe screens](../../../../wireframes/f2-optic-copy-product-lineup/screens.md)와 [wireframe components](../../../../wireframes/f2-optic-copy-product-lineup/components.md)를 우선 참조한다.
 
 ---
 
@@ -29,6 +30,8 @@
 | 상태 | 구현 대상 | 구현 대상 |
 
 구현 예정 제품은 활성 탭처럼 보이지 않게 분리한다. 필요하면 roadmap strip, muted card, 작은 badge 등으로 낮춘다.
+
+Wireframe 기본안은 구현 대상 2개를 primary card로 보여주고, 구현 예정 3개는 compact 영역으로 낮추는 구조다. 기존 tab UI를 유지하려면 활성 tab은 Broker/Shipper만 두고 구현 예정은 tab 밖으로 분리한다.
 
 | 구현 예정 | 보조 라벨 | 표시 방향 |
 |---|---|---|

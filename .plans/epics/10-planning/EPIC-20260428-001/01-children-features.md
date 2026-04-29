@@ -33,6 +33,7 @@
 - **Draft**: [f2-optic-copy-product-lineup](../../../drafts/f2-optic-copy-product-lineup/01-draft.md)
 - **PRD**: [f2-optic-copy-product-lineup-prd](../../../prd/10-approved/f2-optic-copy-product-lineup-prd.md)
 - **PRD Review**: [03-prd-review](../../../drafts/f2-optic-copy-product-lineup/03-prd-review.md)
+- **Wireframe**: [screens](../../../wireframes/f2-optic-copy-product-lineup/screens.md), [review](../../../wireframes/f2-optic-copy-product-lineup/04-wireframe-review.md)
 - **Bridge**: [00-index](../../../features/active/f2-optic-copy-product-lineup/00-context/00-index.md)
 - **완료 기준**:
   - `Optic Cargo`, `서비스 테스트`, 과도한 `Cargo` 중심 표현이 제거된다.
@@ -142,7 +143,7 @@
 | Feature | 상태 | TASK 진행 | 테스트 | 번들 영향 | 리뷰 |
 |---|:---:|:---:|:---:|:---:|:---:|
 | F1 | archived | dev-run 완료 | 통과 | 낮음 | 완료 |
-| F2 | bridged | Bridge 완료 | — | 중간 | Dev feature 대기 |
+| F2 | bridged | Wireframe + Bridge 완료 | — | 중간 | Dev feature 대기 |
 | F3 | pending | — | — | — | — |
 | F4 | pending | — | — | — | — |
 | F5 | pending | — | — | — | — |
@@ -187,3 +188,4 @@
 | 2026-04-29 | F2 PRD review 통과 — 다음 단계 `/plan-bridge` |
 | 2026-04-29 | 사용자 피드백 반영 — 제품 라인업은 한글 역할명 우선, 영문 제품명 보조 라벨로 정리 |
 | 2026-04-29 | F2 Bridge context 생성 — 다음 단계 `/dev-feature` |
+| 2026-04-29 | F2 wireframe 작성 및 review 완료 — 제품 라인업 2개 구현 대상 + 3개 구현 예정 구조 고정, Bridge context 갱신 |

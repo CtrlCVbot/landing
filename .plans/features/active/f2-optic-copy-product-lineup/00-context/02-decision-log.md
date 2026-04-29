@@ -14,7 +14,7 @@
 | `D-F2-004` | 영문 제품명은 보조 라벨로 병기 | 브랜드 학습은 유지하되 이해 속도를 높임 | `OPTIC Broker`, `OPTIC Shipper`는 subtitle/badge/label 성격 |
 | `D-F2-005` | `Carrier/Ops/Billing`은 구현 예정으로 분리 | 현재 구현 대상은 Broker/Shipper 두 가지 | 활성 제품처럼 보이면 안 됨 |
 | `D-F2-006` | `화물맨`만 외부 플랫폼 고유명으로 유지 | 사용자에게 실제 연동 맥락이 중요함 | AI/지도/세금계산서는 일반 기능명으로 낮춤 |
-| `D-F2-007` | Wireframe/Stitch는 생략 | 기존 섹션 copy/data 정리이며 신규 화면 구조 없음 | 다음 단계는 `/dev-feature` |
+| `D-F2-007` | Wireframe은 작성, Stitch는 생략 | 제품 라인업 표시 구조가 구현에 직접 영향을 주므로 P5 wireframe을 추가했고, visual design handoff는 아니므로 Stitch는 생략 | 다음 단계는 `/dev-feature` |
 | `D-F2-008` | F3 신규 업무 섹션은 별도 Feature | F2와 F3 설명 중복 방지 | F2는 카피 기준과 handoff만 남김 |
 
 ---

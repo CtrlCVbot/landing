@@ -13,7 +13,13 @@
   "copy_needed": false,
   "reference_needed": false,
   "prd_required": true,
-  "wireframe_required": false,
+  "wireframe_required": true,
+  "wireframes": {
+    "screens": "../../../../wireframes/f2-optic-copy-product-lineup/screens.md",
+    "navigation": "../../../../wireframes/f2-optic-copy-product-lineup/navigation.md",
+    "components": "../../../../wireframes/f2-optic-copy-product-lineup/components.md",
+    "review": "../../../../wireframes/f2-optic-copy-product-lineup/04-wireframe-review.md"
+  },
   "stitch_required": false,
   "bridge_required": true,
   "draft": "../../../../drafts/f2-optic-copy-product-lineup/01-draft.md",
@@ -27,9 +33,9 @@
   "draft_status": "completed",
   "prd_status": "approved",
   "review_status": "Approve",
-  "wireframe_status": "skipped",
+  "wireframe_status": "draft-reviewed",
   "stitch_status": "skipped",
-  "bridge_status": "completed",
+  "bridge_status": "completed-after-wireframe-refresh",
   "dev_feature_status": "pending",
   "dev_run_status": "pending",
   "dev_verify_status": "pending",
@@ -63,6 +69,7 @@
 
 ## Routing Notes
 
-- P5/P6는 생략한다. F2는 신규 화면 구조가 아니라 기존 섹션 copy/data 정리다.
+- P5는 사용자 피드백에 따라 진행했다. 제품 라인업 표시 구조를 wireframe으로 고정한다.
+- P6 Stitch는 생략한다. F2는 visual design handoff가 아니라 dev feature package로 직행한다.
 - `/dev-feature`는 이 context를 입력으로 `02-package`를 생성한다.
 - `/dev-run`은 `/dev-feature` 이후 진행한다.

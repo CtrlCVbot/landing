@@ -3,6 +3,7 @@
 > **Feature Slug**: `f2-optic-copy-product-lineup`
 > **Source PRD**: [f2-optic-copy-product-lineup-prd.md](../../../../prd/10-approved/f2-optic-copy-product-lineup-prd.md)
 > **PRD Review**: [03-prd-review.md](../../../../drafts/f2-optic-copy-product-lineup/03-prd-review.md)
+> **Wireframe**: [screens.md](../../../../wireframes/f2-optic-copy-product-lineup/screens.md)
 > **Status**: frozen for dev handoff
 > **Created**: 2026-04-29
 
@@ -93,3 +94,5 @@ PRD 원본 ID가 길기 때문에 dev package에서는 아래 alias를 병기할
 다음 단계는 `/dev-feature .plans/features/active/f2-optic-copy-product-lineup/`다.
 
 구현자는 이 문서와 [06-architecture-binding.md](./06-architecture-binding.md)를 먼저 읽고, 실제 TASK와 test case는 `/dev-feature`가 생성할 `02-package` 문서를 SSOT로 사용한다.
+
+제품 라인업 화면 구조는 [screens.md](../../../../wireframes/f2-optic-copy-product-lineup/screens.md), [components.md](../../../../wireframes/f2-optic-copy-product-lineup/components.md)를 함께 따른다.

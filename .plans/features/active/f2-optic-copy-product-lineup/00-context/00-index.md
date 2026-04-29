@@ -32,6 +32,10 @@
 | Draft | [01-draft.md](../../../../drafts/f2-optic-copy-product-lineup/01-draft.md) | reviewed |
 | PRD | [f2-optic-copy-product-lineup-prd.md](../../../../prd/10-approved/f2-optic-copy-product-lineup-prd.md) | approved |
 | PRD Review | [03-prd-review.md](../../../../drafts/f2-optic-copy-product-lineup/03-prd-review.md) | Approve |
+| Wireframe Screens | [screens.md](../../../../wireframes/f2-optic-copy-product-lineup/screens.md) | reviewed |
+| Wireframe Navigation | [navigation.md](../../../../wireframes/f2-optic-copy-product-lineup/navigation.md) | reviewed |
+| Wireframe Components | [components.md](../../../../wireframes/f2-optic-copy-product-lineup/components.md) | reviewed |
+| Wireframe Review | [04-wireframe-review.md](../../../../wireframes/f2-optic-copy-product-lineup/04-wireframe-review.md) | Approve |
 | Draft Routing Metadata | [07-routing-metadata.md](../../../../drafts/f2-optic-copy-product-lineup/07-routing-metadata.md) | bridge done |
 | Architecture SSOT | [00-dev-architecture.md](../../../../project/00-dev-architecture.md) | approved |
 
@@ -60,9 +64,9 @@ F2는 F1에서 고정한 `OPTIC` 브랜드와 CTA 기준을 본문 섹션으로 
 | P2 Screen | done | Go, RICE 78.0, Standard |
 | P3 Draft | done | draft + routing metadata |
 | P4 PRD | done | approved PRD + PRD review |
-| P5 Wireframe | skipped | 기존 섹션 copy/data 정리라 신규 화면 구조 없음 |
-| P6 Stitch | skipped | Wireframe 생략에 따라 Stitch 생략 |
-| P7 Bridge | done | 이 context package |
+| P5 Wireframe | done | 제품 라인업 표시 구조 고정 |
+| P6 Stitch | skipped | visual design handoff 대상이 아니므로 생략 |
+| P7 Bridge | done | wireframe-aware context package |
 | Dev Feature | pending | 다음 단계 |
 
 ---

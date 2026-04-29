@@ -15,6 +15,8 @@
 | Draft | [01-draft.md](../../../../drafts/f2-optic-copy-product-lineup/01-draft.md) |
 | PRD | [f2-optic-copy-product-lineup-prd.md](../../../../prd/10-approved/f2-optic-copy-product-lineup-prd.md) |
 | PRD Review | [03-prd-review.md](../../../../drafts/f2-optic-copy-product-lineup/03-prd-review.md) |
+| Wireframe | [screens.md](../../../../wireframes/f2-optic-copy-product-lineup/screens.md) |
+| Wireframe Review | [04-wireframe-review.md](../../../../wireframes/f2-optic-copy-product-lineup/04-wireframe-review.md) |
 | Routing | [07-routing-metadata.md](../../../../drafts/f2-optic-copy-product-lineup/07-routing-metadata.md) |
 
 ---
@@ -51,7 +53,8 @@ F2는 구현 대상 제품을 `주선사용 운송 운영 콘솔` + `OPTIC Broke
 
 - [x] Approved PRD 존재
 - [x] PRD review `Approve`
-- [x] Wireframe/Stitch 생략 사유 기록
+- [x] Wireframe 작성 및 review `Approve`
+- [x] Stitch 생략 사유 기록
 - [x] Architecture Profile 상속 확인
 - [x] Allowed target paths 정의
 - [x] 제품 라인업 표시 계약 정의
