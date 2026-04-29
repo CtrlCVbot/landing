@@ -9,6 +9,12 @@
 | --- | --- | --- | --- | --- | --- |
 | `2026-04-28-optic-landing-evolution-guide` | active | OPTIC landing planning/development evolution guide | [INDEX](../../docs/reports/2026-04-28-optic-landing-evolution-guide/INDEX.md) | [GUIDE](../../docs/reports/2026-04-28-optic-landing-evolution-guide/GUIDE-landing-evolution.md) | [internal-bundles](../../docs/reports/2026-04-28-optic-landing-evolution-guide/internal-bundles/) |
 
+## Feature Archives
+
+| Slug | Status | Purpose | Bundle | Sources |
+| --- | --- | --- | --- | --- |
+| `f1-optic-brand-cta` | archived | OPTIC 브랜드, 로고, CTA 최소 반영 | [ARCHIVE-F1](./f1-optic-brand-cta/ARCHIVE-F1.md) | [sources](./f1-optic-brand-cta/sources/) |
+
 ## Archive Management Rules
 
 | Rule | Meaning |

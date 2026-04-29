@@ -1,7 +1,7 @@
 # Children Features — EPIC-20260428-001
 
 > `OPTIC 랜딩 브랜드 전환과 업무 매뉴얼형 스크롤 개선`의 자식 Feature 실행 지도.
-> 현재 상태는 `planning`이며, F1 구현과 fresh verification을 완료했다.
+> 현재 상태는 `planning`이며, F1 archive를 완료했다.
 
 ---
 
@@ -9,16 +9,13 @@
 
 ### F1 — 브랜드, 로고, CTA 최소 반영
 
-- **IDEA**: [IDEA-20260428-001](../../../ideas/20-approved/IDEA-20260428-001.md)
+- **IDEA**: [IDEA-20260428-001](../../../archive/f1-optic-brand-cta/sources/ideas/IDEA-20260428-001.md)
 - **Lane**: Lite (헤더/footer/상수 중심의 국소 변경)
 - **RICE 예상**: TBD
 - **범위**: `src/lib/constants.ts`, `src/components/sections/header.tsx`, `src/components/sections/footer.tsx`, `src/components/icons/optic-logo.tsx`
-- **상태**: verified, archive 대기
-- **Draft**: [f1-optic-brand-cta](../../../drafts/f1-optic-brand-cta/01-draft.md)
-- **Bridge**: [context index](../../../features/active/f1-optic-brand-cta/00-context/00-index.md)
-- **Feature Package**: [overview](../../../features/active/f1-optic-brand-cta/02-package/00-overview.md)
-- **Dev Summary**: [dev-output-summary](../../../features/active/f1-optic-brand-cta/03-dev-notes/dev-output-summary.md)
-- **Dev Verify**: [dev-verification-report](../../../features/active/f1-optic-brand-cta/03-dev-notes/dev-verification-report.md)
+- **상태**: archived
+- **Archive**: [ARCHIVE-F1](../../../archive/f1-optic-brand-cta/ARCHIVE-F1.md)
+- **Sources**: [sources](../../../archive/f1-optic-brand-cta/sources/)
 - **완료 기준**:
   - 고객 화면 주 브랜드는 `OPTIC`으로 보인다.
   - `OPTICS`는 footer/About의 `Powered by OPTICS` 정도로 제한된다.
@@ -139,7 +136,7 @@
 
 | Feature | 상태 | TASK 진행 | 테스트 | 번들 영향 | 리뷰 |
 |---|:---:|:---:|:---:|:---:|:---:|
-| F1 | verified | dev-run 완료 | 통과 | 낮음 | archive 대기 |
+| F1 | archived | dev-run 완료 | 통과 | 낮음 | 완료 |
 | F2 | pending | — | — | — | — |
 | F3 | pending | — | — | — | — |
 | F4 | pending | — | — | — | — |
@@ -175,3 +172,4 @@
 | 2026-04-28 | F1 Feature Package 생성 — 다음 단계 `/dev-run` |
 | 2026-04-28 | F1 구현 완료 — 다음 단계 `/dev-verify` |
 | 2026-04-28 | F1 `/dev-verify` 통과 — 다음 단계 `/plan-archive` |
+| 2026-04-29 | F1 archive 완료 — `ARCHIVE-F1.md` 생성 및 sources 이동 |

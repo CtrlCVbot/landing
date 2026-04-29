@@ -42,7 +42,8 @@
 | Dev feature status | `done` |
 | Dev run status | `done` |
 | Dev verify status | `done` |
-| Recommended next | `/plan-archive f1-optic-brand-cta` |
+| Archive status | `done` |
+| Recommended next | `F2 IDEA registration` |
 
 ## Package 문서
 

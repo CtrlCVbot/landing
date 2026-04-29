@@ -81,5 +81,14 @@ Browser QA 세부 결과는 `output/playwright/f1-brand-dev-verify-summary.json`
 
 ## 6. Next Gate
 
-1. `/plan-archive f1-optic-brand-cta`로 F1 산출물을 archive bundle로 정리한다.
-2. F2 IDEA 등록 전, F1의 `BRAND`/`CTA_LINKS` 상수를 카피 기준점으로 참조한다.
+| 항목 | 상태 | 메모 |
+|---|:---:|---|
+| Post-verify logo weight adjustment | pass | `03a8f1d`에서 OPTIC 텍스트 로고 두께를 `900`으로 조정 |
+| Targeted tests | pass | `pnpm test -- header.test.tsx footer.test.tsx` |
+| Typecheck | pass | `pnpm typecheck` |
+| Lint | pass with WARN | 기존 dashboard-preview warnings만 재노출 |
+
+## 7. Next Gate
+
+1. F2 IDEA 등록 전, F1의 `BRAND`/`CTA_LINKS` 상수를 카피 기준점으로 참조한다.
+2. F5에서 로고 이미지/자산 최종 승인과 메타데이터 검증을 이어간다.

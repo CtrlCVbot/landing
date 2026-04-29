@@ -53,4 +53,4 @@
 |---|---|---|
 | 로고 asset 최종 승인 | deferred | F5 release gate |
 | `/dev-verify` | done | [dev-verification-report](./dev-verification-report.md) |
-| `/plan-archive` | next | F1 산출물 archive bundle 생성 |
+| `/plan-archive` | done | `ARCHIVE-F1.md` 생성 및 sources 이동 |

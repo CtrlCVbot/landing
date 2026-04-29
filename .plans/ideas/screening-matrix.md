@@ -12,4 +12,4 @@
 | IDEA-20260427-002 | F3 옵션↔추가요금 파생 로직 | Go | 77.8 | Lite | screened | [screening](10-screening/SCREENING-20260427-002.md) | EPIC-20260422-001 |
 | IDEA-20260427-003 | Dash Preview 단계별 포커스 줌 애니메이션 | Go | 73.8 | Lite | archived | [archive](../archive/dash-preview-focus-zoom-animation/ARCHIVE-FZ.md) | - |
 | IDEA-20260427-004 | hero-01 레퍼런스 기반 Hero 섹션 재개선 | Go | 79.8 | Standard | archived | [archive](../archive/hero-01-reference-hero-refresh/ARCHIVE-HR01.md) | - |
-| IDEA-20260428-001 | F1 브랜드, 로고, CTA 최소 반영 | Go | 76.35 | Lite | approved | [approved](20-approved/SCREENING-20260428-001.md) | EPIC-20260428-001 |
+| IDEA-20260428-001 | F1 브랜드, 로고, CTA 최소 반영 | Go | 76.35 | Lite | archived | [archive](../archive/f1-optic-brand-cta/ARCHIVE-F1.md) | EPIC-20260428-001 |

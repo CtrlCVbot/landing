@@ -18,7 +18,8 @@
 | Dev feature | `done` |
 | Dev run | `done` |
 | Dev verify | `done` |
-| Recommended next | `/plan-archive f1-optic-brand-cta` |
+| Archive | `done` |
+| Recommended next | `F2 IDEA registration` |
 
 ## 근거
 
@@ -29,5 +30,5 @@
 
 ## 다음 게이트
 
-1. `/plan-archive f1-optic-brand-cta`
-2. F2 IDEA 등록 전 F1의 브랜드/CTA 상수를 기준점으로 참조
+1. F2 IDEA 등록 전 F1의 브랜드/CTA 상수를 기준점으로 참조
+2. F5 브랜드 자산 검증 시 `ARCHIVE-F1.md`의 deferred 항목을 확인
