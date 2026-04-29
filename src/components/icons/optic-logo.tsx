@@ -23,7 +23,7 @@ export function OpticLogo({ className, width = 120, height = 32 }: OpticLogoProp
         dominantBaseline="central"
         textAnchor="middle"
         fill="currentColor"
-        fontWeight="bold"
+        fontWeight="900"
         fontSize="24"
         letterSpacing="4"
         fontFamily="system-ui, -apple-system, sans-serif"

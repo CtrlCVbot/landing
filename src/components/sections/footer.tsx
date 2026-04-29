@@ -8,7 +8,7 @@ export function Footer() {
       <div className="max-w-7xl mx-auto px-5 md:px-10 lg:px-20 py-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div>
-            <span className="text-xl font-bold text-foreground">
+            <span className="text-xl font-black text-foreground">
               {BRAND.primary}
             </span>
           </div>

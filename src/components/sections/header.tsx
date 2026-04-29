@@ -37,7 +37,7 @@ export function Header() {
       )}
     >
       <div className="max-w-7xl mx-auto px-5 md:px-10 lg:px-20 h-full flex items-center justify-between">
-        <a href="#" className="text-xl font-bold text-foreground">
+        <a href="#" className="text-xl font-black text-foreground">
           {BRAND.primary}
         </a>
 
