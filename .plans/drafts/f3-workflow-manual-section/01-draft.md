@@ -115,12 +115,13 @@
 
 ## 9. 다음 단계
 
-1. `/plan-prd .plans/drafts/f3-workflow-manual-section/`로 PRD 10개 섹션을 작성한다.
-2. PRD에서 섹션 배치 위치와 단계별 정보 밀도를 확정한다.
-3. PRD 승인 후 `/plan-wireframe .plans/prd/...`로 desktop/mobile 구조를 설계한다.
+1. PRD review 결과를 확인한다: [03-prd-review.md](03-prd-review.md)
+2. `/plan-wireframe .plans/prd/10-approved/f3-workflow-manual-section-prd.md`로 desktop/mobile 구조를 설계한다.
 
 ## 10. 변경 이력
 
 | 날짜 | 내용 |
 |---|---|
 | 2026-04-29 | 초안 — F3 approved IDEA 기반 Standard Draft 생성 |
+| 2026-04-29 | PRD 10개 섹션 작성 — 다음 단계 `/plan-review` |
+| 2026-04-29 | PRD review 통과 — Approve, 다음 단계 `/plan-wireframe` |

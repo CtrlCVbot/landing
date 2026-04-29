@@ -57,3 +57,5 @@
 |---|---|
 | 2026-04-29 | F2 archive 완료 - `ARCHIVE-F2.md` 생성 및 sources 이동 |
 | 2026-04-29 | F3 IDEA, screening, draft 완료 - `f3-workflow-manual-section` 생성 및 다음 단계 `/plan-prd` |
+| 2026-04-29 | F3 PRD draft 완료 - `f3-workflow-manual-section-prd.md` 생성 및 다음 단계 `/plan-review` |
+| 2026-04-29 | F3 PRD review 완료 - Approve, 다음 단계 `/plan-wireframe` |

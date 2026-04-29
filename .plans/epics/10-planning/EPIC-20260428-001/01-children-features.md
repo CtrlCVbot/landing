@@ -50,9 +50,11 @@
 - **Lane**: Standard (신규 섹션과 데이터 구조 추가)
 - **RICE 예상**: 81.6
 - **범위**: `src/components/sections/workflow-manual.tsx`, `src/lib/landing-workflow.ts` 또는 `src/lib/constants.ts`, `src/app/page.tsx`
-- **상태**: draft
+- **상태**: prd-reviewed
 - **Screening**: [SCREENING-20260429-002](../../../ideas/20-approved/SCREENING-20260429-002.md)
 - **Draft**: [f3-workflow-manual-section](../../../drafts/f3-workflow-manual-section/01-draft.md)
+- **PRD**: [f3-workflow-manual-section-prd](../../../prd/10-approved/f3-workflow-manual-section-prd.md)
+- **PRD Review**: [03-prd-review](../../../drafts/f3-workflow-manual-section/03-prd-review.md)
 - **완료 기준**:
   - hero 이후 `AI 오더 등록 → 상하차지 관리 → 배차/운송 상태 → 화물맨 연동 → 정산 자동화 → 세금계산서 관리` 흐름이 이어진다.
   - 섹션당 한 업무만 설명하고, 기존 features/integrations와 중복 설명을 줄인다.
@@ -150,7 +152,7 @@
 |---|:---:|:---:|:---:|:---:|:---:|
 | F1 | archived | dev-run 완료 | 통과 | 낮음 | 완료 |
 | F2 | archived | dev-run/dev-verify 완료 | 통과 | 중간 | 완료 |
-| F3 | draft | P1~P3 완료 | — | 중간 | PRD 대기 |
+| F3 | prd-reviewed | P1~P4 review 완료 | — | 중간 | Wireframe 대기 |
 | F4 | pending | — | — | — | — |
 | F5 | pending | — | — | — | — |
 
@@ -201,3 +203,5 @@
 | 2026-04-29 | F3 screening 완료 — RICE 81.6, Go 제안, Standard lane |
 | 2026-04-29 | F3 사용자 진행 요청 반영 — `20-approved` 생성, 다음 단계 `/plan-draft` |
 | 2026-04-29 | F3 Draft `f3-workflow-manual-section` 생성 — 다음 단계 `/plan-prd` |
+| 2026-04-29 | F3 PRD 10개 섹션 작성 — 다음 단계 `/plan-review` |
+| 2026-04-29 | F3 PRD review 통과 — 다음 단계 `/plan-wireframe` |

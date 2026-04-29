@@ -101,3 +101,5 @@
 | 2026-04-29 | IDEA-20260429-002 screening 완료 — RICE-style weighted score 81.6, Go 제안, Standard lane |
 | 2026-04-29 | IDEA-20260429-002 사용자 진행 요청 반영 — 상태 `approved`, `20-approved` 생성 |
 | 2026-04-29 | IDEA-20260429-002 draft 생성 — `f3-workflow-manual-section`, 다음 단계 `/plan-prd` |
+| 2026-04-29 | IDEA-20260429-002 PRD 10개 섹션 작성 — 다음 단계 `/plan-review` |
+| 2026-04-29 | IDEA-20260429-002 PRD review 완료 — Approve, 다음 단계 `/plan-wireframe` |
