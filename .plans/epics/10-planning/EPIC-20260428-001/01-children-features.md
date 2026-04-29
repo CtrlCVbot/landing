@@ -28,9 +28,10 @@
 - **Lane**: Standard (여러 섹션 카피와 상수 정리)
 - **RICE 예상**: 78.0
 - **범위**: `src/lib/constants.ts`, `src/components/sections/features.tsx`, `problems.tsx`, `products.tsx`, `integrations.tsx`
-- **상태**: draft, PRD 대기
+- **상태**: prd-draft, PRD review 대기
 - **Screening**: [SCREENING-20260429-001](../../../ideas/20-approved/SCREENING-20260429-001.md)
 - **Draft**: [f2-optic-copy-product-lineup](../../../drafts/f2-optic-copy-product-lineup/01-draft.md)
+- **PRD**: [f2-optic-copy-product-lineup-prd](../../../prd/00-draft/f2-optic-copy-product-lineup-prd.md)
 - **완료 기준**:
   - `Optic Cargo`, `서비스 테스트`, 과도한 `Cargo` 중심 표현이 제거된다.
   - 제품 라인업은 `OPTIC Broker`, `OPTIC Shipper`, `OPTIC Carrier`, `OPTIC Ops`, `OPTIC Billing` 기준으로 정렬된다.
@@ -139,12 +140,12 @@
 | Feature | 상태 | TASK 진행 | 테스트 | 번들 영향 | 리뷰 |
 |---|:---:|:---:|:---:|:---:|:---:|
 | F1 | archived | dev-run 완료 | 통과 | 낮음 | 완료 |
-| F2 | draft | draft 작성 | — | 중간 | PRD 대기 |
+| F2 | prd-draft | PRD 작성 | — | 중간 | PRD review 대기 |
 | F3 | pending | — | — | — | — |
 | F4 | pending | — | — | — | — |
 | F5 | pending | — | — | — | — |
 
-상태 값: `pending` / `inbox` / `screening` / `approved` / `draft` / `scope-reviewed` / `bridged` / `feature-package-ready` / `implemented` / `verified` / `active` / `archived`.
+상태 값: `pending` / `inbox` / `screening` / `approved` / `draft` / `prd-draft` / `scope-reviewed` / `bridged` / `feature-package-ready` / `implemented` / `verified` / `active` / `archived`.
 
 ---
 
@@ -179,3 +180,4 @@
 | 2026-04-29 | F2 screening 완료 — RICE 78.0, Go 제안, Standard lane, 사용자 승인 대기 |
 | 2026-04-29 | F2 사용자 Go 승인 — `20-approved` 이동, 다음 단계 `/plan-draft` |
 | 2026-04-29 | F2 Draft `f2-optic-copy-product-lineup` 생성 — 다음 단계 `/plan-prd` |
+| 2026-04-29 | F2 PRD 10개 섹션 작성 — 다음 단계 `/plan-review` |

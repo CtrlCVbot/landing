@@ -174,8 +174,8 @@ F2에서 실제 신규 섹션을 구현하지는 않지만, 기존 섹션 카피
 
 ## 11. 다음 단계
 
-1. `/plan-prd .plans/drafts/f2-optic-copy-product-lineup/`로 PRD 10개 섹션을 작성한다.
-2. PRD에서 섹션별 변경표, OPTIC 의미 기반 카피 체계, 커스텀 가능성 메시지, 문구 스캔 명령, F3 중복 방지 기준을 확정한다.
+1. PRD를 확인한다: [f2-optic-copy-product-lineup-prd.md](../../prd/00-draft/f2-optic-copy-product-lineup-prd.md)
+2. `/plan-review .plans/prd/00-draft/f2-optic-copy-product-lineup-prd.md --type=prd`로 PRD 품질을 검토한다.
 3. PRD review 후 `/plan-bridge` 또는 필요한 설계 단계를 결정한다.
 
 ## 12. 변경 이력
@@ -185,3 +185,4 @@ F2에서 실제 신규 섹션을 구현하지는 않지만, 기존 섹션 카피
 | 2026-04-29 | 초안 — F2 approved IDEA 기반 Standard Draft 생성 |
 | 2026-04-29 | 사용자 피드백 반영 — 화주/주선사별 커스텀 가능성을 OPTIC 핵심 메시지로 추가 |
 | 2026-04-29 | 사용자 피드백 반영 — OPTIC 의미 기반 카피 체계와 매뉴얼형 섹션 제안 추가 |
+| 2026-04-29 | PRD 10개 섹션 작성 — 다음 단계 `/plan-review` |
