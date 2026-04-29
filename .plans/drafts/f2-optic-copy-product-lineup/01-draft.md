@@ -43,7 +43,7 @@
 - **R7**: `src/lib/constants.ts`에서 기능 카드, 제품 라인업, 연동 문구의 기준 데이터를 정리한다.
 - **R8**: `src/components/sections/features.tsx`는 `주문 관리` 중심 표현을 `AI 오더 등록`, 정산, 전자세금계산서 흐름과 연결한다.
 - **R9**: `src/components/sections/problems.tsx`는 브랜드명 나열보다 수작업 감소, 전송 누락 방지, 정산 누락 방지를 먼저 말한다.
-- **R10**: `src/components/sections/products.tsx`는 제품명을 `OPTIC Broker`, `OPTIC Shipper`, `OPTIC Carrier`, `OPTIC Ops`, `OPTIC Billing` 기준으로 정렬하고, 화주/주선사별 커스텀 가능성을 역할별 가치로 연결한다.
+- **R10**: `src/components/sections/products.tsx`는 현재 구현 제품을 `OPTIC Broker`, `OPTIC Shipper` 두 가지로 정렬하고, `OPTIC Carrier`, `OPTIC Ops`, `OPTIC Billing`은 구현 예정으로 분리한다.
 - **R11**: `src/components/sections/integrations.tsx`는 `화물맨`, `AI 오더 등록`, `전자세금계산서`, `주소/거리 계산`처럼 기능명 중심으로 설명한다.
 - **R12**: `src/components/sections/hero.tsx`는 구조 변경 없이 CTA 문구 스캔 대상에만 포함하되, PRD에서 hero 보조 문구에 커스텀 가능성 메시지를 넣을지 검토한다.
 
@@ -61,7 +61,7 @@
 
 | 항목 | 결정 | 근거 |
 |---|---|---|
-| 제품 라인업 | `OPTIC Broker/Shipper/Carrier/Ops/Billing` 유지 | 브랜드 가이드와 CTA 가이드의 고객용 제품명 기준 |
+| 제품 라인업 | `OPTIC Broker/Shipper` 구현, `Carrier/Ops/Billing` 구현 예정 | 현재 제공 가치와 로드맵 제품을 혼동하지 않게 분리 |
 | 커스텀 가능성 메시지 | 전면 반영 | `OPTIC`의 Coordination 의미와 서비스 핵심 가치가 화주/주선사별 운영 조율과 커스텀 가능성에 있다 |
 | 외부 브랜드명 | `화물맨`만 예외로 유지 | 고유 외부 플랫폼명이며, 나머지는 기능명으로 낮추는 것이 가이드 기준 |
 | hero 범위 | 문구 스캔만 포함, 구조 변경 없음 | F2의 목적은 기존 섹션 카피 정렬이고 hero 구조 변경은 리스크가 커진다 |
@@ -94,13 +94,13 @@
 
 ### 5.3 제품 라인업 카피 후보
 
-| 제품 | 추천 카피 |
-|---|---|
-| `OPTIC Broker` | 주선사별 배차, 연동, 정산 기준에 맞춘 운영 콘솔 |
-| `OPTIC Shipper` | 화주별 요청 양식과 진행 확인 방식에 맞춘 운송 포털 |
-| `OPTIC Carrier` | 운송사와 차주가 필요한 배차 수행 정보를 간결하게 확인 |
-| `OPTIC Ops` | 여러 고객사와 운영 기준을 한 화면에서 조율 |
-| `OPTIC Billing` | 회사별 정산 기준과 세금계산서 흐름을 놓치지 않게 관리 |
+| 제품 | 상태 | 추천 카피 |
+|---|---|---|
+| `OPTIC Broker` | 구현 대상 | 주선사별 배차, 연동, 정산 기준에 맞춘 운영 콘솔 |
+| `OPTIC Shipper` | 구현 대상 | 화주별 요청 양식과 진행 확인 방식에 맞춘 운송 포털 |
+| `OPTIC Carrier` | 구현 예정 | 운송사와 차주가 필요한 배차 수행 정보를 간결하게 확인 |
+| `OPTIC Ops` | 구현 예정 | 여러 고객사와 운영 기준을 한 화면에서 조율 |
+| `OPTIC Billing` | 구현 예정 | 회사별 정산 기준과 세금계산서 흐름을 놓치지 않게 관리 |
 
 ### 5.4 PRD에 넣을 기준 문장
 
@@ -138,7 +138,7 @@ F2에서 실제 신규 섹션을 구현하지는 않지만, 기존 섹션 카피
 
 - 랜딩 코드와 테스트 대상 문구에서 `Optic Cargo`가 남지 않는다.
 - 고객 CTA나 본문에 `서비스 테스트`, `테스트 서버`, `데모 테스트`가 남지 않는다.
-- 제품 라인업은 `OPTIC Broker`, `OPTIC Shipper`, `OPTIC Carrier`, `OPTIC Ops`, `OPTIC Billing` 기준으로 보인다.
+- 제품 라인업은 현재 구현 대상 `OPTIC Broker`, `OPTIC Shipper`가 우선 보이고, `OPTIC Carrier`, `OPTIC Ops`, `OPTIC Billing`은 구현 예정으로만 구분된다.
 - 화주/주선사별 운영 방식에 맞춘 커스텀 가능성이 OPTIC의 핵심 가치로 보인다.
 - `OPTIC`의 의미가 약어 설명이 아니라 최적화, 플랫폼, 운송, AI, 조율의 고객 가치 문장으로 풀린다.
 - 매뉴얼형 섹션으로 확장 가능한 단계 흐름이 PRD에 남는다.
@@ -151,7 +151,7 @@ F2에서 실제 신규 섹션을 구현하지는 않지만, 기존 섹션 카피
 | 검증 | 기준 |
 |---|---|
 | 문구 스캔 | `Optic Cargo`, `서비스 테스트`, `테스트 서버`, `데모 테스트`, 과도한 `Cargo` 잔존 여부 확인 |
-| 제품명 스캔 | `OPTIC Broker`, `OPTIC Shipper`, `OPTIC Carrier`, `OPTIC Ops`, `OPTIC Billing` 노출 확인 |
+| 제품명 스캔 | `OPTIC Broker`, `OPTIC Shipper` 구현 대상 노출과 `OPTIC Carrier`, `OPTIC Ops`, `OPTIC Billing` 구현 예정 구분 확인 |
 | 커스텀 메시지 스캔 | 화주/주선사별 맞춤, 커스텀, 운영 방식 조율 메시지가 주요 섹션에 반영됐는지 확인 |
 | OPTIC 의미 스캔 | `Optimized`, `Platform`, `Transport`, `Intelligence`, `Coordination`을 직접 나열하기보다 고객 가치 문장으로 풀었는지 확인 |
 | 매뉴얼형 흐름 확인 | 운영 방식 선택 → AI 오더 등록 → 상하차지 → 화물맨 → 정산 → 세금계산서 흐름이 PRD에 반영됐는지 확인 |
@@ -174,9 +174,9 @@ F2에서 실제 신규 섹션을 구현하지는 않지만, 기존 섹션 카피
 
 ## 11. 다음 단계
 
-1. PRD를 확인한다: [f2-optic-copy-product-lineup-prd.md](../../prd/00-draft/f2-optic-copy-product-lineup-prd.md)
-2. `/plan-review .plans/prd/00-draft/f2-optic-copy-product-lineup-prd.md --type=prd`로 PRD 품질을 검토한다.
-3. PRD review 후 `/plan-bridge` 또는 필요한 설계 단계를 결정한다.
+1. 승인된 PRD를 확인한다: [f2-optic-copy-product-lineup-prd.md](../../prd/10-approved/f2-optic-copy-product-lineup-prd.md)
+2. PRD review를 확인한다: [03-prd-review.md](./03-prd-review.md)
+3. `/plan-bridge f2-optic-copy-product-lineup`로 개발 핸드오프 문서를 만든다.
 
 ## 12. 변경 이력
 
@@ -186,3 +186,5 @@ F2에서 실제 신규 섹션을 구현하지는 않지만, 기존 섹션 카피
 | 2026-04-29 | 사용자 피드백 반영 — 화주/주선사별 커스텀 가능성을 OPTIC 핵심 메시지로 추가 |
 | 2026-04-29 | 사용자 피드백 반영 — OPTIC 의미 기반 카피 체계와 매뉴얼형 섹션 제안 추가 |
 | 2026-04-29 | PRD 10개 섹션 작성 — 다음 단계 `/plan-review` |
+| 2026-04-29 | 사용자 피드백 반영 — 제품 라인업 구현 대상은 Broker/Shipper 2개로 제한, 나머지는 구현 예정으로 분리 |
+| 2026-04-29 | PRD review 통과 — 다음 단계 `/plan-bridge` |

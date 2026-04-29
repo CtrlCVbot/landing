@@ -28,13 +28,14 @@
 - **Lane**: Standard (여러 섹션 카피와 상수 정리)
 - **RICE 예상**: 78.0
 - **범위**: `src/lib/constants.ts`, `src/components/sections/features.tsx`, `problems.tsx`, `products.tsx`, `integrations.tsx`
-- **상태**: prd-draft, PRD review 대기
+- **상태**: prd-reviewed, Bridge 대기
 - **Screening**: [SCREENING-20260429-001](../../../ideas/20-approved/SCREENING-20260429-001.md)
 - **Draft**: [f2-optic-copy-product-lineup](../../../drafts/f2-optic-copy-product-lineup/01-draft.md)
-- **PRD**: [f2-optic-copy-product-lineup-prd](../../../prd/00-draft/f2-optic-copy-product-lineup-prd.md)
+- **PRD**: [f2-optic-copy-product-lineup-prd](../../../prd/10-approved/f2-optic-copy-product-lineup-prd.md)
+- **PRD Review**: [03-prd-review](../../../drafts/f2-optic-copy-product-lineup/03-prd-review.md)
 - **완료 기준**:
   - `Optic Cargo`, `서비스 테스트`, 과도한 `Cargo` 중심 표현이 제거된다.
-  - 제품 라인업은 `OPTIC Broker`, `OPTIC Shipper`, `OPTIC Carrier`, `OPTIC Ops`, `OPTIC Billing` 기준으로 정렬된다.
+  - 제품 라인업은 `OPTIC Broker`, `OPTIC Shipper` 두 가지가 현재 구현 대상으로 정렬되고, `OPTIC Carrier`, `OPTIC Ops`, `OPTIC Billing`은 구현 예정으로 분리된다.
   - `화물맨` 외 외부 브랜드명은 일반 기능명으로 바뀐다.
 
 ### F3 — 업무 매뉴얼형 스크롤 섹션 MVP
@@ -140,12 +141,12 @@
 | Feature | 상태 | TASK 진행 | 테스트 | 번들 영향 | 리뷰 |
 |---|:---:|:---:|:---:|:---:|:---:|
 | F1 | archived | dev-run 완료 | 통과 | 낮음 | 완료 |
-| F2 | prd-draft | PRD 작성 | — | 중간 | PRD review 대기 |
+| F2 | prd-reviewed | PRD review 완료 | — | 중간 | Bridge 대기 |
 | F3 | pending | — | — | — | — |
 | F4 | pending | — | — | — | — |
 | F5 | pending | — | — | — | — |
 
-상태 값: `pending` / `inbox` / `screening` / `approved` / `draft` / `prd-draft` / `scope-reviewed` / `bridged` / `feature-package-ready` / `implemented` / `verified` / `active` / `archived`.
+상태 값: `pending` / `inbox` / `screening` / `approved` / `draft` / `prd-draft` / `prd-reviewed` / `scope-reviewed` / `bridged` / `feature-package-ready` / `implemented` / `verified` / `active` / `archived`.
 
 ---
 
@@ -181,3 +182,5 @@
 | 2026-04-29 | F2 사용자 Go 승인 — `20-approved` 이동, 다음 단계 `/plan-draft` |
 | 2026-04-29 | F2 Draft `f2-optic-copy-product-lineup` 생성 — 다음 단계 `/plan-prd` |
 | 2026-04-29 | F2 PRD 10개 섹션 작성 — 다음 단계 `/plan-review` |
+| 2026-04-29 | 사용자 피드백 반영 — F2 제품 라인업 구현 대상은 Broker/Shipper 2개로 제한, Carrier/Ops/Billing은 구현 예정으로 분리 |
+| 2026-04-29 | F2 PRD review 통과 — 다음 단계 `/plan-bridge` |

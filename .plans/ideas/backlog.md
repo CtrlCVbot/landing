@@ -90,3 +90,4 @@
 | 2026-04-29 | IDEA-20260429-001 사용자 Go 승인 — 상태 `screened → approved`, `20-approved` 이동 |
 | 2026-04-29 | IDEA-20260429-001 draft 생성 — `f2-optic-copy-product-lineup`, Standard lane, 다음 단계 `/plan-prd` |
 | 2026-04-29 | IDEA-20260429-001 PRD 10개 섹션 작성 — 다음 단계 `/plan-review` |
+| 2026-04-29 | IDEA-20260429-001 PRD review 완료 — Approve, Broker/Shipper 2개 구현 대상 반영, 다음 단계 `/plan-bridge` |
