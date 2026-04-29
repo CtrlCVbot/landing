@@ -23,7 +23,8 @@
 | Lint | done | `pnpm lint` |
 | Build | done | `pnpm build` |
 | Copy scan | done | 금지 문구, 제한 provider명, 필수 문구 scan |
-| Browser preview open | done | `http://localhost:3102/` returned `200` |
+| Browser preview open | done | `http://localhost:3102/` static export preview returned `200` |
+| Viewport overflow check | done | 1440px, 768px, 375px DOM/screenshot evidence |
 
 ## 3. Release Guardrails
 
@@ -36,5 +37,5 @@
 ## 4. 다음 명령
 
 ```bash
-/dev-verify .plans/features/active/f2-optic-copy-product-lineup/
+/plan-archive f2-optic-copy-product-lineup
 ```

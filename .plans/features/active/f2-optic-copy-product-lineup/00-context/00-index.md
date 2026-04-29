@@ -86,14 +86,15 @@ F2는 F1에서 고정한 `OPTIC` 브랜드와 CTA 기준을 본문 섹션으로 
 | P7 Bridge | done | wireframe-aware context package |
 | Dev Feature | done | 02-package 생성 |
 | Dev Run | done | 구현 및 검증 완료 |
-| Dev Verify | pending | 다음 단계 |
+| Dev Verify | done | pass with warnings |
+| Archive | pending | 다음 단계 |
 
 ---
 
 ## 5. Next Step
 
 ```bash
-/dev-verify .plans/features/active/f2-optic-copy-product-lineup/
+/plan-archive f2-optic-copy-product-lineup
 ```
 
-`/dev-verify`에서는 이번 구현 결과, 검증 로그, preview evidence를 기준으로 fresh-context 검증을 수행한다.
+`/plan-archive`에서는 구현/검증 완료 산출물을 아카이브로 이동하고 인덱스를 갱신한다.

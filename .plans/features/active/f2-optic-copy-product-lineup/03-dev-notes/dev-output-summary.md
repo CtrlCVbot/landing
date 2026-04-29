@@ -42,4 +42,4 @@ This run keeps F1 brand/CTA direction, removes test/provider-first wording, and 
 
 - `pnpm lint` and `pnpm build` still report pre-existing warnings in dashboard-preview test files and `use-focus-walk.ts`.
 - Browser preview is open at `http://localhost:3102/`.
-- Next pipeline step is `/dev-verify .plans/features/active/f2-optic-copy-product-lineup/`.
+- `/dev-verify` was completed after this dev output; see `dev-verify-report.md`.
