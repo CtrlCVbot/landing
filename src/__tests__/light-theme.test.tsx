@@ -664,8 +664,9 @@ describe('F1 Footer + Sections 토큰 치환 (T-THEME-07, PR-5)', () => {
       expect(FILES.cta).toMatch(/to-blue-900\/30/)
       expect(FILES.cta).toMatch(/border-purple-500\/20/)
     })
-    it('products.tsx active tab border-purple-500 유지', () => {
-      expect(FILES.products).toMatch(/border-purple-500(?![/-])/)
+    it('products.tsx 제품 카드가 중립 토큰 border를 유지', () => {
+      expect(FILES.products).toMatch(/border border-border bg-card/)
+      expect(FILES.products).not.toMatch(/border-purple-500(?![/-])/)
     })
   })
 })
@@ -1226,22 +1227,24 @@ describe('F1 Products/Integrations 카드 배경 강화 (T-THEME-11, PR-7)', () 
     'utf-8',
   )
 
-  describe('D-016 QA — products placeholder 시각 강화', () => {
-    it('products.tsx — aspect-video 컨테이너에 bg-muted/50 적용', () => {
-      expect(PRODUCTS).toMatch(/aspect-video[^"]*bg-muted\/50/)
+  describe('D-016 QA — products 카드 시각 강화', () => {
+    it('products.tsx — 구현 대상 카드에 bg-card/border/shadow-sm 적용', () => {
+      expect(PRODUCTS).toMatch(
+        /rounded-xl[^"]*border border-border bg-card[^"]*shadow-sm/,
+      )
     })
 
-    it('products.tsx — shadow-sm 존재 (깊이감 확보)', () => {
-      expect(PRODUCTS).toMatch(/aspect-video[^"]*shadow-sm/)
+    it('products.tsx — 구현 예정 카드에 bg-muted/30 적용', () => {
+      expect(PRODUCTS).toMatch(/rounded-xl[^"]*border border-border\/70 bg-muted\/30/)
     })
 
-    it('products.tsx — border border-border 유지', () => {
-      expect(PRODUCTS).toMatch(/aspect-video[^"]*border border-border/)
+    it('products.tsx — 구현 대상 카드의 border border-border 유지', () => {
+      expect(PRODUCTS).toMatch(/rounded-xl[^"]*border border-border bg-card/)
     })
 
-    it('products.tsx — 기존 bg-card/50 placeholder 제거', () => {
-      const placeholderBlock = PRODUCTS.match(/aspect-video[^"]*"/s)?.[0] ?? ''
-      expect(placeholderBlock).not.toMatch(/bg-card\/50/)
+    it('products.tsx — 기존 placeholder 구조 제거', () => {
+      expect(PRODUCTS).not.toMatch(/aspect-video/)
+      expect(PRODUCTS).not.toMatch(/bg-card\/50/)
     })
   })
 

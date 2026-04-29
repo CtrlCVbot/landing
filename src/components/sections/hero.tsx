@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { fadeInUp } from '@/lib/motion'
 import { HeroLiquidGradientBackground } from '@/components/shared/hero-liquid-gradient-background'
 import { DashboardPreview } from '@/components/dashboard-preview/dashboard-preview'
+import { CTA_LINKS } from '@/lib/constants'
 
 export function Hero() {
   return (
@@ -53,12 +54,12 @@ export function Hero() {
           도입 문의하기
         </a>
         <a
-          href="#"
-          target="_blank"
-          rel="noopener noreferrer"
+          href={CTA_LINKS.service.href}
+          target={CTA_LINKS.service.target}
+          rel={CTA_LINKS.service.rel}
           className="rounded-lg border border-border/80 bg-background/55 px-8 py-4 font-semibold text-foreground backdrop-blur-md transition-colors hover:border-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         >
-          데모 보기
+          {CTA_LINKS.service.label}
         </a>
       </motion.div>
 

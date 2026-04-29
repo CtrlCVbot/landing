@@ -37,7 +37,7 @@
   "stitch_status": "skipped",
   "bridge_status": "completed-after-wireframe-refresh",
   "dev_feature_status": "completed",
-  "dev_run_status": "pending",
+  "dev_run_status": "completed",
   "dev_verify_status": "pending",
   "archive_status": "pending",
   "product_display_contract": {
@@ -60,8 +60,8 @@
     ]
   },
   "feature_package": "../02-package/00-overview.md",
-  "next": "dev-run",
-  "next_command": "/dev-run .plans/features/active/f2-optic-copy-product-lineup/",
+  "next": "dev-verify",
+  "next_command": "/dev-verify .plans/features/active/f2-optic-copy-product-lineup/",
   "fallback_next": "/plan-review .plans/features/active/f2-optic-copy-product-lineup/00-context --type=bridge"
 }
 ```

@@ -3,7 +3,7 @@
 > **Feature**: F2 카피와 제품 라인업 정리
 > **Epic**: [EPIC-20260428-001](../../../../epics/10-planning/EPIC-20260428-001/00-epic-brief.md) Phase B, F2
 > **Scope**: Standard, dev, copy/data 정리
-> **Status**: feature-package-ready
+> **Status**: dev-run-completed
 > **Created**: 2026-04-29
 > **Plan Bridge**: completed
 
@@ -85,14 +85,15 @@ F2는 F1에서 고정한 `OPTIC` 브랜드와 CTA 기준을 본문 섹션으로 
 | P6 Stitch | skipped | visual design handoff 대상이 아니므로 생략 |
 | P7 Bridge | done | wireframe-aware context package |
 | Dev Feature | done | 02-package 생성 |
-| Dev Run | pending | 다음 단계 |
+| Dev Run | done | 구현 및 검증 완료 |
+| Dev Verify | pending | 다음 단계 |
 
 ---
 
 ## 5. Next Step
 
 ```bash
-/dev-run .plans/features/active/f2-optic-copy-product-lineup/
+/dev-verify .plans/features/active/f2-optic-copy-product-lineup/
 ```
 
-`/dev-run`에서는 `02-package`의 요구사항, UI spec, dev tasks, test cases를 SSOT로 사용해 TDD 구현을 수행한다.
+`/dev-verify`에서는 이번 구현 결과, 검증 로그, preview evidence를 기준으로 fresh-context 검증을 수행한다.

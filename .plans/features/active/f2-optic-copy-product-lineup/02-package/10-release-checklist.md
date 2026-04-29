@@ -6,24 +6,24 @@
 
 | 항목 | 상태 |
 |---|:---:|
-| `src/lib/constants.ts` copy/data 정리 | pending |
-| Features 섹션에 배차 단계의 `화물맨 연동` 반영 | pending |
-| Products 섹션 한글 역할명 우선 표시 | pending |
-| Carrier/Ops/Billing 구현 예정 분리 | pending |
-| Integrations provider명 일반화 | pending |
-| F1 브랜드/CTA 회귀 확인 | pending |
+| `src/lib/constants.ts` copy/data 정리 | done |
+| Features 섹션에 배차 단계의 `화물맨 연동` 반영 | done |
+| Products 섹션 한글 역할명 우선 표시 | done |
+| Carrier/Ops/Billing 구현 예정 분리 | done |
+| Integrations provider명 일반화 | done |
+| F1 브랜드/CTA 회귀 확인 | done |
 
 ## 2. 검증 체크
 
 | 검증 | 상태 | 명령/근거 |
 |---|:---:|---|
-| Targeted tests | pending | `pnpm test -- constants products features integrations` |
-| Full tests | pending | `pnpm test` |
-| Typecheck | pending | `pnpm typecheck` |
-| Lint | pending | `pnpm lint` |
-| Build | pending | `pnpm build` |
-| Copy scan | pending | 금지 문구, 제한 provider명, 필수 문구 scan |
-| Browser spot check | pending | 1440px, 768px, 375px |
+| Targeted tests | done | `pnpm test -- constants products features integrations` |
+| Full tests | done | `pnpm test` |
+| Typecheck | done | `pnpm typecheck` |
+| Lint | done | `pnpm lint` |
+| Build | done | `pnpm build` |
+| Copy scan | done | 금지 문구, 제한 provider명, 필수 문구 scan |
+| Browser preview open | done | `http://localhost:3102/` returned `200` |
 
 ## 3. Release Guardrails
 
@@ -36,5 +36,5 @@
 ## 4. 다음 명령
 
 ```bash
-/dev-run .plans/features/active/f2-optic-copy-product-lineup/
+/dev-verify .plans/features/active/f2-optic-copy-product-lineup/
 ```

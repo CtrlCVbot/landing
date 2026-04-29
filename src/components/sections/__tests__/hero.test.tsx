@@ -21,6 +21,7 @@ import { render, screen } from '@testing-library/react'
 import { afterAll, beforeAll, describe, it, expect, vi } from 'vitest'
 
 import { Hero } from '@/components/sections/hero'
+import { CTA_LINKS } from '@/lib/constants'
 
 // ---------------------------------------------------------------------------
 // Mocks
@@ -126,6 +127,19 @@ describe('Hero — DashboardPreview wrapper (T-DASH3-M1-08)', () => {
       render(<Hero />)
       expect(screen.getByText('운송 운영을 한눈에')).toBeInTheDocument()
       expect(screen.getByText('오더부터 정산까지')).toBeInTheDocument()
+    })
+
+    it('Hero 보조 CTA는 내부 데모 문구가 아니라 OPTIC 서비스 CTA를 사용한다', () => {
+      render(<Hero />)
+
+      const serviceCta = screen.getByRole('link', {
+        name: CTA_LINKS.service.label,
+      })
+
+      expect(serviceCta).toHaveAttribute('href', CTA_LINKS.service.href)
+      expect(serviceCta).toHaveAttribute('target', CTA_LINKS.service.target)
+      expect(serviceCta).toHaveAttribute('rel', CTA_LINKS.service.rel)
+      expect(screen.queryByRole('link', { name: '데모 보기' })).not.toBeInTheDocument()
     })
   })
 })

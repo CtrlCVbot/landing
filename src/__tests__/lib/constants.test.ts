@@ -1,24 +1,97 @@
 import { describe, expect, it } from 'vitest'
 
-import { BRAND, CTA_LINKS } from '@/lib/constants'
+import {
+  BRAND,
+  CTA_LINKS,
+  FEATURES,
+  INTEGRATIONS,
+  PRODUCTS,
+  PROBLEMS,
+} from '@/lib/constants'
 
-describe('brand and CTA constants (T-BRAND-01)', () => {
-  it('exposes the primary and auxiliary brand names', () => {
+const customerFacingCopy = JSON.stringify({
+  BRAND,
+  CTA_LINKS,
+  FEATURES,
+  INTEGRATIONS,
+  PRODUCTS,
+  PROBLEMS,
+})
+
+describe('F2 copy and product lineup constants', () => {
+  it('keeps OPTIC as the customer-facing primary brand', () => {
     expect(BRAND.primary).toBe('OPTIC')
     expect(BRAND.auxiliary).toBe('OPTICS')
+    expect(BRAND.poweredByLabel).toBe('Powered by OPTICS')
   })
 
-  it('exposes the service and contact CTA contract', () => {
-    expect(CTA_LINKS.service).toEqual({
-      label: 'OPTIC 바로가기',
-      href: 'https://mm-broker-test.vercel.app/',
-      target: '_blank',
-      rel: 'noopener noreferrer',
-    })
+  it('removes deprecated test and provider copy from customer-facing constants', () => {
+    expect(customerFacingCopy).not.toContain('Optic Cargo')
+    expect(customerFacingCopy).not.toContain('서비스 테스트')
+    expect(customerFacingCopy).not.toContain('테스트 서버')
+    expect(customerFacingCopy).not.toContain('데모 테스트')
+    expect(customerFacingCopy).not.toContain('Google Gemini AI')
+    expect(customerFacingCopy).not.toContain('카카오 맵')
+    expect(customerFacingCopy).not.toContain('팝빌')
+    expect(customerFacingCopy).not.toContain('로지스엠')
+  })
 
-    expect(CTA_LINKS.contact).toEqual({
-      label: '도입 문의하기',
-      href: '#contact',
-    })
+  it('defines Features around AI order, dispatch Hwamulman, settlement, and invoice work', () => {
+    expect(FEATURES.map((feature) => feature.title)).toEqual(
+      expect.arrayContaining([
+        'AI 오더 등록',
+        '화물맨 연동',
+        '정산 자동화',
+        '세금계산서 관리',
+      ]),
+    )
+
+    const hwamulmanFeature = FEATURES.find(
+      (feature) => feature.title === '화물맨 연동',
+    )
+    expect(hwamulmanFeature?.description).toContain('배차')
+    expect(hwamulmanFeature?.description).toContain('중복')
+  })
+
+  it('separates implemented Broker/Shipper products from upcoming products', () => {
+    const implemented = PRODUCTS.filter(
+      (product) => product.status === 'implemented',
+    )
+    const upcoming = PRODUCTS.filter((product) => product.status === 'upcoming')
+
+    expect(implemented.map((product) => product.key)).toEqual([
+      'broker',
+      'shipper',
+    ])
+    expect(upcoming.map((product) => product.key)).toEqual([
+      'carrier',
+      'ops',
+      'billing',
+    ])
+  })
+
+  it('uses Korean role titles first and OPTIC product names as secondary labels', () => {
+    expect(PRODUCTS).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          key: 'broker',
+          title: '주선사용 운송 운영 콘솔',
+          productLabel: 'OPTIC Broker',
+          status: 'implemented',
+        }),
+        expect.objectContaining({
+          key: 'shipper',
+          title: '화주용 운송 요청 포털',
+          productLabel: 'OPTIC Shipper',
+          status: 'implemented',
+        }),
+        expect.objectContaining({
+          key: 'ops',
+          title: '운영 조율 콘솔',
+          productLabel: 'OPTIC Ops',
+          status: 'upcoming',
+        }),
+      ]),
+    )
   })
 })
