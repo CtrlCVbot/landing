@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import { ExternalLink, Menu, X } from 'lucide-react'
-import { BRAND, CTA_LINKS, NAV_LINKS } from '@/lib/constants'
+import { OpticLogo } from '@/components/icons/optic-logo'
+import { CTA_LINKS, NAV_LINKS } from '@/lib/constants'
 import { useScrollSpy } from '@/hooks/use-scroll-spy'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { cn } from '@/lib/utils'
@@ -37,8 +38,8 @@ export function Header() {
       )}
     >
       <div className="max-w-7xl mx-auto px-5 md:px-10 lg:px-20 h-full flex items-center justify-between">
-        <a href="#" className="text-xl font-black text-foreground">
-          {BRAND.primary}
+        <a href="#" className="text-foreground">
+          <OpticLogo width={112} height={28} />
         </a>
 
         <nav className="hidden md:flex items-center gap-8">
@@ -67,6 +68,7 @@ export function Header() {
             href={CTA_LINKS.service.href}
             target={CTA_LINKS.service.target}
             rel={CTA_LINKS.service.rel}
+            aria-label={CTA_LINKS.service.ariaLabel}
             className="inline-flex items-center gap-1.5 rounded-lg border border-border px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-accent/10"
           >
             {CTA_LINKS.service.label}
@@ -74,6 +76,7 @@ export function Header() {
           </a>
           <a
             href={CTA_LINKS.contact.href}
+            aria-label={CTA_LINKS.contact.ariaLabel}
             className="text-sm font-semibold text-white bg-gradient-to-r from-purple-600 to-blue-600 px-5 py-2 rounded-lg"
           >
             {CTA_LINKS.contact.label}
@@ -120,6 +123,7 @@ export function Header() {
               href={CTA_LINKS.service.href}
               target={CTA_LINKS.service.target}
               rel={CTA_LINKS.service.rel}
+              aria-label={CTA_LINKS.service.ariaLabel}
               className="inline-flex items-center justify-center gap-2 rounded-xl border border-border px-6 py-3 text-base font-semibold text-foreground transition-colors hover:bg-accent/10"
               onClick={closeMobile}
             >
@@ -128,6 +132,7 @@ export function Header() {
             </a>
             <a
               href={CTA_LINKS.contact.href}
+              aria-label={CTA_LINKS.contact.ariaLabel}
               className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-3 text-base font-semibold text-white"
               onClick={closeMobile}
             >

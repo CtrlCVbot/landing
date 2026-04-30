@@ -1,6 +1,7 @@
 'use client'
 
 import { BRAND, FOOTER_LINKS } from '@/lib/constants'
+import { OpticLogo } from '@/components/icons/optic-logo'
 
 export function Footer() {
   return (
@@ -8,9 +9,7 @@ export function Footer() {
       <div className="max-w-7xl mx-auto px-5 md:px-10 lg:px-20 py-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div>
-            <span className="text-xl font-black text-foreground">
-              {BRAND.primary}
-            </span>
+            <OpticLogo className="text-foreground" width={112} height={28} />
           </div>
 
           {FOOTER_LINKS.map((group) => (
@@ -23,6 +22,8 @@ export function Footer() {
                   <li key={link.label} className="mb-2">
                     <a
                       href={link.href}
+                      target={'target' in link ? link.target : undefined}
+                      rel={'rel' in link ? link.rel : undefined}
                       className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                     >
                       {link.label}

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { ThemeProvider } from '@/components/providers/theme-provider'
 import { MotionProvider } from '@/components/providers/motion-provider'
+import { siteMetadata } from '@/lib/site-metadata'
 import './globals.css'
 
 const inter = Inter({
@@ -10,33 +11,7 @@ const inter = Inter({
   display: 'swap',
 })
 
-export const metadata: Metadata = {
-  title: 'OPTIC - 운송 운영을 한눈에',
-  description:
-    '오더부터 정산까지, 물류 주선 업무를 디지털화하는 통합 운송 관리 플랫폼',
-  icons: {
-    icon: '/favicon.ico',
-  },
-  openGraph: {
-    title: 'OPTIC - 운송 운영을 한눈에',
-    description:
-      '오더부터 정산까지, 물류 주선 업무를 디지털화하는 통합 운송 관리 플랫폼',
-    url: 'https://optic.app',
-    siteName: 'OPTIC',
-    locale: 'ko_KR',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'OPTIC - 운송 운영을 한눈에',
-    description:
-      '오더부터 정산까지, 물류 주선 업무를 디지털화하는 통합 운송 관리 플랫폼',
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-}
+export const metadata: Metadata = siteMetadata
 
 export default function RootLayout({
   children,

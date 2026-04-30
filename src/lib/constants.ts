@@ -2,19 +2,36 @@ export const BRAND = {
   primary: 'OPTIC',
   auxiliary: 'OPTICS',
   poweredByLabel: 'Powered by OPTICS',
-  logoLabel: 'OPTIC logo',
+  logoLabel: 'OPTIC 로고',
+  openGraphAlt: 'OPTIC 맞춤 운송 운영 플랫폼',
   copyrightLabel: '© 2026 OPTIC. All rights reserved.',
+} as const
+
+export const BRAND_ASSETS = {
+  logo: '/brand/optic-logo.svg',
+  mark: '/brand/optic-mark.svg',
+  favicon: '/favicon.svg',
+  openGraph: '/brand/optic-og.svg',
+} as const
+
+export const SITE_METADATA = {
+  title: 'OPTIC - 화주와 주선사를 위한 맞춤 운송 운영',
+  description:
+    '화주와 주선사별 업무 방식에 맞춰 오더, 배차, 정산, 세금계산서를 한 흐름으로 정리하는 운송 운영 플랫폼입니다.',
+  url: 'https://optic.app',
 } as const
 
 export const CTA_LINKS = {
   service: {
     label: 'OPTIC 바로가기',
+    ariaLabel: 'OPTIC 서비스 새 창으로 열기',
     href: 'https://mm-broker-test.vercel.app/',
     target: '_blank',
     rel: 'noopener noreferrer',
   },
   contact: {
     label: '도입 문의하기',
+    ariaLabel: '도입 문의 섹션으로 이동',
     href: '#contact',
   },
 } as const
@@ -166,8 +183,18 @@ export const FOOTER_LINKS = [
   {
     group: '제품',
     links: [
-      { label: 'Broker', href: 'https://brkr.optic.app' },
-      { label: 'Shipper', href: 'https://shpr.optic.app' },
+      {
+        label: 'Broker',
+        href: 'https://brkr.optic.app',
+        target: '_blank',
+        rel: 'noopener noreferrer',
+      },
+      {
+        label: 'Shipper',
+        href: 'https://shpr.optic.app',
+        target: '_blank',
+        rel: 'noopener noreferrer',
+      },
       { label: 'Carrier', href: '#' },
       { label: 'Ops', href: '#' },
       { label: 'Billing', href: '#' },

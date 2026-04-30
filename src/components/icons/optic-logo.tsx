@@ -6,11 +6,15 @@ interface OpticLogoProps {
   readonly height?: number
 }
 
-export function OpticLogo({ className, width = 120, height = 32 }: OpticLogoProps) {
+export function OpticLogo({
+  className,
+  width = 120,
+  height = 32,
+}: OpticLogoProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 120 32"
+      viewBox="0 0 112 40"
       width={width}
       height={height}
       className={className}
@@ -18,14 +22,12 @@ export function OpticLogo({ className, width = 120, height = 32 }: OpticLogoProp
       aria-label={BRAND.logoLabel}
     >
       <text
-        x="50%"
+        x="0"
         y="50%"
         dominantBaseline="central"
-        textAnchor="middle"
         fill="currentColor"
         fontWeight="900"
         fontSize="24"
-        letterSpacing="4"
         fontFamily="system-ui, -apple-system, sans-serif"
       >
         {BRAND.primary}

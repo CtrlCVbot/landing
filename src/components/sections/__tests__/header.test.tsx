@@ -2,7 +2,7 @@ import { fireEvent, render, screen, within } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 
 import { Header } from '@/components/sections/header'
-import { CTA_LINKS } from '@/lib/constants'
+import { BRAND, CTA_LINKS } from '@/lib/constants'
 
 vi.mock('@/components/ThemeToggle', () => ({
   ThemeToggle: () => <button type="button">테마 전환</button>,
@@ -13,14 +13,22 @@ vi.mock('@/hooks/use-scroll-spy', () => ({
 }))
 
 describe('Header brand CTAs (T-BRAND-02)', () => {
+  it('renders the OPTIC logo as an accessible home link', () => {
+    render(<Header />)
+
+    const homeLink = screen.getByRole('link', { name: BRAND.logoLabel })
+
+    expect(homeLink).toHaveAttribute('href', '#')
+  })
+
   it('renders separate desktop service and contact CTAs', () => {
     render(<Header />)
 
     const serviceCta = screen.getByRole('link', {
-      name: CTA_LINKS.service.label,
+      name: CTA_LINKS.service.ariaLabel,
     })
     const contactCta = screen.getByRole('link', {
-      name: CTA_LINKS.contact.label,
+      name: CTA_LINKS.contact.ariaLabel,
     })
 
     expect(serviceCta).toHaveAttribute('href', CTA_LINKS.service.href)
@@ -40,12 +48,12 @@ describe('Header brand CTAs (T-BRAND-02)', () => {
     expect(overlay).not.toBeNull()
     expect(
       within(overlay as HTMLElement).getByRole('link', {
-        name: CTA_LINKS.service.label,
+        name: CTA_LINKS.service.ariaLabel,
       }),
     ).toHaveAttribute('href', CTA_LINKS.service.href)
 
     const mobileContactCta = within(overlay as HTMLElement).getByRole('link', {
-      name: CTA_LINKS.contact.label,
+      name: CTA_LINKS.contact.ariaLabel,
     })
     fireEvent.click(mobileContactCta)
 

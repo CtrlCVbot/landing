@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="OPTIC 맞춤 운송 운영 플랫폼">
+  <rect width="1200" height="630" fill="#f8fafc"/>
+  <rect x="70" y="70" width="1060" height="490" rx="44" fill="#ffffff" stroke="#dbe4ef" stroke-width="2"/>
+  <text x="126" y="230" fill="#111111" font-family="Arial, Helvetica, sans-serif" font-size="96" font-weight="900">OPTIC</text>
+  <text x="126" y="350" fill="#172033" font-family="Arial, Helvetica, sans-serif" font-size="48" font-weight="800">화주와 주선사를 위한 맞춤 운송 운영</text>
+  <text x="128" y="430" fill="#526173" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="600">오더, 배차, 정산, 세금계산서를 한 흐름으로 정리합니다.</text>
+  <g transform="translate(128 480)" fill="#eef6ff">
+    <rect width="184" height="42" rx="21"/>
+    <rect x="204" width="184" height="42" rx="21"/>
+    <rect x="408" width="238" height="42" rx="21"/>
+  </g>
+  <g transform="translate(156 508)" fill="#1f6feb" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="800">
+    <text>AI 오더</text>
+    <text x="204">화물맨 연동</text>
+    <text x="408">정산/세금계산서 관리</text>
+  </g>
+</svg>
