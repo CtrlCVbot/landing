@@ -1,6 +1,8 @@
 'use client'
 
+import { motion, useReducedMotion } from 'framer-motion'
 import {
+  Activity,
   ArrowRight,
   Calculator,
   ClipboardList,
@@ -12,7 +14,12 @@ import {
 import type { LucideIcon } from 'lucide-react'
 
 import { CTA_LINKS } from '@/lib/constants'
-import { WORKFLOW_STEPS, type WorkflowStepId } from '@/lib/landing-workflow'
+import {
+  WORKFLOW_STEPS,
+  type WorkflowStateTone,
+  type WorkflowStepId,
+} from '@/lib/landing-workflow'
+import { workflowListReveal, workflowStepReveal } from '@/lib/motion'
 import { SectionWrapper } from '@/components/shared/section-wrapper'
 
 const ICON_MAP: Record<WorkflowStepId, LucideIcon> = {
@@ -24,7 +31,23 @@ const ICON_MAP: Record<WorkflowStepId, LucideIcon> = {
   invoice: ReceiptText,
 }
 
+const STATE_TONE_CLASSES: Record<WorkflowStateTone, string> = {
+  progress: 'border-sky-500/30 bg-sky-500/10 text-sky-700',
+  success: 'border-emerald-500/30 bg-emerald-500/10 text-emerald-700',
+  warning: 'border-amber-500/30 bg-amber-500/10 text-amber-700',
+  neutral: 'border-border bg-muted text-muted-foreground',
+}
+
+const STATE_DOT_CLASSES: Record<WorkflowStateTone, string> = {
+  progress: 'bg-sky-500',
+  success: 'bg-emerald-500',
+  warning: 'bg-amber-500',
+  neutral: 'bg-muted-foreground',
+}
+
 export function WorkflowManual() {
+  const shouldReduceMotion = useReducedMotion()
+
   return (
     <SectionWrapper
       id="workflow-manual"
@@ -76,13 +99,41 @@ export function WorkflowManual() {
           </div>
         </div>
 
-        <ol className="grid gap-4">
+        <div className="grid gap-4">
+          <div className="rounded-xl border border-border bg-muted/40 p-4">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="text-sm font-semibold text-foreground">
+                  샘플 상태 보드
+                </p>
+                <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                  실제 연동 완료 약속이 아니라, 도입 상담에서 맞출 수 있는
+                  운영 상태 예시입니다.
+                </p>
+              </div>
+              <div className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1 text-xs font-medium text-muted-foreground">
+                <Activity className="h-3.5 w-3.5" aria-hidden="true" />
+                Motion-ready mock
+              </div>
+            </div>
+          </div>
+
+          <motion.ol
+            variants={shouldReduceMotion ? undefined : workflowListReveal}
+            initial={shouldReduceMotion ? false : 'hidden'}
+            whileInView={shouldReduceMotion ? undefined : 'visible'}
+            viewport={
+              shouldReduceMotion ? undefined : { once: true, margin: '-80px' }
+            }
+            className="grid gap-4"
+          >
           {WORKFLOW_STEPS.map((step) => {
             const Icon = ICON_MAP[step.id]
 
             return (
-              <li
+              <motion.li
                 key={step.id}
+                variants={shouldReduceMotion ? undefined : workflowStepReveal}
                 className="rounded-xl border border-border bg-card p-5 shadow-sm transition-colors hover:border-accent/40 hover:bg-card/90"
               >
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
@@ -120,12 +171,43 @@ export function WorkflowManual() {
                         </span>
                       ))}
                     </div>
+
+                    <div className="mt-5 rounded-lg border border-border bg-background/70 p-4">
+                      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                        <div>
+                          <p className="text-sm font-semibold text-foreground">
+                            {step.state.summary}
+                          </p>
+                        </div>
+                        <span
+                          className={`inline-flex w-fit items-center rounded-full border px-2.5 py-1 text-xs font-semibold ${STATE_TONE_CLASSES[step.state.tone]}`}
+                        >
+                          {step.state.title}
+                        </span>
+                      </div>
+
+                      <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                        {step.state.events.map((event) => (
+                          <span
+                            key={event}
+                            className="inline-flex min-w-0 items-center gap-2 rounded-md border border-border bg-card px-3 py-2 text-xs font-medium text-muted-foreground"
+                          >
+                            <span
+                              className={`h-1.5 w-1.5 shrink-0 rounded-full ${STATE_DOT_CLASSES[step.state.tone]}`}
+                              aria-hidden="true"
+                            />
+                            <span className="min-w-0 break-keep">{event}</span>
+                          </span>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </li>
+              </motion.li>
             )
           })}
-        </ol>
+          </motion.ol>
+        </div>
       </div>
     </SectionWrapper>
   )

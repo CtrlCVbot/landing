@@ -218,3 +218,17 @@
 | 2026-04-29 | F3 `/dev-run` 완료 — 업무 매뉴얼형 섹션 구현, 검증 통과, 다음 단계 `/dev-verify` |
 | 2026-04-30 | F3 `/dev-verify` 통과 — 다음 단계 `/plan-archive` |
 | 2026-04-30 | F3 archive 완료 — `ARCHIVE-F3.md` 생성 및 sources 이동 |
+
+## 7. F4 진행 반영 (2026-04-30)
+
+| 항목 | 상태 | 링크 |
+|---|---|---|
+| IDEA | approved | [IDEA-20260430-001](../../../ideas/20-approved/IDEA-20260430-001.md) |
+| Screening | approved | [SCREENING-20260430-001](../../../ideas/20-approved/SCREENING-20260430-001.md) |
+| Draft | approved | [01-draft](../../../drafts/f4-workflow-motion-state/01-draft.md) |
+| PRD | approved | [f4-workflow-motion-state-prd](../../../prd/10-approved/f4-workflow-motion-state-prd.md) |
+| Wireframe | approved | [screens](../../../wireframes/f4-workflow-motion-state/screens.md) |
+| Feature Package | verified | [00-overview](../../../features/active/f4-workflow-motion-state/02-package/00-overview.md) |
+| Dev Verify | PASS | [dev-verify-report](../../../features/active/f4-workflow-motion-state/03-dev-notes/dev-verify-report.md) |
+
+F4는 F3의 `WorkflowManual` 섹션에 motion과 샘플 상태 보드를 추가하는 Phase D 작업이다. `/dev-verify .plans/features/active/f4-workflow-motion-state/`가 통과했으므로 다음 단계는 `/plan-archive f4-workflow-motion-state`다.

@@ -24,7 +24,14 @@ vi.mock('framer-motion', () => ({
     }: React.LiHTMLAttributes<HTMLLIElement>) => (
       <li className={className}>{children}</li>
     ),
+    ol: ({
+      children,
+      className,
+    }: React.OlHTMLAttributes<HTMLOListElement>) => (
+      <ol className={className}>{children}</ol>
+    ),
   },
+  useReducedMotion: () => false,
 }))
 
 describe('WorkflowManual section - F3 workflow section', () => {
@@ -66,5 +73,16 @@ describe('WorkflowManual section - F3 workflow section', () => {
     expect(screen.getByText(/발행 상태/)).toBeInTheDocument()
     expect(screen.queryByText('OPTIC Broker')).not.toBeInTheDocument()
     expect(screen.queryByText('OPTIC Shipper')).not.toBeInTheDocument()
+  })
+
+  it('renders the F4 sample status board without promising live automation', () => {
+    render(<WorkflowManual />)
+
+    expect(screen.getByText('샘플 상태 보드')).toBeInTheDocument()
+    expect(screen.getByText('화물맨 전송 성공')).toBeInTheDocument()
+    expect(screen.getByText('필드 오류 재확인')).toBeInTheDocument()
+    expect(screen.getByText('SalesBundle 묶음 생성')).toBeInTheDocument()
+    expect(screen.getByText('세금계산서 상태 확인')).toBeInTheDocument()
+    expect(screen.queryByText('실시간 자동 연동')).not.toBeInTheDocument()
   })
 })

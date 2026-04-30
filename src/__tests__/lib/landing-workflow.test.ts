@@ -36,6 +36,8 @@ describe('F3 landing workflow data', () => {
   it('gives every step customization copy without overclaiming implementation scope', () => {
     for (const step of WORKFLOW_STEPS) {
       expect(step.customization.length).toBeGreaterThan(0)
+      expect(step.state.title).toBeTruthy()
+      expect(step.state.events.length).toBeGreaterThan(0)
     }
 
     expect(customerFacingWorkflowCopy).not.toContain('설정 저장')
@@ -43,5 +45,18 @@ describe('F3 landing workflow data', () => {
     expect(customerFacingWorkflowCopy).not.toContain('자동 연동 완료')
     expect(customerFacingWorkflowCopy).not.toContain('자동 발행 완료')
     expect(customerFacingWorkflowCopy).not.toContain('성공 보장')
+  })
+
+  it('keeps F4 motion/state mock details tied to approved workflow steps', () => {
+    const hwamulman = WORKFLOW_STEPS.find((step) => step.id === 'hwamulman')
+    const settlement = WORKFLOW_STEPS.find((step) => step.id === 'settlement')
+    const invoice = WORKFLOW_STEPS.find((step) => step.id === 'invoice')
+
+    expect(hwamulman?.state.events).toEqual(
+      expect.arrayContaining(['화물맨 전송 성공', '필드 오류 재확인']),
+    )
+    expect(settlement?.state.events).toContain('SalesBundle 묶음 생성')
+    expect(invoice?.state.events).toContain('세금계산서 상태 확인')
+    expect(customerFacingWorkflowCopy).toContain('샘플 상태')
   })
 })
