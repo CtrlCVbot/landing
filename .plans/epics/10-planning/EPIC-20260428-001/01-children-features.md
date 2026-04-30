@@ -69,11 +69,13 @@
 
 ### F4 — 업무 흐름 애니메이션과 상태 표현
 
-- **IDEA**: pending
+- **IDEA**: [IDEA-20260430-001](../../../archive/f4-workflow-motion-state/sources/ideas/IDEA-20260430-001.md)
 - **Lane**: Standard (motion, 상태 mock, responsive QA 포함)
-- **RICE 예상**: TBD
-- **범위**: `workflow-manual.tsx`, `src/lib/motion.ts`, 신규 mock 데이터 또는 상수
-- **상태**: pending IDEA
+- **RICE**: 74.4
+- **범위**: `workflow-manual.tsx`, `src/lib/motion.ts`, `src/lib/landing-workflow.ts`
+- **상태**: archived
+- **Archive**: [ARCHIVE-F4](../../../archive/f4-workflow-motion-state/ARCHIVE-F4.md)
+- **Sources**: [sources](../../../archive/f4-workflow-motion-state/sources/)
 - **완료 기준**:
   - 단계별 fade/slide/stagger가 과하지 않게 적용된다.
   - 화물맨 전송 성공/오류 로그, SalesBundle 묶음, 세금계산서 상태가 mock UI로 표현된다.
@@ -160,7 +162,7 @@
 | F1 | archived | dev-run 완료 | 통과 | 낮음 | 완료 |
 | F2 | archived | dev-run/dev-verify 완료 | 통과 | 중간 | 완료 |
 | F3 | archived | dev-run/dev-verify/archive 완료 | 통과 | 중간 | 완료 |
-| F4 | pending | — | — | — | — |
+| F4 | archived | dev-run/dev-verify/archive 완료 | 통과 | 낮음 | 완료 |
 | F5 | pending | — | — | — | — |
 
 상태 값: `pending` / `inbox` / `screening` / `approved` / `draft` / `prd-draft` / `prd-reviewed` / `wireframe-reviewed` / `scope-reviewed` / `bridged` / `feature-package-ready` / `implemented` / `verified` / `active` / `archived`.
@@ -223,12 +225,13 @@
 
 | 항목 | 상태 | 링크 |
 |---|---|---|
-| IDEA | approved | [IDEA-20260430-001](../../../ideas/20-approved/IDEA-20260430-001.md) |
-| Screening | approved | [SCREENING-20260430-001](../../../ideas/20-approved/SCREENING-20260430-001.md) |
-| Draft | approved | [01-draft](../../../drafts/f4-workflow-motion-state/01-draft.md) |
-| PRD | approved | [f4-workflow-motion-state-prd](../../../prd/10-approved/f4-workflow-motion-state-prd.md) |
-| Wireframe | approved | [screens](../../../wireframes/f4-workflow-motion-state/screens.md) |
-| Feature Package | verified | [00-overview](../../../features/active/f4-workflow-motion-state/02-package/00-overview.md) |
-| Dev Verify | PASS | [dev-verify-report](../../../features/active/f4-workflow-motion-state/03-dev-notes/dev-verify-report.md) |
+| IDEA | archived | [IDEA-20260430-001](../../../archive/f4-workflow-motion-state/sources/ideas/IDEA-20260430-001.md) |
+| Screening | archived | [SCREENING-20260430-001](../../../archive/f4-workflow-motion-state/sources/ideas/SCREENING-20260430-001.md) |
+| Draft | archived | [01-draft](../../../archive/f4-workflow-motion-state/sources/drafts/01-draft.md) |
+| PRD | archived | [f4-workflow-motion-state-prd](../../../archive/f4-workflow-motion-state/sources/prd/f4-workflow-motion-state-prd.md) |
+| Wireframe | archived | [screens](../../../archive/f4-workflow-motion-state/sources/wireframes/screens.md) |
+| Feature Package | archived | [00-overview](../../../archive/f4-workflow-motion-state/sources/feature-package/02-package/00-overview.md) |
+| Dev Verify | PASS | [dev-verify-report](../../../archive/f4-workflow-motion-state/sources/feature-package/03-dev-notes/dev-verify-report.md) |
+| Archive | archived | [ARCHIVE-F4](../../../archive/f4-workflow-motion-state/ARCHIVE-F4.md) |
 
-F4는 F3의 `WorkflowManual` 섹션에 motion과 샘플 상태 보드를 추가하는 Phase D 작업이다. `/dev-verify .plans/features/active/f4-workflow-motion-state/`가 통과했으므로 다음 단계는 `/plan-archive f4-workflow-motion-state`다.
+F4는 F3의 `WorkflowManual` 섹션에 motion과 샘플 상태 보드를 추가하는 Phase D 작업이다. `/dev-verify`와 `/plan-archive`를 통과했으므로 다음 단계는 F5 브랜드 자산, 메타데이터, 검증 정리다.

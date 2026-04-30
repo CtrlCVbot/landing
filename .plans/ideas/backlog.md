@@ -28,7 +28,7 @@
 | IDEA-20260428-001 | F1 브랜드, 로고, CTA 최소 반영 | improvement | archived | 2026-04-28 | `archive/f1-optic-brand-cta/sources/ideas` | [링크](../archive/f1-optic-brand-cta/sources/ideas/IDEA-20260428-001.md) | [EPIC-20260428-001](../epics/10-planning/EPIC-20260428-001/00-epic-brief.md) |
 | IDEA-20260429-001 | F2 카피와 제품 라인업 정리 | improvement | archived | 2026-04-29 | `archive/f2-optic-copy-product-lineup/sources/ideas` | [링크](../archive/f2-optic-copy-product-lineup/sources/ideas/IDEA-20260429-001.md) | [EPIC-20260428-001](../epics/10-planning/EPIC-20260428-001/00-epic-brief.md) |
 | IDEA-20260429-002 | F3 업무 매뉴얼형 스크롤 섹션 MVP | feature | archived | 2026-04-29 | `archive/f3-workflow-manual-section/sources/ideas` | [링크](../archive/f3-workflow-manual-section/sources/ideas/IDEA-20260429-002.md) | [EPIC-20260428-001](../epics/10-planning/EPIC-20260428-001/00-epic-brief.md) |
-| IDEA-20260430-001 | F4 업무 흐름 애니메이션과 상태 표현 | feature | approved | 2026-04-30 | `20-approved` | [링크](20-approved/IDEA-20260430-001.md) | [EPIC-20260428-001](../epics/10-planning/EPIC-20260428-001/00-epic-brief.md) |
+| IDEA-20260430-001 | F4 업무 흐름 애니메이션과 상태 표현 | feature | archived | 2026-04-30 | `archive/f4-workflow-motion-state/sources/ideas` | [링크](../archive/f4-workflow-motion-state/sources/ideas/IDEA-20260430-001.md) | [EPIC-20260428-001](../epics/10-planning/EPIC-20260428-001/00-epic-brief.md) |
 
 ---
 
@@ -112,3 +112,4 @@
 | 2026-04-30 | IDEA-20260429-002 `/dev-verify` 완료 — fresh 검증 통과, 다음 단계 `/plan-archive` |
 | 2026-04-30 | IDEA-20260429-002 상태 `approved → archived` — `ARCHIVE-F3.md` 생성 및 sources 이동 |
 | 2026-04-30 | IDEA-20260430-001 신규 등록 및 F4 파이프라인 진행 — 업무 흐름 애니메이션과 상태 표현, `/dev-verify` 대상 |
+| 2026-04-30 | IDEA-20260430-001 상태 `approved → archived` — `ARCHIVE-F4.md` 생성 및 sources 이동 |

@@ -65,3 +65,5 @@
 | 2026-04-29 | F3 `/dev-run` 완료 - `workflow-manual` 섹션 구현 및 검증, 다음 단계 `/dev-verify` |
 | 2026-04-30 | F3 `/dev-verify` 완료 - fresh 검증 통과, 다음 단계 `/plan-archive` |
 | 2026-04-30 | F3 archive 완료 - `ARCHIVE-F3.md` 생성 및 sources 이동 |
+| 2026-04-30 | F4 구현 및 `/dev-verify` 완료 - 업무 흐름 애니메이션과 샘플 상태 보드 검증 통과 |
+| 2026-04-30 | F4 archive 완료 - `ARCHIVE-F4.md` 생성 및 sources 이동 |
