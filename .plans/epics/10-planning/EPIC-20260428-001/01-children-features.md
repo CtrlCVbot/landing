@@ -83,11 +83,12 @@
 
 ### F5 — 브랜드 자산, 메타데이터, 검증 정리
 
-- **IDEA**: pending
+- **IDEA**: [IDEA-20260430-002](../../../ideas/20-approved/IDEA-20260430-002.md)
 - **Lane**: Lite (마무리 자산과 검증 중심)
-- **RICE 예상**: TBD
-- **범위**: `public/brand/**`, `src/app/layout.tsx`, header/footer/CTA 접근성 라벨, 문구 스캔 스크립트 또는 명령
-- **상태**: pending IDEA
+- **RICE**: 70.2
+- **범위**: `public/brand/**`, `public/favicon.svg`, `src/lib/constants.ts`, `src/lib/site-metadata.ts`, `src/app/layout.tsx`, header/footer/CTA 접근성 라벨, 문구 스캔 명령
+- **상태**: verified
+- **Dev Verify**: [dev-verify-report](../../../features/active/f5-brand-assets-metadata-readiness/03-dev-notes/dev-verify-report.md)
 - **완료 기준**:
   - 로고 후보가 header/footer/favicon/Open Graph 적용 기준을 충족한다.
   - `alt`, `aria-label`, 외부 링크 속성이 정리된다.
@@ -163,7 +164,7 @@
 | F2 | archived | dev-run/dev-verify 완료 | 통과 | 중간 | 완료 |
 | F3 | archived | dev-run/dev-verify/archive 완료 | 통과 | 중간 | 완료 |
 | F4 | archived | dev-run/dev-verify/archive 완료 | 통과 | 낮음 | 완료 |
-| F5 | pending | — | — | — | — |
+| F5 | verified | dev-run/dev-verify 완료 | 통과 | 낮음 | 완료 |
 
 상태 값: `pending` / `inbox` / `screening` / `approved` / `draft` / `prd-draft` / `prd-reviewed` / `wireframe-reviewed` / `scope-reviewed` / `bridged` / `feature-package-ready` / `implemented` / `verified` / `active` / `archived`.
 
@@ -220,6 +221,7 @@
 | 2026-04-29 | F3 `/dev-run` 완료 — 업무 매뉴얼형 섹션 구현, 검증 통과, 다음 단계 `/dev-verify` |
 | 2026-04-30 | F3 `/dev-verify` 통과 — 다음 단계 `/plan-archive` |
 | 2026-04-30 | F3 archive 완료 — `ARCHIVE-F3.md` 생성 및 sources 이동 |
+| 2026-04-30 | F5 Lite 파이프라인 진행 — IDEA, screening, draft, feature package, dev-run, dev-verify 완료 |
 
 ## 7. F4 진행 반영 (2026-04-30)
 

@@ -14,4 +14,6 @@
 | IDEA-20260427-004 | hero-01 레퍼런스 기반 Hero 섹션 재개선 | Go | 79.8 | Standard | archived | [archive](../archive/hero-01-reference-hero-refresh/ARCHIVE-HR01.md) | - |
 | IDEA-20260428-001 | F1 브랜드, 로고, CTA 최소 반영 | Go | 76.35 | Lite | archived | [archive](../archive/f1-optic-brand-cta/ARCHIVE-F1.md) | EPIC-20260428-001 |
 | IDEA-20260429-001 | F2 카피와 제품 라인업 정리 | Go | 78.0 | Standard | archived | [archive](../archive/f2-optic-copy-product-lineup/ARCHIVE-F2.md) | EPIC-20260428-001 |
-| IDEA-20260429-002 | F3 업무 매뉴얼형 스크롤 섹션 MVP | Go | 81.6 | Standard | approved | [screening](20-approved/SCREENING-20260429-002.md) | EPIC-20260428-001 |
+| IDEA-20260429-002 | F3 업무 매뉴얼형 스크롤 섹션 MVP | Go | 81.6 | Standard | archived | [archive](../archive/f3-workflow-manual-section/ARCHIVE-F3.md) | EPIC-20260428-001 |
+| IDEA-20260430-001 | F4 업무 흐름 애니메이션과 상태 표현 | Go | 74.4 | Standard | archived | [archive](../archive/f4-workflow-motion-state/ARCHIVE-F4.md) | EPIC-20260428-001 |
+| IDEA-20260430-002 | F5 브랜드 자산, 메타데이터, 검증 정리 | Go | 70.2 | Lite | approved | [screening](20-approved/SCREENING-20260430-002.md) | EPIC-20260428-001 |
