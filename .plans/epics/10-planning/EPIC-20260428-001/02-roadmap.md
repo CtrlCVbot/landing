@@ -62,3 +62,6 @@
 | 2026-04-29 | F3 wireframe review 완료 - Approve, 다음 단계 `/plan-bridge` |
 | 2026-04-29 | F3 Bridge context 완료 - 다음 단계 `/dev-feature` |
 | 2026-04-29 | F3 Feature Package 완료 - 다음 단계 `/dev-run` |
+| 2026-04-29 | F3 `/dev-run` 완료 - `workflow-manual` 섹션 구현 및 검증, 다음 단계 `/dev-verify` |
+| 2026-04-30 | F3 `/dev-verify` 완료 - fresh 검증 통과, 다음 단계 `/plan-archive` |
+| 2026-04-30 | F3 archive 완료 - `ARCHIVE-F3.md` 생성 및 sources 이동 |

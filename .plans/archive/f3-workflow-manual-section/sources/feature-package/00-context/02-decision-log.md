@@ -15,7 +15,7 @@
 | `D-F3-005` | `정산 자동화`와 `세금계산서 관리`를 분리한다. | 사용자가 선호한 표현 기준과 PRD 요구사항 | 후반부 2단계로 구분 |
 | `D-F3-006` | F3는 static MVP다. | F4가 애니메이션과 상태 mock 고도화 담당 | framer-motion 고도화는 F4로 보류 |
 | `D-F3-007` | 커스텀 가능성은 운영 방식 조율 수준으로 표현한다. | tenant admin/설정 저장 구현 약속 방지 | 과장 표현 방지 테스트 또는 review 필요 |
-| `D-F3-008` | Stitch는 생략한다. | visual design handoff가 아니라 dev feature package로 직행하는 Standard dev feature | 당시 다음 단계는 `/dev-feature`, 현재 다음 단계는 `/dev-run` |
+| `D-F3-008` | Stitch는 생략한다. | visual design handoff가 아니라 dev feature package로 직행하는 Standard dev feature | `/dev-feature`와 `/dev-run` 완료, 현재 다음 단계는 `/dev-verify` |
 
 ---
 

@@ -38,9 +38,9 @@
   "stitch_status": "skipped",
   "bridge_status": "completed",
   "dev_feature_status": "completed",
-  "dev_run_status": "pending",
-  "dev_verify_status": "pending",
-  "archive_status": "pending",
+  "dev_run_status": "completed",
+  "dev_verify_status": "completed",
+  "archive_status": "completed",
   "workflow_steps": [
     "ai-order",
     "locations",
@@ -51,9 +51,12 @@
   ],
   "recommended_placement": "after-products",
   "feature_package": "../02-package/00-overview.md",
-  "next": "dev-run",
-  "next_command": "/dev-run .plans/features/active/f3-workflow-manual-section/",
-  "fallback_next": "/dev-feature .plans/features/active/f3-workflow-manual-section/"
+  "dev_output": "../03-dev-notes/dev-output-summary.md",
+  "dev_verify_report": "../03-dev-notes/dev-verify-report.md",
+  "archive": "../../../ARCHIVE-F3.md",
+  "next": "f4-planning",
+  "next_command": "/plan-idea F4 업무 흐름 애니메이션과 상태 표현",
+  "fallback_next": "/plan-archive f3-workflow-manual-section"
 }
 ```
 
@@ -64,4 +67,7 @@
 - P6 Stitch는 생략한다. F3는 visual design handoff가 아니라 dev feature package로 직행한다.
 - P7 Bridge는 approved PRD, PRD review, wireframe, wireframe review를 dev handoff context로 동결한다.
 - `/dev-feature`는 이 `00-context`를 입력으로 `02-package` 요구사항, UI spec, TASK, test case 생성을 완료했다.
-- 다음 단계는 `/dev-run`이며, `02-package/08-dev-tasks.md`와 `02-package/09-test-cases.md`를 SSOT로 사용한다.
+- `/dev-run`은 완료되었으며, 구현 결과와 검증 evidence는 `../03-dev-notes/dev-output-summary.md`에 기록한다.
+- `/dev-verify`도 완료되었으며, fresh 검증 결과는 `../03-dev-notes/dev-verify-report.md`에 기록한다.
+- `/plan-archive f3-workflow-manual-section`도 완료되었으며, archive bundle은 `../../../ARCHIVE-F3.md`에 기록한다.
+- 다음 단계는 F4 업무 흐름 애니메이션과 상태 표현 기획이다.

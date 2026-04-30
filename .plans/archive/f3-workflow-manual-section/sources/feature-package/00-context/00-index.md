@@ -3,10 +3,13 @@
 > **Feature**: F3 업무 매뉴얼형 스크롤 섹션 MVP
 > **Epic**: [EPIC-20260428-001](../../../../epics/10-planning/EPIC-20260428-001/00-epic-brief.md) Phase C, F3
 > **Scope**: Standard, dev, 신규 landing section
-> **Status**: feature-package-ready
+> **Status**: archived
 > **Created**: 2026-04-29
 > **Plan Bridge**: completed
 > **Dev Feature**: completed
+> **Dev Run**: completed
+> **Dev Verify**: completed
+> **Archive**: completed
 
 ---
 
@@ -37,6 +40,7 @@
 | 08 | [08-dev-tasks.md](../02-package/08-dev-tasks.md) | SSOT | `/dev-run` TASK |
 | 09 | [09-test-cases.md](../02-package/09-test-cases.md) | SSOT | 테스트 케이스 |
 | 10 | [10-release-checklist.md](../02-package/10-release-checklist.md) | current | release readiness checklist |
+| 11 | [dev-output-summary.md](../03-dev-notes/dev-output-summary.md) | current | `/dev-run` 구현 결과와 검증 evidence |
 
 ---
 
@@ -87,10 +91,12 @@ F3는 OPTIC 랜딩에 업무 매뉴얼형 스크롤 섹션을 추가하는 Featu
 | P6 Stitch | skipped | visual design handoff 대상이 아니므로 생략 |
 | P7 Bridge | done | context package |
 | Dev Feature | done | feature package |
-| Dev Run | pending | 다음 단계 |
+| Dev Run | done | implementation + verification evidence |
+| Dev Verify | done | verification report |
+| Archive | done | [ARCHIVE-F3](../../../ARCHIVE-F3.md) |
 
 ---
 
 ## 5. Next Step
 
-`/dev-run .plans/features/active/f3-workflow-manual-section/`
+F3 산출물은 [ARCHIVE-F3](../../../ARCHIVE-F3.md)와 [sources](../../../sources/)에 보존한다.

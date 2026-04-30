@@ -92,7 +92,7 @@ PRD 원본 ID가 길기 때문에 dev package에서는 아래 alias를 병기할
 
 ## 6. Dev Handoff
 
-Feature Package 생성이 완료되었으므로 다음 단계는 `/dev-run .plans/features/active/f3-workflow-manual-section/`다.
+Feature Package와 `/dev-run` 구현이 완료되었으므로 다음 단계는 `/dev-verify .plans/features/active/f3-workflow-manual-section/`다.
 
 구현자는 이 문서와 [06-architecture-binding.md](./06-architecture-binding.md)를 먼저 읽고, 실제 TASK와 test case는 [08-dev-tasks.md](../02-package/08-dev-tasks.md)와 [09-test-cases.md](../02-package/09-test-cases.md)를 SSOT로 사용한다.
 

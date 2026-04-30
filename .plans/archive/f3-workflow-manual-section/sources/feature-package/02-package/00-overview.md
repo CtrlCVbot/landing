@@ -8,7 +8,7 @@
 > **작성일**: 2026-04-29
 > **작성자**: Codex (`/dev-feature` 대응)
 > **승인 근거**: approved PRD + wireframe review Approve + Bridge context
-> **다음 단계**: `/dev-run .plans/features/active/f3-workflow-manual-section/`
+> **다음 단계**: `/dev-verify .plans/features/active/f3-workflow-manual-section/`
 
 ---
 
@@ -125,6 +125,7 @@ backend route, persistence, API
 | Requirements SSOT | `02-package/01-requirements.md` |
 | Dev tasks SSOT | `02-package/08-dev-tasks.md` |
 | Test cases SSOT | `02-package/09-test-cases.md` |
+| Dev output | `03-dev-notes/dev-output-summary.md` |
 | Architecture binding | `00-context/06-architecture-binding.md` |
 | Wireframe source | `.plans/wireframes/f3-workflow-manual-section/screens.md` |
 
@@ -144,7 +145,7 @@ backend route, persistence, API
 ## 10. 다음 단계
 
 ```bash
-/dev-run .plans/features/active/f3-workflow-manual-section/
+/dev-verify .plans/features/active/f3-workflow-manual-section/
 ```
 
-구현은 `landing-workflow` data test를 먼저 추가한 뒤, `workflow-manual` section과 page composition을 순서대로 연결한다.
+구현은 완료되었다. 다음 단계에서는 fresh-context 검증으로 `landing-workflow` data, `workflow-manual` section, page composition, 문구 scan, responsive evidence를 재확인한다.

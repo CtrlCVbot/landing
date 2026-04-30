@@ -26,7 +26,7 @@
 | IDEA-20260427-004 | hero-01 레퍼런스 기반 Hero 섹션 재개선 | improvement | archived | 2026-04-27 | `archive/hero-01-reference-hero-refresh/sources/ideas` | [링크](../archive/hero-01-reference-hero-refresh/sources/ideas/IDEA-20260427-004.md) | - |
 | IDEA-20260428-001 | F1 브랜드, 로고, CTA 최소 반영 | improvement | archived | 2026-04-28 | `archive/f1-optic-brand-cta/sources/ideas` | [링크](../archive/f1-optic-brand-cta/sources/ideas/IDEA-20260428-001.md) | [EPIC-20260428-001](../epics/10-planning/EPIC-20260428-001/00-epic-brief.md) |
 | IDEA-20260429-001 | F2 카피와 제품 라인업 정리 | improvement | archived | 2026-04-29 | `archive/f2-optic-copy-product-lineup/sources/ideas` | [링크](../archive/f2-optic-copy-product-lineup/sources/ideas/IDEA-20260429-001.md) | [EPIC-20260428-001](../epics/10-planning/EPIC-20260428-001/00-epic-brief.md) |
-| IDEA-20260429-002 | F3 업무 매뉴얼형 스크롤 섹션 MVP | feature | approved | 2026-04-29 | `20-approved` | [링크](20-approved/IDEA-20260429-002.md) | [EPIC-20260428-001](../epics/10-planning/EPIC-20260428-001/00-epic-brief.md) |
+| IDEA-20260429-002 | F3 업무 매뉴얼형 스크롤 섹션 MVP | feature | archived | 2026-04-29 | `archive/f3-workflow-manual-section/sources/ideas` | [링크](../archive/f3-workflow-manual-section/sources/ideas/IDEA-20260429-002.md) | [EPIC-20260428-001](../epics/10-planning/EPIC-20260428-001/00-epic-brief.md) |
 
 ---
 
@@ -106,3 +106,6 @@
 | 2026-04-29 | IDEA-20260429-002 wireframe 작성 및 review 완료 — Products 직후 배치 추천, 다음 단계 `/plan-bridge` |
 | 2026-04-29 | IDEA-20260429-002 Bridge context 생성 — 다음 단계 `/dev-feature` |
 | 2026-04-29 | IDEA-20260429-002 `/dev-feature` 완료 — `02-package` 요구사항, UI spec, TASK, 테스트 케이스 생성 |
+| 2026-04-29 | IDEA-20260429-002 `/dev-run` 완료 — `WorkflowManual` 섹션 구현, 검증 통과, 다음 단계 `/dev-verify` |
+| 2026-04-30 | IDEA-20260429-002 `/dev-verify` 완료 — fresh 검증 통과, 다음 단계 `/plan-archive` |
+| 2026-04-30 | IDEA-20260429-002 상태 `approved → archived` — `ARCHIVE-F3.md` 생성 및 sources 이동 |

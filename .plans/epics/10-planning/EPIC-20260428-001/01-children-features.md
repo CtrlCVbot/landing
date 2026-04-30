@@ -46,18 +46,22 @@
 
 ### F3 — 업무 매뉴얼형 스크롤 섹션 MVP
 
-- **IDEA**: [IDEA-20260429-002](../../../ideas/20-approved/IDEA-20260429-002.md)
+- **IDEA**: [IDEA-20260429-002](../../../archive/f3-workflow-manual-section/sources/ideas/IDEA-20260429-002.md)
 - **Lane**: Standard (신규 섹션과 데이터 구조 추가)
 - **RICE 예상**: 81.6
 - **범위**: `src/components/sections/workflow-manual.tsx`, `src/lib/landing-workflow.ts` 또는 `src/lib/constants.ts`, `src/app/page.tsx`
-- **상태**: feature-package-ready
-- **Screening**: [SCREENING-20260429-002](../../../ideas/20-approved/SCREENING-20260429-002.md)
-- **Draft**: [f3-workflow-manual-section](../../../drafts/f3-workflow-manual-section/01-draft.md)
-- **PRD**: [f3-workflow-manual-section-prd](../../../prd/10-approved/f3-workflow-manual-section-prd.md)
-- **PRD Review**: [03-prd-review](../../../drafts/f3-workflow-manual-section/03-prd-review.md)
-- **Wireframe**: [screens](../../../wireframes/f3-workflow-manual-section/screens.md), [review](../../../wireframes/f3-workflow-manual-section/04-wireframe-review.md)
-- **Bridge**: [00-index](../../../features/active/f3-workflow-manual-section/00-context/00-index.md)
-- **Feature Package**: [00-overview](../../../features/active/f3-workflow-manual-section/02-package/00-overview.md), [08-dev-tasks](../../../features/active/f3-workflow-manual-section/02-package/08-dev-tasks.md)
+- **상태**: archived
+- **Archive**: [ARCHIVE-F3](../../../archive/f3-workflow-manual-section/ARCHIVE-F3.md)
+- **Sources**: [sources](../../../archive/f3-workflow-manual-section/sources/)
+- **Screening**: [SCREENING-20260429-002](../../../archive/f3-workflow-manual-section/sources/ideas/SCREENING-20260429-002.md)
+- **Draft**: [f3-workflow-manual-section](../../../archive/f3-workflow-manual-section/sources/drafts/01-draft.md)
+- **PRD**: [f3-workflow-manual-section-prd](../../../archive/f3-workflow-manual-section/sources/prd/f3-workflow-manual-section-prd.md)
+- **PRD Review**: [03-prd-review](../../../archive/f3-workflow-manual-section/sources/drafts/03-prd-review.md)
+- **Wireframe**: [screens](../../../archive/f3-workflow-manual-section/sources/wireframes/screens.md), [review](../../../archive/f3-workflow-manual-section/sources/wireframes/04-wireframe-review.md)
+- **Bridge**: [00-index](../../../archive/f3-workflow-manual-section/sources/feature-package/00-context/00-index.md)
+- **Feature Package**: [00-overview](../../../archive/f3-workflow-manual-section/sources/feature-package/02-package/00-overview.md), [08-dev-tasks](../../../archive/f3-workflow-manual-section/sources/feature-package/02-package/08-dev-tasks.md)
+- **Dev Output**: [dev-output-summary](../../../archive/f3-workflow-manual-section/sources/feature-package/03-dev-notes/dev-output-summary.md)
+- **Dev Verify**: [dev-verify-report](../../../archive/f3-workflow-manual-section/sources/feature-package/03-dev-notes/dev-verify-report.md)
 - **완료 기준**:
   - hero 이후 `AI 오더 등록 → 상하차지 관리 → 배차/운송 상태 → 화물맨 연동 → 정산 자동화 → 세금계산서 관리` 흐름이 이어진다.
   - 섹션당 한 업무만 설명하고, 기존 features/integrations와 중복 설명을 줄인다.
@@ -155,7 +159,7 @@
 |---|:---:|:---:|:---:|:---:|:---:|
 | F1 | archived | dev-run 완료 | 통과 | 낮음 | 완료 |
 | F2 | archived | dev-run/dev-verify 완료 | 통과 | 중간 | 완료 |
-| F3 | feature-package-ready | dev-feature 완료 | — | 중간 | Dev run 대기 |
+| F3 | archived | dev-run/dev-verify/archive 완료 | 통과 | 중간 | 완료 |
 | F4 | pending | — | — | — | — |
 | F5 | pending | — | — | — | — |
 
@@ -211,3 +215,6 @@
 | 2026-04-29 | F3 wireframe 작성 및 review 통과 — 다음 단계 `/plan-bridge` |
 | 2026-04-29 | F3 Bridge context 생성 — 다음 단계 `/dev-feature` |
 | 2026-04-29 | F3 Feature Package 생성 — 다음 단계 `/dev-run` |
+| 2026-04-29 | F3 `/dev-run` 완료 — 업무 매뉴얼형 섹션 구현, 검증 통과, 다음 단계 `/dev-verify` |
+| 2026-04-30 | F3 `/dev-verify` 통과 — 다음 단계 `/plan-archive` |
+| 2026-04-30 | F3 archive 완료 — `ARCHIVE-F3.md` 생성 및 sources 이동 |
